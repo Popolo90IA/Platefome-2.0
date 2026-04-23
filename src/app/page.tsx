@@ -150,65 +150,50 @@ export default function HomePage() {
           }}
         />
 
-        {/* Sticker — only on larger screens */}
+        {/* 3D dish — absolute right side, desktop only */}
         <div
-          className="hidden lg:block"
+          className="hidden xl:block"
           style={{
             position: "absolute",
-            top: "140px",
-            right: "80px",
-            zIndex: 10,
+            top: "50%",
+            right: 0,
+            transform: "translateY(-50%)",
+            width: "52%",
+            height: "100%",
+            zIndex: 2,
+            pointerEvents: "auto",
           }}
         >
-          <StickerRound
-            text="סריקה · AR · תלת-מימד · VR · חי · תפריט · סריקה · AR"
-            size={148}
-            color="hsl(var(--gold))"
-          />
-        </div>
-
-        <div className="max-w-7xl mx-auto px-6 lg:px-12" style={{ position: "relative", zIndex: 1, display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0", alignItems: "center" }} id="hero-grid">
-
-          {/* ── Left — 3D dish ── */}
+          <Dish3DScene />
+          {/* Drag hint */}
           <div
-            className="hidden lg:block"
             style={{
-              position: "relative",
-              height: "520px",
-              borderRadius: "4px",
-              overflow: "hidden",
+              position: "absolute",
+              bottom: "32px",
+              left: "50%",
+              transform: "translateX(-50%)",
+              zIndex: 10,
+              display: "flex",
+              alignItems: "center",
+              gap: "8px",
+              padding: "6px 16px",
+              background: "hsl(var(--void)/0.75)",
+              border: "1px solid hsl(var(--gold)/0.2)",
+              borderRadius: "99px",
+              backdropFilter: "blur(12px)",
+              WebkitBackdropFilter: "blur(12px)",
+              whiteSpace: "nowrap",
+              pointerEvents: "none",
             }}
           >
-            {/* Hint label */}
-            <div
-              style={{
-                position: "absolute",
-                bottom: "24px",
-                left: "50%",
-                transform: "translateX(-50%)",
-                zIndex: 10,
-                display: "flex",
-                alignItems: "center",
-                gap: "8px",
-                padding: "6px 14px",
-                background: "hsl(var(--abyss)/0.7)",
-                border: "1px solid hsl(var(--line))",
-                borderRadius: "99px",
-                backdropFilter: "blur(8px)",
-                WebkitBackdropFilter: "blur(8px)",
-                whiteSpace: "nowrap",
-              }}
-            >
-              <span style={{ width: 5, height: 5, borderRadius: "50%", background: "hsl(var(--gold))", boxShadow: "0 0 6px hsl(var(--gold)/0.6)", flexShrink: 0 }} />
-              <span style={{ fontFamily: "'DM Mono',monospace", fontSize: "0.5625rem", letterSpacing: "0.1em", color: "hsl(var(--subtle))", textTransform: "uppercase" }}>
-                גרור לסיבוב · Drag to rotate
-              </span>
-            </div>
-            <Dish3DScene />
+            <span style={{ width: 5, height: 5, borderRadius: "50%", background: "hsl(var(--gold))", boxShadow: "0 0 6px hsl(var(--gold)/0.7)", flexShrink: 0 }} />
+            <span style={{ fontFamily: "'DM Mono',monospace", fontSize: "0.5625rem", letterSpacing: "0.12em", color: "hsl(var(--subtle))", textTransform: "uppercase" }}>
+              גרור לסיבוב · Drag to rotate
+            </span>
           </div>
+        </div>
 
-          {/* ── Right — text ── */}
-          <div>
+        <div className="max-w-7xl mx-auto px-6 lg:px-12" style={{ position: "relative", zIndex: 3 }}>
 
           {/* Eyebrow */}
           <div
@@ -346,18 +331,7 @@ export default function HomePage() {
               </div>
             ))}
           </div>
-
-          </div>{/* end right col */}
         </div>
-
-        {/* Responsive: single column on mobile */}
-        <style>{`
-          @media (max-width: 1024px) {
-            #hero-grid {
-              grid-template-columns: 1fr !important;
-            }
-          }
-        `}</style>
       </section>
 
       {/* ───────────────────────────────────────────────────────
