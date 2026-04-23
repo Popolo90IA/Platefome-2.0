@@ -150,186 +150,199 @@ export default function HomePage() {
           }}
         />
 
-        {/* 3D dish — absolute right side, desktop only */}
+        {/* Hero inner — two-column flex layout */}
         <div
-          className="hidden xl:block"
+          className="max-w-7xl mx-auto px-6 lg:px-12"
           style={{
-            position: "absolute",
-            top: "50%",
-            right: 0,
-            transform: "translateY(-50%)",
-            width: "52%",
-            height: "100%",
-            zIndex: 2,
-            pointerEvents: "auto",
+            position: "relative",
+            zIndex: 3,
+            display: "flex",
+            alignItems: "center",
+            gap: "0",
           }}
         >
-          <Dish3DScene />
-          {/* Drag hint */}
-          <div
-            style={{
-              position: "absolute",
-              bottom: "32px",
-              left: "50%",
-              transform: "translateX(-50%)",
-              zIndex: 10,
-              display: "flex",
-              alignItems: "center",
-              gap: "8px",
-              padding: "6px 16px",
-              background: "hsl(var(--void)/0.75)",
-              border: "1px solid hsl(var(--gold)/0.2)",
-              borderRadius: "99px",
-              backdropFilter: "blur(12px)",
-              WebkitBackdropFilter: "blur(12px)",
-              whiteSpace: "nowrap",
-              pointerEvents: "none",
-            }}
-          >
-            <span style={{ width: 5, height: 5, borderRadius: "50%", background: "hsl(var(--gold))", boxShadow: "0 0 6px hsl(var(--gold)/0.7)", flexShrink: 0 }} />
-            <span style={{ fontFamily: "'DM Mono',monospace", fontSize: "0.5625rem", letterSpacing: "0.12em", color: "hsl(var(--subtle))", textTransform: "uppercase" }}>
-              גרור לסיבוב · Drag to rotate
-            </span>
-          </div>
-        </div>
+          {/* ── Col 1 : Text (left) ── */}
+          <div style={{ flex: "0 0 50%", maxWidth: "50%" }}>
 
-        <div className="max-w-7xl mx-auto px-6 lg:px-12" style={{ position: "relative", zIndex: 3 }}>
-
-          {/* Eyebrow */}
-          <div
-            className="animate-fade-up"
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: "10px",
-              marginBottom: "40px",
-              padding: "6px 14px",
-              border: "1px solid hsl(var(--gold)/0.25)",
-              borderRadius: "99px",
-              background: "hsl(var(--gold)/0.06)",
-            }}
-          >
-            <span
+            {/* Eyebrow */}
+            <div
+              className="animate-fade-up"
               style={{
-                width: 6,
-                height: 6,
-                borderRadius: "50%",
-                background: "hsl(var(--sage))",
-                boxShadow: "0 0 8px hsl(var(--sage)/0.6)",
-                flexShrink: 0,
-                animation: "pulseGlow 2.5s ease-in-out infinite",
-              }}
-            />
-            <span className="eyebrow-gold" style={{ fontSize: "0.625rem" }}>
-              תפריטים תלת-מימד · AR · VR — למסעדות
-            </span>
-          </div>
-
-          {/* Main headline */}
-          <div className="animate-fade-up" style={{ animationDelay: "80ms", maxWidth: "820px" }}>
-            <h1
-              style={{
-                fontFamily: "'Cormorant Garamond',serif",
-                fontWeight: 300,
-                fontSize: "clamp(52px, 7.5vw, 108px)",
-                lineHeight: 0.92,
-                letterSpacing: "-0.04em",
-                color: "hsl(var(--snow))",
-                margin: 0,
-                marginBottom: "8px",
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "10px",
+                marginBottom: "40px",
+                padding: "6px 14px",
+                border: "1px solid hsl(var(--gold)/0.25)",
+                borderRadius: "99px",
+                background: "hsl(var(--gold)/0.06)",
               }}
             >
-              הטלפון
-              <br />
               <span
                 style={{
-                  fontStyle: "italic",
-                  background: "linear-gradient(135deg, hsl(var(--gold)) 0%, hsl(42 85% 78%) 60%)",
-                  WebkitBackgroundClip: "text",
-                  backgroundClip: "text",
-                  WebkitTextFillColor: "transparent",
-                  color: "transparent",
+                  width: 6,
+                  height: 6,
+                  borderRadius: "50%",
+                  background: "hsl(var(--sage))",
+                  boxShadow: "0 0 8px hsl(var(--sage)/0.6)",
+                  flexShrink: 0,
+                  animation: "pulseGlow 2.5s ease-in-out infinite",
+                }}
+              />
+              <span className="eyebrow-gold" style={{ fontSize: "0.625rem" }}>
+                תפריטים תלת-מימד · AR · VR — למסעדות
+              </span>
+            </div>
+
+            {/* Main headline */}
+            <div className="animate-fade-up" style={{ animationDelay: "80ms" }}>
+              <h1
+                style={{
+                  fontFamily: "'Cormorant Garamond',serif",
+                  fontWeight: 300,
+                  fontSize: "clamp(52px, 5.5vw, 96px)",
+                  lineHeight: 0.92,
+                  letterSpacing: "-0.04em",
+                  color: "hsl(var(--snow))",
+                  margin: 0,
+                  marginBottom: "8px",
                 }}
               >
-                הופך
-              </span>
-              <br />
-              <span style={{ color: "hsl(var(--snow)/0.55)" }}>לצלחת</span>
-            </h1>
-          </div>
-
-          {/* Sub-headline */}
-          <p
-            className="animate-fade-up"
-            style={{
-              animationDelay: "160ms",
-              fontFamily: "'DM Sans',sans-serif",
-              fontSize: "1.125rem",
-              lineHeight: 1.65,
-              color: "hsl(var(--subtle))",
-              maxWidth: "480px",
-              marginTop: "32px",
-              marginBottom: "0",
-            }}
-          >
-            <EditableText
-              contentKey="landing.hero.subtitle"
-              defaultValue="הלקוח סורק. המנה מופיעה בתלת-מימד על השולחן. זה לא תפריט — זו חוויה גסטרונומית דיגיטלית."
-              as="span"
-              multiline
-            />
-          </p>
-
-          {/* CTAs */}
-          <div
-            className="animate-fade-up"
-            style={{ animationDelay: "240ms", display: "flex", flexWrap: "wrap", gap: "12px", marginTop: "48px" }}
-          >
-            <Link href="/signup" style={{ textDecoration: "none" }}>
-              <button className="btn-primary">
-                התחל בחינם
-                <ArrowRight size={13} />
-              </button>
-            </Link>
-            <a href="#features" style={{ textDecoration: "none" }}>
-              <button className="btn-ghost">
-                ראה הדגמה
-              </button>
-            </a>
-          </div>
-
-          {/* Trust row */}
-          <div
-            className="animate-fade-up"
-            style={{
-              animationDelay: "360ms",
-              display: "flex",
-              flexWrap: "wrap",
-              gap: "24px",
-              marginTop: "56px",
-              alignItems: "center",
-            }}
-          >
-            {[
-              "הגדרה תוך 5 דקות",
-              "ללא אפליקציה",
-              "עברית · אנגלית · צרפתית · RTL",
-              "iOS ו-Android AR",
-            ].map((item, i) => (
-              <div key={i} style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                <Check size={12} style={{ color: "hsl(var(--sage))", flexShrink: 0 }} />
+                הטלפון
+                <br />
                 <span
                   style={{
-                    fontFamily: "'DM Mono',monospace",
-                    fontSize: "0.6875rem",
-                    letterSpacing: "0.06em",
-                    color: "hsl(var(--subtle))",
+                    fontStyle: "italic",
+                    background: "linear-gradient(135deg, hsl(var(--gold)) 0%, hsl(42 85% 78%) 60%)",
+                    WebkitBackgroundClip: "text",
+                    backgroundClip: "text",
+                    WebkitTextFillColor: "transparent",
+                    color: "transparent",
                   }}
                 >
-                  {item}
+                  הופך
                 </span>
-              </div>
-            ))}
+                <br />
+                <span style={{ color: "hsl(var(--snow)/0.55)" }}>לצלחת</span>
+              </h1>
+            </div>
+
+            {/* Sub-headline */}
+            <p
+              className="animate-fade-up"
+              style={{
+                animationDelay: "160ms",
+                fontFamily: "'DM Sans',sans-serif",
+                fontSize: "1.125rem",
+                lineHeight: 1.65,
+                color: "hsl(var(--subtle))",
+                maxWidth: "420px",
+                marginTop: "32px",
+                marginBottom: "0",
+              }}
+            >
+              <EditableText
+                contentKey="landing.hero.subtitle"
+                defaultValue="הלקוח סורק. המנה מופיעה בתלת-מימד על השולחן. זה לא תפריט — זו חוויה גסטרונומית דיגיטלית."
+                as="span"
+                multiline
+              />
+            </p>
+
+            {/* CTAs */}
+            <div
+              className="animate-fade-up"
+              style={{ animationDelay: "240ms", display: "flex", flexWrap: "wrap", gap: "12px", marginTop: "48px" }}
+            >
+              <Link href="/signup" style={{ textDecoration: "none" }}>
+                <button className="btn-primary">
+                  התחל בחינם
+                  <ArrowRight size={13} />
+                </button>
+              </Link>
+              <a href="#features" style={{ textDecoration: "none" }}>
+                <button className="btn-ghost">
+                  ראה הדגמה
+                </button>
+              </a>
+            </div>
+
+            {/* Trust row */}
+            <div
+              className="animate-fade-up"
+              style={{
+                animationDelay: "360ms",
+                display: "flex",
+                flexWrap: "wrap",
+                gap: "24px",
+                marginTop: "56px",
+                alignItems: "center",
+              }}
+            >
+              {[
+                "הגדרה תוך 5 דקות",
+                "ללא אפליקציה",
+                "עברית · אנגלית · צרפתית · RTL",
+                "iOS ו-Android AR",
+              ].map((item, i) => (
+                <div key={i} style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                  <Check size={12} style={{ color: "hsl(var(--sage))", flexShrink: 0 }} />
+                  <span
+                    style={{
+                      fontFamily: "'DM Mono',monospace",
+                      fontSize: "0.6875rem",
+                      letterSpacing: "0.06em",
+                      color: "hsl(var(--subtle))",
+                    }}
+                  >
+                    {item}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* ── Col 2 : Dish (right) — desktop only ── */}
+          <div
+            className="hidden xl:flex"
+            style={{
+              flex: "0 0 50%",
+              maxWidth: "50%",
+              height: "600px",
+              position: "relative",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <div style={{ position: "relative", width: "100%", height: "100%" }}>
+              <Dish3DScene />
+            </div>
+            {/* Hint label */}
+            <div
+              style={{
+                position: "absolute",
+                bottom: "16px",
+                left: "50%",
+                transform: "translateX(-50%)",
+                zIndex: 10,
+                display: "flex",
+                alignItems: "center",
+                gap: "8px",
+                padding: "6px 16px",
+                background: "hsl(var(--void)/0.75)",
+                border: "1px solid hsl(var(--gold)/0.2)",
+                borderRadius: "99px",
+                backdropFilter: "blur(12px)",
+                WebkitBackdropFilter: "blur(12px)",
+                whiteSpace: "nowrap",
+                pointerEvents: "none",
+              }}
+            >
+              <span style={{ width: 5, height: 5, borderRadius: "50%", background: "hsl(var(--gold))", boxShadow: "0 0 6px hsl(var(--gold)/0.7)", flexShrink: 0 }} />
+              <span style={{ fontFamily: "'DM Mono',monospace", fontSize: "0.5625rem", letterSpacing: "0.12em", color: "hsl(var(--subtle))", textTransform: "uppercase" }}>
+                גרור לסיבוב · Drag to rotate
+              </span>
+            </div>
           </div>
         </div>
       </section>
