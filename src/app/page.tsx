@@ -6,6 +6,11 @@ import { EditableText } from "@/components/editable/EditableText";
 import { Marquee } from "@/components/appetite/Marquee";
 import { StickerRound } from "@/components/appetite/StickerRound";
 import { Plus, ArrowRight, Check, Scan, Cuboid, Globe } from "lucide-react";
+import dynamic from "next/dynamic";
+const Dish3DScene = dynamic(
+  () => import("@/components/appetite/Dish3DScene").then(m => m.Dish3DScene),
+  { ssr: false }
+);
 
 export default function HomePage() {
   return (
@@ -162,7 +167,48 @@ export default function HomePage() {
           />
         </div>
 
-        <div className="max-w-7xl mx-auto px-6 lg:px-12" style={{ position: "relative", zIndex: 1 }}>
+        <div className="max-w-7xl mx-auto px-6 lg:px-12" style={{ position: "relative", zIndex: 1, display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0", alignItems: "center" }} id="hero-grid">
+
+          {/* ── Left — 3D dish ── */}
+          <div
+            className="hidden lg:block"
+            style={{
+              position: "relative",
+              height: "520px",
+              borderRadius: "4px",
+              overflow: "hidden",
+            }}
+          >
+            {/* Hint label */}
+            <div
+              style={{
+                position: "absolute",
+                bottom: "24px",
+                left: "50%",
+                transform: "translateX(-50%)",
+                zIndex: 10,
+                display: "flex",
+                alignItems: "center",
+                gap: "8px",
+                padding: "6px 14px",
+                background: "hsl(var(--abyss)/0.7)",
+                border: "1px solid hsl(var(--line))",
+                borderRadius: "99px",
+                backdropFilter: "blur(8px)",
+                WebkitBackdropFilter: "blur(8px)",
+                whiteSpace: "nowrap",
+              }}
+            >
+              <span style={{ width: 5, height: 5, borderRadius: "50%", background: "hsl(var(--gold))", boxShadow: "0 0 6px hsl(var(--gold)/0.6)", flexShrink: 0 }} />
+              <span style={{ fontFamily: "'DM Mono',monospace", fontSize: "0.5625rem", letterSpacing: "0.1em", color: "hsl(var(--subtle))", textTransform: "uppercase" }}>
+                גרור לסיבוב · Drag to rotate
+              </span>
+            </div>
+            <Dish3DScene />
+          </div>
+
+          {/* ── Right — text ── */}
+          <div>
 
           {/* Eyebrow */}
           <div
@@ -300,7 +346,18 @@ export default function HomePage() {
               </div>
             ))}
           </div>
+
+          </div>{/* end right col */}
         </div>
+
+        {/* Responsive: single column on mobile */}
+        <style>{`
+          @media (max-width: 1024px) {
+            #hero-grid {
+              grid-template-columns: 1fr !important;
+            }
+          }
+        `}</style>
       </section>
 
       {/* ───────────────────────────────────────────────────────
