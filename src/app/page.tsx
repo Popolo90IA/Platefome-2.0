@@ -203,28 +203,82 @@ export default function HomePage() {
                   fontSize: "clamp(52px, 5.5vw, 96px)",
                   lineHeight: 0.92,
                   letterSpacing: "-0.04em",
-                  color: "hsl(var(--snow))",
                   margin: 0,
                   marginBottom: "8px",
+                  position: "relative",
                 }}
               >
-                הטלפון
-                <br />
-                <span
-                  style={{
-                    fontStyle: "italic",
-                    background: "linear-gradient(135deg, hsl(var(--gold)) 0%, hsl(28 90% 68%) 60%)",
+                {/* הטלפון — reflet glint animé */}
+                <span style={{ position: "relative", display: "block", overflow: "hidden" }}>
+                  <span style={{
+                    background: "linear-gradient(90deg, hsl(var(--snow)) 0%, hsl(30 18% 96%) 40%, hsl(var(--snow)) 100%)",
                     WebkitBackgroundClip: "text",
                     backgroundClip: "text",
                     WebkitTextFillColor: "transparent",
                     color: "transparent",
-                  }}
-                >
-                  הופך
+                  }}>
+                    הטלפון
+                  </span>
+                  {/* Glint sweep */}
+                  <span aria-hidden style={{
+                    position: "absolute",
+                    inset: 0,
+                    background: "linear-gradient(105deg, transparent 35%, rgba(255,255,255,0.55) 50%, transparent 65%)",
+                    backgroundSize: "200% 100%",
+                    animation: "textGlint 4s ease-in-out infinite",
+                    WebkitBackgroundClip: "text",
+                    backgroundClip: "text",
+                    WebkitTextFillColor: "transparent",
+                    pointerEvents: "none",
+                  }} />
                 </span>
-                <br />
-                <span style={{ color: "hsl(var(--snow)/0.55)" }}>לצלחת</span>
+
+                {/* הופך — orange LV avec shimmer */}
+                <span style={{ position: "relative", display: "block", overflow: "hidden", fontStyle: "italic" }}>
+                  <span style={{
+                    background: "linear-gradient(135deg, hsl(25 85% 38%) 0%, hsl(var(--gold)) 35%, hsl(28 92% 70%) 55%, hsl(var(--gold)) 75%, hsl(25 85% 38%) 100%)",
+                    backgroundSize: "200% 100%",
+                    WebkitBackgroundClip: "text",
+                    backgroundClip: "text",
+                    WebkitTextFillColor: "transparent",
+                    color: "transparent",
+                    animation: "goldShimmer 3.5s ease-in-out infinite",
+                    display: "inline-block",
+                    width: "100%",
+                  }}>
+                    הופך
+                  </span>
+                </span>
+
+                {/* לצלחת — dim avec reflet subtil */}
+                <span style={{ position: "relative", display: "block", overflow: "hidden" }}>
+                  <span style={{
+                    background: "linear-gradient(90deg, hsl(var(--snow)/0.4) 0%, hsl(var(--snow)/0.65) 50%, hsl(var(--snow)/0.4) 100%)",
+                    backgroundSize: "200% 100%",
+                    WebkitBackgroundClip: "text",
+                    backgroundClip: "text",
+                    WebkitTextFillColor: "transparent",
+                    color: "transparent",
+                    animation: "textGlint 5.5s ease-in-out 1s infinite",
+                    display: "inline-block",
+                    width: "100%",
+                  }}>
+                    לצלחת
+                  </span>
+                </span>
               </h1>
+
+              <style>{`
+                @keyframes goldShimmer {
+                  0%   { background-position: 100% 0; }
+                  50%  { background-position:   0% 0; }
+                  100% { background-position: 100% 0; }
+                }
+                @keyframes textGlint {
+                  0%, 70%, 100% { background-position: 200% 0; }
+                  40%           { background-position: -50% 0; }
+                }
+              `}</style>
             </div>
 
             {/* Sub-headline */}
