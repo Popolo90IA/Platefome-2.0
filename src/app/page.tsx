@@ -213,7 +213,7 @@ export default function HomePage() {
                 <span
                   style={{
                     fontStyle: "italic",
-                    background: "linear-gradient(135deg, hsl(var(--gold)) 0%, hsl(42 85% 78%) 60%)",
+                    background: "linear-gradient(135deg, hsl(var(--gold)) 0%, hsl(28 90% 68%) 60%)",
                     WebkitBackgroundClip: "text",
                     backgroundClip: "text",
                     WebkitTextFillColor: "transparent",

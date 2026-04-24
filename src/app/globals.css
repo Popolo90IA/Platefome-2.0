@@ -18,25 +18,25 @@
     --popover: 220 12% 7%;
     --popover-foreground: 42 20% 90%;
 
-    /* Gold champagne — the only warm accent */
-    --primary: 42 75% 62%;
-    --primary-foreground: 220 15% 4%;
+    /* Orange LV — luxe cuir maroquinerie */
+    --primary: 28 88% 48%;
+    --primary-foreground: 20 15% 6%;
 
     --secondary: 220 10% 11%;
-    --secondary-foreground: 42 20% 90%;
+    --secondary-foreground: 30 20% 90%;
 
     --muted: 220 10% 13%;
     --muted-foreground: 220 8% 52%;
 
     --accent: 220 10% 13%;
-    --accent-foreground: 42 20% 90%;
+    --accent-foreground: 30 20% 90%;
 
     --destructive: 0 72% 51%;
-    --destructive-foreground: 42 20% 90%;
+    --destructive-foreground: 30 20% 90%;
 
     --border: 220 10% 12%;
     --input: 220 10% 12%;
-    --ring: 42 75% 62%;
+    --ring: 28 88% 48%;
 
     /* Design tokens */
     --void:    220 15%  4%;   /* absolute black */
@@ -47,11 +47,11 @@
     --dim:     220  8% 38%;   /* placeholder / disabled */
     --subtle:  220  8% 52%;   /* secondary text */
     --pale:    220  6% 78%;   /* tertiary text */
-    --snow:    42  20% 92%;   /* primary text */
+    --snow:    30  18% 92%;   /* primary text */
 
-    /* The two accent colors — maximally restrained */
-    --gold:        42  75% 62%;  /* champagne gold */
-    --gold-dim:    42  45% 40%;  /* dark gold */
+    /* Accent principal : orange LV cuir chaud */
+    --gold:        28  88% 48%;  /* #C8620A — orange LV signature */
+    --gold-dim:    25  65% 28%;  /* brun cuir foncé */
     --sage:       158  45% 52%;  /* electric sage / confirmation */
     --sage-dim:   158  35% 28%;  /* dark sage */
     --ember:        8  82% 58%;  /* alert / sold out */
@@ -61,8 +61,8 @@
     --crimson-deep: 0 70% 36%;
     --matcha:    158  45% 52%;
     --matcha-deep: 158 35% 28%;
-    --amber:      42  75% 62%;
-    --cream:      42  20% 92%;
+    --amber:      28  88% 48%;
+    --cream:      30  18% 92%;
     --ink:       220  12%  7%;
     --obsidian:  220  15%  4%;
     --charcoal:  220  10% 11%;
@@ -261,19 +261,19 @@
   }
 
   .text-gold-gradient {
-    background: linear-gradient(135deg, hsl(var(--gold)) 0%, hsl(42 85% 78%) 50%, hsl(var(--gold)) 100%);
+    background: linear-gradient(135deg, hsl(var(--gold)) 0%, hsl(28 90% 68%) 50%, hsl(var(--gold)) 100%);
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
     color: transparent;
   }
   .bg-gold-gradient {
-    background: linear-gradient(135deg, hsl(var(--gold)), hsl(42 85% 78%));
+    background: linear-gradient(135deg, hsl(28 88% 42%), hsl(28 90% 58%));
   }
 
   .text-gold-glow {
     color: hsl(var(--gold));
-    text-shadow: 0 0 30px hsl(var(--gold)/0.4), 0 0 60px hsl(var(--gold)/0.15);
+    text-shadow: 0 0 30px hsl(28 88% 48% / 0.5), 0 0 80px hsl(28 88% 48% / 0.2);
   }
 
   /* Legacy */
@@ -286,7 +286,7 @@
     height: 1px;
   }
   .shadow-gold-glow {
-    box-shadow: 0 0 0 1px hsl(var(--gold)/0.3), 0 10px 40px -10px hsl(var(--gold)/0.3);
+    box-shadow: 0 0 0 1px hsl(28 88% 48% / 0.35), 0 10px 40px -10px hsl(28 88% 48% / 0.4);
   }
 
   /* ─────────────────────────────────────────────
@@ -535,9 +535,9 @@
     transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
   }
   .btn-primary:hover {
-    background: hsl(42 85% 72%);
+    background: hsl(28 90% 58%);
     transform: translateY(-1px);
-    box-shadow: 0 8px 24px hsl(var(--gold)/0.25);
+    box-shadow: 0 8px 32px hsl(28 88% 48% / 0.4);
   }
 
   .btn-ghost {
