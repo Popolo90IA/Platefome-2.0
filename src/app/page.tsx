@@ -369,7 +369,7 @@ export default function HomePage() {
             }}
           >
             <div style={{ position: "relative", width: "100%", height: "100%" }}>
-              <Dish3DScene />
+              <Dish3DScene modelUrl="/models/hero-dish.glb" />
             </div>
             {/* Hint label */}
             <div
