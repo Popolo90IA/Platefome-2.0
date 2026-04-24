@@ -35,13 +35,13 @@ export function Dish3DScene({ modelUrl, posterUrl }: Dish3DSceneProps = {}) {
           auto-rotate
           auto-rotate-delay="500"
           rotation-per-second="10deg"
-          camera-orbit="0deg 50deg auto"
+          camera-orbit="0deg 48deg auto"
           camera-target="0m 0m 0m"
           field-of-view="28deg"
-          shadow-intensity="0.3"
-          shadow-softness="1"
-          exposure="2.2"
-          environment-image="https://modelviewer.dev/shared-assets/environments/neutral.hdr"
+          shadow-intensity="0.8"
+          shadow-softness="0.8"
+          exposure="1.4"
+          environment-image="https://modelviewer.dev/shared-assets/environments/spruit_sunrise_1k_HDR.hdr"
           tone-mapping="aces"
           style={{
             width: "100%",
