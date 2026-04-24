@@ -28,13 +28,27 @@ export function Dish3DScene({ modelUrl, posterUrl }: Dish3DSceneProps = {}) {
       {modelUrl && scriptReady ? (
         /* @ts-expect-error model-viewer custom element */
         <model-viewer
-          src={modelUrl} poster={posterUrl}
+          src={modelUrl}
+          poster={posterUrl}
           alt="מנת השף — תלת-מימד"
-          camera-controls auto-rotate auto-rotate-delay="0"
-          rotation-per-second="15deg" camera-orbit="0deg 70deg 2.5m"
-          shadow-intensity="1.5" shadow-softness="0.9" exposure="1.1"
-          environment-image="neutral"
-          style={{ width: "100%", height: "100%", background: "transparent" }}
+          camera-controls
+          auto-rotate
+          auto-rotate-delay="500"
+          rotation-per-second="10deg"
+          camera-orbit="0deg 55deg auto"
+          camera-target="0m 0m 0m"
+          field-of-view="30deg"
+          shadow-intensity="0"
+          exposure="1.8"
+          environment-image="legacy"
+          tone-mapping="commerce"
+          style={{
+            width: "100%",
+            height: "100%",
+            background: "transparent",
+            "--progress-bar-color": "transparent",
+            "--progress-mask": "transparent",
+          } as React.CSSProperties}
         >
           {/* @ts-expect-error */}
         </model-viewer>
