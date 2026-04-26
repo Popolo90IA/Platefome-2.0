@@ -42,12 +42,24 @@ export default function ResetPasswordPage() {
   // Supabase sends a PKCE / implicit hash token in the URL.
   // onAuthStateChange fires with type "PASSWORD_RECOVERY" once it is consumed.
   useEffect(() => {
+    let timedOut = false;
+
+    const timer = setTimeout(() => {
+      timedOut = true;
+      setLinkError("הקישור אינו תקין או שפג תוקף. אנא בקש קישור חדש.");
+    }, 6000);
+
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
-      if (event === "PASSWORD_RECOVERY") {
+      if (event === "PASSWORD_RECOVERY" && !timedOut) {
+        clearTimeout(timer);
         setReady(true);
       }
     });
-    return () => subscription.unsubscribe();
+
+    return () => {
+      subscription.unsubscribe();
+      clearTimeout(timer);
+    };
   }, [supabase]);
 
   const handleSubmit = async (e: React.FormEvent) => {
