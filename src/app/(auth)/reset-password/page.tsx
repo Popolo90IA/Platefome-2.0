@@ -14,7 +14,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Loader2, ShieldCheck, AlertCircle, CheckCircle2, Eye, EyeOff } from "lucide-react";
+import { Loader2, ShieldCheck, AlertCircle, CheckCircle2, Eye, EyeOff, Link2Off } from "lucide-react";
 
 export default function ResetPasswordPage() {
   const [password, setPassword] = useState("");
@@ -24,8 +24,20 @@ export default function ResetPasswordPage() {
   const [error, setError] = useState<string | null>(null);
   const [done, setDone] = useState(false);
   const [ready, setReady] = useState(false);
+  const [linkError, setLinkError] = useState<string | null>(null);
   const router = useRouter();
   const supabase = createClient();
+
+  // Check for error params in the URL (e.g. expired link)
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const errCode = params.get("error_code");
+    if (errCode === "otp_expired") {
+      setLinkError("הקישור פג תוקף. אנא בקש קישור חדש.");
+    } else if (params.get("error")) {
+      setLinkError("הקישור אינו תקין. אנא בקש קישור חדש.");
+    }
+  }, []);
 
   // Supabase sends a PKCE / implicit hash token in the URL.
   // onAuthStateChange fires with type "PASSWORD_RECOVERY" once it is consumed.
@@ -85,6 +97,37 @@ export default function ResetPasswordPage() {
         </CardHeader>
         <CardContent className="text-center">
           <Loader2 className="h-5 w-5 animate-spin mx-auto text-muted-foreground" />
+        </CardContent>
+      </Card>
+    );
+  }
+
+  /* ── Expired / invalid link state ── */
+  if (linkError) {
+    return (
+      <Card className="shadow-premium border-border/60 backdrop-blur-sm bg-card/95">
+        <CardHeader className="text-center pb-6">
+          <div className="flex justify-center mb-4">
+            <div className="h-14 w-14 rounded-2xl bg-destructive/15 border border-destructive/30 flex items-center justify-center">
+              <Link2Off className="h-7 w-7 text-destructive" />
+            </div>
+          </div>
+          <CardTitle className="font-serif-display text-2xl">קישור לא תקין</CardTitle>
+          <CardDescription className="pt-1">{linkError}</CardDescription>
+        </CardHeader>
+        <CardContent className="text-center space-y-4">
+          <Link
+            href="/forgot-password"
+            className="inline-flex items-center justify-center w-full h-11 rounded-xl bg-gold-gradient hover:opacity-90 shadow-gold-glow text-white font-medium transition-opacity"
+          >
+            שלח קישור חדש
+          </Link>
+          <Link
+            href="/login"
+            className="block text-sm text-muted-foreground hover:text-foreground transition-colors"
+          >
+            חזור להתחברות
+          </Link>
         </CardContent>
       </Card>
     );
