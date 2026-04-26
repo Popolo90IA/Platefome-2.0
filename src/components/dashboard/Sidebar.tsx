@@ -12,18 +12,17 @@ import {
   QrCode,
   Settings,
   LogOut,
-  UtensilsCrossed,
   BarChart3,
   Shield,
 } from "lucide-react";
 
 const navItems = [
-  { href: "/dashboard", label: "בית", icon: LayoutDashboard },
-  { href: "/dashboard/dishes", label: "מנות", icon: Utensils },
-  { href: "/dashboard/categories", label: "קטגוריות", icon: FolderTree },
-  { href: "/dashboard/analytics", label: "סטטיסטיקות", icon: BarChart3 },
-  { href: "/dashboard/qrcode", label: "QR קוד", icon: QrCode },
-  { href: "/dashboard/settings", label: "הגדרות", icon: Settings },
+  { href: "/dashboard", label: "בית", labelEn: "Home", icon: LayoutDashboard },
+  { href: "/dashboard/dishes", label: "מנות", labelEn: "Dishes", icon: Utensils },
+  { href: "/dashboard/categories", label: "קטגוריות", labelEn: "Categories", icon: FolderTree },
+  { href: "/dashboard/analytics", label: "סטטיסטיקות", labelEn: "Analytics", icon: BarChart3 },
+  { href: "/dashboard/qrcode", label: "QR קוד", labelEn: "QR Code", icon: QrCode },
+  { href: "/dashboard/settings", label: "הגדרות", labelEn: "Settings", icon: Settings },
 ];
 
 export function Sidebar() {
@@ -34,9 +33,7 @@ export function Sidebar() {
 
   useEffect(() => {
     const checkRole = async () => {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
+      const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
       const { data } = await supabase
         .from("user_roles")
@@ -55,59 +52,149 @@ export function Sidebar() {
   };
 
   return (
-    <aside className="w-64 bg-card border-l border-border/60 h-screen sticky top-0 flex flex-col">
-      <div className="p-6 border-b border-border/60">
-        <Link href="/dashboard" className="flex items-center gap-2.5 group">
-          <div className="relative h-9 w-9 rounded-lg bg-gold-gradient flex items-center justify-center shadow-gold-glow group-hover:scale-105 transition-transform">
-            <UtensilsCrossed className="h-5 w-5 text-white" />
+    <aside
+      className="w-56 h-screen sticky top-0 flex flex-col overflow-hidden scrollbar-none"
+      style={{
+        background: "hsl(var(--abyss))",
+        borderLeft: "1px solid hsl(var(--line))",
+      }}
+    >
+      {/* Wordmark */}
+      <div
+        className="px-6 pt-8 pb-6"
+        style={{ borderBottom: "1px solid hsl(var(--line))" }}
+      >
+        <Link href="/dashboard" className="block group">
+          <div
+            className="font-display text-xl tracking-tight leading-none"
+            style={{ color: "hsl(var(--cream))", letterSpacing: "-0.04em", fontWeight: 300 }}
+          >
+            Maison
           </div>
-          <span className="font-serif-display font-bold text-lg">
-            פלטפורמה
-          </span>
+          <div
+            className="font-mono text-[9px] tracking-[0.22em] uppercase mt-1.5"
+            style={{ color: "hsl(var(--subtle))" }}
+          >
+            Restaurant OS
+          </div>
         </Link>
       </div>
 
-      <nav className="flex-1 p-3 space-y-1">
-        {navItems.map((item) => {
-          const Icon = item.icon;
-          const isActive = pathname === item.href;
-          return (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={cn(
-                "relative flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium transition-all",
-                isActive
-                  ? "bg-gold-gradient text-white shadow-gold-glow"
-                  : "text-foreground/70 hover:bg-secondary hover:text-foreground"
-              )}
+      {/* Navigation */}
+      <nav className="flex-1 px-2 py-4 overflow-y-auto scrollbar-none">
+        {/* Section label */}
+        <div
+          className="px-3 mb-3 font-mono text-[9px] tracking-[0.2em] uppercase"
+          style={{ color: "hsl(var(--dim))" }}
+        >
+          ניהול
+        </div>
+
+        <div className="space-y-px">
+          {navItems.map((item) => {
+            const Icon = item.icon;
+            const isActive =
+              item.href === "/dashboard"
+                ? pathname === "/dashboard"
+                : pathname.startsWith(item.href);
+
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={cn(
+                  "group flex items-center gap-3 px-3 py-2 rounded-sm text-sm transition-all duration-150 relative",
+                  isActive
+                    ? "text-[hsl(var(--cream))]"
+                    : "text-[hsl(var(--subtle))] hover:text-[hsl(var(--fog))]"
+                )}
+                style={{
+                  background: isActive ? "hsl(var(--surface))" : "transparent",
+                }}
+              >
+                {/* Active left border */}
+                {isActive && (
+                  <div
+                    className="absolute right-0 top-1/2 -translate-y-1/2 w-px h-4"
+                    style={{ background: "hsl(var(--cream))" }}
+                  />
+                )}
+
+                <Icon
+                  className={cn(
+                    "h-[15px] w-[15px] flex-shrink-0 transition-colors duration-150",
+                    isActive
+                      ? "text-[hsl(var(--cream))]"
+                      : "text-[hsl(var(--dim))] group-hover:text-[hsl(var(--fog))]"
+                  )}
+                  strokeWidth={isActive ? 1.75 : 1.5}
+                />
+
+                <span className="font-sans text-[13px] font-normal flex-1">
+                  {item.label}
+                </span>
+
+                {/* Hover state bg */}
+                {!isActive && (
+                  <div
+                    className="absolute inset-0 rounded-sm opacity-0 group-hover:opacity-100 transition-opacity duration-150 pointer-events-none"
+                    style={{ background: "hsl(var(--deep))" }}
+                  />
+                )}
+              </Link>
+            );
+          })}
+        </div>
+
+        {/* Admin section */}
+        {isAdmin && (
+          <>
+            <div
+              className="px-3 mt-6 mb-3 font-mono text-[9px] tracking-[0.2em] uppercase"
+              style={{ color: "hsl(var(--dim))" }}
             >
-              <Icon className={cn("h-5 w-5", isActive && "drop-shadow")} />
-              <span>{item.label}</span>
-              {isActive && (
-                <div className="absolute left-0 top-1/2 -translate-y-1/2 h-6 w-0.5 bg-white/60 rounded-full" />
-              )}
+              Admin
+            </div>
+            <Link
+              href="/admin"
+              className="group flex items-center gap-3 px-3 py-2 rounded-sm text-sm transition-all duration-150 relative"
+              style={{ color: "hsl(var(--subtle))" }}
+            >
+              <Shield
+                className="h-[15px] w-[15px] flex-shrink-0 text-[hsl(var(--dim))] group-hover:text-[hsl(var(--fog))] transition-colors"
+                strokeWidth={1.5}
+              />
+              <span className="font-sans text-[13px]">פאנל מנהל</span>
+              <div
+                className="absolute inset-0 rounded-sm opacity-0 group-hover:opacity-100 transition-opacity duration-150 pointer-events-none"
+                style={{ background: "hsl(var(--deep))" }}
+              />
             </Link>
-          );
-        })}
+          </>
+        )}
       </nav>
 
-      <div className="p-3 border-t border-border/60 space-y-1">
-        {isAdmin && (
-          <Link
-            href="/admin"
-            className="w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium text-[hsl(var(--gold-dark))] bg-[hsl(var(--gold))]/5 hover:bg-[hsl(var(--gold))]/15 transition-colors border border-[hsl(var(--gold))]/20"
-          >
-            <Shield className="h-5 w-5" />
-            פאנל מנהל
-          </Link>
-        )}
+      {/* Logout */}
+      <div
+        className="px-2 py-4"
+        style={{ borderTop: "1px solid hsl(var(--line))" }}
+      >
         <button
           onClick={handleLogout}
-          className="w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium text-destructive/80 hover:bg-destructive/10 hover:text-destructive transition-colors"
+          className="group w-full flex items-center gap-3 px-3 py-2 rounded-sm text-sm transition-all duration-150 relative"
+          style={{ color: "hsl(var(--dim))" }}
         >
-          <LogOut className="h-5 w-5" />
-          התנתקות
+          <LogOut
+            className="h-[15px] w-[15px] flex-shrink-0 group-hover:text-[hsl(var(--ember))] transition-colors"
+            strokeWidth={1.5}
+          />
+          <span className="font-sans text-[13px] group-hover:text-[hsl(var(--ember))] transition-colors">
+            התנתקות
+          </span>
+          <div
+            className="absolute inset-0 rounded-sm opacity-0 group-hover:opacity-100 transition-opacity duration-150 pointer-events-none"
+            style={{ background: "hsl(var(--ember) / 0.06)" }}
+          />
         </button>
       </div>
     </aside>

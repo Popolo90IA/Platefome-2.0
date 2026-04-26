@@ -4,12 +4,13 @@ import Link from "next/link";
 import { useAuth } from "@/hooks/useAuth";
 import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
-import { Eye, Shield } from "lucide-react";
+import { Eye, ChevronDown } from "lucide-react";
 
 export function Header() {
   const { user } = useAuth();
   const [role, setRole] = useState<string | null>(null);
   const [slug, setSlug] = useState<string | null>(null);
+  const [scrolled, setScrolled] = useState(false);
   const supabase = createClient();
 
   useEffect(() => {
@@ -17,11 +18,7 @@ export function Header() {
       if (!user) return;
       const [roleRes, restoRes] = await Promise.all([
         supabase.from("user_roles").select("role").eq("user_id", user.id).single(),
-        supabase
-          .from("restaurants")
-          .select("slug")
-          .eq("user_id", user.id)
-          .maybeSingle(),
+        supabase.from("restaurants").select("slug").eq("user_id", user.id).maybeSingle(),
       ]);
       setRole(roleRes.data?.role ?? null);
       setSlug(restoRes.data?.slug ?? null);
@@ -29,41 +26,100 @@ export function Header() {
     fetchData();
   }, [user, supabase]);
 
+  useEffect(() => {
+    const el = document.querySelector("main");
+    if (!el) return;
+    const onScroll = () => setScrolled(el.scrollTop > 12);
+    el.addEventListener("scroll", onScroll, { passive: true });
+    return () => el.removeEventListener("scroll", onScroll);
+  }, []);
+
   if (!user) return null;
 
   const initial = user.email?.charAt(0).toUpperCase() ?? "?";
 
   return (
-    <header className="bg-card/80 backdrop-blur-xl border-b border-border/60 px-6 py-3 flex items-center justify-between gap-4 sticky top-0 z-40">
-      {/* Client preview button */}
-      {slug ? (
-        <Link
-          href={`/menu/${slug}`}
-          target="_blank"
-          className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-lg bg-[hsl(var(--gold))]/10 hover:bg-[hsl(var(--gold))]/20 border border-[hsl(var(--gold))]/30 text-sm font-medium text-[hsl(var(--gold-dark))] transition-all"
-        >
-          <Eye className="h-4 w-4" />
-          <span>תצוגת לקוח</span>
-        </Link>
-      ) : (
-        <div />
-      )}
-
+    <header
+      className="sticky top-0 z-40 px-8 flex items-center justify-between h-14 transition-all duration-200"
+      style={{
+        background: scrolled
+          ? "hsl(var(--void) / 0.96)"
+          : "hsl(var(--void) / 0.0)",
+        backdropFilter: scrolled ? "blur(20px)" : "none",
+        borderBottom: scrolled
+          ? "1px solid hsl(var(--line))"
+          : "1px solid transparent",
+      }}
+    >
+      {/* Left — breadcrumb / page preview */}
       <div className="flex items-center gap-4">
+        {slug && (
+          <Link
+            href={`/menu/${slug}`}
+            target="_blank"
+            className="group flex items-center gap-1.5 text-[13px] transition-colors duration-150"
+            style={{ color: "hsl(var(--subtle))" }}
+          >
+            <Eye
+              className="h-3.5 w-3.5 group-hover:text-[hsl(var(--fog))] transition-colors"
+              strokeWidth={1.5}
+            />
+            <span className="group-hover:text-[hsl(var(--fog))] transition-colors">
+              תצוגת לקוח
+            </span>
+          </Link>
+        )}
+      </div>
+
+      {/* Right — user */}
+      <div className="flex items-center gap-5">
+        {/* Role pill */}
         {role && (
-          <span className="inline-flex items-center gap-1.5 text-xs bg-[hsl(var(--gold))]/10 text-[hsl(var(--gold-dark))] px-3 py-1.5 rounded-full font-medium border border-[hsl(var(--gold))]/20">
-            <Shield className="h-3 w-3" />
-            {role === "super_admin" ? "מנהל מערכת" : "בעל מסעדה"}
+          <span
+            className="hidden sm:block font-mono text-[10px] tracking-[0.15em] uppercase"
+            style={{ color: "hsl(var(--dim))" }}
+          >
+            {role === "super_admin" ? "Admin" : "Owner"}
           </span>
         )}
-        <div className="flex items-center gap-3">
-          <span className="text-sm text-foreground/80 hidden sm:inline" dir="ltr">
-            {user.email}
-          </span>
-          <div className="h-9 w-9 rounded-full bg-gold-gradient text-white flex items-center justify-center font-semibold shadow-gold-glow">
+
+        {/* Separator */}
+        <div
+          className="hidden sm:block h-4 w-px"
+          style={{ background: "hsl(var(--line))" }}
+        />
+
+        {/* User chip */}
+        <button
+          className="group flex items-center gap-2.5 transition-opacity duration-150 hover:opacity-80"
+        >
+          {/* Avatar */}
+          <div
+            className="h-7 w-7 rounded-sm flex items-center justify-center text-[11px] font-medium flex-shrink-0"
+            style={{
+              background: "hsl(var(--surface))",
+              border: "1px solid hsl(var(--line))",
+              color: "hsl(var(--fog))",
+            }}
+          >
             {initial}
           </div>
-        </div>
+
+          {/* Email */}
+          <span
+            className="hidden md:block font-sans text-[12px]"
+            style={{ color: "hsl(var(--subtle))" }}
+            dir="ltr"
+          >
+            {user.email}
+          </span>
+
+          <ChevronDown
+            className="h-3 w-3 hidden md:block"
+            style={{ color: "hsl(var(--dim))" }}
+            strokeWidth={1.5}
+          />
+        </button>
       </div>
     </header>
   );
