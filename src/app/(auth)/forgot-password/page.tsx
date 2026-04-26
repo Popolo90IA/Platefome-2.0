@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -14,14 +13,13 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Loader2, LogIn, AlertCircle } from "lucide-react";
+import { Loader2, KeyRound, AlertCircle, CheckCircle2, ArrowLeft } from "lucide-react";
 
-export default function LoginPage() {
+export default function ForgotPasswordPage() {
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const router = useRouter();
+  const [sent, setSent] = useState(false);
   const supabase = createClient();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -29,9 +27,8 @@ export default function LoginPage() {
     setLoading(true);
     setError(null);
 
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: `${window.location.origin}/reset-password`,
     });
 
     if (error) {
@@ -40,34 +37,58 @@ export default function LoginPage() {
       return;
     }
 
-    const { data: userData } = await supabase.auth.getUser();
-    if (userData.user) {
-      const { data: roleData } = await supabase
-        .from("user_roles")
-        .select("role")
-        .eq("user_id", userData.user.id)
-        .single();
-
-      if (roleData?.role === "super_admin") {
-        router.push("/admin");
-      } else {
-        router.push("/dashboard");
-      }
-      router.refresh();
-    }
+    setSent(true);
+    setLoading(false);
   };
+
+  if (sent) {
+    return (
+      <Card className="shadow-premium border-border/60 backdrop-blur-sm bg-card/95">
+        <CardHeader className="text-center pb-6">
+          <div className="flex justify-center mb-4">
+            <div className="h-14 w-14 rounded-2xl bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center">
+              <CheckCircle2 className="h-7 w-7 text-emerald-400" />
+            </div>
+          </div>
+          <CardTitle className="font-serif-display text-2xl">נשלח!</CardTitle>
+          <CardDescription className="pt-1">
+            בדוק את תיבת הדואר שלך
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="text-center space-y-4">
+          <p className="text-sm text-muted-foreground leading-relaxed">
+            שלחנו לך קישור לאיפוס הסיסמה לכתובת{" "}
+            <span className="font-medium text-foreground">{email}</span>.
+            <br />
+            הקישור יפוג תוך שעה.
+          </p>
+          <p className="text-xs text-muted-foreground">
+            לא קיבלת? בדוק בתיקיית הספאם.
+          </p>
+          <div className="divider-gold w-20 mx-auto my-2" />
+          <Link
+            href="/login"
+            className="inline-flex items-center gap-2 text-sm font-medium text-[hsl(var(--gold-dark))] hover:text-[hsl(var(--gold))] transition-colors"
+          >
+            <ArrowLeft className="h-3.5 w-3.5" />
+            חזור להתחברות
+          </Link>
+        </CardContent>
+      </Card>
+    );
+  }
 
   return (
     <Card className="shadow-premium border-border/60 backdrop-blur-sm bg-card/95">
       <CardHeader className="text-center pb-6">
         <div className="flex justify-center mb-4">
           <div className="h-14 w-14 rounded-2xl bg-gold-gradient flex items-center justify-center shadow-gold-glow">
-            <LogIn className="h-7 w-7 text-white" />
+            <KeyRound className="h-7 w-7 text-white" />
           </div>
         </div>
-        <CardTitle className="font-serif-display text-3xl">ברוך שובך</CardTitle>
+        <CardTitle className="font-serif-display text-3xl">שכחת סיסמה?</CardTitle>
         <CardDescription className="pt-1">
-          התחבר כדי להמשיך לנהל את המסעדה שלך
+          הכנס את האימייל שלך ונשלח לך קישור לאיפוס
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -82,26 +103,7 @@ export default function LoginPage() {
               onChange={(e) => setEmail(e.target.value)}
               required
               dir="ltr"
-            />
-          </div>
-          <div className="space-y-2">
-            <div className="flex items-center justify-between">
-              <Label htmlFor="password">סיסמה</Label>
-              <Link
-                href="/forgot-password"
-                className="text-xs text-muted-foreground hover:text-[hsl(var(--gold))] transition-colors"
-              >
-                שכחת סיסמה?
-              </Link>
-            </div>
-            <Input
-              id="password"
-              type="password"
-              placeholder="••••••••"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              dir="ltr"
+              autoFocus
             />
           </div>
 
@@ -120,19 +122,19 @@ export default function LoginPage() {
             {loading ? (
               <Loader2 className="h-4 w-4 animate-spin" />
             ) : (
-              "התחבר"
+              "שלח קישור לאיפוס"
             )}
           </Button>
 
           <div className="divider-gold w-20 mx-auto my-2" />
 
           <p className="text-center text-sm text-muted-foreground">
-            אין לך חשבון?{" "}
+            נזכרת?{" "}
             <Link
-              href="/signup"
+              href="/login"
               className="font-medium text-[hsl(var(--gold-dark))] hover:text-[hsl(var(--gold))] transition-colors"
             >
-              הירשם עכשיו ←
+              חזור להתחברות ←
             </Link>
           </p>
         </form>
