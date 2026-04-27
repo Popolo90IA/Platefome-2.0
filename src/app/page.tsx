@@ -214,7 +214,7 @@ export default function HomePage() {
           {/* 3D viewer */}
           <div style={{ flex: "0 0 50%", maxWidth: "50%", position: "relative", display: "flex", flexDirection: "column", alignItems: "center" }} className="hero-3d">
             <div className="fade-b" style={{ position: "relative", width: "100%", height: 560, borderRadius: 8, overflow: "hidden", background: "radial-gradient(ellipse at 50% 40%,hsl(36,28%,92%,.07) 0%,transparent 60%)" }}>
-              <Dish3DScene />
+              <Dish3DScene modelUrl="/models/hero-dish.glb" />
             </div>
             <div style={{ display: "flex", alignItems: "center", gap: 8, marginTop: 16, padding: "7px 18px", background: "hsl(220,10%,6%,.9)", border: "1px solid hsl(36,28%,92%,.15)", borderRadius: 99, backdropFilter: "blur(16px)" }}>
               <span style={{ width: 5, height: 5, borderRadius: "50%", background: "hsl(var(--gold))", boxShadow: "0 0 8px hsl(36,28%,92%,.8)" }} />
