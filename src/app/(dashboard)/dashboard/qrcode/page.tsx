@@ -2,10 +2,10 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import QRCode from "qrcode";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { QRCode } from "@/components/ui/qr-code";
 import {
   Download,
   Copy,
@@ -21,7 +21,7 @@ export default function QRCodePage() {
   const [restaurant, setRestaurant] = useState<Restaurant | null>(null);
   const [loading, setLoading] = useState(true);
   const [copied, setCopied] = useState(false);
-  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const svgRef = useRef<SVGSVGElement>(null);
   const supabase = createClient();
 
   useEffect(() => {
@@ -47,23 +47,23 @@ export default function QRCodePage() {
     ? `${typeof window !== "undefined" ? window.location.origin : ""}/menu/${restaurant.slug}`
     : "";
 
-  useEffect(() => {
-    if (!menuUrl || !canvasRef.current) return;
-    QRCode.toCanvas(canvasRef.current, menuUrl, {
-      width: 340,
-      margin: 2,
-      color: { dark: "#1a1510", light: "#FFFFFF" },
-      errorCorrectionLevel: "H",
-    });
-  }, [menuUrl]);
-
-  const handleDownload = async () => {
-    if (!canvasRef.current) return;
-    const url = canvasRef.current.toDataURL("image/png");
-    const link = document.createElement("a");
-    link.download = `qr-${restaurant?.slug ?? "menu"}.png`;
-    link.href = url;
-    link.click();
+  const handleDownload = () => {
+    if (!svgRef.current) return;
+    const svgData = new XMLSerializer().serializeToString(svgRef.current);
+    const canvas = document.createElement("canvas");
+    canvas.width = 340;
+    canvas.height = 340;
+    const ctx = canvas.getContext("2d");
+    const img = new Image();
+    img.onload = () => {
+      ctx?.drawImage(img, 0, 0, 340, 340);
+      const url = canvas.toDataURL("image/png");
+      const link = document.createElement("a");
+      link.download = `qr-${restaurant?.slug ?? "menu"}.png`;
+      link.href = url;
+      link.click();
+    };
+    img.src = "data:image/svg+xml;base64," + btoa(unescape(encodeURIComponent(svgData)));
   };
 
   const handleCopy = () => {
@@ -127,7 +127,16 @@ export default function QRCodePage() {
           <div className="relative">
             <div className="absolute inset-0 bg-gold-gradient blur-2xl opacity-20 scale-90" />
             <div className="relative bg-white p-5 rounded-2xl shadow-premium ring-4 ring-[hsl(var(--gold))]/20">
-              <canvas ref={canvasRef} />
+              {menuUrl && (
+                <QRCode
+                  ref={svgRef}
+                  value={menuUrl}
+                  size={268}
+                  fgColor="#1a1510"
+                  bgColor="#ffffff"
+                  errorCorrectionLevel="H"
+                />
+              )}
             </div>
           </div>
 
