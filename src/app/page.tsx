@@ -226,7 +226,7 @@ export default function HomePage() {
       </section>
 
       {/* ═══ MARQUEE ═══ */}
-      <div style={{ borderTop: "1px solid hsl(var(--line))", borderBottom: "1px solid hsl(var(--line))", background: "linear-gradient(180deg,hsl(var(--abyss)) 0%,hsl(var(--void)) 100%)", padding: "18px 0", overflow: "hidden" }}>
+      <div className="reveal" style={{ borderTop: "1px solid hsl(var(--line))", borderBottom: "1px solid hsl(var(--line))", background: "linear-gradient(180deg,hsl(var(--abyss)) 0%,hsl(var(--void)) 100%)", padding: "18px 0", overflow: "hidden" }}>
         <div style={{ overflow: "hidden", WebkitMaskImage: "linear-gradient(90deg,transparent,black 10%,black 90%,transparent)", maskImage: "linear-gradient(90deg,transparent,black 10%,black 90%,transparent)" }}>
           <div style={{ display: "flex", width: "max-content", animation: "marqueeScroll 55s linear infinite" }}>
             {[...Array(2)].flatMap(() => [
@@ -251,7 +251,7 @@ export default function HomePage() {
             { num: "<1s", label: "זמן פתיחה", sub: "ללא אפליקציה", color: "hsl(var(--gold))" },
             { num: "100%", label: "תואם AR", sub: "iOS ו-Android", color: "hsl(var(--sage))" },
           ].map((s, i) => (
-            <div key={i} style={{ padding: "36px 28px", textAlign: "center", background: "hsl(var(--abyss))", transition: "background .2s", cursor: "default" }}
+            <div key={i} className="reveal" data-delay={String(i * 100)} style={{ padding: "36px 28px", textAlign: "center", background: "hsl(var(--abyss))", transition: "background .2s", cursor: "default" }}
               onMouseOver={e => (e.currentTarget.style.background = "hsl(var(--deep))")}
               onMouseOut={e => (e.currentTarget.style.background = "hsl(var(--abyss))")}>
               <div style={{ fontFamily: "'Cormorant Garamond',serif", fontWeight: 300, fontSize: "3.25rem", letterSpacing: "-.06em", color: s.color, lineHeight: 1, marginBottom: 10 }}>{s.num}</div>
@@ -267,7 +267,7 @@ export default function HomePage() {
         <div aria-hidden style={{ position: "absolute", top: "20%", right: "5%", width: 600, height: 600, background: "radial-gradient(circle,hsl(36,28%,92%,.04) 0%,transparent 65%)", filter: "blur(80px)", pointerEvents: "none" }} />
         <div style={{ maxWidth: 1320, margin: "0 auto", padding: "0 56px", direction: "rtl" }}>
           <div style={{ marginBottom: 80 }}>
-            <div style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 10 }}>
+            <div className="reveal" style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 10 }}>
               <span className="eyebrow">השיטה</span>
               <div style={{ flex: 1, maxWidth: 80, height: 1, background: "hsl(var(--line))" }} />
             </div>
@@ -301,7 +301,7 @@ export default function HomePage() {
         <div style={{ maxWidth: 1320, margin: "0 auto", padding: "0 56px", direction: "rtl" }}>
           <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", flexWrap: "wrap", gap: 32, marginBottom: 64 }}>
             <div>
-              <div style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 18 }}>
+              <div className="reveal" style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 18 }}>
                 <span className="eyebrow">הגלריה</span>
                 <div style={{ flex: 1, maxWidth: 64, height: 1, background: "hsl(var(--line))" }} />
               </div>
@@ -309,7 +309,7 @@ export default function HomePage() {
                 כל מנה,<br /><span style={{ fontStyle: "italic", color: "hsl(36,18%,72%)" }}>בשלושה ממדים</span>
               </h2>
             </div>
-            <p style={{ fontSize: ".9375rem", color: "hsl(var(--subtle))", maxWidth: 300, lineHeight: 1.75 }}>הלקוחות רואים את המנה לפני שמזמינים. AR תואם iPhone ו-Android, ללא אפליקציה.</p>
+            <p className="reveal" data-delay="150" style={{ fontSize: ".9375rem", color: "hsl(var(--subtle))", maxWidth: 300, lineHeight: 1.75 }}>הלקוחות רואים את המנה לפני שמזמינים. AR תואם iPhone ו-Android, ללא אפליקציה.</p>
           </div>
 
           <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 14 }} className="gallery-grid">
@@ -351,7 +351,7 @@ export default function HomePage() {
         <div style={{ maxWidth: 1320, margin: "0 auto", padding: "0 56px", direction: "rtl" }}>
           <div style={{ marginBottom: 80, display: "flex", alignItems: "flex-end", justifyContent: "space-between", flexWrap: "wrap", gap: 28 }}>
             <div>
-              <div style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 18 }}>
+              <div className="reveal" style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 18 }}>
                 <span className="eyebrow">מחירים</span>
                 <div style={{ flex: 1, maxWidth: 64, height: 1, background: "hsl(var(--line))" }} />
               </div>
@@ -389,7 +389,7 @@ export default function HomePage() {
             </div>
 
             {/* Popular */}
-            <div className="reveal" style={{ borderRadius: 4, overflow: "hidden", border: "1px solid hsl(36,28%,92%,.25)", animation: "pricingPulse 4.5s ease-in-out infinite", background: "hsl(var(--abyss))" }}>
+            <div className="reveal" data-delay="120" style={{ borderRadius: 4, overflow: "hidden", border: "1px solid hsl(36,28%,92%,.25)", animation: "pricingPulse 4.5s ease-in-out 1.5s infinite", background: "hsl(var(--abyss))" }}>
               <div style={{ padding: "32px 32px 28px", borderBottom: "1px solid hsl(36,28%,92%,.1)" }}>
                 <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
                   <span className="eyebrow-gold">II · המנה העיקרית</span>
@@ -443,7 +443,7 @@ export default function HomePage() {
       <footer style={{ borderTop: "1px solid hsl(var(--line))", background: "hsl(var(--abyss))", padding: "60px 0 36px" }}>
         <div style={{ maxWidth: 1320, margin: "0 auto", padding: "0 56px", direction: "rtl" }}>
           <div style={{ display: "flex", justifyContent: "space-between", flexWrap: "wrap", gap: 48, marginBottom: 56 }}>
-            <div style={{ maxWidth: 260 }}>
+            <div className="reveal" style={{ maxWidth: 260 }}>
               <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 16 }}>
                 <div style={{ width: 30, height: 30, border: "1px solid hsl(36,28%,92%,.35)", borderRadius: 5, background: "linear-gradient(135deg,hsl(36,28%,92%,.1),hsl(36,28%,92%,.04))", display: "flex", alignItems: "center", justifyContent: "center" }}>
                   <span style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: "1.05rem", color: "hsl(var(--gold))", fontStyle: "italic" }}>פ</span>
@@ -452,7 +452,7 @@ export default function HomePage() {
               </div>
               <p style={{ fontSize: ".875rem", lineHeight: 1.7, color: "hsl(var(--subtle))" }}>פלטפורמת תפריטים תלת-מימד/AR למסעדות. תל אביב · פריז.</p>
             </div>
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 48 }} className="footer-links">
+            <div className="reveal footer-links" data-delay="150" style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 48 }}>
               {[
                 { title: "מוצר", links: [["#features","תכונות"],["#pricing","מחירים"]] },
                 { title: "חברה", links: [["#","אודות"],["#","צור קשר"]] },
