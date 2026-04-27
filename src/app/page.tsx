@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import dynamic from "next/dynamic";
 
@@ -129,9 +129,18 @@ const IconExternal = () => (
   </svg>
 );
 
+const MODELS = [
+  { url: "/models/hero-dish.glb", label: "פסטה שף" },
+  { url: "/models/pizza.glb",     label: "פיצה" },
+  { url: "/models/tuna.glb",      label: "טונה" },
+];
+
 export default function HomePage() {
   useReveal();
   useHeaderScroll();
+  const [modelIdx, setModelIdx] = useState(0);
+  const prev = () => setModelIdx(i => (i - 1 + MODELS.length) % MODELS.length);
+  const next = () => setModelIdx(i => (i + 1) % MODELS.length);
 
   return (
     <div style={{ background: "hsl(var(--void))", color: "hsl(var(--cream))", overflowX: "hidden", minHeight: "100vh" }}>
@@ -211,15 +220,41 @@ export default function HomePage() {
             </div>
           </div>
 
-          {/* 3D viewer */}
+          {/* 3D viewer — carousel */}
           <div style={{ flex: "0 0 50%", maxWidth: "50%", position: "relative", display: "flex", flexDirection: "column", alignItems: "center" }} className="hero-3d">
             <div className="fade-b" style={{ width: "100%", position: "relative" }}>
-              <HeroCanvas />
+              <HeroCanvas modelUrl={MODELS[modelIdx].url} />
+
+              {/* Flèche gauche */}
+              <button onClick={prev} aria-label="modèle précédent" style={{ position: "absolute", left: 12, top: "50%", transform: "translateY(-50%)", zIndex: 10, width: 40, height: 40, borderRadius: "50%", background: "hsl(220,10%,6%,.85)", border: "1px solid hsl(36,28%,92%,.18)", backdropFilter: "blur(12px)", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", transition: "border-color .2s,background .2s" }}
+                onMouseOver={e => { (e.currentTarget as HTMLButtonElement).style.borderColor = "hsl(36,28%,92%,.5)"; (e.currentTarget as HTMLButtonElement).style.background = "hsl(220,10%,10%,.95)"; }}
+                onMouseOut={e => { (e.currentTarget as HTMLButtonElement).style.borderColor = "hsl(36,28%,92%,.18)"; (e.currentTarget as HTMLButtonElement).style.background = "hsl(220,10%,6%,.85)"; }}>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="hsl(36,28%,92%)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+              </button>
+
+              {/* Flèche droite */}
+              <button onClick={next} aria-label="modèle suivant" style={{ position: "absolute", right: 12, top: "50%", transform: "translateY(-50%)", zIndex: 10, width: 40, height: 40, borderRadius: "50%", background: "hsl(220,10%,6%,.85)", border: "1px solid hsl(36,28%,92%,.18)", backdropFilter: "blur(12px)", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", transition: "border-color .2s,background .2s" }}
+                onMouseOver={e => { (e.currentTarget as HTMLButtonElement).style.borderColor = "hsl(36,28%,92%,.5)"; (e.currentTarget as HTMLButtonElement).style.background = "hsl(220,10%,10%,.95)"; }}
+                onMouseOut={e => { (e.currentTarget as HTMLButtonElement).style.borderColor = "hsl(36,28%,92%,.18)"; (e.currentTarget as HTMLButtonElement).style.background = "hsl(220,10%,6%,.85)"; }}>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="hsl(36,28%,92%)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+              </button>
+
+              {/* Dots */}
+              <div style={{ position: "absolute", bottom: 16, left: "50%", transform: "translateX(-50%)", display: "flex", gap: 8, zIndex: 10 }}>
+                {MODELS.map((_, i) => (
+                  <button key={i} onClick={() => setModelIdx(i)} aria-label={`modèle ${i + 1}`} style={{ width: i === modelIdx ? 20 : 6, height: 6, borderRadius: 99, background: i === modelIdx ? "hsl(36,28%,92%)" : "hsl(36,28%,92%,.3)", border: "none", cursor: "pointer", transition: "all .3s cubic-bezier(.16,1,.3,1)", padding: 0 }} />
+                ))}
+              </div>
             </div>
-            {/* Drag hint — identique au Design System */}
-            <div style={{ display: "flex", alignItems: "center", gap: 8, marginTop: 16, padding: "7px 18px", background: "hsl(220,10%,6%,.9)", border: "1px solid hsl(36,28%,92%,.15)", borderRadius: 99, backdropFilter: "blur(16px)" }}>
-              <span style={{ width: 5, height: 5, borderRadius: "50%", background: "hsl(var(--gold))", boxShadow: "0 0 8px hsl(36,28%,92%,.8)" }} />
-              <span style={{ fontFamily: "'DM Mono',monospace", fontSize: ".5625rem", letterSpacing: ".14em", color: "hsl(var(--subtle))", textTransform: "uppercase" }}>גרור לסיבוב · Drag to rotate</span>
+
+            {/* Label + drag hint */}
+            <div style={{ display: "flex", alignItems: "center", gap: 16, marginTop: 16 }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 8, padding: "7px 18px", background: "hsl(220,10%,6%,.9)", border: "1px solid hsl(36,28%,92%,.15)", borderRadius: 99, backdropFilter: "blur(16px)" }}>
+                <span style={{ fontFamily: "'Noto Serif Hebrew',serif", fontSize: ".8rem", color: "hsl(var(--cream))", fontStyle: "italic" }}>{MODELS[modelIdx].label}</span>
+                <span style={{ width: 1, height: 12, background: "hsl(36,28%,92%,.2)" }} />
+                <span style={{ width: 5, height: 5, borderRadius: "50%", background: "hsl(var(--gold))", boxShadow: "0 0 8px hsl(36,28%,92%,.8)", flexShrink: 0 }} />
+                <span style={{ fontFamily: "'DM Mono',monospace", fontSize: ".5625rem", letterSpacing: ".14em", color: "hsl(var(--subtle))", textTransform: "uppercase" }}>גרור לסיבוב</span>
+              </div>
             </div>
           </div>
         </div>

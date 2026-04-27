@@ -5,23 +5,24 @@ import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 
-export function HeroCanvas() {
+interface HeroCanvasProps {
+  modelUrl: string;
+}
+
+export function HeroCanvas({ modelUrl }: HeroCanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const wrapRef = useRef<HTMLDivElement>(null);
-  const [modelLoaded, setModelLoaded] = useState(false);
+  const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
     const canvas = canvasRef.current;
     const wrap = wrapRef.current;
     if (!canvas || !wrap) return;
 
+    setLoaded(false);
+
     // Renderer
-    const renderer = new THREE.WebGLRenderer({
-      canvas,
-      antialias: true,
-      alpha: true,
-      powerPreference: "high-performance",
-    });
+    const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, powerPreference: "high-performance" });
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.outputColorSpace = THREE.SRGBColorSpace;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
@@ -29,38 +30,29 @@ export function HeroCanvas() {
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
-    // Scene
+    // Scene + Camera
     const scene = new THREE.Scene();
-
-    // Camera
     const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 100);
     camera.position.set(0, 0.5, 4);
 
-    // Lights — warm luxury setup
-    const ambientLight = new THREE.AmbientLight(0xf0ebe2, 0.6);
-    scene.add(ambientLight);
-
+    // Lights — warm luxury
+    scene.add(new THREE.AmbientLight(0xf0ebe2, 0.6));
     const keyLight = new THREE.DirectionalLight(0xfff5e0, 2.2);
     keyLight.position.set(3, 5, 4);
     keyLight.castShadow = true;
     keyLight.shadow.mapSize.set(1024, 1024);
-    keyLight.shadow.camera.near = 0.5;
-    keyLight.shadow.camera.far = 20;
     scene.add(keyLight);
-
     const fillLight = new THREE.DirectionalLight(0x8ebccc, 0.5);
     fillLight.position.set(-4, 2, -2);
     scene.add(fillLight);
-
     const rimLight = new THREE.DirectionalLight(0xf0ebe2, 0.8);
     rimLight.position.set(0, -2, -4);
     scene.add(rimLight);
-
     const glowLight = new THREE.PointLight(0xf0d8a0, 1.0, 6);
     glowLight.position.set(0, -1, 0.5);
     scene.add(glowLight);
 
-    // OrbitControls
+    // Controls
     const controls = new OrbitControls(camera, canvas);
     controls.enableDamping = true;
     controls.dampingFactor = 0.05;
@@ -75,12 +67,7 @@ export function HeroCanvas() {
 
     function showFallback() {
       const geo = new THREE.SphereGeometry(0.9, 64, 64);
-      const mat = new THREE.MeshStandardMaterial({
-        color: 0x1a1c22,
-        metalness: 0.6,
-        roughness: 0.3,
-        envMapIntensity: 1.2,
-      });
+      const mat = new THREE.MeshStandardMaterial({ color: 0x1a1c22, metalness: 0.6, roughness: 0.3 });
       const sphere = new THREE.Mesh(geo, mat);
       sphere.castShadow = true;
       scene.add(sphere);
@@ -90,13 +77,11 @@ export function HeroCanvas() {
       ring.rotation.x = Math.PI / 2;
       scene.add(ring);
       model = sphere;
-      setModelLoaded(true);
+      setLoaded(true);
     }
 
-    // Load GLB
-    const gltfLoader = new GLTFLoader();
-    gltfLoader.load(
-      "/models/hero-dish.glb",
+    new GLTFLoader().load(
+      modelUrl,
       (gltf) => {
         model = gltf.scene;
         const box = new THREE.Box3().setFromObject(model);
@@ -111,20 +96,15 @@ export function HeroCanvas() {
           if ((child as THREE.Mesh).isMesh) {
             child.castShadow = true;
             child.receiveShadow = true;
-            const mesh = child as THREE.Mesh;
-            if (mesh.material) {
-              (mesh.material as THREE.MeshStandardMaterial).envMapIntensity = 1.4;
-            }
+            const m = (child as THREE.Mesh).material as THREE.MeshStandardMaterial;
+            if (m) m.envMapIntensity = 1.4;
           }
         });
         scene.add(model);
-        setModelLoaded(true);
+        setLoaded(true);
       },
       undefined,
-      (error) => {
-        console.warn("GLB load failed, showing fallback:", error);
-        showFallback();
-      }
+      () => showFallback()
     );
 
     // Resize
@@ -140,7 +120,7 @@ export function HeroCanvas() {
     const ro = new ResizeObserver(resize);
     ro.observe(wrap);
 
-    // Animate
+    // Interact
     let userInteracting = false;
     const onDown = () => { userInteracting = true; controls.autoRotate = false; };
     const onUp = () => { userInteracting = false; setTimeout(() => { controls.autoRotate = true; }, 2000); };
@@ -152,9 +132,7 @@ export function HeroCanvas() {
     function animate() {
       rafId = requestAnimationFrame(animate);
       const t = clock.getElapsedTime();
-      if (model && !userInteracting) {
-        model.position.y += Math.sin(t * 0.6) * 0.0008;
-      }
+      if (model && !userInteracting) model.position.y += Math.sin(t * 0.6) * 0.0008;
       glowLight.intensity = 0.8 + Math.sin(t * 1.2) * 0.2;
       controls.update();
       renderer.render(scene, camera);
@@ -168,24 +146,18 @@ export function HeroCanvas() {
       canvas.removeEventListener("pointerup", onUp);
       renderer.dispose();
     };
-  }, []);
+  }, [modelUrl]);
 
   return (
-    <div
-      ref={wrapRef}
-      style={{ position: "relative", width: "100%", height: "560px", borderRadius: 8, overflow: "hidden", background: "radial-gradient(ellipse at 50% 40%,hsl(36,28%,92%,.07) 0%,transparent 60%)" }}
-    >
-      <canvas
-        ref={canvasRef}
-        style={{ width: "100%", height: "100%", display: "block", cursor: "grab" }}
-      />
-      {/* Loading state */}
-      {!modelLoaded && (
+    <div ref={wrapRef} style={{ position: "relative", width: "100%", height: "560px", borderRadius: 8, overflow: "hidden", background: "radial-gradient(ellipse at 50% 40%,hsl(36,28%,92%,.07) 0%,transparent 60%)" }}>
+      <canvas ref={canvasRef} style={{ width: "100%", height: "100%", display: "block", cursor: "grab" }} />
+      {!loaded && (
         <div style={{ position: "absolute", inset: 0, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 16, pointerEvents: "none" }}>
-          <div style={{ width: 32, height: 32, border: "1px solid hsl(220,7%,16%)", borderTopColor: "hsl(36,28%,92%)", borderRadius: "50%", animation: "floatY 1s linear infinite" }} />
+          <div style={{ width: 32, height: 32, border: "1px solid hsl(220,7%,16%)", borderTopColor: "hsl(36,28%,92%)", borderRadius: "50%", animation: "spin 1s linear infinite" }} />
           <span style={{ fontFamily: "'DM Mono',monospace", fontSize: ".5625rem", letterSpacing: ".18em", textTransform: "uppercase", color: "hsl(220,5%,32%)" }}>טוען מודל</span>
         </div>
       )}
+      <style>{`@keyframes spin{to{transform:rotate(360deg)}}`}</style>
     </div>
   );
 }
