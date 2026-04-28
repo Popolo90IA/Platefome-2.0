@@ -134,6 +134,8 @@ const KEYFRAMES = `
   }
   @keyframes scrollIndicator { 0%{transform:translateY(0);opacity:1} 100%{transform:translateY(18px);opacity:0} }
   @keyframes stepProgress { from{height:0} to{height:100%} }
+  @keyframes fadeIn { from{opacity:0} to{opacity:1} }
+  @keyframes slideUp { from{opacity:0;transform:translateY(32px) scale(.97)} to{opacity:1;transform:translateY(0) scale(1)} }
   .fade-a{animation:fadeUp 1s cubic-bezier(.16,1,.3,1) both}
   .fade-b{animation:fadeUp 1s cubic-bezier(.16,1,.3,1) .12s both}
   .fade-c{animation:fadeUp 1s cubic-bezier(.16,1,.3,1) .24s both}
@@ -220,14 +222,24 @@ const MODELS = [
   { url: "/models/tuna.glb",      label: "טונה" },
 ];
 
+type GalleryDish = { img: string; name: string; desc: string; price: string; badge: string; badgeColor: string };
+
 export default function HomePage() {
   useReveal();
   useHeaderScroll();
   const [modelIdx, setModelIdx] = useState(0);
   const [activeStep, setActiveStep] = useState(0);
   const stepsRef = useRef<HTMLDivElement>(null);
+  const [selectedDish, setSelectedDish] = useState<GalleryDish | null>(null);
   const prev = () => setModelIdx(i => (i - 1 + MODELS.length) % MODELS.length);
   const next = () => setModelIdx(i => (i + 1) % MODELS.length);
+
+  // Close modal on Escape
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => { if (e.key === "Escape") setSelectedDish(null); };
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, []);
 
   /* Steps scroll tracking */
   useEffect(() => {
@@ -255,6 +267,53 @@ export default function HomePage() {
 
       {/* Grain */}
       <div aria-hidden style={{ position: "fixed", inset: 0, pointerEvents: "none", zIndex: 9999, opacity: 0.022, mixBlendMode: "screen", backgroundImage: GRAIN_SVG, backgroundSize: "256px" }} />
+
+      {/* ═══ DISH DETAIL MODAL ═══ */}
+      {selectedDish && (
+        <div
+          onClick={() => setSelectedDish(null)}
+          style={{ position: "fixed", inset: 0, zIndex: 10000, display: "flex", alignItems: "center", justifyContent: "center", padding: "24px", background: "hsl(220,12%,4%,.85)", backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)", animation: "fadeIn .2s ease" }}
+        >
+          <div
+            onClick={e => e.stopPropagation()}
+            style={{ background: "hsl(220,10%,7%)", border: "1px solid hsl(36,28%,92%,.14)", borderRadius: 16, overflow: "hidden", maxWidth: 560, width: "100%", boxShadow: "0 40px 80px -20px rgba(0,0,0,.9)", animation: "slideUp .35s cubic-bezier(.16,1,.3,1)", direction: "rtl" }}
+          >
+            {/* Image */}
+            <div style={{ position: "relative", height: 300, overflow: "hidden" }}>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={selectedDish.img} alt={selectedDish.name} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+              <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top,hsl(220,10%,7%) 0%,transparent 50%)" }} />
+              {/* Badge */}
+              <div style={{ position: "absolute", top: 16, right: 16, padding: "6px 14px", background: "hsl(220,12%,4%,.8)", backdropFilter: "blur(8px)", border: "1px solid hsl(36,28%,92%,.2)", borderRadius: 99, fontFamily: "'DM Mono',monospace", fontSize: ".625rem", letterSpacing: ".14em", textTransform: "uppercase", color: selectedDish.badgeColor }}>{selectedDish.badge}</div>
+              {/* Close button */}
+              <button
+                onClick={() => setSelectedDish(null)}
+                style={{ position: "absolute", top: 16, left: 16, width: 36, height: 36, borderRadius: "50%", background: "hsl(220,12%,4%,.7)", border: "1px solid hsl(36,28%,92%,.15)", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", color: "hsl(var(--pale))", transition: "background .2s" }}
+                onMouseOver={e => ((e.currentTarget as HTMLButtonElement).style.background = "hsl(220,10%,14%)")}
+                onMouseOut={e => ((e.currentTarget as HTMLButtonElement).style.background = "hsl(220,12%,4%,.7)")}
+                aria-label="סגור"
+              >
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+              </button>
+            </div>
+
+            {/* Content */}
+            <div style={{ padding: "28px 32px 36px" }}>
+              <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 16, marginBottom: 16 }}>
+                <h2 style={{ fontFamily: "'Noto Serif Hebrew',serif", fontWeight: 400, fontSize: "1.75rem", letterSpacing: "-.03em", color: "hsl(var(--cream))", lineHeight: 1.15, margin: 0 }}>{selectedDish.name}</h2>
+                <span style={{ fontFamily: "'Cormorant Garamond',serif", fontWeight: 300, fontSize: "2rem", letterSpacing: "-.04em", color: "hsl(var(--gold))", whiteSpace: "nowrap", lineHeight: 1 }}>{selectedDish.price}</span>
+              </div>
+              <div style={{ width: 40, height: 1, background: "hsl(36,28%,92%,.2)", marginBottom: 16 }} />
+              <p style={{ fontSize: "1.0625rem", color: "hsl(var(--subtle))", lineHeight: 1.75, margin: 0 }}>{selectedDish.desc}</p>
+
+              <div style={{ marginTop: 28, padding: "16px 20px", background: "hsl(36,28%,92%,.04)", border: "1px solid hsl(36,28%,92%,.08)", borderRadius: 10, display: "flex", alignItems: "center", gap: 10 }}>
+                <span style={{ width: 6, height: 6, borderRadius: "50%", background: "hsl(var(--sage))", boxShadow: "0 0 8px hsl(158,28%,48%,.8)", flexShrink: 0 }} />
+                <span style={{ fontFamily: "'DM Mono',monospace", fontSize: ".6875rem", letterSpacing: ".12em", color: "hsl(var(--dim))", textTransform: "uppercase" }}>זמין לצפייה בתלת-מימד ו-AR</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* ═══ HEADER ═══ */}
       <header id="site-header" style={{ position: "fixed", top: 0, left: 0, right: 0, zIndex: 50, transition: "background .4s,border-color .4s" }}>
@@ -635,14 +694,14 @@ export default function HomePage() {
 
           <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 14 }} className="gallery-grid">
             {[
-              { img: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=700&h=440&fit=crop&q=80", name: "בשר אנגוס", desc: "אנגוס על האש עם תוספת לבחירה", price: "₪148", badge: "3D · AR", badgeColor: "hsl(var(--gold))" },
-              { img: "https://images.unsplash.com/photo-1563379926898-05f4575a45d8?w=700&h=440&fit=crop&q=80", name: "פסטה ים", desc: "פסטה פירות ים ברוטב ויין לבן", price: "₪89", badge: "וידאו", badgeColor: "hsl(var(--pale))" },
-              { img: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=700&h=440&fit=crop&q=80", name: "סלט עונתי", desc: "עשבי תיבול טריים ורוטב ביתי", price: "₪54", badge: "3D", badgeColor: "hsl(var(--pale))" },
-              { img: "https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?w=700&h=440&fit=crop&q=80", name: "יין אדום", desc: "בורדו · 2021 · בחירת הסומלייה", price: "₪62", badge: "360°", badgeColor: "hsl(var(--pale))" },
-              { img: "https://images.unsplash.com/photo-1571877227200-a0d98ea607e9?w=700&h=440&fit=crop&q=80", name: "פונדאן", desc: "שוקולד בלגי חם עם גלידת וניל", price: "₪44", badge: "AR", badgeColor: "hsl(var(--pale))" },
-              { img: "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=700&h=440&fit=crop&q=80", name: "אספרסו", desc: "בלנד אתיופי · קלייה בינונית", price: "₪28", badge: "חי", badgeColor: "hsl(var(--sage))" },
+              { img: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=700&h=440&fit=crop&q=80", name: "בשר אנגוס", desc: "נתח אנגוס פרמיום על האש עם תוספת לבחירה — גריל פחמים, עשבי תיבול טריים, וסלסה בית. מוגש עם אחת מהתוספות העונתיות שלנו.", price: "₪148", badge: "3D · AR", badgeColor: "hsl(var(--gold))" },
+              { img: "https://images.unsplash.com/photo-1563379926898-05f4575a45d8?w=700&h=440&fit=crop&q=80", name: "פסטה ים", desc: "פסטה פתוחה עם פירות ים טריים — שרימפס, מולים ותמנון — ברוטב ויין לבן, שום ופרמז'ן. הכנה טרייה ב-20 דקות.", price: "₪89", badge: "וידאו", badgeColor: "hsl(var(--pale))" },
+              { img: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=700&h=440&fit=crop&q=80", name: "סלט עונתי", desc: "תערובת עשבי תיבול טריים מהגינה שלנו עם גבינה צרפתית, אגוזי מלך קלויים ורוטב ביתי על בסיס שמן זית וחומץ תפוחים.", price: "₪54", badge: "3D", badgeColor: "hsl(var(--pale))" },
+              { img: "https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?w=700&h=440&fit=crop&q=80", name: "יין אדום", desc: "בורדו עדין ועשיר משנת 2021 — פרי יומרני עם טאנינים מעודנים. בחירת הסומלייה החודש. מוגש במצב החדר האידיאלי של 16°.", price: "₪62", badge: "360°", badgeColor: "hsl(var(--pale))" },
+              { img: "https://images.unsplash.com/photo-1571877227200-a0d98ea607e9?w=700&h=440&fit=crop&q=80", name: "פונדאן שוקולד", desc: "עוגת שוקולד בלגי 72% חמה ונוזלית בפנים, מוגשת עם גלידת וניל מדגסקר וקרמל מלח ים. מומלץ לאכול מיד כשמגיע.", price: "₪44", badge: "AR", badgeColor: "hsl(var(--pale))" },
+              { img: "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=700&h=440&fit=crop&q=80", name: "אספרסו", desc: "בלנד אתיופי מיוחד — עם טעמי פרי יערות ופרחים — נקלה בקלייה בינונית כדי לשמר את הארומה. מוגש כפול כדיפולט.", price: "₪28", badge: "חי", badgeColor: "hsl(var(--sage))" },
             ].map((d, i) => (
-              <div key={i} className="card-surface reveal" data-delay={String((i % 3) * 80)} style={{ borderRadius: 8, overflow: "hidden", cursor: "pointer" }}>
+              <div key={i} className="card-surface reveal" data-delay={String((i % 3) * 80)} style={{ borderRadius: 8, overflow: "hidden", cursor: "pointer" }} onClick={() => setSelectedDish(d)}>
                 <div style={{ height: 240, overflow: "hidden", position: "relative" }}>
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img src={d.img} alt={d.name} style={{ width: "100%", height: "100%", objectFit: "cover", transition: "transform .6s cubic-bezier(.16,1,.3,1)" }}
