@@ -457,30 +457,9 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ═══ LARGE MARQUEE BACKGROUND ═══ */}
-      <div style={{ position: "relative", overflow: "hidden", background: "hsl(var(--void))", borderTop: "1px solid hsl(var(--line))", borderBottom: "1px solid hsl(var(--line))", padding: "0" }}>
-        {/* Large background text — line 1 (slow, RTL direction) */}
-        <div style={{ overflow: "hidden", pointerEvents: "none", userSelect: "none", lineHeight: 0.85, marginBottom: -8 }}>
-          <div style={{ display: "flex", width: "max-content", animation: "marqueeScroll 80s linear infinite", willChange: "transform" }}>
-            {[...Array(4)].map((_, i) => (
-              <span key={i} style={{ display: "block", fontFamily: "'Cormorant Garamond',serif", fontWeight: 300, fontSize: "clamp(8rem,14vw,18rem)", letterSpacing: "-.04em", color: "transparent", WebkitTextStroke: "1px hsl(36,28%,92%,.06)", whiteSpace: "nowrap", paddingLeft: "2vw" }}>
-                מסעדה · תפריט · חוויה ·
-              </span>
-            ))}
-          </div>
-        </div>
-        {/* Line 2 (faster, opposite direction) */}
-        <div style={{ overflow: "hidden", pointerEvents: "none", userSelect: "none", lineHeight: 0.85, marginBottom: -8 }}>
-          <div style={{ display: "flex", width: "max-content", animation: "marqueeScrollReverse 55s linear infinite", willChange: "transform" }}>
-            {[...Array(4)].map((_, i) => (
-              <span key={i} style={{ display: "block", fontFamily: "'Noto Serif Hebrew',serif", fontWeight: 200, fontSize: "clamp(6rem,11vw,15rem)", letterSpacing: "-.02em", color: "transparent", WebkitTextStroke: "1px hsl(158,28%,48%,.05)", whiteSpace: "nowrap", paddingLeft: "2vw" }}>
-                3D · AR · VR · סריקה · טכנולוגיה ·
-              </span>
-            ))}
-          </div>
-        </div>
-        {/* Foreground marquee — actual content */}
-        <div style={{ overflow: "hidden", WebkitMaskImage: "linear-gradient(90deg,transparent,black 10%,black 90%,transparent)", maskImage: "linear-gradient(90deg,transparent,black 10%,black 90%,transparent)", padding: "20px 0", position: "relative", zIndex: 2 }}>
+      {/* ═══ MARQUEE BAND ═══ */}
+      <div style={{ background: "hsl(var(--void))", borderTop: "1px solid hsl(var(--line))", borderBottom: "1px solid hsl(var(--line))" }}>
+        <div style={{ overflow: "hidden", WebkitMaskImage: "linear-gradient(90deg,transparent,black 10%,black 90%,transparent)", maskImage: "linear-gradient(90deg,transparent,black 10%,black 90%,transparent)", padding: "20px 0" }}>
           <div style={{ display: "flex", width: "max-content", animation: "marqueeScroll 55s linear infinite" }}>
             {[...Array(2)].flatMap((_, k) => [
               <span key={`a1-${k}`} style={{ display: "inline-flex", alignItems: "center", gap: 24, paddingLeft: 24, fontFamily: "'Noto Serif Hebrew',serif", fontSize: "1.45rem", fontWeight: 300, fontStyle: "italic", color: "hsl(var(--cream))", whiteSpace: "nowrap" }}>בשר וגריל<span style={{ color: "hsl(var(--line))" }}>·</span></span>,
