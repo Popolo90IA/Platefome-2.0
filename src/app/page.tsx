@@ -524,7 +524,7 @@ export default function HomePage() {
 
             {/* Sticky visual — first in DOM → right side in RTL */}
             <div className="steps-sticky" style={{ flex: "0 0 44%", position: "sticky", top: 100 }}>
-              <div style={{ position: "relative", minHeight: 520 }}>
+              <div style={{ position: "relative", minHeight: 420 }}>
                 {[
                   {
                     idx: 0,
@@ -535,7 +535,7 @@ export default function HomePage() {
                     title: "הלקוח מכוון,\nהתפריט נפתח",
                     body: "קוד QR אישי. תוך 0.8 שניות התפריט נפתח ישירות בדפדפן.",
                     visual: (
-                      <div style={{ width: 110, height: 110, background: "hsl(220,10%,5%)", border: "1px solid hsl(36,28%,92%,.2)", borderRadius: 10, display: "grid", gridTemplateColumns: "repeat(5,1fr)", gap: 3, padding: 12, marginBottom: 32 }}>
+                      <div style={{ width: 80, height: 80, background: "hsl(220,10%,5%)", border: "1px solid hsl(36,28%,92%,.2)", borderRadius: 8, display: "grid", gridTemplateColumns: "repeat(5,1fr)", gap: 2, padding: 9, marginBottom: 20 }}>
                         {Array(25).fill(0).map((_, j) => (
                           <div key={j} style={{ background: [0,1,2,3,4,5,9,10,14,15,16,17,18,19,20,21,24].includes(j) ? "hsl(36,28%,92%,.85)" : "transparent", borderRadius: 2 }} />
                         ))}
@@ -551,7 +551,7 @@ export default function HomePage() {
                     title: "המנה על\nהשולחן, ב-AR",
                     body: "iPhone ו-Android מציגים את המנה במציאות רבודה. כל מנה — לפני ההזמנה.",
                     visual: (
-                      <div style={{ width: 80, height: 80, background: "hsl(158,28%,48%,.08)", border: "1px solid hsl(158,28%,48%,.25)", borderRadius: 12, display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 32, color: "hsl(var(--sage))" }}>
+                      <div style={{ width: 56, height: 56, background: "hsl(158,28%,48%,.08)", border: "1px solid hsl(158,28%,48%,.25)", borderRadius: 10, display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 20, color: "hsl(var(--sage))" }}>
                         <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round">
                           <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
                           <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
@@ -569,7 +569,7 @@ export default function HomePage() {
                     title: "+30% הזמנות\nנמדדו",
                     body: "אנליטיקה בזמן אמת: צפיות, המרות, מנות פופולריות.",
                     visual: (
-                      <div style={{ display: "flex", alignItems: "flex-end", gap: 5, height: 56, marginBottom: 32 }}>
+                      <div style={{ display: "flex", alignItems: "flex-end", gap: 4, height: 40, marginBottom: 20 }}>
                         {[40, 60, 45, 75, 55, 90, 70].map((h, i) => (
                           <div key={i} style={{ flex: 1, height: `${h}%`, background: i === 5 ? "hsl(36,28%,92%,.75)" : "hsl(36,28%,92%,.12)", borderRadius: "3px 3px 0 0" }} />
                         ))}
@@ -584,14 +584,14 @@ export default function HomePage() {
                     transform: activeStep === card.idx ? "scale(1) translateY(0)" : "scale(.97) translateY(16px)",
                     pointerEvents: activeStep === card.idx ? "auto" : "none",
                   }}>
-                    <div style={{ background: card.bg, border: `1px solid ${card.border}`, borderRadius: 16, padding: "44px 40px", boxShadow: `0 32px 64px -20px rgba(0,0,0,.7),inset 0 1px 0 ${card.insetBorder}`, height: "100%", display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
+                    <div style={{ background: card.bg, border: `1px solid ${card.border}`, borderRadius: 14, padding: "32px 30px", boxShadow: `0 24px 48px -16px rgba(0,0,0,.7),inset 0 1px 0 ${card.insetBorder}`, height: "100%", display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
                       <div>
-                        <div style={{ fontFamily: "'DM Mono',monospace", fontSize: ".5875rem", letterSpacing: ".18em", color: "hsl(var(--dim))", marginBottom: 28 }}>{card.label}</div>
+                        <div style={{ fontFamily: "'DM Mono',monospace", fontSize: ".5875rem", letterSpacing: ".18em", color: "hsl(var(--dim))", marginBottom: 20 }}>{card.label}</div>
                         {card.visual}
                       </div>
                       <div>
-                        <h3 style={{ fontFamily: "'Noto Serif Hebrew',serif", fontWeight: 300, fontSize: "1.625rem", letterSpacing: "-.02em", color: "hsl(var(--cream))", marginBottom: 10, lineHeight: 1.25, whiteSpace: "pre-line" }}>{card.title}</h3>
-                        <p style={{ fontSize: ".9375rem", color: "hsl(var(--subtle))", lineHeight: 1.7 }}>{card.body}</p>
+                        <h3 style={{ fontFamily: "'Noto Serif Hebrew',serif", fontWeight: 300, fontSize: "1.4rem", letterSpacing: "-.02em", color: "hsl(var(--cream))", marginBottom: 8, lineHeight: 1.25, whiteSpace: "pre-line" }}>{card.title}</h3>
+                        <p style={{ fontSize: ".875rem", color: "hsl(var(--subtle))", lineHeight: 1.65 }}>{card.body}</p>
                       </div>
                     </div>
                   </div>
@@ -609,17 +609,17 @@ export default function HomePage() {
             {/* Scrollable text steps — second in DOM → left side in RTL */}
             <div style={{ flex: 1 }}>
               {[
-                { num: "01", icon: <IconScan />, accentColor: "hsl(36,28%,92%)", bg: "hsl(36,28%,92%,.06)", border: "hsl(36,28%,92%,.12)", eyebrowEl: <span className="eyebrow" style={{ display: "block", marginBottom: 14, fontSize: ".75rem" }}>סריקה</span>, title: <>הלקוח מכוון,<br />התפריט נפתח</>, body: "קוד QR אישי. תוך 0.8 שניות התפריט נפתח ישירות בדפדפן — ללא אפליקציה, ללא הורדה.", topLine: "linear-gradient(90deg,transparent,hsl(36,28%,92%,.2),transparent)" },
-                { num: "02", icon: <IconCube />, accentColor: "hsl(var(--sage))", bg: "hsl(158,28%,48%,.08)", border: "hsl(158,28%,48%,.2)", eyebrowEl: <span className="eyebrow-sage" style={{ display: "block", marginBottom: 14, fontSize: ".75rem" }}>תלת-מימד AR</span>, title: <>המנה על<br />השולחן, ב-AR</>, body: "iPhone ו-Android מציגים את המנה במציאות רבודה. כל מנה — לפני ההזמנה.", topLine: "linear-gradient(90deg,transparent,hsl(158,28%,48%,.35),transparent)" },
-                { num: "03", icon: <IconBar />, accentColor: "hsl(var(--pale))", bg: "hsl(220,3%,64%,.06)", border: "hsl(220,3%,64%,.15)", eyebrowEl: <span className="eyebrow" style={{ display: "block", marginBottom: 14, fontSize: ".75rem" }}>אנליטיקה</span>, title: <>+30% הזמנות<br />נמדדו</>, body: "שולחנות שסורקים ממירים 3.4× יותר. אנליטיקה בזמן אמת: צפיות, המרות, מנות פופולריות.", topLine: "linear-gradient(90deg,transparent,hsl(220,3%,64%,.2),transparent)" },
+                { num: "01", icon: <IconScan />, accentColor: "hsl(36,28%,92%)", bg: "hsl(36,28%,92%,.06)", border: "hsl(36,28%,92%,.12)", eyebrowEl: <span className="eyebrow" style={{ display: "block", marginBottom: 8, fontSize: ".75rem" }}>סריקה</span>, title: <>הלקוח מכוון,<br />התפריט נפתח</>, body: "קוד QR אישי. תוך 0.8 שניות התפריט נפתח ישירות בדפדפן — ללא אפליקציה, ללא הורדה.", topLine: "linear-gradient(90deg,transparent,hsl(36,28%,92%,.2),transparent)" },
+                { num: "02", icon: <IconCube />, accentColor: "hsl(var(--sage))", bg: "hsl(158,28%,48%,.08)", border: "hsl(158,28%,48%,.2)", eyebrowEl: <span className="eyebrow-sage" style={{ display: "block", marginBottom: 8, fontSize: ".75rem" }}>תלת-מימד AR</span>, title: <>המנה על<br />השולחן, ב-AR</>, body: "iPhone ו-Android מציגים את המנה במציאות רבודה. כל מנה — לפני ההזמנה.", topLine: "linear-gradient(90deg,transparent,hsl(158,28%,48%,.35),transparent)" },
+                { num: "03", icon: <IconBar />, accentColor: "hsl(var(--pale))", bg: "hsl(220,3%,64%,.06)", border: "hsl(220,3%,64%,.15)", eyebrowEl: <span className="eyebrow" style={{ display: "block", marginBottom: 8, fontSize: ".75rem" }}>אנליטיקה</span>, title: <>+30% הזמנות<br />נמדדו</>, body: "שולחנות שסורקים ממירים 3.4× יותר. אנליטיקה בזמן אמת: צפיות, המרות, מנות פופולריות.", topLine: "linear-gradient(90deg,transparent,hsl(220,3%,64%,.2),transparent)" },
               ].map((f, i) => (
-                <div key={i} data-step={i} className="card-surface reveal" data-delay={String(i * 120)} style={{ padding: "52px 44px", borderRadius: 8, position: "relative", overflow: "hidden", marginBottom: 24 }}>
+                <div key={i} data-step={i} className="card-surface reveal" data-delay={String(i * 120)} style={{ padding: "28px 32px", borderRadius: 8, position: "relative", overflow: "hidden", marginBottom: 10 }}>
                   <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 2, background: f.topLine }} />
-                  <div style={{ fontFamily: "'DM Mono',monospace", fontSize: ".6875rem", letterSpacing: ".18em", color: "hsl(var(--dim))", marginBottom: 28 }}>{f.num}</div>
-                  <div style={{ width: 48, height: 48, display: "flex", alignItems: "center", justifyContent: "center", background: f.bg, border: `1px solid ${f.border}`, borderRadius: 8, marginBottom: 28, color: f.accentColor }}>{f.icon}</div>
+                  <div style={{ fontFamily: "'DM Mono',monospace", fontSize: ".6875rem", letterSpacing: ".18em", color: "hsl(var(--dim))", marginBottom: 14 }}>{f.num}</div>
+                  <div style={{ width: 36, height: 36, display: "flex", alignItems: "center", justifyContent: "center", background: f.bg, border: `1px solid ${f.border}`, borderRadius: 8, marginBottom: 14, color: f.accentColor }}>{f.icon}</div>
                   {f.eyebrowEl}
-                  <h3 style={{ fontFamily: "'Noto Serif Hebrew',serif", fontWeight: 300, fontSize: "1.875rem", letterSpacing: "-.02em", color: "hsl(var(--cream))", marginBottom: 20, lineHeight: 1.15 }}>{f.title}</h3>
-                  <p style={{ fontSize: "1.0625rem", color: "hsl(var(--subtle))", lineHeight: 1.7 }}>{f.body}</p>
+                  <h3 style={{ fontFamily: "'Noto Serif Hebrew',serif", fontWeight: 300, fontSize: "1.5rem", letterSpacing: "-.02em", color: "hsl(var(--cream))", marginBottom: 10, lineHeight: 1.15 }}>{f.title}</h3>
+                  <p style={{ fontSize: ".9375rem", color: "hsl(var(--subtle))", lineHeight: 1.65 }}>{f.body}</p>
                 </div>
               ))}
             </div>
