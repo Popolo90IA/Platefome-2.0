@@ -379,7 +379,7 @@ export default function HomePage() {
           {/* Text */}
           <div style={{ flex: "0 0 50%", maxWidth: "50%", paddingLeft: 48, overflow: "visible" }} className="hero-text">
             {/* Eyebrow pill */}
-            <div className="fade-a liquid-glass" style={{ display: "inline-flex", alignItems: "center", gap: 10, marginBottom: 44, padding: "9px 22px", borderRadius: 99 }}>
+            <div className="liquid-glass" style={{ display: "inline-flex", alignItems: "center", gap: 10, marginBottom: 44, padding: "9px 22px", borderRadius: 99 }}>
               <span style={{ width: 7, height: 7, borderRadius: "50%", background: "hsl(var(--sage))", boxShadow: "0 0 14px hsl(158,28%,48%,.9)", flexShrink: 0, animation: "pulseGlow 2.5s ease-in-out infinite" }} />
               <span className="eyebrow-gold" style={{ fontSize: ".6875rem" }}>תפריטים תלת-מימד · AR · VR — מסעדות כוכב מישלן</span>
             </div>
@@ -393,11 +393,11 @@ export default function HomePage() {
               </h1>
             </div>
 
-            <p className="fade-c" style={{ fontSize: "1.125rem", lineHeight: 1.8, color: "hsl(var(--subtle))", maxWidth: 420, marginBottom: 56 }}>
+            <p style={{ fontSize: "1.125rem", lineHeight: 1.8, color: "hsl(var(--subtle))", maxWidth: 420, marginBottom: 56 }}>
               הלקוח סורק. המנה מופיעה בתלת-מימד על השולחן.<br />זה לא תפריט — זו חוויה גסטרונומית דיגיטלית.
             </p>
 
-            <div className="fade-c" style={{ display: "flex", gap: 14, flexWrap: "wrap", marginBottom: 56 }}>
+            <div style={{ display: "flex", gap: 14, flexWrap: "wrap", marginBottom: 56 }}>
               <Link href="/signup" style={{
                 display: "inline-flex", alignItems: "center", gap: 8,
                 padding: "14px 32px",
