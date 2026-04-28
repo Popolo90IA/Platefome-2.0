@@ -375,29 +375,47 @@ export default function HomePage() {
           <div style={{ position: "absolute", top: 0, left: "50%", transform: "translateX(-50%)", width: 1200, height: 1, background: "linear-gradient(90deg,transparent,hsl(36,28%,92%,.2),hsl(158,28%,48%,.12),hsl(36,28%,92%,.2),transparent)" }} />
         </div>
 
-        <div style={{ maxWidth: 1320, margin: "0 auto", padding: "0 56px", width: "100%", position: "relative", zIndex: 3, display: "flex", alignItems: "center", direction: "rtl" }} className="hero-cols">
-          {/* Text */}
-          <div style={{ flex: "0 0 50%", maxWidth: "50%", paddingLeft: 48, overflow: "visible" }} className="hero-text">
+        <div style={{ maxWidth: 1320, margin: "0 auto", padding: "0 56px", width: "100%", position: "relative", zIndex: 3, display: "flex", flexDirection: "column", alignItems: "center", direction: "rtl" }}>
+
+          {/* ── TITRE EN HAUT centré ── */}
+          <div style={{ textAlign: "center", marginBottom: 20, width: "100%" }}>
+
             {/* Eyebrow pill */}
-            <div className="liquid-glass" style={{ display: "inline-flex", alignItems: "center", gap: 10, marginBottom: 44, padding: "9px 22px", borderRadius: 99 }}>
+            <div className="liquid-glass" style={{ display: "inline-flex", alignItems: "center", gap: 10, marginBottom: 36, padding: "9px 22px", borderRadius: 99 }}>
               <span style={{ width: 7, height: 7, borderRadius: "50%", background: "hsl(var(--sage))", boxShadow: "0 0 14px hsl(158,28%,48%,.9)", flexShrink: 0, animation: "pulseGlow 2.5s ease-in-out infinite" }} />
               <span className="eyebrow-gold" style={{ fontSize: ".6875rem" }}>תפריטים תלת-מימד · AR · VR — מסעדות כוכב מישלן</span>
             </div>
 
-            {/* Headline */}
-            <div style={{ marginBottom: 36 }}>
-              <h1 style={{ fontFamily: "'Noto Serif Hebrew',serif", fontWeight: 300, fontSize: "clamp(64px,6.5vw,128px)", lineHeight: 1.15, letterSpacing: "-.04em", margin: 0, padding: "8px 12px 8px 4px" }}>
-                <span style={{ display: "block", color: "hsl(var(--cream))" }}>התפריט</span>
-                <span style={{ display: "block", fontStyle: "italic", background: "linear-gradient(135deg,hsl(24,80%,32%) 0%,hsl(36,28%,92%) 30%,hsl(28,95%,72%) 55%,hsl(36,28%,92%) 75%,hsl(24,80%,32%) 100%)", backgroundSize: "220% 100%", WebkitBackgroundClip: "text", backgroundClip: "text", WebkitTextFillColor: "transparent", animation: "goldShimmer 5s ease-in-out infinite", paddingInlineEnd: "0.1em" }}>שהלקוחות</span>
-                <span style={{ display: "block", color: "hsl(36,28%,92%,.28)", fontWeight: 200 }}>לא ישכחו</span>
-              </h1>
-            </div>
+            {/* Titre principal — une ligne, grande, élégante */}
+            <h1 style={{
+              fontFamily: "'Cormorant Garamond', 'Noto Serif Hebrew', serif",
+              fontWeight: 300,
+              fontSize: "clamp(56px, 8vw, 140px)",
+              lineHeight: 1,
+              letterSpacing: "-.03em",
+              margin: "0 0 24px",
+              padding: "12px 0",
+              color: "hsl(var(--cream))",
+              whiteSpace: "nowrap",
+            }}>
+              התפריט שהלקוחות{" "}
+              <span style={{
+                fontStyle: "italic",
+                background: "linear-gradient(135deg,hsl(24,80%,32%) 0%,hsl(36,28%,92%) 30%,hsl(28,95%,72%) 55%,hsl(36,28%,92%) 75%,hsl(24,80%,32%) 100%)",
+                backgroundSize: "220% 100%",
+                WebkitBackgroundClip: "text",
+                backgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                animation: "goldShimmer 5s ease-in-out infinite",
+              }}>לא ישכחו</span>
+            </h1>
 
-            <p style={{ fontSize: "1.125rem", lineHeight: 1.8, color: "hsl(var(--subtle))", maxWidth: 420, marginBottom: 56 }}>
-              הלקוח סורק. המנה מופיעה בתלת-מימד על השולחן.<br />זה לא תפריט — זו חוויה גסטרונומית דיגיטלית.
+            {/* Sous-titre + boutons */}
+            <p style={{ fontSize: "1.125rem", lineHeight: 1.8, color: "hsl(var(--subtle))", marginBottom: 40 }}>
+              הלקוח סורק. המנה מופיעה בתלת-מימד על השולחן — זו חוויה גסטרונומית דיגיטלית.
             </p>
 
-            <div style={{ display: "flex", gap: 14, flexWrap: "wrap", marginBottom: 56 }}>
+            <div style={{ display: "flex", gap: 14, flexWrap: "wrap", justifyContent: "center", marginBottom: 16 }}>
               <Link href="/signup" style={{
                 display: "inline-flex", alignItems: "center", gap: 8,
                 padding: "14px 32px",
@@ -446,29 +464,11 @@ export default function HomePage() {
                 }}
               >ראה הדגמה</a>
             </div>
-
-            {/* Trust pills */}
-            <div className="fade-d" style={{ display: "flex", flexWrap: "wrap", gap: 16, alignItems: "center" }}>
-              {["הגדרה תוך 5 דקות", "ללא אפליקציה", "iOS ו-Android AR"].map((t) => (
-                <div key={t} style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                  <span style={{ width: 20, height: 20, borderRadius: "50%", background: "hsl(158,28%,48%,.1)", border: "1px solid hsl(158,28%,48%,.3)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}><IconCheck /></span>
-                  <span style={{ fontFamily: "'DM Mono',monospace", fontSize: ".6875rem", letterSpacing: ".08em", color: "hsl(var(--subtle))" }}>{t}</span>
-                </div>
-              ))}
-            </div>
-
-            {/* Scroll indicator */}
-            <div className="fade-d" style={{ display: "flex", alignItems: "center", gap: 10, marginTop: 48 }}>
-              <div style={{ width: 24, height: 40, border: "1px solid hsl(36,28%,92%,.2)", borderRadius: 99, display: "flex", alignItems: "flex-start", justifyContent: "center", padding: "6px 0" }}>
-                <div style={{ width: 3, height: 10, background: "hsl(36,28%,92%,.6)", borderRadius: 99, animation: "scrollIndicator 1.6s ease-in-out infinite" }} />
-              </div>
-              <span style={{ fontFamily: "'DM Mono',monospace", fontSize: ".5875rem", letterSpacing: ".14em", color: "hsl(var(--dim))", textTransform: "uppercase" }}>גלול למטה</span>
-            </div>
           </div>
 
-          {/* 3D viewer — carousel */}
-          <div style={{ flex: "0 0 50%", maxWidth: "50%", position: "relative", display: "flex", flexDirection: "column", alignItems: "center" }} className="hero-3d">
-            <div className="fade-b" style={{ width: "100%", position: "relative" }}>
+          {/* ── MODÈLE 3D EN DESSOUS, pleine largeur ── */}
+          <div style={{ width: "100%", position: "relative", display: "flex", flexDirection: "column", alignItems: "center" }}>
+            <div style={{ width: "100%", maxWidth: 900, position: "relative" }}>
               <HeroCanvas modelUrl={MODELS[modelIdx].url} />
 
               {/* Arrow left */}
