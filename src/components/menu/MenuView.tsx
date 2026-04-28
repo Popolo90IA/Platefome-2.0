@@ -358,16 +358,23 @@ function DishCard({
           </div>
         )}
         {dish.video_url && (
-          <div className="absolute bottom-1 end-1 bg-black/60 rounded-full p-1 text-white">
+          <div className="absolute bottom-1 end-1 bg-black/60 rounded-full p-1 text-white pointer-events-none">
             <PlayCircle className="h-3.5 w-3.5" />
           </div>
         )}
         {soldout && (
-          <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
+          <div className="absolute inset-0 bg-black/50 flex items-center justify-center pointer-events-none">
             <span className="text-[10px] text-white font-bold uppercase tracking-wider px-2 py-1 rounded bg-black/70">
               {t(lang, "soldout")}
             </span>
           </div>
+        )}
+        {slug && (
+          <Link
+            href={`/menu/${slug}/dish/${dish.id}`}
+            className="absolute inset-0 z-10"
+            aria-label={name || dish.name}
+          />
         )}
       </div>
 
@@ -375,7 +382,13 @@ function DishCard({
       <div className="flex-1 min-w-0">
         <div className="flex items-baseline justify-between gap-3 mb-1.5">
           <h3 className="font-semibold text-lg md:text-xl text-foreground truncate">
-            {name || dish.name}
+            {slug ? (
+              <Link href={`/menu/${slug}/dish/${dish.id}`} className="hover:text-[hsl(var(--gold-dark))] transition-colors">
+                {name || dish.name}
+              </Link>
+            ) : (
+              name || dish.name
+            )}
           </h3>
           <span className="font-bold text-lg text-gold-gradient whitespace-nowrap">
             {formatCurrency(Number(dish.price), currency, lang)}
