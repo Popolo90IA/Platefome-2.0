@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import {
   MapPin,
   Phone,
@@ -30,9 +31,10 @@ interface MenuViewProps {
   restaurant: Restaurant;
   categories: Category[];
   dishes: Dish[];
+  slug?: string;
 }
 
-export function MenuView({ restaurant, categories, dishes }: MenuViewProps) {
+export function MenuView({ restaurant, categories, dishes, slug }: MenuViewProps) {
   const available: Language[] = (restaurant.languages ?? ["he"]).filter((l) =>
     ["he", "en", "fr"].includes(l)
   ) as Language[];
@@ -214,6 +216,7 @@ export function MenuView({ restaurant, categories, dishes }: MenuViewProps) {
                         restaurantId={restaurant.id}
                         lang={lang}
                         currency={currency}
+                        slug={slug}
                       />
                     ))}
                   </div>
@@ -284,11 +287,13 @@ function DishCard({
   restaurantId,
   lang,
   currency,
+  slug,
 }: {
   dish: Dish;
   restaurantId: string;
   lang: Language;
   currency: string;
+  slug?: string;
 }) {
   const name = pickLocalized(
     dish as unknown as Record<string, unknown>,
@@ -427,6 +432,20 @@ function DishCard({
           <p className="text-sm text-muted-foreground leading-relaxed line-clamp-3">
             {desc}
           </p>
+        )}
+
+        {slug && (
+          <div className="mt-3">
+            <Link
+              href={`/menu/${slug}/dish/${dish.id}`}
+              className="inline-flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wider px-3 py-1.5 rounded-full border border-[hsl(var(--gold))]/40 text-[hsl(var(--gold-dark))] bg-[hsl(var(--gold))]/8 hover:bg-[hsl(var(--gold))]/20 hover:border-[hsl(var(--gold))]/60 transition-colors"
+            >
+              פרטים
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+                <path d="M5 12h14M12 5l7 7-7 7"/>
+              </svg>
+            </Link>
+          </div>
         )}
       </div>
 

@@ -54,6 +54,7 @@ export default async function MenuPage({ params }: MenuPageProps) {
       restaurant={restaurant}
       categories={categories ?? []}
       dishes={dishes ?? []}
+      slug={slug}
     />
   );
 }

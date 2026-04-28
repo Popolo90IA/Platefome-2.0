@@ -72,13 +72,15 @@ function useCountUp(target: number, duration = 2000, start = false) {
 }
 
 /* ─── Stats count-up component ───────────────────────────── */
-function StatNumber({ value, suffix, color }: { value: string; suffix?: string; color: string }) {
+function StatNumber({ value, color }: { value: string; color: string }) {
   const ref = useRef<HTMLDivElement>(null);
   const [started, setStarted] = useState(false);
-  const numMatch = value.match(/[\d.]+/);
-  const numVal = numMatch ? parseFloat(numMatch[0]) : 0;
-  const isFloat = value.includes(".");
-  const count = useCountUp(numVal, 1800, started);
+  // Parse: find numeric part (supports decimals)
+  const numMatch = value.match(/([\d]+(?:\.[\d]+)?)/);
+  const numVal = numMatch ? Math.round(parseFloat(numMatch[1])) : 0;
+  const count = useCountUp(numVal, 1600, started);
+  // Reconstruct: replace numeric part with animated count
+  const display = value.replace(/([\d]+(?:\.[\d]+)?)/, String(count));
 
   useEffect(() => {
     const el = ref.current;
@@ -91,12 +93,9 @@ function StatNumber({ value, suffix, color }: { value: string; suffix?: string; 
     return () => obs.disconnect();
   }, []);
 
-  const prefix = value.match(/^[^0-9]*/)?.[0] || "";
-  const postfix = value.match(/[^0-9.]+$/)?.[0] || suffix || "";
-
   return (
-    <div ref={ref} style={{ fontFamily: "'Cormorant Garamond',serif", fontWeight: 300, fontSize: "clamp(2.5rem,4vw,4rem)", letterSpacing: "-.06em", color, lineHeight: 1, marginBottom: 8 }}>
-      {prefix}{isFloat ? (count / 10).toFixed(1) : count}{postfix}
+    <div ref={ref} style={{ fontFamily: "'Cormorant Garamond',serif", fontWeight: 300, fontSize: "clamp(2.2rem,3.5vw,3.25rem)", letterSpacing: "-.05em", color, lineHeight: 1, marginBottom: 10 }}>
+      {started ? display : value}
     </div>
   );
 }
@@ -504,7 +503,7 @@ export default function HomePage() {
             <span className="eyebrow" style={{ fontSize: ".75rem" }}>מספרים</span>
             <div style={{ flex: 1, maxWidth: 64, height: 1, background: "hsl(var(--line))" }} />
           </div>
-          <div style={{ display: "grid", gap: 1, background: "hsl(var(--line))" }} className="stats-grid" data-cols="4">
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: 1, background: "hsl(var(--line))" }} className="stats-grid" data-cols="4">
             {[
               { num: "+30%", label: "יותר הזמנות", sub: "שולחנות שסורקים", color: "hsl(var(--gold))", spark: [20,30,25,40,35,50,45,60,55,70] },
               { num: "3.4×", label: "יותר המרות", sub: "לעומת תפריט נייר", color: "hsl(var(--sage))", spark: [10,18,15,30,28,45,40,55,50,68] },
@@ -541,81 +540,9 @@ export default function HomePage() {
             </h2>
           </div>
 
-          {/* Sticky layout */}
+          {/* Sticky layout — text left (RTL), sticky visual right */}
           <div className="steps-layout" style={{ display: "flex", gap: 80, alignItems: "flex-start" }} ref={stepsRef}>
-            {/* Sticky left — visual */}
-            <div className="steps-sticky" style={{ flex: "0 0 44%", position: "sticky", top: 120, height: "auto" }}>
-              {/* Step visual cards */}
-              <div style={{ position: "relative" }}>
-                {/* Card 1: QR scan */}
-                <div style={{ transition: "opacity .5s,transform .5s", opacity: activeStep === 0 ? 1 : 0, transform: activeStep === 0 ? "scale(1) translateY(0)" : "scale(.97) translateY(12px)", position: activeStep === 0 ? "relative" : "absolute", top: 0, left: 0, right: 0, pointerEvents: activeStep === 0 ? "auto" : "none" }}>
-                  <div style={{ background: "linear-gradient(135deg,hsl(220,10%,8%) 0%,hsl(220,10%,6%) 100%)", border: "1px solid hsl(36,28%,92%,.12)", borderRadius: 16, padding: "52px 48px", backdropFilter: "blur(32px)", boxShadow: "0 40px 80px -24px rgba(0,0,0,.7),inset 0 1px 0 hsl(36,28%,92%,.08)", minHeight: 380, display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
-                    <div>
-                      <div style={{ fontFamily: "'DM Mono',monospace", fontSize: ".625rem", letterSpacing: ".18em", color: "hsl(var(--dim))", marginBottom: 32 }}>01 / 03 — סריקה</div>
-                      {/* QR visual */}
-                      <div style={{ width: 120, height: 120, background: "hsl(220,10%,5%)", border: "1px solid hsl(36,28%,92%,.2)", borderRadius: 12, display: "grid", gridTemplateColumns: "repeat(5,1fr)", gap: 3, padding: 14, marginBottom: 36 }}>
-                        {Array(25).fill(0).map((_, j) => (
-                          <div key={j} style={{ background: [0,1,2,3,4,5,9,10,14,15,16,17,18,19,20,21,24].includes(j) ? "hsl(36,28%,92%,.8)" : "transparent", borderRadius: 2 }} />
-                        ))}
-                      </div>
-                    </div>
-                    <div>
-                      <h3 style={{ fontFamily: "'Noto Serif Hebrew',serif", fontWeight: 300, fontSize: "1.75rem", letterSpacing: "-.02em", color: "hsl(var(--cream))", marginBottom: 12, lineHeight: 1.2 }}>הלקוח מכוון,<br />התפריט נפתח</h3>
-                      <p style={{ fontSize: "1rem", color: "hsl(var(--subtle))", lineHeight: 1.7 }}>קוד QR אישי. תוך 0.8 שניות התפריט נפתח ישירות בדפדפן.</p>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Card 2: 3D AR */}
-                <div style={{ transition: "opacity .5s,transform .5s", opacity: activeStep === 1 ? 1 : 0, transform: activeStep === 1 ? "scale(1) translateY(0)" : "scale(.97) translateY(12px)", position: activeStep === 1 ? "relative" : "absolute", top: 0, left: 0, right: 0, pointerEvents: activeStep === 1 ? "auto" : "none" }}>
-                  <div style={{ background: "linear-gradient(135deg,hsl(158,25%,8%) 0%,hsl(220,10%,6%) 100%)", border: "1px solid hsl(158,28%,48%,.2)", borderRadius: 16, padding: "52px 48px", backdropFilter: "blur(32px)", boxShadow: "0 40px 80px -24px rgba(0,0,0,.7),inset 0 1px 0 hsl(158,28%,48%,.1)", minHeight: 380, display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
-                    <div>
-                      <div style={{ fontFamily: "'DM Mono',monospace", fontSize: ".625rem", letterSpacing: ".18em", color: "hsl(var(--dim))", marginBottom: 32 }}>02 / 03 — AR</div>
-                      {/* 3D cube icon */}
-                      <div style={{ width: 80, height: 80, background: "hsl(158,28%,48%,.08)", border: "1px solid hsl(158,28%,48%,.25)", borderRadius: 12, display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 36, color: "hsl(var(--sage))" }}>
-                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round">
-                          <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
-                          <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
-                          <line x1="12" x2="12" y1="22.08" y2="12"/>
-                        </svg>
-                      </div>
-                    </div>
-                    <div>
-                      <h3 style={{ fontFamily: "'Noto Serif Hebrew',serif", fontWeight: 300, fontSize: "1.75rem", letterSpacing: "-.02em", color: "hsl(var(--cream))", marginBottom: 12, lineHeight: 1.2 }}>המנה על<br />השולחן, ב-AR</h3>
-                      <p style={{ fontSize: "1rem", color: "hsl(var(--subtle))", lineHeight: 1.7 }}>iPhone ו-Android מציגים את המנה במציאות רבודה. כל מנה — לפני ההזמנה.</p>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Card 3: Analytics */}
-                <div style={{ transition: "opacity .5s,transform .5s", opacity: activeStep === 2 ? 1 : 0, transform: activeStep === 2 ? "scale(1) translateY(0)" : "scale(.97) translateY(12px)", position: activeStep === 2 ? "relative" : "absolute", top: 0, left: 0, right: 0, pointerEvents: activeStep === 2 ? "auto" : "none" }}>
-                  <div style={{ background: "linear-gradient(135deg,hsl(220,10%,8%) 0%,hsl(220,10%,6%) 100%)", border: "1px solid hsl(220,7%,16%,.8)", borderRadius: 16, padding: "52px 48px", backdropFilter: "blur(32px)", boxShadow: "0 40px 80px -24px rgba(0,0,0,.7),inset 0 1px 0 hsl(36,28%,92%,.06)", minHeight: 380, display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
-                    <div>
-                      <div style={{ fontFamily: "'DM Mono',monospace", fontSize: ".625rem", letterSpacing: ".18em", color: "hsl(var(--dim))", marginBottom: 32 }}>03 / 03 — אנליטיקה</div>
-                      {/* Bar chart visual */}
-                      <div style={{ display: "flex", alignItems: "flex-end", gap: 5, height: 60, marginBottom: 36 }}>
-                        {[40, 60, 45, 75, 55, 90, 70].map((h, i) => (
-                          <div key={i} style={{ flex: 1, height: `${h}%`, background: i === 5 ? "hsl(36,28%,92%,.7)" : "hsl(36,28%,92%,.15)", borderRadius: "3px 3px 0 0", transition: "height .6s" }} />
-                        ))}
-                      </div>
-                    </div>
-                    <div>
-                      <h3 style={{ fontFamily: "'Noto Serif Hebrew',serif", fontWeight: 300, fontSize: "1.75rem", letterSpacing: "-.02em", color: "hsl(var(--cream))", marginBottom: 12, lineHeight: 1.2 }}>+30% הזמנות<br />נמדדו</h3>
-                      <p style={{ fontSize: "1rem", color: "hsl(var(--subtle))", lineHeight: 1.7 }}>אנליטיקה בזמן אמת: צפיות, המרות, מנות פופולריות.</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Step dots */}
-              <div style={{ display: "flex", gap: 10, marginTop: 24, justifyContent: "flex-end" }}>
-                {[0,1,2].map(i => (
-                  <div key={i} style={{ width: i === activeStep ? 28 : 8, height: 4, borderRadius: 99, background: i === activeStep ? "hsl(var(--cream))" : "hsl(var(--line))", transition: "all .4s" }} />
-                ))}
-              </div>
-            </div>
-
-            {/* Scrollable right — text steps */}
+            {/* Scrollable left — text steps */}
             <div style={{ flex: 1 }}>
               {[
                 { num: "01", icon: <IconScan />, accentColor: "hsl(36,28%,92%)", bg: "hsl(36,28%,92%,.06)", border: "hsl(36,28%,92%,.12)", eyebrowEl: <span className="eyebrow" style={{ display: "block", marginBottom: 14, fontSize: ".75rem" }}>סריקה</span>, title: <>הלקוח מכוון,<br />התפריט נפתח</>, body: "קוד QR אישי. תוך 0.8 שניות התפריט נפתח ישירות בדפדפן — ללא אפליקציה, ללא הורדה.", topLine: "linear-gradient(90deg,transparent,hsl(36,28%,92%,.2),transparent)" },
@@ -631,6 +558,91 @@ export default function HomePage() {
                   <p style={{ fontSize: "1.0625rem", color: "hsl(var(--subtle))", lineHeight: 1.7 }}>{f.body}</p>
                 </div>
               ))}
+            </div>
+
+            {/* Sticky right — visual card */}
+            <div className="steps-sticky" style={{ flex: "0 0 42%", position: "sticky", top: 120 }}>
+              {/* Container with fixed height = tallest card */}
+              <div style={{ position: "relative", minHeight: 440 }}>
+                {[
+                  {
+                    idx: 0,
+                    bg: "linear-gradient(135deg,hsl(220,10%,8%) 0%,hsl(220,10%,6%) 100%)",
+                    border: "hsl(36,28%,92%,.12)",
+                    insetBorder: "hsl(36,28%,92%,.08)",
+                    label: "01 / 03 — סריקה",
+                    title: "הלקוח מכוון,\nהתפריט נפתח",
+                    body: "קוד QR אישי. תוך 0.8 שניות התפריט נפתח ישירות בדפדפן.",
+                    visual: (
+                      <div style={{ width: 110, height: 110, background: "hsl(220,10%,5%)", border: "1px solid hsl(36,28%,92%,.2)", borderRadius: 10, display: "grid", gridTemplateColumns: "repeat(5,1fr)", gap: 3, padding: 12, marginBottom: 32 }}>
+                        {Array(25).fill(0).map((_, j) => (
+                          <div key={j} style={{ background: [0,1,2,3,4,5,9,10,14,15,16,17,18,19,20,21,24].includes(j) ? "hsl(36,28%,92%,.85)" : "transparent", borderRadius: 2 }} />
+                        ))}
+                      </div>
+                    ),
+                  },
+                  {
+                    idx: 1,
+                    bg: "linear-gradient(135deg,hsl(158,22%,8%) 0%,hsl(220,10%,6%) 100%)",
+                    border: "hsl(158,28%,48%,.2)",
+                    insetBorder: "hsl(158,28%,48%,.1)",
+                    label: "02 / 03 — AR",
+                    title: "המנה על\nהשולחן, ב-AR",
+                    body: "iPhone ו-Android מציגים את המנה במציאות רבודה. כל מנה — לפני ההזמנה.",
+                    visual: (
+                      <div style={{ width: 80, height: 80, background: "hsl(158,28%,48%,.08)", border: "1px solid hsl(158,28%,48%,.25)", borderRadius: 12, display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 32, color: "hsl(var(--sage))" }}>
+                        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round">
+                          <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+                          <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
+                          <line x1="12" x2="12" y1="22.08" y2="12"/>
+                        </svg>
+                      </div>
+                    ),
+                  },
+                  {
+                    idx: 2,
+                    bg: "linear-gradient(135deg,hsl(220,10%,8%) 0%,hsl(220,10%,6%) 100%)",
+                    border: "hsl(220,7%,20%,.9)",
+                    insetBorder: "hsl(36,28%,92%,.06)",
+                    label: "03 / 03 — אנליטיקה",
+                    title: "+30% הזמנות\nנמדדו",
+                    body: "אנליטיקה בזמן אמת: צפיות, המרות, מנות פופולריות.",
+                    visual: (
+                      <div style={{ display: "flex", alignItems: "flex-end", gap: 5, height: 56, marginBottom: 32 }}>
+                        {[40, 60, 45, 75, 55, 90, 70].map((h, i) => (
+                          <div key={i} style={{ flex: 1, height: `${h}%`, background: i === 5 ? "hsl(36,28%,92%,.75)" : "hsl(36,28%,92%,.12)", borderRadius: "3px 3px 0 0" }} />
+                        ))}
+                      </div>
+                    ),
+                  },
+                ].map(card => (
+                  <div key={card.idx} style={{
+                    position: "absolute", inset: 0,
+                    transition: "opacity .5s cubic-bezier(.16,1,.3,1), transform .5s cubic-bezier(.16,1,.3,1)",
+                    opacity: activeStep === card.idx ? 1 : 0,
+                    transform: activeStep === card.idx ? "scale(1) translateY(0)" : "scale(.97) translateY(16px)",
+                    pointerEvents: activeStep === card.idx ? "auto" : "none",
+                  }}>
+                    <div style={{ background: card.bg, border: `1px solid ${card.border}`, borderRadius: 16, padding: "44px 40px", boxShadow: `0 32px 64px -20px rgba(0,0,0,.7),inset 0 1px 0 ${card.insetBorder}`, height: "100%", display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
+                      <div>
+                        <div style={{ fontFamily: "'DM Mono',monospace", fontSize: ".5875rem", letterSpacing: ".18em", color: "hsl(var(--dim))", marginBottom: 28 }}>{card.label}</div>
+                        {card.visual}
+                      </div>
+                      <div>
+                        <h3 style={{ fontFamily: "'Noto Serif Hebrew',serif", fontWeight: 300, fontSize: "1.625rem", letterSpacing: "-.02em", color: "hsl(var(--cream))", marginBottom: 10, lineHeight: 1.25, whiteSpace: "pre-line" }}>{card.title}</h3>
+                        <p style={{ fontSize: ".9375rem", color: "hsl(var(--subtle))", lineHeight: 1.7 }}>{card.body}</p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Step dots */}
+              <div style={{ display: "flex", gap: 8, marginTop: 20, justifyContent: "center" }}>
+                {[0,1,2].map(i => (
+                  <div key={i} style={{ width: i === activeStep ? 24 : 6, height: 4, borderRadius: 99, background: i === activeStep ? "hsl(var(--cream))" : "hsl(var(--line))", transition: "all .4s" }} />
+                ))}
+              </div>
             </div>
           </div>
         </div>
