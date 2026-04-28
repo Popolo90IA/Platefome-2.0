@@ -135,6 +135,7 @@ const KEYFRAMES = `
   @keyframes scrollIndicator { 0%{transform:translateY(0);opacity:1} 100%{transform:translateY(18px);opacity:0} }
   @keyframes stepProgress { from{height:0} to{height:100%} }
   @keyframes fadeIn { from{opacity:0} to{opacity:1} }
+  @keyframes heroFadeIn { from{opacity:0} to{opacity:1} }
   @keyframes slideUp { from{opacity:0;transform:translateY(32px) scale(.97)} to{opacity:1;transform:translateY(0) scale(1)} }
   .fade-a{animation:fadeUp 1s cubic-bezier(.16,1,.3,1) both}
   .fade-b{animation:fadeUp 1s cubic-bezier(.16,1,.3,1) .12s both}
@@ -362,17 +363,17 @@ export default function HomePage() {
       </header>
 
       {/* ═══ HERO ═══ */}
-      <section style={{ paddingTop: 140, paddingBottom: 100, position: "relative", overflow: "hidden", minHeight: "100vh", display: "flex", alignItems: "center" }}>
-        {/* Ambient orbs */}
+      <section style={{ paddingTop: 140, paddingBottom: 100, position: "relative", minHeight: "100vh", display: "flex", alignItems: "center" }}>
+        {/* Ambient orbs — contained in their own overflow:hidden wrapper so they don't clip text */}
         <div aria-hidden style={{ position: "absolute", inset: 0, pointerEvents: "none", overflow: "hidden" }}>
           <div style={{ position: "absolute", top: "8%", left: "2%", width: 800, height: 800, background: "radial-gradient(circle,hsl(36,28%,92%,.07) 0%,transparent 60%)", filter: "blur(90px)", animation: "orbFloat1 20s ease-in-out infinite" }} />
           <div style={{ position: "absolute", top: "40%", right: 0, width: 700, height: 700, background: "radial-gradient(circle,hsl(158,28%,48%,.05) 0%,transparent 60%)", filter: "blur(90px)", animation: "orbFloat2 28s ease-in-out infinite" }} />
           <div style={{ position: "absolute", bottom: 0, left: "40%", width: 600, height: 400, background: "radial-gradient(circle,hsl(36,28%,92%,.04) 0%,transparent 65%)", filter: "blur(80px)", animation: "orbFloat1 35s ease-in-out 5s infinite" }} />
+          {/* Grid */}
+          <div style={{ position: "absolute", inset: 0, backgroundImage: "linear-gradient(hsl(220,7%,16%,.4) 1px,transparent 1px),linear-gradient(90deg,hsl(220,7%,16%,.4) 1px,transparent 1px)", backgroundSize: "80px 80px", opacity: .15, maskImage: "radial-gradient(ellipse 85% 60% at 50% 0%,black 10%,transparent 100%)", WebkitMaskImage: "radial-gradient(ellipse 85% 60% at 50% 0%,black 10%,transparent 100%)" }} />
+          {/* Top line */}
+          <div style={{ position: "absolute", top: 0, left: "50%", transform: "translateX(-50%)", width: 1200, height: 1, background: "linear-gradient(90deg,transparent,hsl(36,28%,92%,.2),hsl(158,28%,48%,.12),hsl(36,28%,92%,.2),transparent)" }} />
         </div>
-        {/* Grid */}
-        <div aria-hidden style={{ position: "absolute", inset: 0, backgroundImage: "linear-gradient(hsl(220,7%,16%,.4) 1px,transparent 1px),linear-gradient(90deg,hsl(220,7%,16%,.4) 1px,transparent 1px)", backgroundSize: "80px 80px", opacity: .15, maskImage: "radial-gradient(ellipse 85% 60% at 50% 0%,black 10%,transparent 100%)", WebkitMaskImage: "radial-gradient(ellipse 85% 60% at 50% 0%,black 10%,transparent 100%)" }} />
-        {/* Top line */}
-        <div aria-hidden style={{ position: "absolute", top: 0, left: "50%", transform: "translateX(-50%)", width: 1200, height: 1, background: "linear-gradient(90deg,transparent,hsl(36,28%,92%,.2),hsl(158,28%,48%,.12),hsl(36,28%,92%,.2),transparent)" }} />
 
         <div style={{ maxWidth: 1320, margin: "0 auto", padding: "0 56px", width: "100%", position: "relative", zIndex: 3, display: "flex", alignItems: "center", direction: "rtl" }} className="hero-cols">
           {/* Text */}
@@ -384,10 +385,10 @@ export default function HomePage() {
             </div>
 
             {/* Headline */}
-            <div className="fade-b" style={{ marginBottom: 36, overflow: "visible" }}>
-              <h1 style={{ fontFamily: "'Noto Serif Hebrew',serif", fontWeight: 300, fontSize: "clamp(48px,4.8vw,96px)", lineHeight: 1.05, letterSpacing: "-.04em", margin: 0, padding: "4px 6px 4px 0", overflow: "visible" }}>
+            <div style={{ marginBottom: 36, animation: "heroFadeIn 1s cubic-bezier(.16,1,.3,1) .12s both" }}>
+              <h1 style={{ fontFamily: "'Noto Serif Hebrew',serif", fontWeight: 300, fontSize: "clamp(48px,4.8vw,96px)", lineHeight: 1.15, letterSpacing: "-.04em", margin: 0, padding: "8px 12px 8px 4px" }}>
                 <span style={{ display: "block", color: "hsl(var(--cream))" }}>התפריט</span>
-                <span style={{ display: "block", fontStyle: "italic", background: "linear-gradient(135deg,hsl(24,80%,32%) 0%,hsl(36,28%,92%) 30%,hsl(28,95%,72%) 55%,hsl(36,28%,92%) 75%,hsl(24,80%,32%) 100%)", backgroundSize: "220% 100%", WebkitBackgroundClip: "text", backgroundClip: "text", WebkitTextFillColor: "transparent", animation: "goldShimmer 5s ease-in-out infinite", paddingInlineEnd: "0.05em" }}>שהלקוחות</span>
+                <span style={{ display: "block", fontStyle: "italic", background: "linear-gradient(135deg,hsl(24,80%,32%) 0%,hsl(36,28%,92%) 30%,hsl(28,95%,72%) 55%,hsl(36,28%,92%) 75%,hsl(24,80%,32%) 100%)", backgroundSize: "220% 100%", WebkitBackgroundClip: "text", backgroundClip: "text", WebkitTextFillColor: "transparent", animation: "goldShimmer 5s ease-in-out infinite", paddingInlineEnd: "0.1em" }}>שהלקוחות</span>
                 <span style={{ display: "block", color: "hsl(36,28%,92%,.28)", fontWeight: 200 }}>לא ישכחו</span>
               </h1>
             </div>
