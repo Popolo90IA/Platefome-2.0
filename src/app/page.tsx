@@ -115,6 +115,9 @@ const KEYFRAMES = `
     50%{box-shadow:0 0 0 1px hsl(36,28%,92%,.42),0 40px 80px -24px rgba(0,0,0,.7),0 0 80px hsl(36,28%,92%,.05)}
   }
   @keyframes shimmerCard { 0%{background-position:-200% 0} 100%{background-position:200% 0} }
+  @keyframes letterReveal { from{opacity:0;transform:translateY(60px) skewY(4deg)} to{opacity:1;transform:translateY(0) skewY(0deg)} }
+  @keyframes lineExpand { from{scaleX:0} to{scaleX:1} }
+  @keyframes subtlePulse { 0%,100%{opacity:.6} 50%{opacity:1} }
   @keyframes floatY { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
   @keyframes kineticWord {
     0%,18%  {transform:translateY(0);opacity:1}
@@ -375,47 +378,73 @@ export default function HomePage() {
           <div style={{ position: "absolute", top: 0, left: "50%", transform: "translateX(-50%)", width: 1200, height: 1, background: "linear-gradient(90deg,transparent,hsl(36,28%,92%,.2),hsl(158,28%,48%,.12),hsl(36,28%,92%,.2),transparent)" }} />
         </div>
 
-        <div style={{ maxWidth: 1320, margin: "0 auto", padding: "0 56px", width: "100%", position: "relative", zIndex: 3, display: "flex", flexDirection: "column", alignItems: "center", direction: "rtl" }}>
+        <div style={{ maxWidth: 1320, margin: "0 auto", padding: "0 56px", width: "100%", position: "relative", zIndex: 3, direction: "rtl" }}>
 
-          {/* ── TITRE EN HAUT centré ── */}
-          <div style={{ textAlign: "center", marginBottom: 20, width: "100%" }}>
+          {/* ══ HERO ÉDITORIAL ══ */}
 
-            {/* Eyebrow pill */}
-            <div className="liquid-glass" style={{ display: "inline-flex", alignItems: "center", gap: 10, marginBottom: 36, padding: "9px 22px", borderRadius: 99 }}>
-              <span style={{ width: 7, height: 7, borderRadius: "50%", background: "hsl(var(--sage))", boxShadow: "0 0 14px hsl(158,28%,48%,.9)", flexShrink: 0, animation: "pulseGlow 2.5s ease-in-out infinite" }} />
-              <span className="eyebrow-gold" style={{ fontSize: ".6875rem" }}>תפריטים תלת-מימד · AR · VR — מסעדות כוכב מישלן</span>
+          {/* Ligne décorative top */}
+          <div style={{ display: "flex", alignItems: "center", gap: 20, marginBottom: 48 }}>
+            <div style={{ flex: 1, height: 1, background: "linear-gradient(90deg, hsl(36,28%,92%,.35), transparent)" }} />
+            <span style={{ fontFamily: "'DM Mono',monospace", fontSize: ".625rem", letterSpacing: ".2em", textTransform: "uppercase", color: "hsl(var(--gold))", animation: "subtlePulse 3s ease-in-out infinite" }}>
+              AR · 3D · VR
+            </span>
+            <div style={{ flex: 1, height: 1, background: "linear-gradient(90deg, transparent, hsl(36,28%,92%,.35))" }} />
+          </div>
+
+          {/* Titre éditorial — grand, pleine largeur, lettrés */}
+          <div style={{ overflow: "visible", marginBottom: 32 }}>
+            {/* Ligne 1 — ultra grand */}
+            <div style={{ overflow: "hidden", lineHeight: 1 }}>
+              <h1 style={{
+                fontFamily: "'Cormorant Garamond', serif",
+                fontWeight: 300,
+                fontSize: "clamp(72px, 10vw, 180px)",
+                lineHeight: 0.9,
+                letterSpacing: "-.02em",
+                margin: 0,
+                padding: "4px 0 8px",
+                color: "hsl(var(--cream))",
+                display: "block",
+                animation: "letterReveal .9s cubic-bezier(.16,1,.3,1) both",
+              }}>
+                תפריט דיגיטלי
+              </h1>
             </div>
 
-            {/* Titre principal — une ligne, grande, élégante */}
-            <h1 style={{
-              fontFamily: "'Cormorant Garamond', 'Noto Serif Hebrew', serif",
-              fontWeight: 300,
-              fontSize: "clamp(56px, 8vw, 140px)",
-              lineHeight: 1,
-              letterSpacing: "-.03em",
-              margin: "0 0 24px",
-              padding: "12px 0",
-              color: "hsl(var(--cream))",
-              whiteSpace: "nowrap",
-            }}>
-              התפריט שהלקוחות{" "}
-              <span style={{
+            {/* Ligne 2 — italique or, légèrement décalée */}
+            <div style={{ overflow: "hidden", lineHeight: 1, paddingRight: "8vw" }}>
+              <h1 style={{
+                fontFamily: "'Cormorant Garamond', serif",
                 fontStyle: "italic",
-                background: "linear-gradient(135deg,hsl(24,80%,32%) 0%,hsl(36,28%,92%) 30%,hsl(28,95%,72%) 55%,hsl(36,28%,92%) 75%,hsl(24,80%,32%) 100%)",
-                backgroundSize: "220% 100%",
+                fontWeight: 300,
+                fontSize: "clamp(56px, 7.5vw, 140px)",
+                lineHeight: 0.95,
+                letterSpacing: "-.01em",
+                margin: 0,
+                padding: "4px 0 8px",
+                background: "linear-gradient(100deg, hsl(28,90%,68%) 0%, hsl(36,28%,92%) 45%, hsl(24,70%,52%) 100%)",
+                backgroundSize: "200% 100%",
                 WebkitBackgroundClip: "text",
                 backgroundClip: "text",
                 WebkitTextFillColor: "transparent",
-                animation: "goldShimmer 5s ease-in-out infinite",
-              }}>לא ישכחו</span>
-            </h1>
+                animation: "letterReveal .9s cubic-bezier(.16,1,.3,1) .15s both, goldShimmer 6s ease-in-out 1s infinite",
+                display: "block",
+              }}>
+                ברמה אחרת
+              </h1>
+            </div>
+          </div>
 
-            {/* Sous-titre + boutons */}
-            <p style={{ fontSize: "1.125rem", lineHeight: 1.8, color: "hsl(var(--subtle))", marginBottom: 40 }}>
-              הלקוח סורק. המנה מופיעה בתלת-מימד על השולחן — זו חוויה גסטרונומית דיגיטלית.
+          {/* Ligne séparatrice animée */}
+          <div style={{ width: "100%", height: 1, background: "linear-gradient(90deg, hsl(36,28%,92%,.5), hsl(158,28%,48%,.3), transparent)", marginBottom: 40, transformOrigin: "right", animation: "lineExpand .8s cubic-bezier(.16,1,.3,1) .4s both" }} />
+
+          {/* Sous-bloc : description + CTA côte à côte */}
+          <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", gap: 40, flexWrap: "wrap" }}>
+            <p style={{ fontSize: "1.0625rem", lineHeight: 1.8, color: "hsl(var(--subtle))", maxWidth: 480, margin: 0 }}>
+              הלקוח סורק · המנה מופיעה בתלת-מימד · ממשק שמסעדות מישלן בוחרות
             </p>
 
-            <div style={{ display: "flex", gap: 14, flexWrap: "wrap", justifyContent: "center", marginBottom: 16 }}>
+            <div style={{ display: "flex", gap: 14, flexWrap: "wrap", flexShrink: 0 }}>
               <Link href="/signup" style={{
                 display: "inline-flex", alignItems: "center", gap: 8,
                 padding: "14px 32px",
@@ -465,6 +494,9 @@ export default function HomePage() {
               >ראה הדגמה</a>
             </div>
           </div>
+
+          {/* Spacing avant le 3D */}
+          <div style={{ height: 60 }} />
 
           {/* ── MODÈLE 3D EN DESSOUS, pleine largeur ── */}
           <div style={{ width: "100%", position: "relative", display: "flex", flexDirection: "column", alignItems: "center" }}>
