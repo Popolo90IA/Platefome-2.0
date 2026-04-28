@@ -317,7 +317,7 @@ export default function HomePage() {
 
         <div style={{ maxWidth: 1320, margin: "0 auto", padding: "0 56px", width: "100%", position: "relative", zIndex: 3, display: "flex", alignItems: "center", direction: "rtl" }} className="hero-cols">
           {/* Text */}
-          <div style={{ flex: "0 0 50%", maxWidth: "50%", paddingLeft: 48 }} className="hero-text">
+          <div style={{ flex: "0 0 50%", maxWidth: "50%", paddingLeft: 48, overflow: "visible" }} className="hero-text">
             {/* Eyebrow pill */}
             <div className="fade-a liquid-glass" style={{ display: "inline-flex", alignItems: "center", gap: 10, marginBottom: 44, padding: "9px 22px", borderRadius: 99 }}>
               <span style={{ width: 7, height: 7, borderRadius: "50%", background: "hsl(var(--sage))", boxShadow: "0 0 14px hsl(158,28%,48%,.9)", flexShrink: 0, animation: "pulseGlow 2.5s ease-in-out infinite" }} />
@@ -325,10 +325,10 @@ export default function HomePage() {
             </div>
 
             {/* Headline */}
-            <div className="fade-b" style={{ marginBottom: 36 }}>
-              <h1 style={{ fontFamily: "'Noto Serif Hebrew',serif", fontWeight: 300, fontSize: "clamp(48px,4.8vw,96px)", lineHeight: .9, letterSpacing: "-.04em", margin: 0 }}>
+            <div className="fade-b" style={{ marginBottom: 36, overflow: "visible" }}>
+              <h1 style={{ fontFamily: "'Noto Serif Hebrew',serif", fontWeight: 300, fontSize: "clamp(48px,4.8vw,96px)", lineHeight: 1.05, letterSpacing: "-.04em", margin: 0, padding: "4px 6px 4px 0", overflow: "visible" }}>
                 <span style={{ display: "block", color: "hsl(var(--cream))" }}>התפריט</span>
-                <span style={{ display: "block", fontStyle: "italic", background: "linear-gradient(135deg,hsl(24,80%,32%) 0%,hsl(36,28%,92%) 30%,hsl(28,95%,72%) 55%,hsl(36,28%,92%) 75%,hsl(24,80%,32%) 100%)", backgroundSize: "220% 100%", WebkitBackgroundClip: "text", backgroundClip: "text", WebkitTextFillColor: "transparent", animation: "goldShimmer 5s ease-in-out infinite" }}>שהלקוחות</span>
+                <span style={{ display: "block", fontStyle: "italic", background: "linear-gradient(135deg,hsl(24,80%,32%) 0%,hsl(36,28%,92%) 30%,hsl(28,95%,72%) 55%,hsl(36,28%,92%) 75%,hsl(24,80%,32%) 100%)", backgroundSize: "220% 100%", WebkitBackgroundClip: "text", backgroundClip: "text", WebkitTextFillColor: "transparent", animation: "goldShimmer 5s ease-in-out infinite", paddingInlineEnd: "0.05em" }}>שהלקוחות</span>
                 <span style={{ display: "block", color: "hsl(36,28%,92%,.28)", fontWeight: 200 }}>לא ישכחו</span>
               </h1>
             </div>
