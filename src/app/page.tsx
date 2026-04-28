@@ -378,12 +378,12 @@ export default function HomePage() {
           <div style={{ position: "absolute", top: 0, left: "50%", transform: "translateX(-50%)", width: 1200, height: 1, background: "linear-gradient(90deg,transparent,hsl(36,28%,92%,.2),hsl(158,28%,48%,.12),hsl(36,28%,92%,.2),transparent)" }} />
         </div>
 
-        <div style={{ maxWidth: 1320, margin: "0 auto", padding: "0 56px", width: "100%", position: "relative", zIndex: 3, direction: "rtl" }}>
+        <div style={{ maxWidth: 1320, margin: "0 auto", padding: "0 56px", width: "100%", position: "relative", zIndex: 3, direction: "rtl", textAlign: "center" }}>
 
           {/* ══ HERO ÉDITORIAL ══ */}
 
           {/* Ligne décorative top */}
-          <div style={{ display: "flex", alignItems: "center", gap: 20, marginBottom: 48 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 20, marginBottom: 40 }}>
             <div style={{ flex: 1, height: 1, background: "linear-gradient(90deg, hsl(36,28%,92%,.35), transparent)" }} />
             <span style={{ fontFamily: "'DM Mono',monospace", fontSize: ".625rem", letterSpacing: ".2em", textTransform: "uppercase", color: "hsl(var(--gold))", animation: "subtlePulse 3s ease-in-out infinite" }}>
               AR · 3D · VR
@@ -391,18 +391,17 @@ export default function HomePage() {
             <div style={{ flex: 1, height: 1, background: "linear-gradient(90deg, transparent, hsl(36,28%,92%,.35))" }} />
           </div>
 
-          {/* Titre éditorial — grand, pleine largeur, lettrés */}
-          <div style={{ overflow: "visible", marginBottom: 32 }}>
-            {/* Ligne 1 — ultra grand */}
-            <div style={{ overflow: "hidden", lineHeight: 1 }}>
+          {/* Titre éditorial — centré, taille réduite */}
+          <div style={{ overflow: "visible", marginBottom: 24 }}>
+            <div style={{ overflow: "hidden" }}>
               <h1 style={{
                 fontFamily: "'Cormorant Garamond', serif",
                 fontWeight: 300,
-                fontSize: "clamp(72px, 10vw, 180px)",
-                lineHeight: 0.9,
+                fontSize: "clamp(48px, 6vw, 100px)",
+                lineHeight: 1,
                 letterSpacing: "-.02em",
                 margin: 0,
-                padding: "4px 0 8px",
+                padding: "4px 0 6px",
                 color: "hsl(var(--cream))",
                 display: "block",
                 animation: "letterReveal .9s cubic-bezier(.16,1,.3,1) both",
@@ -411,17 +410,16 @@ export default function HomePage() {
               </h1>
             </div>
 
-            {/* Ligne 2 — italique or, légèrement décalée */}
-            <div style={{ overflow: "hidden", lineHeight: 1, paddingRight: "8vw" }}>
+            <div style={{ overflow: "hidden" }}>
               <h1 style={{
                 fontFamily: "'Cormorant Garamond', serif",
                 fontStyle: "italic",
                 fontWeight: 300,
-                fontSize: "clamp(56px, 7.5vw, 140px)",
-                lineHeight: 0.95,
+                fontSize: "clamp(40px, 5vw, 84px)",
+                lineHeight: 1,
                 letterSpacing: "-.01em",
                 margin: 0,
-                padding: "4px 0 8px",
+                padding: "4px 0 6px",
                 background: "linear-gradient(100deg, hsl(28,90%,68%) 0%, hsl(36,28%,92%) 45%, hsl(24,70%,52%) 100%)",
                 backgroundSize: "200% 100%",
                 WebkitBackgroundClip: "text",
@@ -435,16 +433,16 @@ export default function HomePage() {
             </div>
           </div>
 
-          {/* Ligne séparatrice animée */}
-          <div style={{ width: "100%", height: 1, background: "linear-gradient(90deg, hsl(36,28%,92%,.5), hsl(158,28%,48%,.3), transparent)", marginBottom: 40, transformOrigin: "right", animation: "lineExpand .8s cubic-bezier(.16,1,.3,1) .4s both" }} />
+          {/* Ligne séparatrice */}
+          <div style={{ width: "60%", margin: "0 auto 32px", height: 1, background: "linear-gradient(90deg, transparent, hsl(36,28%,92%,.4), hsl(158,28%,48%,.3), hsl(36,28%,92%,.4), transparent)" }} />
 
-          {/* Sous-bloc : description + CTA côte à côte */}
-          <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", gap: 40, flexWrap: "wrap" }}>
-            <p style={{ fontSize: "1.0625rem", lineHeight: 1.8, color: "hsl(var(--subtle))", maxWidth: 480, margin: 0 }}>
-              הלקוח סורק · המנה מופיעה בתלת-מימד · ממשק שמסעדות מישלן בוחרות
-            </p>
+          {/* Description */}
+          <p style={{ fontSize: "1.0625rem", lineHeight: 1.8, color: "hsl(var(--subtle))", maxWidth: 520, margin: "0 auto 36px" }}>
+            הלקוח סורק · המנה מופיעה בתלת-מימד · ממשק שמסעדות מישלן בוחרות
+          </p>
 
-            <div style={{ display: "flex", gap: 14, flexWrap: "wrap", flexShrink: 0 }}>
+          {/* CTA centré */}
+          <div style={{ display: "flex", gap: 14, flexWrap: "wrap", justifyContent: "center", marginBottom: 0 }}>
               <Link href="/signup" style={{
                 display: "inline-flex", alignItems: "center", gap: 8,
                 padding: "14px 32px",
@@ -493,7 +491,6 @@ export default function HomePage() {
                 }}
               >ראה הדגמה</a>
             </div>
-          </div>
 
           {/* Spacing avant le 3D */}
           <div style={{ height: 60 }} />
