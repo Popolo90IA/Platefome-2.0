@@ -386,7 +386,7 @@ export default function HomePage() {
 
             {/* Headline */}
             <div style={{ marginBottom: 36, animation: "heroFadeIn 1s cubic-bezier(.16,1,.3,1) .12s both" }}>
-              <h1 style={{ fontFamily: "'Noto Serif Hebrew',serif", fontWeight: 300, fontSize: "clamp(48px,4.8vw,96px)", lineHeight: 1.15, letterSpacing: "-.04em", margin: 0, padding: "8px 12px 8px 4px" }}>
+              <h1 style={{ fontFamily: "'Noto Serif Hebrew',serif", fontWeight: 300, fontSize: "clamp(64px,6.5vw,128px)", lineHeight: 1.15, letterSpacing: "-.04em", margin: 0, padding: "8px 12px 8px 4px" }}>
                 <span style={{ display: "block", color: "hsl(var(--cream))" }}>התפריט</span>
                 <span style={{ display: "block", fontStyle: "italic", background: "linear-gradient(135deg,hsl(24,80%,32%) 0%,hsl(36,28%,92%) 30%,hsl(28,95%,72%) 55%,hsl(36,28%,92%) 75%,hsl(24,80%,32%) 100%)", backgroundSize: "220% 100%", WebkitBackgroundClip: "text", backgroundClip: "text", WebkitTextFillColor: "transparent", animation: "goldShimmer 5s ease-in-out infinite", paddingInlineEnd: "0.1em" }}>שהלקוחות</span>
                 <span style={{ display: "block", color: "hsl(36,28%,92%,.28)", fontWeight: 200 }}>לא ישכחו</span>
