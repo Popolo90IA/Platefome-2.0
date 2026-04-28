@@ -324,23 +324,12 @@ export default function HomePage() {
               <span className="eyebrow-gold" style={{ fontSize: ".6875rem" }}>תפריטים תלת-מימד · AR · VR — מסעדות כוכב מישלן</span>
             </div>
 
-            {/* Kinetic headline */}
+            {/* Headline */}
             <div className="fade-b" style={{ marginBottom: 36 }}>
-              <h1 style={{ fontFamily: "'Noto Serif Hebrew',serif", fontWeight: 300, fontSize: "clamp(56px,5.5vw,108px)", lineHeight: .86, letterSpacing: "-.04em", margin: 0 }}>
-                <span style={{ display: "block", color: "hsl(var(--cream))", marginBottom: 4 }}>הטלפון</span>
-                {/* Kinetic cycling word */}
-                <span style={{ display: "block", position: "relative", height: "1.05em", overflow: "hidden", marginBottom: 4 }}>
-                  <span className="kinetic-a">
-                    <span style={{ background: "linear-gradient(135deg,hsl(24,80%,32%) 0%,hsl(36,28%,92%) 28%,hsl(28,95%,72%) 50%,hsl(36,28%,92%) 72%,hsl(24,80%,32%) 100%)", backgroundSize: "220% 100%", WebkitBackgroundClip: "text", backgroundClip: "text", WebkitTextFillColor: "transparent", fontStyle: "italic", animation: "goldShimmer 3.5s ease-in-out infinite,kineticWord 9s cubic-bezier(.76,0,.24,1) infinite" }}>הופך</span>
-                  </span>
-                  <span className="kinetic-b">
-                    <span style={{ background: "linear-gradient(135deg,hsl(158,28%,48%) 0%,hsl(36,28%,92%) 60%,hsl(158,28%,48%) 100%)", backgroundSize: "220% 100%", WebkitBackgroundClip: "text", backgroundClip: "text", WebkitTextFillColor: "transparent", fontStyle: "italic" }}>סורק</span>
-                  </span>
-                  <span className="kinetic-c">
-                    <span style={{ color: "hsl(36,28%,92%,.4)", fontStyle: "italic" }}>חושף</span>
-                  </span>
-                </span>
-                <span style={{ display: "block", color: "hsl(36,28%,92%,.3)" }}>לצלחת</span>
+              <h1 style={{ fontFamily: "'Noto Serif Hebrew',serif", fontWeight: 300, fontSize: "clamp(48px,4.8vw,96px)", lineHeight: .9, letterSpacing: "-.04em", margin: 0 }}>
+                <span style={{ display: "block", color: "hsl(var(--cream))" }}>התפריט</span>
+                <span style={{ display: "block", fontStyle: "italic", background: "linear-gradient(135deg,hsl(24,80%,32%) 0%,hsl(36,28%,92%) 30%,hsl(28,95%,72%) 55%,hsl(36,28%,92%) 75%,hsl(24,80%,32%) 100%)", backgroundSize: "220% 100%", WebkitBackgroundClip: "text", backgroundClip: "text", WebkitTextFillColor: "transparent", animation: "goldShimmer 5s ease-in-out infinite" }}>שהלקוחות</span>
+                <span style={{ display: "block", color: "hsl(36,28%,92%,.28)", fontWeight: 200 }}>לא ישכחו</span>
               </h1>
             </div>
 
@@ -459,7 +448,7 @@ export default function HomePage() {
 
       {/* ═══ MARQUEE BAND ═══ */}
       <div style={{ background: "hsl(var(--void))", borderTop: "1px solid hsl(var(--line))", borderBottom: "1px solid hsl(var(--line))" }}>
-        <div style={{ overflow: "hidden", WebkitMaskImage: "linear-gradient(90deg,transparent,black 10%,black 90%,transparent)", maskImage: "linear-gradient(90deg,transparent,black 10%,black 90%,transparent)", padding: "20px 0" }}>
+        <div style={{ overflow: "hidden", padding: "20px 0" }}>
           <div style={{ display: "flex", width: "max-content", animation: "marqueeScroll 55s linear infinite" }}>
             {[...Array(2)].flatMap((_, k) => [
               <span key={`a1-${k}`} style={{ display: "inline-flex", alignItems: "center", gap: 24, paddingLeft: 24, fontFamily: "'Noto Serif Hebrew',serif", fontSize: "1.45rem", fontWeight: 300, fontStyle: "italic", color: "hsl(var(--cream))", whiteSpace: "nowrap" }}>בשר וגריל<span style={{ color: "hsl(var(--line))" }}>·</span></span>,
