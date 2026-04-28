@@ -62,10 +62,10 @@ export function DishDetailView({ dish, restaurant, slug }: DishDetailViewProps) 
 
   /* Badges */
   const badges: { label: string; color: string; bg: string }[] = [
-    ...(dish.is_new ? [{ label: "חדש", color: "hsl(158,28%,48%)", bg: "hsl(158,28%,48%,.08)" }] : []),
+    ...(dish.is_new ? [{ label: "חדש", color: "hsl(28,88%,52%)", bg: "hsl(28,88%,52%,.08)" }] : []),
     ...(dish.is_signature ? [{ label: "מנת שף", color: "hsl(36,28%,92%)", bg: "hsl(36,28%,92%,.06)" }] : []),
     ...(dish.is_featured ? [{ label: "מובלט", color: "hsl(28,90%,58%)", bg: "hsl(28,90%,58%,.08)" }] : []),
-    ...(dish.ar_enabled ? [{ label: "AR", color: "hsl(158,28%,48%)", bg: "hsl(158,28%,48%,.08)" }] : []),
+    ...(dish.ar_enabled ? [{ label: "AR", color: "hsl(28,88%,52%)", bg: "hsl(28,88%,52%,.08)" }] : []),
     ...(dish.model_3d_url ? [{ label: "3D", color: "hsl(36,28%,92%)", bg: "hsl(36,28%,92%,.06)" }] : []),
     ...(!dish.is_available ? [{ label: "לא זמין", color: "hsl(0,60%,52%)", bg: "hsl(0,60%,52%,.08)" }] : []),
   ];
@@ -167,14 +167,14 @@ export function DishDetailView({ dish, restaurant, slug }: DishDetailViewProps) 
                   <div style={{
                     display: "flex", alignItems: "center", gap: 10,
                     padding: "12px 20px",
-                    background: "hsl(158,28%,48%,.07)", border: "1px solid hsl(158,28%,48%,.25)", borderRadius: 10,
+                    background: "hsl(28,88%,52%,.07)", border: "1px solid hsl(28,88%,52%,.25)", borderRadius: 10,
                     flex: 1,
                   }}>
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="hsl(158,28%,48%)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="hsl(28,88%,52%)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                       <path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/>
                     </svg>
                     <div>
-                      <div style={{ fontFamily: "'DM Mono',monospace", fontSize: ".5875rem", letterSpacing: ".14em", color: "hsl(158,28%,48%)", textTransform: "uppercase", marginBottom: 2 }}>מציאות רבודה</div>
+                      <div style={{ fontFamily: "'DM Mono',monospace", fontSize: ".5875rem", letterSpacing: ".14em", color: "hsl(28,88%,52%)", textTransform: "uppercase", marginBottom: 2 }}>מציאות רבודה</div>
                       <div style={{ fontSize: ".8125rem", color: "hsl(var(--subtle))" }}>כוון מצלמה לשולחן</div>
                     </div>
                   </div>
@@ -279,10 +279,10 @@ export function DishDetailView({ dish, restaurant, slug }: DishDetailViewProps) 
 
             {/* Status indicators */}
             <div className="dish-fade-d" style={{ display: "flex", flexDirection: "column", gap: 12, paddingTop: 28, borderTop: "1px solid hsl(var(--line))" }}>
-              <StatusRow label="זמינות" value={dish.is_available ? "זמין עכשיו" : "לא זמין"} color={dish.is_available ? "hsl(158,28%,48%)" : "hsl(0,60%,52%)"} icon={dish.is_available ? "✓" : "✗"} />
-              {dish.is_new && <StatusRow label="מנה חדשה" value="נוסף לאחרונה לתפריט" color="hsl(158,28%,48%)" icon="★" />}
+              <StatusRow label="זמינות" value={dish.is_available ? "זמין עכשיו" : "לא זמין"} color={dish.is_available ? "hsl(28,88%,52%)" : "hsl(0,60%,52%)"} icon={dish.is_available ? "✓" : "✗"} />
+              {dish.is_new && <StatusRow label="מנה חדשה" value="נוסף לאחרונה לתפריט" color="hsl(28,88%,52%)" icon="★" />}
               {dish.is_signature && <StatusRow label="מנת שף" value="המלצה מיוחדת של השף" color="hsl(36,28%,92%)" icon="♦" />}
-              {dish.ar_enabled && <StatusRow label="AR זמין" value="סרוק עם המצלמה לחוויה תלת-מימד" color="hsl(158,28%,48%)" icon="◉" />}
+              {dish.ar_enabled && <StatusRow label="AR זמין" value="סרוק עם המצלמה לחוויה תלת-מימד" color="hsl(28,88%,52%)" icon="◉" />}
             </div>
           </div>
         </div>

@@ -182,7 +182,7 @@ const IconArrow = () => (
   </svg>
 );
 const IconCheck = () => (
-  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="hsl(158,28%,48%)" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="hsl(28,88%,52%)" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
     <polyline points="20 6 9 17 4 12"/>
   </svg>
 );
@@ -311,7 +311,7 @@ export default function HomePage() {
               <p style={{ fontSize: "1.0625rem", color: "hsl(var(--subtle))", lineHeight: 1.75, margin: 0 }}>{selectedDish.desc}</p>
 
               <div style={{ marginTop: 28, padding: "16px 20px", background: "hsl(36,28%,92%,.04)", border: "1px solid hsl(36,28%,92%,.08)", borderRadius: 10, display: "flex", alignItems: "center", gap: 10 }}>
-                <span style={{ width: 6, height: 6, borderRadius: "50%", background: "hsl(var(--sage))", boxShadow: "0 0 8px hsl(158,28%,48%,.8)", flexShrink: 0 }} />
+                <span style={{ width: 6, height: 6, borderRadius: "50%", background: "hsl(var(--sage))", boxShadow: "0 0 8px hsl(28,88%,52%,.8)", flexShrink: 0 }} />
                 <span style={{ fontFamily: "'DM Mono',monospace", fontSize: ".6875rem", letterSpacing: ".12em", color: "hsl(var(--dim))", textTransform: "uppercase" }}>זמין לצפייה בתלת-מימד ו-AR</span>
               </div>
             </div>
@@ -321,7 +321,7 @@ export default function HomePage() {
 
       {/* ═══ HEADER ═══ */}
       <header id="site-header" style={{ position: "fixed", top: 0, left: 0, right: 0, zIndex: 50, transition: "background .4s,border-color .4s" }}>
-        <div aria-hidden style={{ position: "absolute", top: 0, left: 0, right: 0, height: 1, background: "linear-gradient(90deg,transparent,hsl(36,28%,92%,.45),hsl(158,28%,48%,.25),hsl(36,28%,92%,.45),transparent)", backgroundSize: "200% 100%", animation: "borderRun 5s linear infinite" }} />
+        <div aria-hidden style={{ position: "absolute", top: 0, left: 0, right: 0, height: 1, background: "linear-gradient(90deg,transparent,hsl(36,28%,92%,.45),hsl(28,88%,52%,.25),hsl(36,28%,92%,.45),transparent)", backgroundSize: "200% 100%", animation: "borderRun 5s linear infinite" }} />
         <div style={{ maxWidth: 1320, margin: "0 auto", padding: "0 56px", height: 68, display: "flex", alignItems: "center", justifyContent: "space-between", direction: "rtl" }}>
           <Link href="/" style={{ display: "flex", alignItems: "center", gap: 12, textDecoration: "none", flexShrink: 0 }}>
             <div style={{ width: 36, height: 36, background: "linear-gradient(135deg,hsl(36,28%,92%,.12),hsl(36,28%,92%,.04))", border: "1px solid hsl(36,28%,92%,.35)", borderRadius: 6, display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "inset 0 1px 0 hsl(36,28%,92%,.18),0 4px 20px hsl(36,28%,92%,.12)" }}>
@@ -370,12 +370,12 @@ export default function HomePage() {
         {/* Ambient orbs — contained in their own overflow:hidden wrapper so they don't clip text */}
         <div aria-hidden style={{ position: "absolute", inset: 0, pointerEvents: "none", overflow: "hidden" }}>
           <div style={{ position: "absolute", top: "8%", left: "2%", width: 800, height: 800, background: "radial-gradient(circle,hsl(36,28%,92%,.07) 0%,transparent 60%)", filter: "blur(90px)", animation: "orbFloat1 20s ease-in-out infinite" }} />
-          <div style={{ position: "absolute", top: "40%", right: 0, width: 700, height: 700, background: "radial-gradient(circle,hsl(158,28%,48%,.05) 0%,transparent 60%)", filter: "blur(90px)", animation: "orbFloat2 28s ease-in-out infinite" }} />
+          <div style={{ position: "absolute", top: "40%", right: 0, width: 700, height: 700, background: "radial-gradient(circle,hsl(28,88%,52%,.05) 0%,transparent 60%)", filter: "blur(90px)", animation: "orbFloat2 28s ease-in-out infinite" }} />
           <div style={{ position: "absolute", bottom: 0, left: "40%", width: 600, height: 400, background: "radial-gradient(circle,hsl(36,28%,92%,.04) 0%,transparent 65%)", filter: "blur(80px)", animation: "orbFloat1 35s ease-in-out 5s infinite" }} />
           {/* Grid */}
           <div style={{ position: "absolute", inset: 0, backgroundImage: "linear-gradient(hsl(220,7%,16%,.4) 1px,transparent 1px),linear-gradient(90deg,hsl(220,7%,16%,.4) 1px,transparent 1px)", backgroundSize: "80px 80px", opacity: .15, maskImage: "radial-gradient(ellipse 85% 60% at 50% 0%,black 10%,transparent 100%)", WebkitMaskImage: "radial-gradient(ellipse 85% 60% at 50% 0%,black 10%,transparent 100%)" }} />
           {/* Top line */}
-          <div style={{ position: "absolute", top: 0, left: "50%", transform: "translateX(-50%)", width: 1200, height: 1, background: "linear-gradient(90deg,transparent,hsl(36,28%,92%,.2),hsl(158,28%,48%,.12),hsl(36,28%,92%,.2),transparent)" }} />
+          <div style={{ position: "absolute", top: 0, left: "50%", transform: "translateX(-50%)", width: 1200, height: 1, background: "linear-gradient(90deg,transparent,hsl(36,28%,92%,.2),hsl(28,88%,52%,.12),hsl(36,28%,92%,.2),transparent)" }} />
         </div>
 
         <div style={{ maxWidth: 1320, margin: "0 auto", padding: "0 56px", width: "100%", position: "relative", zIndex: 3, direction: "rtl", textAlign: "center" }}>
@@ -434,7 +434,7 @@ export default function HomePage() {
           </div>
 
           {/* Ligne séparatrice */}
-          <div style={{ width: "60%", margin: "0 auto 32px", height: 1, background: "linear-gradient(90deg, transparent, hsl(36,28%,92%,.4), hsl(158,28%,48%,.3), hsl(36,28%,92%,.4), transparent)" }} />
+          <div style={{ width: "60%", margin: "0 auto 32px", height: 1, background: "linear-gradient(90deg, transparent, hsl(36,28%,92%,.4), hsl(28,88%,52%,.3), hsl(36,28%,92%,.4), transparent)" }} />
 
           {/* Description */}
           <p style={{ fontSize: "1.0625rem", lineHeight: 1.8, color: "hsl(var(--subtle))", maxWidth: 520, margin: "0 auto 36px" }}>
@@ -480,9 +480,9 @@ export default function HomePage() {
                 transition: "border-color .2s,color .2s,background .2s",
               }}
                 onMouseOver={e => {
-                  (e.currentTarget as HTMLAnchorElement).style.borderColor = "hsl(158,28%,48%,.6)";
+                  (e.currentTarget as HTMLAnchorElement).style.borderColor = "hsl(28,88%,52%,.6)";
                   (e.currentTarget as HTMLAnchorElement).style.color = "hsl(var(--sage))";
-                  (e.currentTarget as HTMLAnchorElement).style.background = "hsl(158,28%,48%,.06)";
+                  (e.currentTarget as HTMLAnchorElement).style.background = "hsl(28,88%,52%,.06)";
                 }}
                 onMouseOut={e => {
                   (e.currentTarget as HTMLAnchorElement).style.borderColor = "hsl(var(--line))";
@@ -622,14 +622,14 @@ export default function HomePage() {
                   },
                   {
                     idx: 1,
-                    bg: "linear-gradient(135deg,hsl(158,22%,8%) 0%,hsl(220,10%,6%) 100%)",
-                    border: "hsl(158,28%,48%,.2)",
-                    insetBorder: "hsl(158,28%,48%,.1)",
+                    bg: "linear-gradient(135deg,hsl(28,20%,8%) 0%,hsl(220,10%,6%) 100%)",
+                    border: "hsl(28,88%,52%,.2)",
+                    insetBorder: "hsl(28,88%,52%,.1)",
                     label: "02 / 03 — AR",
                     title: "המנה על\nהשולחן, ב-AR",
                     body: "iPhone ו-Android מציגים את המנה במציאות רבודה. כל מנה — לפני ההזמנה.",
                     visual: (
-                      <div style={{ width: 56, height: 56, background: "hsl(158,28%,48%,.08)", border: "1px solid hsl(158,28%,48%,.25)", borderRadius: 10, display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 20, color: "hsl(var(--sage))" }}>
+                      <div style={{ width: 56, height: 56, background: "hsl(28,88%,52%,.08)", border: "1px solid hsl(28,88%,52%,.25)", borderRadius: 10, display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 20, color: "hsl(var(--sage))" }}>
                         <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round">
                           <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
                           <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
@@ -688,7 +688,7 @@ export default function HomePage() {
             <div style={{ flex: 1 }}>
               {[
                 { num: "01", icon: <IconScan />, accentColor: "hsl(36,28%,92%)", bg: "hsl(36,28%,92%,.06)", border: "hsl(36,28%,92%,.12)", eyebrowEl: <span className="eyebrow" style={{ display: "block", marginBottom: 8, fontSize: ".75rem" }}>סריקה</span>, title: <>הלקוח מכוון,<br />התפריט נפתח</>, body: "קוד QR אישי. תוך 0.8 שניות התפריט נפתח ישירות בדפדפן — ללא אפליקציה, ללא הורדה.", topLine: "linear-gradient(90deg,transparent,hsl(36,28%,92%,.2),transparent)" },
-                { num: "02", icon: <IconCube />, accentColor: "hsl(var(--sage))", bg: "hsl(158,28%,48%,.08)", border: "hsl(158,28%,48%,.2)", eyebrowEl: <span className="eyebrow-sage" style={{ display: "block", marginBottom: 8, fontSize: ".75rem" }}>תלת-מימד AR</span>, title: <>המנה על<br />השולחן, ב-AR</>, body: "iPhone ו-Android מציגים את המנה במציאות רבודה. כל מנה — לפני ההזמנה.", topLine: "linear-gradient(90deg,transparent,hsl(158,28%,48%,.35),transparent)" },
+                { num: "02", icon: <IconCube />, accentColor: "hsl(var(--sage))", bg: "hsl(28,88%,52%,.08)", border: "hsl(28,88%,52%,.2)", eyebrowEl: <span className="eyebrow-gold" style={{ display: "block", marginBottom: 8, fontSize: ".75rem" }}>תלת-מימד AR</span>, title: <>המנה על<br />השולחן, ב-AR</>, body: "iPhone ו-Android מציגים את המנה במציאות רבודה. כל מנה — לפני ההזמנה.", topLine: "linear-gradient(90deg,transparent,hsl(28,88%,52%,.35),transparent)" },
                 { num: "03", icon: <IconBar />, accentColor: "hsl(var(--pale))", bg: "hsl(220,3%,64%,.06)", border: "hsl(220,3%,64%,.15)", eyebrowEl: <span className="eyebrow" style={{ display: "block", marginBottom: 8, fontSize: ".75rem" }}>אנליטיקה</span>, title: <>+30% הזמנות<br />נמדדו</>, body: "שולחנות שסורקים ממירים 3.4× יותר. אנליטיקה בזמן אמת: צפיות, המרות, מנות פופולריות.", topLine: "linear-gradient(90deg,transparent,hsl(220,3%,64%,.2),transparent)" },
               ].map((f, i) => (
                 <div key={i} data-step={i} className="card-surface reveal" data-delay={String(i * 120)} style={{ padding: "28px 32px", borderRadius: 8, position: "relative", overflow: "hidden", marginBottom: 10 }}>
@@ -769,9 +769,9 @@ export default function HomePage() {
                 שלוש תוכניות.<br /><span style={{ fontStyle: "italic", color: "hsl(36,12%,64%)" }}>אפס הפתעות.</span>
               </h2>
             </div>
-            <div style={{ display: "inline-flex", alignItems: "center", gap: 10, padding: "10px 22px", background: "hsl(158,28%,48%,.07)", border: "1px solid hsl(158,28%,48%,.22)", borderRadius: 99 }}>
-              <span style={{ width: 7, height: 7, borderRadius: "50%", background: "hsl(var(--sage))", boxShadow: "0 0 10px hsl(158,28%,48%,.8)", animation: "pulseGlow 2.5s ease-in-out infinite" }} />
-              <span className="eyebrow-sage" style={{ fontSize: ".6875rem" }}>חודש ראשון מתנה</span>
+            <div style={{ display: "inline-flex", alignItems: "center", gap: 10, padding: "10px 22px", background: "hsl(28,88%,52%,.07)", border: "1px solid hsl(28,88%,52%,.22)", borderRadius: 99 }}>
+              <span style={{ width: 7, height: 7, borderRadius: "50%", background: "hsl(var(--sage))", boxShadow: "0 0 10px hsl(28,88%,52%,.8)", animation: "pulseGlow 2.5s ease-in-out infinite" }} />
+              <span className="eyebrow-gold" style={{ fontSize: ".6875rem" }}>חודש ראשון מתנה</span>
             </div>
           </div>
 
@@ -839,7 +839,7 @@ export default function HomePage() {
                 <div style={{ display: "flex", flexDirection: "column", gap: 14, marginBottom: 32 }}>
                   {["מנות ללא הגבלה","וידאו לכל מנה","3 שפות + תרגום","אנליטיקה מתקדמת","תמיכה מועדפת"].map(f => (
                     <div key={f} style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="hsl(158,28%,48%)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="hsl(28,88%,52%)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
                       <span style={{ fontSize: ".9375rem", color: "hsl(var(--cream))" }}>{f}</span>
                     </div>
                   ))}
