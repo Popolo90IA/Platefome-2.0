@@ -185,7 +185,7 @@
     -webkit-background-clip: text; background-clip: text;
     -webkit-text-fill-color: transparent; color: transparent;
   }
-  .bg-gold-gradient { background: linear-gradient(135deg, hsl(var(--surface)), hsl(var(--line))); }
+  .bg-gold-gradient { background: linear-gradient(135deg, hsl(28,88%,52%) 0%, hsl(36,90%,62%) 50%, hsl(28,85%,48%) 100%); }
   .text-gold-glow { color: hsl(var(--cream)); text-shadow: 0 0 40px hsl(var(--cream) / 0.12); }
   .text-crimson-glow { color: hsl(var(--ember)); text-shadow: 0 0 20px hsl(var(--ember)/0.4); }
   .divider-gold { background: linear-gradient(90deg, transparent, hsl(var(--line)), transparent); height: 1px; }
