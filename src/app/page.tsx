@@ -540,30 +540,12 @@ export default function HomePage() {
             </h2>
           </div>
 
-          {/* Sticky layout — text left (RTL), sticky visual right */}
+          {/* Sticky layout — RTL: sticky visual FIRST in DOM = visually RIGHT */}
           <div className="steps-layout" style={{ display: "flex", gap: 80, alignItems: "flex-start" }} ref={stepsRef}>
-            {/* Scrollable left — text steps */}
-            <div style={{ flex: 1 }}>
-              {[
-                { num: "01", icon: <IconScan />, accentColor: "hsl(36,28%,92%)", bg: "hsl(36,28%,92%,.06)", border: "hsl(36,28%,92%,.12)", eyebrowEl: <span className="eyebrow" style={{ display: "block", marginBottom: 14, fontSize: ".75rem" }}>סריקה</span>, title: <>הלקוח מכוון,<br />התפריט נפתח</>, body: "קוד QR אישי. תוך 0.8 שניות התפריט נפתח ישירות בדפדפן — ללא אפליקציה, ללא הורדה.", topLine: "linear-gradient(90deg,transparent,hsl(36,28%,92%,.2),transparent)" },
-                { num: "02", icon: <IconCube />, accentColor: "hsl(var(--sage))", bg: "hsl(158,28%,48%,.08)", border: "hsl(158,28%,48%,.2)", eyebrowEl: <span className="eyebrow-sage" style={{ display: "block", marginBottom: 14, fontSize: ".75rem" }}>תלת-מימד AR</span>, title: <>המנה על<br />השולחן, ב-AR</>, body: "iPhone ו-Android מציגים את המנה במציאות רבודה. כל מנה — לפני ההזמנה.", topLine: "linear-gradient(90deg,transparent,hsl(158,28%,48%,.35),transparent)" },
-                { num: "03", icon: <IconBar />, accentColor: "hsl(var(--pale))", bg: "hsl(220,3%,64%,.06)", border: "hsl(220,3%,64%,.15)", eyebrowEl: <span className="eyebrow" style={{ display: "block", marginBottom: 14, fontSize: ".75rem" }}>אנליטיקה</span>, title: <>+30% הזמנות<br />נמדדו</>, body: "שולחנות שסורקים ממירים 3.4× יותר. אנליטיקה בזמן אמת: צפיות, המרות, מנות פופולריות.", topLine: "linear-gradient(90deg,transparent,hsl(220,3%,64%,.2),transparent)" },
-              ].map((f, i) => (
-                <div key={i} data-step={i} className="card-surface reveal" data-delay={String(i * 120)} style={{ padding: "52px 44px", borderRadius: 8, position: "relative", overflow: "hidden", marginBottom: 24 }}>
-                  <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 2, background: f.topLine }} />
-                  <div style={{ fontFamily: "'DM Mono',monospace", fontSize: ".6875rem", letterSpacing: ".18em", color: "hsl(var(--dim))", marginBottom: 28 }}>{f.num}</div>
-                  <div style={{ width: 48, height: 48, display: "flex", alignItems: "center", justifyContent: "center", background: f.bg, border: `1px solid ${f.border}`, borderRadius: 8, marginBottom: 28, color: f.accentColor }}>{f.icon}</div>
-                  {f.eyebrowEl}
-                  <h3 style={{ fontFamily: "'Noto Serif Hebrew',serif", fontWeight: 300, fontSize: "1.875rem", letterSpacing: "-.02em", color: "hsl(var(--cream))", marginBottom: 20, lineHeight: 1.15 }}>{f.title}</h3>
-                  <p style={{ fontSize: "1.0625rem", color: "hsl(var(--subtle))", lineHeight: 1.7 }}>{f.body}</p>
-                </div>
-              ))}
-            </div>
 
-            {/* Sticky right — visual card */}
-            <div className="steps-sticky" style={{ flex: "0 0 42%", position: "sticky", top: 120 }}>
-              {/* Container with fixed height = tallest card */}
-              <div style={{ position: "relative", minHeight: 440 }}>
+            {/* Sticky visual — first in DOM → right side in RTL */}
+            <div className="steps-sticky" style={{ flex: "0 0 44%", position: "sticky", top: 100 }}>
+              <div style={{ position: "relative", minHeight: 520 }}>
                 {[
                   {
                     idx: 0,
@@ -644,6 +626,25 @@ export default function HomePage() {
                 ))}
               </div>
             </div>
+
+            {/* Scrollable text steps — second in DOM → left side in RTL */}
+            <div style={{ flex: 1 }}>
+              {[
+                { num: "01", icon: <IconScan />, accentColor: "hsl(36,28%,92%)", bg: "hsl(36,28%,92%,.06)", border: "hsl(36,28%,92%,.12)", eyebrowEl: <span className="eyebrow" style={{ display: "block", marginBottom: 14, fontSize: ".75rem" }}>סריקה</span>, title: <>הלקוח מכוון,<br />התפריט נפתח</>, body: "קוד QR אישי. תוך 0.8 שניות התפריט נפתח ישירות בדפדפן — ללא אפליקציה, ללא הורדה.", topLine: "linear-gradient(90deg,transparent,hsl(36,28%,92%,.2),transparent)" },
+                { num: "02", icon: <IconCube />, accentColor: "hsl(var(--sage))", bg: "hsl(158,28%,48%,.08)", border: "hsl(158,28%,48%,.2)", eyebrowEl: <span className="eyebrow-sage" style={{ display: "block", marginBottom: 14, fontSize: ".75rem" }}>תלת-מימד AR</span>, title: <>המנה על<br />השולחן, ב-AR</>, body: "iPhone ו-Android מציגים את המנה במציאות רבודה. כל מנה — לפני ההזמנה.", topLine: "linear-gradient(90deg,transparent,hsl(158,28%,48%,.35),transparent)" },
+                { num: "03", icon: <IconBar />, accentColor: "hsl(var(--pale))", bg: "hsl(220,3%,64%,.06)", border: "hsl(220,3%,64%,.15)", eyebrowEl: <span className="eyebrow" style={{ display: "block", marginBottom: 14, fontSize: ".75rem" }}>אנליטיקה</span>, title: <>+30% הזמנות<br />נמדדו</>, body: "שולחנות שסורקים ממירים 3.4× יותר. אנליטיקה בזמן אמת: צפיות, המרות, מנות פופולריות.", topLine: "linear-gradient(90deg,transparent,hsl(220,3%,64%,.2),transparent)" },
+              ].map((f, i) => (
+                <div key={i} data-step={i} className="card-surface reveal" data-delay={String(i * 120)} style={{ padding: "52px 44px", borderRadius: 8, position: "relative", overflow: "hidden", marginBottom: 24 }}>
+                  <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 2, background: f.topLine }} />
+                  <div style={{ fontFamily: "'DM Mono',monospace", fontSize: ".6875rem", letterSpacing: ".18em", color: "hsl(var(--dim))", marginBottom: 28 }}>{f.num}</div>
+                  <div style={{ width: 48, height: 48, display: "flex", alignItems: "center", justifyContent: "center", background: f.bg, border: `1px solid ${f.border}`, borderRadius: 8, marginBottom: 28, color: f.accentColor }}>{f.icon}</div>
+                  {f.eyebrowEl}
+                  <h3 style={{ fontFamily: "'Noto Serif Hebrew',serif", fontWeight: 300, fontSize: "1.875rem", letterSpacing: "-.02em", color: "hsl(var(--cream))", marginBottom: 20, lineHeight: 1.15 }}>{f.title}</h3>
+                  <p style={{ fontSize: "1.0625rem", color: "hsl(var(--subtle))", lineHeight: 1.7 }}>{f.body}</p>
+                </div>
+              ))}
+            </div>
+
           </div>
         </div>
       </section>
