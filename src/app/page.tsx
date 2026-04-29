@@ -450,8 +450,48 @@ export default function HomePage() {
             הלקוח סורק · המנה מופיעה בתלת-מימד · ממשק שמסעדות מישלן בוחרות
           </p>
 
-          {/* CTA centré */}
-          <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 14, marginBottom: 0 }}>
+          {/* Spacing avant le 3D */}
+          <div style={{ height: 40 }} />
+
+          {/* ── MODÈLE 3D EN DESSOUS, pleine largeur ── */}
+          <div style={{ width: "100%", position: "relative", display: "flex", flexDirection: "column", alignItems: "center" }}>
+            <div style={{ width: "100%", maxWidth: 900, position: "relative" }}>
+              <HeroCanvas modelUrl={MODELS[modelIdx].url} />
+
+              {/* Arrow left */}
+              <button onClick={prev} aria-label="מודל קודם" style={{ position: "absolute", left: 12, top: "50%", transform: "translateY(-50%)", zIndex: 10, width: 44, height: 44, borderRadius: "50%", background: "hsl(220,10%,6%,.85)", border: "1px solid hsl(36,28%,92%,.18)", backdropFilter: "blur(12px)", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", transition: "border-color .2s,background .2s,box-shadow .2s" }}
+                onMouseOver={e => { const b = e.currentTarget as HTMLButtonElement; b.style.borderColor = "hsl(36,28%,92%,.5)"; b.style.background = "hsl(220,10%,10%,.95)"; b.style.boxShadow = "0 0 20px hsl(36,28%,92%,.1)"; }}
+                onMouseOut={e => { const b = e.currentTarget as HTMLButtonElement; b.style.borderColor = "hsl(36,28%,92%,.18)"; b.style.background = "hsl(220,10%,6%,.85)"; b.style.boxShadow = ""; }}>
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="hsl(36,28%,92%)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+              </button>
+
+              {/* Arrow right */}
+              <button onClick={next} aria-label="מודל הבא" style={{ position: "absolute", right: 12, top: "50%", transform: "translateY(-50%)", zIndex: 10, width: 44, height: 44, borderRadius: "50%", background: "hsl(220,10%,6%,.85)", border: "1px solid hsl(36,28%,92%,.18)", backdropFilter: "blur(12px)", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", transition: "border-color .2s,background .2s,box-shadow .2s" }}
+                onMouseOver={e => { const b = e.currentTarget as HTMLButtonElement; b.style.borderColor = "hsl(36,28%,92%,.5)"; b.style.background = "hsl(220,10%,10%,.95)"; b.style.boxShadow = "0 0 20px hsl(36,28%,92%,.1)"; }}
+                onMouseOut={e => { const b = e.currentTarget as HTMLButtonElement; b.style.borderColor = "hsl(36,28%,92%,.18)"; b.style.background = "hsl(220,10%,6%,.85)"; b.style.boxShadow = ""; }}>
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="hsl(36,28%,92%)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+              </button>
+
+              {/* Dots */}
+              <div style={{ position: "absolute", bottom: 16, left: "50%", transform: "translateX(-50%)", display: "flex", gap: 8, zIndex: 10 }}>
+                {MODELS.map((_, i) => (
+                  <button key={i} onClick={() => setModelIdx(i)} aria-label={`מודל ${i + 1}`} style={{ width: i === modelIdx ? 22 : 7, height: 7, borderRadius: 99, background: i === modelIdx ? "hsl(36,28%,92%)" : "hsl(36,28%,92%,.3)", border: "none", cursor: "pointer", transition: "all .3s cubic-bezier(.16,1,.3,1)", padding: 0 }} />
+                ))}
+              </div>
+            </div>
+
+            {/* Label */}
+            <div style={{ display: "flex", alignItems: "center", gap: 16, marginTop: 20 }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 10, padding: "8px 20px", background: "hsl(220,10%,6%,.9)", border: "1px solid hsl(36,28%,92%,.15)", borderRadius: 99, backdropFilter: "blur(16px)" }}>
+                <span style={{ fontFamily: "'Noto Serif Hebrew',serif", fontSize: ".9rem", color: "hsl(var(--cream))", fontStyle: "italic" }}>{MODELS[modelIdx].label}</span>
+                <span style={{ width: 1, height: 13, background: "hsl(36,28%,92%,.2)" }} />
+                <span style={{ width: 6, height: 6, borderRadius: "50%", background: "hsl(var(--gold))", boxShadow: "0 0 8px hsl(36,28%,92%,.8)", flexShrink: 0 }} />
+                <span style={{ fontFamily: "'DM Mono',monospace", fontSize: ".625rem", letterSpacing: ".14em", color: "hsl(var(--subtle))", textTransform: "uppercase" }}>גרור לסיבוב</span>
+              </div>
+            </div>
+
+            {/* CTA sous le modèle */}
+            <div style={{ display: "flex", gap: 14, flexWrap: "wrap", justifyContent: "center", marginTop: 36 }}>
               <Link href="/signup" style={{
                 display: "inline-flex", alignItems: "center", gap: 8,
                 padding: "14px 32px",
@@ -499,46 +539,6 @@ export default function HomePage() {
                   (e.currentTarget as HTMLAnchorElement).style.background = "transparent";
                 }}
               >ראה הדגמה</a>
-            </div>
-
-          {/* Spacing avant le 3D */}
-          <div style={{ height: 60 }} />
-
-          {/* ── MODÈLE 3D EN DESSOUS, pleine largeur ── */}
-          <div style={{ width: "100%", position: "relative", display: "flex", flexDirection: "column", alignItems: "center" }}>
-            <div style={{ width: "100%", maxWidth: 900, position: "relative" }}>
-              <HeroCanvas modelUrl={MODELS[modelIdx].url} />
-
-              {/* Arrow left */}
-              <button onClick={prev} aria-label="מודל קודם" style={{ position: "absolute", left: 12, top: "50%", transform: "translateY(-50%)", zIndex: 10, width: 44, height: 44, borderRadius: "50%", background: "hsl(220,10%,6%,.85)", border: "1px solid hsl(36,28%,92%,.18)", backdropFilter: "blur(12px)", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", transition: "border-color .2s,background .2s,box-shadow .2s" }}
-                onMouseOver={e => { const b = e.currentTarget as HTMLButtonElement; b.style.borderColor = "hsl(36,28%,92%,.5)"; b.style.background = "hsl(220,10%,10%,.95)"; b.style.boxShadow = "0 0 20px hsl(36,28%,92%,.1)"; }}
-                onMouseOut={e => { const b = e.currentTarget as HTMLButtonElement; b.style.borderColor = "hsl(36,28%,92%,.18)"; b.style.background = "hsl(220,10%,6%,.85)"; b.style.boxShadow = ""; }}>
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="hsl(36,28%,92%)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
-              </button>
-
-              {/* Arrow right */}
-              <button onClick={next} aria-label="מודל הבא" style={{ position: "absolute", right: 12, top: "50%", transform: "translateY(-50%)", zIndex: 10, width: 44, height: 44, borderRadius: "50%", background: "hsl(220,10%,6%,.85)", border: "1px solid hsl(36,28%,92%,.18)", backdropFilter: "blur(12px)", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", transition: "border-color .2s,background .2s,box-shadow .2s" }}
-                onMouseOver={e => { const b = e.currentTarget as HTMLButtonElement; b.style.borderColor = "hsl(36,28%,92%,.5)"; b.style.background = "hsl(220,10%,10%,.95)"; b.style.boxShadow = "0 0 20px hsl(36,28%,92%,.1)"; }}
-                onMouseOut={e => { const b = e.currentTarget as HTMLButtonElement; b.style.borderColor = "hsl(36,28%,92%,.18)"; b.style.background = "hsl(220,10%,6%,.85)"; b.style.boxShadow = ""; }}>
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="hsl(36,28%,92%)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
-              </button>
-
-              {/* Dots */}
-              <div style={{ position: "absolute", bottom: 16, left: "50%", transform: "translateX(-50%)", display: "flex", gap: 8, zIndex: 10 }}>
-                {MODELS.map((_, i) => (
-                  <button key={i} onClick={() => setModelIdx(i)} aria-label={`מודל ${i + 1}`} style={{ width: i === modelIdx ? 22 : 7, height: 7, borderRadius: 99, background: i === modelIdx ? "hsl(36,28%,92%)" : "hsl(36,28%,92%,.3)", border: "none", cursor: "pointer", transition: "all .3s cubic-bezier(.16,1,.3,1)", padding: 0 }} />
-                ))}
-              </div>
-            </div>
-
-            {/* Label */}
-            <div style={{ display: "flex", alignItems: "center", gap: 16, marginTop: 20 }}>
-              <div style={{ display: "flex", alignItems: "center", gap: 10, padding: "8px 20px", background: "hsl(220,10%,6%,.9)", border: "1px solid hsl(36,28%,92%,.15)", borderRadius: 99, backdropFilter: "blur(16px)" }}>
-                <span style={{ fontFamily: "'Noto Serif Hebrew',serif", fontSize: ".9rem", color: "hsl(var(--cream))", fontStyle: "italic" }}>{MODELS[modelIdx].label}</span>
-                <span style={{ width: 1, height: 13, background: "hsl(36,28%,92%,.2)" }} />
-                <span style={{ width: 6, height: 6, borderRadius: "50%", background: "hsl(var(--gold))", boxShadow: "0 0 8px hsl(36,28%,92%,.8)", flexShrink: 0 }} />
-                <span style={{ fontFamily: "'DM Mono',monospace", fontSize: ".625rem", letterSpacing: ".14em", color: "hsl(var(--subtle))", textTransform: "uppercase" }}>גרור לסיבוב</span>
-              </div>
             </div>
           </div>
         </div>
