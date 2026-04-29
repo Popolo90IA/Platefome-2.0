@@ -325,10 +325,15 @@ export default function HomePage() {
         <div style={{ maxWidth: 1320, margin: "0 auto", padding: "0 56px", height: 68, display: "flex", alignItems: "center", justifyContent: "space-between", direction: "rtl" }}>
           <Link href="/" style={{ display: "flex", alignItems: "center", gap: 12, textDecoration: "none", flexShrink: 0 }}>
             <div style={{ width: 36, height: 36, background: "linear-gradient(135deg,hsl(36,28%,92%,.12),hsl(36,28%,92%,.04))", border: "1px solid hsl(36,28%,92%,.35)", borderRadius: 6, display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "inset 0 1px 0 hsl(36,28%,92%,.18),0 4px 20px hsl(36,28%,92%,.12)" }}>
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="hsl(36,28%,92%)" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M2 19h20"/>
-                <path d="M12 3a9 9 0 0 1 9 9H3a9 9 0 0 1 9-9z"/>
-                <path d="M9 19v-2a3 3 0 0 1 6 0v2"/>
+              <svg width="22" height="22" viewBox="0 0 32 32" fill="none" stroke="hsl(36,28%,92%)" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round">
+                {/* Bouton sommet */}
+                <circle cx="16" cy="5.5" r="1.5"/>
+                {/* Dôme */}
+                <path d="M16 7C9.373 7 4 12.373 4 19h24c0-6.627-5.373-12-12-12z"/>
+                {/* Plateau base */}
+                <line x1="2" y1="21" x2="30" y2="21"/>
+                {/* Pied */}
+                <path d="M10 21v1.5a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V21"/>
               </svg>
             </div>
             <span style={{ fontFamily: "'DM Mono',monospace", fontSize: "1rem", fontWeight: 500, letterSpacing: ".18em", textTransform: "uppercase", color: "hsl(var(--cream))" }}>PLATFORME</span>
@@ -934,10 +939,11 @@ export default function HomePage() {
             <div className="reveal" style={{ maxWidth: 280 }}>
               <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 18 }}>
                 <div style={{ width: 32, height: 32, border: "1px solid hsl(36,28%,92%,.35)", borderRadius: 5, background: "linear-gradient(135deg,hsl(36,28%,92%,.1),hsl(36,28%,92%,.04))", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="hsl(36,28%,92%)" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M2 19h20"/>
-                    <path d="M12 3a9 9 0 0 1 9 9H3a9 9 0 0 1 9-9z"/>
-                    <path d="M9 19v-2a3 3 0 0 1 6 0v2"/>
+                  <svg width="20" height="20" viewBox="0 0 32 32" fill="none" stroke="hsl(36,28%,92%)" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round">
+                    <circle cx="16" cy="5.5" r="1.5"/>
+                    <path d="M16 7C9.373 7 4 12.373 4 19h24c0-6.627-5.373-12-12-12z"/>
+                    <line x1="2" y1="21" x2="30" y2="21"/>
+                    <path d="M10 21v1.5a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V21"/>
                   </svg>
                 </div>
                 <span style={{ fontFamily: "'DM Mono',monospace", fontSize: "1rem", fontWeight: 500, letterSpacing: ".18em", textTransform: "uppercase", color: "hsl(var(--cream))" }}>PLATFORME</span>

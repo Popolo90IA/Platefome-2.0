@@ -67,10 +67,11 @@ export function Sidebar() {
         <Link href="/dashboard" className="block group">
           <div style={{ display: "flex", alignItems: "center", gap: 9 }}>
             <div style={{ width: 28, height: 28, background: "linear-gradient(135deg,hsl(36,28%,92%,.12),hsl(36,28%,92%,.04))", border: "1px solid hsl(36,28%,92%,.3)", borderRadius: 5, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="hsl(36,28%,92%)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M2 19h20"/>
-                <path d="M12 3a9 9 0 0 1 9 9H3a9 9 0 0 1 9-9z"/>
-                <path d="M9 19v-2a3 3 0 0 1 6 0v2"/>
+              <svg width="16" height="16" viewBox="0 0 32 32" fill="none" stroke="hsl(36,28%,92%)" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="16" cy="5.5" r="1.5"/>
+                <path d="M16 7C9.373 7 4 12.373 4 19h24c0-6.627-5.373-12-12-12z"/>
+                <line x1="2" y1="21" x2="30" y2="21"/>
+                <path d="M10 21v1.5a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V21"/>
               </svg>
             </div>
             <div>
