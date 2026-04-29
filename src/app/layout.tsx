@@ -4,7 +4,7 @@ import { EditModeProvider } from "@/components/editable/EditModeProvider";
 import { FloatingEditToggle } from "@/components/editable/FloatingEditToggle";
 
 export const metadata: Metadata = {
-  title: "פלטפורמת מסעדות | Plateforme Restaurant",
+  title: "PLATFORME | תפריט דיגיטלי למסעדות",
   description: "תפריטים דיגיטליים למסעדות עם QR קוד",
 };
 

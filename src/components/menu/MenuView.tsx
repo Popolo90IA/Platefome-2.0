@@ -286,7 +286,7 @@ export function MenuView({ restaurant, categories, dishes, slug }: MenuViewProps
           </div>
 
           <p style={{ textAlign: "center", marginTop: 32, fontSize: ".65rem", color: C.dim, fontFamily: "'DM Mono',monospace", letterSpacing: ".1em", textTransform: "uppercase" }}>
-            {t(lang, "powered")} <span style={{ color: C.gold }}>פלטפורמת מסעדות</span>
+            {t(lang, "powered")} <span style={{ color: C.gold }}>PLATFORME</span>
           </p>
         </div>
       </footer>

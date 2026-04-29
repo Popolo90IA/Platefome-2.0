@@ -325,9 +325,13 @@ export default function HomePage() {
         <div style={{ maxWidth: 1320, margin: "0 auto", padding: "0 56px", height: 68, display: "flex", alignItems: "center", justifyContent: "space-between", direction: "rtl" }}>
           <Link href="/" style={{ display: "flex", alignItems: "center", gap: 12, textDecoration: "none", flexShrink: 0 }}>
             <div style={{ width: 36, height: 36, background: "linear-gradient(135deg,hsl(36,28%,92%,.12),hsl(36,28%,92%,.04))", border: "1px solid hsl(36,28%,92%,.35)", borderRadius: 6, display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "inset 0 1px 0 hsl(36,28%,92%,.18),0 4px 20px hsl(36,28%,92%,.12)" }}>
-              <span style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: "1.2rem", color: "hsl(var(--gold))", fontStyle: "italic", lineHeight: 1, marginTop: 1 }}>פ</span>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="hsl(36,28%,92%)" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M2 19h20"/>
+                <path d="M12 3a9 9 0 0 1 9 9H3a9 9 0 0 1 9-9z"/>
+                <path d="M9 19v-2a3 3 0 0 1 6 0v2"/>
+              </svg>
             </div>
-            <span style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: "1.35rem", fontWeight: 300, letterSpacing: "-.025em", color: "hsl(var(--cream))" }}>פלטפורמה</span>
+            <span style={{ fontFamily: "'DM Mono',monospace", fontSize: "1rem", fontWeight: 500, letterSpacing: ".18em", textTransform: "uppercase", color: "hsl(var(--cream))" }}>PLATFORME</span>
           </Link>
           <nav style={{ display: "flex", gap: 40, alignItems: "center" }}>
             {[["#features","תכונות"],["#gallery","גלריה"],["#pricing","מחירים"]].map(([href,label]) => (
@@ -930,9 +934,13 @@ export default function HomePage() {
             <div className="reveal" style={{ maxWidth: 280 }}>
               <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 18 }}>
                 <div style={{ width: 32, height: 32, border: "1px solid hsl(36,28%,92%,.35)", borderRadius: 5, background: "linear-gradient(135deg,hsl(36,28%,92%,.1),hsl(36,28%,92%,.04))", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                  <span style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: "1.1rem", color: "hsl(var(--gold))", fontStyle: "italic" }}>פ</span>
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="hsl(36,28%,92%)" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M2 19h20"/>
+                    <path d="M12 3a9 9 0 0 1 9 9H3a9 9 0 0 1 9-9z"/>
+                    <path d="M9 19v-2a3 3 0 0 1 6 0v2"/>
+                  </svg>
                 </div>
-                <span style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: "1.4rem", fontWeight: 300, color: "hsl(var(--cream))", letterSpacing: "-.025em" }}>פלטפורמה</span>
+                <span style={{ fontFamily: "'DM Mono',monospace", fontSize: "1rem", fontWeight: 500, letterSpacing: ".18em", textTransform: "uppercase", color: "hsl(var(--cream))" }}>PLATFORME</span>
               </div>
               <p style={{ fontSize: ".9375rem", lineHeight: 1.75, color: "hsl(var(--subtle))" }}>פלטפורמת תפריטים תלת-מימד/AR למסעדות. תל אביב · פריז.</p>
             </div>
@@ -956,7 +964,7 @@ export default function HomePage() {
             </div>
           </div>
           <div style={{ borderTop: "1px solid hsl(var(--line))", paddingTop: 28, display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 10 }}>
-            <span style={{ fontFamily: "'DM Mono',monospace", fontSize: ".625rem", letterSpacing: ".08em", color: "hsl(var(--dim))" }}>© 2025 פלטפורמה · כל הזכויות שמורות</span>
+            <span style={{ fontFamily: "'DM Mono',monospace", fontSize: ".625rem", letterSpacing: ".08em", color: "hsl(var(--dim))" }}>© 2025 PLATFORME · כל הזכויות שמורות</span>
             <span style={{ fontFamily: "'DM Mono',monospace", fontSize: ".625rem", letterSpacing: ".08em", color: "hsl(var(--dim))" }}>נוצר באהבה <span style={{ color: "hsl(var(--gold))" }}>◆</span> בתל אביב</span>
           </div>
         </div>

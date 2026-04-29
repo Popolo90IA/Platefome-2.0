@@ -65,17 +65,28 @@ export function Sidebar() {
         style={{ borderBottom: "1px solid hsl(var(--line))" }}
       >
         <Link href="/dashboard" className="block group">
-          <div
-            className="font-display text-xl tracking-tight leading-none"
-            style={{ color: "hsl(var(--cream))", letterSpacing: "-0.04em", fontWeight: 300 }}
-          >
-            Maison
-          </div>
-          <div
-            className="font-mono text-[9px] tracking-[0.22em] uppercase mt-1.5"
-            style={{ color: "hsl(var(--subtle))" }}
-          >
-            Restaurant OS
+          <div style={{ display: "flex", alignItems: "center", gap: 9 }}>
+            <div style={{ width: 28, height: 28, background: "linear-gradient(135deg,hsl(36,28%,92%,.12),hsl(36,28%,92%,.04))", border: "1px solid hsl(36,28%,92%,.3)", borderRadius: 5, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="hsl(36,28%,92%)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M2 19h20"/>
+                <path d="M12 3a9 9 0 0 1 9 9H3a9 9 0 0 1 9-9z"/>
+                <path d="M9 19v-2a3 3 0 0 1 6 0v2"/>
+              </svg>
+            </div>
+            <div>
+              <div
+                className="font-mono text-[11px] tracking-[0.2em] uppercase leading-none"
+                style={{ color: "hsl(var(--cream))", fontWeight: 500 }}
+              >
+                PLATFORME
+              </div>
+              <div
+                className="font-mono text-[8px] tracking-[0.18em] uppercase mt-1"
+                style={{ color: "hsl(var(--subtle))" }}
+              >
+                Restaurant OS
+              </div>
+            </div>
           </div>
         </Link>
       </div>
