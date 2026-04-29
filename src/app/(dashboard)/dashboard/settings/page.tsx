@@ -49,11 +49,11 @@ export default function SettingsPage() {
   const supabase = createClient();
 
   // Password change state
-  const [pwForm, setPwForm] = useState({ next: "", confirm: "" });
+  const [pwForm, setPwForm] = useState({ current: "", next: "", confirm: "" });
   const [pwSaving, setPwSaving] = useState(false);
   const [pwSaved, setPwSaved] = useState(false);
   const [pwError, setPwError] = useState<string | null>(null);
-  const [showPw, setShowPw] = useState({ next: false, confirm: false });
+  const [showPw, setShowPw] = useState({ current: false, next: false, confirm: false });
 
   const handlePasswordChange = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -67,12 +67,24 @@ export default function SettingsPage() {
       return;
     }
     setPwSaving(true);
+    const { data: { user } } = await supabase.auth.getUser();
+    if (user?.email) {
+      const { error: signInError } = await supabase.auth.signInWithPassword({
+        email: user.email,
+        password: pwForm.current,
+      });
+      if (signInError) {
+        setPwError("הסיסמה הנוכחית שגויה");
+        setPwSaving(false);
+        return;
+      }
+    }
     const { error } = await supabase.auth.updateUser({ password: pwForm.next });
     if (error) {
       setPwError(error.message);
     } else {
       setPwSaved(true);
-      setPwForm({ next: "", confirm: "" });
+      setPwForm({ current: "", next: "", confirm: "" });
       setTimeout(() => setPwSaved(false), 3000);
     }
     setPwSaving(false);
@@ -539,6 +551,31 @@ export default function SettingsPage() {
               </p>
             </CardHeader>
             <CardContent className="space-y-4">
+              {/* Current password */}
+              <div className="space-y-2">
+                <Label htmlFor="pw_current">סיסמה נוכחית</Label>
+                <div className="relative">
+                  <Input
+                    id="pw_current"
+                    type={showPw.current ? "text" : "password"}
+                    value={pwForm.current}
+                    onChange={(e) => setPwForm((f) => ({ ...f, current: e.target.value }))}
+                    placeholder="••••••••"
+                    required
+                    dir="ltr"
+                    className="pr-10"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPw((s) => ({ ...s, current: !s.current }))}
+                    className="absolute inset-y-0 right-0 flex items-center px-3 text-muted-foreground hover:text-foreground transition-colors"
+                    tabIndex={-1}
+                  >
+                    {showPw.current ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                  </button>
+                </div>
+              </div>
+
               {/* New password */}
               <div className="space-y-2">
                 <Label htmlFor="pw_next">סיסמה חדשה</Label>
@@ -598,7 +635,7 @@ export default function SettingsPage() {
 
               <Button
                 type="submit"
-                disabled={pwSaving || !pwForm.next || !pwForm.confirm}
+                disabled={pwSaving || !pwForm.current || !pwForm.next || !pwForm.confirm}
                 className="bg-gold-gradient hover:opacity-90 shadow-gold-glow"
               >
                 {pwSaving ? (
