@@ -19,6 +19,8 @@ import {
   EyeOff,
   ExternalLink,
   Sparkles,
+  Lock,
+  AlertCircle,
 } from "lucide-react";
 import type { Restaurant } from "@/types/database.types";
 
@@ -45,6 +47,49 @@ export default function SettingsPage() {
     currency: "ILS",
   });
   const supabase = createClient();
+
+  // Password change state
+  const [pwForm, setPwForm] = useState({ current: "", next: "", confirm: "" });
+  const [pwSaving, setPwSaving] = useState(false);
+  const [pwSaved, setPwSaved] = useState(false);
+  const [pwError, setPwError] = useState<string | null>(null);
+  const [showPw, setShowPw] = useState({ current: false, next: false, confirm: false });
+
+  const handlePasswordChange = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setPwError(null);
+    if (pwForm.next.length < 6) {
+      setPwError("הסיסמה חייבת להכיל לפחות 6 תווים");
+      return;
+    }
+    if (pwForm.next !== pwForm.confirm) {
+      setPwError("הסיסמאות אינן תואמות");
+      return;
+    }
+    setPwSaving(true);
+    // Re-authenticate with current password first
+    const { data: { user } } = await supabase.auth.getUser();
+    if (user?.email) {
+      const { error: signInError } = await supabase.auth.signInWithPassword({
+        email: user.email,
+        password: pwForm.current,
+      });
+      if (signInError) {
+        setPwError("הסיסמה הנוכחית שגויה");
+        setPwSaving(false);
+        return;
+      }
+    }
+    const { error } = await supabase.auth.updateUser({ password: pwForm.next });
+    if (error) {
+      setPwError(error.message);
+    } else {
+      setPwSaved(true);
+      setPwForm({ current: "", next: "", confirm: "" });
+      setTimeout(() => setPwSaved(false), 3000);
+    }
+    setPwSaving(false);
+  };
 
   useEffect(() => {
     const load = async () => {
@@ -470,6 +515,7 @@ export default function SettingsPage() {
           )}
 
           <div className="flex gap-2 sticky bottom-4 z-10">
+
             <Button
               type="submit"
               disabled={saving}
@@ -491,6 +537,124 @@ export default function SettingsPage() {
               )}
             </Button>
           </div>
+        </form>
+
+        {/* ── Password Change ── */}
+        <form onSubmit={handlePasswordChange} className="space-y-6">
+          <Card className="shadow-premium">
+            <CardHeader>
+              <CardTitle className="font-serif-display text-xl flex items-center gap-2">
+                <Lock className="h-5 w-5 text-[hsl(var(--gold))]" />
+                שינוי סיסמה
+              </CardTitle>
+              <p className="text-sm text-muted-foreground pt-1">
+                עדכן את הסיסמה שלך לחשבון
+              </p>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {/* Current password */}
+              <div className="space-y-2">
+                <Label htmlFor="pw_current">סיסמה נוכחית</Label>
+                <div className="relative">
+                  <Input
+                    id="pw_current"
+                    type={showPw.current ? "text" : "password"}
+                    value={pwForm.current}
+                    onChange={(e) => setPwForm((f) => ({ ...f, current: e.target.value }))}
+                    placeholder="••••••••"
+                    required
+                    dir="ltr"
+                    className="pr-10"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPw((s) => ({ ...s, current: !s.current }))}
+                    className="absolute inset-y-0 right-0 flex items-center px-3 text-muted-foreground hover:text-foreground transition-colors"
+                    tabIndex={-1}
+                  >
+                    {showPw.current ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                  </button>
+                </div>
+              </div>
+
+              {/* New password */}
+              <div className="space-y-2">
+                <Label htmlFor="pw_next">סיסמה חדשה</Label>
+                <div className="relative">
+                  <Input
+                    id="pw_next"
+                    type={showPw.next ? "text" : "password"}
+                    value={pwForm.next}
+                    onChange={(e) => setPwForm((f) => ({ ...f, next: e.target.value }))}
+                    placeholder="לפחות 6 תווים"
+                    required
+                    dir="ltr"
+                    className="pr-10"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPw((s) => ({ ...s, next: !s.next }))}
+                    className="absolute inset-y-0 right-0 flex items-center px-3 text-muted-foreground hover:text-foreground transition-colors"
+                    tabIndex={-1}
+                  >
+                    {showPw.next ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                  </button>
+                </div>
+              </div>
+
+              {/* Confirm password */}
+              <div className="space-y-2">
+                <Label htmlFor="pw_confirm">אימות סיסמה חדשה</Label>
+                <div className="relative">
+                  <Input
+                    id="pw_confirm"
+                    type={showPw.confirm ? "text" : "password"}
+                    value={pwForm.confirm}
+                    onChange={(e) => setPwForm((f) => ({ ...f, confirm: e.target.value }))}
+                    placeholder="חזור על הסיסמה החדשה"
+                    required
+                    dir="ltr"
+                    className="pr-10"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPw((s) => ({ ...s, confirm: !s.confirm }))}
+                    className="absolute inset-y-0 right-0 flex items-center px-3 text-muted-foreground hover:text-foreground transition-colors"
+                    tabIndex={-1}
+                  >
+                    {showPw.confirm ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                  </button>
+                </div>
+              </div>
+
+              {pwError && (
+                <div className="flex items-start gap-2 text-sm text-destructive bg-destructive/10 p-3.5 rounded-xl border border-destructive/20">
+                  <AlertCircle className="h-4 w-4 flex-shrink-0 mt-0.5" />
+                  <span>{pwError}</span>
+                </div>
+              )}
+
+              <Button
+                type="submit"
+                disabled={pwSaving || !pwForm.current || !pwForm.next || !pwForm.confirm}
+                className="bg-gold-gradient hover:opacity-90 shadow-gold-glow"
+              >
+                {pwSaving ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : pwSaved ? (
+                  <>
+                    <Check className="h-4 w-4" />
+                    הסיסמה עודכנה!
+                  </>
+                ) : (
+                  <>
+                    <Lock className="h-4 w-4" />
+                    עדכן סיסמה
+                  </>
+                )}
+              </Button>
+            </CardContent>
+          </Card>
         </form>
 
         {/* Live Preview */}
