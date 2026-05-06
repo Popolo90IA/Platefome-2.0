@@ -6,57 +6,57 @@
 
 @layer base {
   :root {
-    /* MAISON NOIRE — Minimal Luxury, Dark with Cream Accents */
+    /* PLATFORME — Light Mode, Beige Sable + Bronze */
 
     /* ── Shadcn/Radix compatibility tokens ── */
-    --background: 220 10% 5%;
-    --foreground: 36 25% 88%;
-    --card: 220 10% 7%;
-    --card-foreground: 36 25% 88%;
-    --popover: 220 10% 7%;
-    --popover-foreground: 36 25% 88%;
-    --primary: 36 25% 88%;
-    --primary-foreground: 220 10% 5%;
-    --secondary: 220 8% 11%;
-    --secondary-foreground: 36 20% 72%;
-    --muted: 220 8% 10%;
-    --muted-foreground: 220 6% 46%;
-    --accent: 220 8% 12%;
-    --accent-foreground: 36 25% 88%;
+    --background: 38 28% 94%;
+    --foreground: 24 18% 16%;
+    --card: 38 30% 97%;
+    --card-foreground: 24 18% 16%;
+    --popover: 38 30% 97%;
+    --popover-foreground: 24 18% 16%;
+    --primary: 28 62% 42%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 36 22% 90%;
+    --secondary-foreground: 24 18% 16%;
+    --muted: 30 18% 88%;
+    --muted-foreground: 24 12% 38%;
+    --accent: 36 22% 90%;
+    --accent-foreground: 24 18% 16%;
     --destructive: 0 62% 48%;
-    --destructive-foreground: 36 25% 88%;
-    --border: 220 8% 13%;
-    --input: 220 8% 11%;
-    --ring: 36 20% 72%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 30 18% 82%;
+    --input: 36 22% 90%;
+    --ring: 28 62% 42%;
 
-    /* ── Spatial depth scale ── */
-    --void:    220 12%  4%;   /* darkest — page bg */
-    --abyss:   220 10%  6%;   /* sidebar, modals */
-    --deep:    220  9%  9%;   /* elevated cards */
-    --surface: 220  8% 12%;   /* interactive surfaces */
-    --line:    220  7% 16%;   /* borders, dividers */
-    --dim:     220  5% 32%;   /* disabled, placeholder */
-    --subtle:  220  4% 46%;   /* secondary text */
-    --pale:    220  3% 64%;   /* tertiary text */
-    --fog:     36  12% 78%;   /* near-cream, labels */
-    --cream:   36  28% 92%;   /* primary text, titles */
-    --white:   0   0% 100%;   /* absolute white */
+    /* ── Spatial depth scale (light beige) ── */
+    --void:    38 28% 94%;   /* page bg — beige sable */
+    --abyss:   36 22% 90%;   /* sections alternées */
+    --deep:    38 30% 97%;   /* cards blanches cassées */
+    --surface: 30 18% 88%;   /* surfaces interactives */
+    --line:    30 18% 82%;   /* bordures, séparateurs */
+    --dim:     28 10% 56%;   /* désactivé, placeholder */
+    --subtle:  24 12% 38%;   /* texte secondaire */
+    --pale:    24 15% 28%;   /* texte tertiaire */
+    --fog:     24 18% 16%;   /* texte principal */
+    --cream:   24 18% 16%;   /* titres */
+    --white:   0   0% 100%;  /* blanc absolu */
 
-    /* ── Accent tones ── */
-    --accent-warm:   36  18% 72%;   /* warm cream accent */
-    --accent-bright: 36  28% 92%;   /* bright cream */
+    /* ── Accent tones (bronze/cuivre) ── */
+    --accent-warm:   28  52% 52%;   /* bronze clair */
+    --accent-bright: 28  62% 42%;   /* bronze principal */
     --ember:          0  60% 52%;   /* error / danger */
-    --sage:          28  88% 52%;   /* accent orange (was sage green) */
-    --gold:          36  28% 92%;   /* repurposed = cream (primary accent now) */
-    --gold-dark:     36  12% 54%;   /* mid-cream */
-    --gold-dim:      36  12% 54%;
+    --sage:          28  62% 42%;   /* bronze accent */
+    --gold:          22  70% 50%;   /* terracotta secondaire */
+    --gold-dark:     28  48% 34%;   /* bronze foncé */
+    --gold-dim:      28  38% 58%;   /* bronze atténué */
 
     /* backward compat aliases */
-    --snow:    36  28% 92%;
-    --ink:    220  10%  6%;
-    --obsidian: 220 12% 4%;
-    --charcoal: 220  9%  9%;
-    --mist:   220   4% 46%;
+    --snow:    38  28% 94%;
+    --ink:     24  18% 16%;
+    --obsidian: 38 28% 94%;
+    --charcoal: 24 15% 28%;
+    --mist:    24  12% 38%;
 
     --radius: 4px;
   }

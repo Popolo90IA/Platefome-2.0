@@ -149,7 +149,7 @@ export function HeroCanvas({ modelUrl }: HeroCanvasProps) {
   }, [modelUrl]);
 
   return (
-    <div ref={wrapRef} style={{ position: "relative", width: "100%", height: "560px", borderRadius: 8, overflow: "hidden", background: "radial-gradient(ellipse at 50% 40%,hsl(36,28%,92%,.07) 0%,transparent 60%)" }}>
+    <div ref={wrapRef} style={{ position: "relative", width: "100%", height: "420px", borderRadius: 8, overflow: "hidden", background: "radial-gradient(ellipse at 50% 40%,hsl(36,28%,92%,.07) 0%,transparent 60%)" }}>
       <canvas ref={canvasRef} style={{ width: "100%", height: "100%", display: "block", cursor: "grab" }} />
       {!loaded && (
         <div style={{ position: "absolute", inset: 0, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 16, pointerEvents: "none" }}>
