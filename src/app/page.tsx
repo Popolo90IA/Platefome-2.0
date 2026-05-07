@@ -189,12 +189,12 @@ const KEYFRAMES = `
   }
 
   /* ── Post-curtain: décalage démarrage ── */
-  .hero-fade-a { animation: heroBadgeIn  .9s cubic-bezier(.16,1,.3,1) 1.6s  both; }
-  .hero-fade-b { animation: titleReveal  1.1s cubic-bezier(.16,1,.3,1) 1.75s both; }
-  .hero-fade-c { animation: titleReveal2 1.0s cubic-bezier(.16,1,.3,1) 2.0s  both; }
-  .hero-fade-d { animation: heroSubIn    .9s cubic-bezier(.16,1,.3,1)  2.2s  both; }
-  .hero-fade-e { animation: heroSubIn    .8s cubic-bezier(.16,1,.3,1)  2.35s both; }
-  .hero-fade-f { animation: heroSubIn    .8s cubic-bezier(.16,1,.3,1)  2.5s  both; }
+  .hero-fade-a { animation: heroBadgeIn  .9s cubic-bezier(.16,1,.3,1) 2.5s  both; }
+  .hero-fade-b { animation: titleReveal  1.1s cubic-bezier(.16,1,.3,1) 2.65s both; }
+  .hero-fade-c { animation: titleReveal2 1.0s cubic-bezier(.16,1,.3,1) 2.9s  both; }
+  .hero-fade-d { animation: heroSubIn    .9s cubic-bezier(.16,1,.3,1)  3.1s  both; }
+  .hero-fade-e { animation: heroSubIn    .8s cubic-bezier(.16,1,.3,1)  3.25s both; }
+  .hero-fade-f { animation: heroSubIn    .8s cubic-bezier(.16,1,.3,1)  3.4s  both; }
 
   @media (prefers-reduced-motion: reduce) {
     .hero-fade-a,.hero-fade-b,.hero-fade-c,.hero-fade-d,.hero-fade-e,.hero-fade-f {
@@ -337,7 +337,7 @@ export default function HomePage() {
           position: "fixed", inset: 0, zIndex: 99998,
           background: "hsl(28,18%,8%)",
           transformOrigin: "top",
-          animation: "curtainRise 1.4s cubic-bezier(.76,0,.24,1) 0.2s forwards",
+          animation: "curtainRise 2.2s cubic-bezier(.76,0,.24,1) 0.3s forwards",
           pointerEvents: "none",
         }}
       >
@@ -347,7 +347,7 @@ export default function HomePage() {
           transform: "translate(-50%,-50%)",
           width: 320, height: 160,
           background: "radial-gradient(ellipse at center, hsl(28,62%,38%,.18) 0%, transparent 70%)",
-          animation: "curtainLogoFade 1.4s ease 0.2s forwards",
+          animation: "curtainLogoFade 2.2s ease 0.3s forwards",
           opacity: 0,
         }} />
         {/* Wordmark container */}
@@ -355,7 +355,7 @@ export default function HomePage() {
           position: "absolute", top: "50%", left: "50%",
           transform: "translate(-50%,-50%)",
           display: "flex", flexDirection: "column", alignItems: "center", gap: 16,
-          animation: "curtainLogoFade 1.4s cubic-bezier(.4,0,.2,1) 0.2s forwards",
+          animation: "curtainLogoFade 2.2s cubic-bezier(.4,0,.2,1) 0.3s forwards",
           opacity: 0,
           width: "max-content",
         }}>
@@ -366,7 +366,7 @@ export default function HomePage() {
             background: "linear-gradient(90deg, transparent, hsl(28,70%,60%), transparent)",
             transformOrigin: "center",
             transform: "scaleX(0)",
-            animation: "curtainLineDraw 1.4s ease 0.2s forwards",
+            animation: "curtainLineDraw 2.2s ease 0.3s forwards",
           }} />
           {/* PLATFORME wordmark */}
           <span style={{
@@ -383,7 +383,7 @@ export default function HomePage() {
             background: "linear-gradient(90deg, transparent, hsl(28,70%,60%), transparent)",
             transformOrigin: "center",
             transform: "scaleX(0)",
-            animation: "curtainLineDraw 1.4s ease 0.25s forwards",
+            animation: "curtainLineDraw 2.2s ease 0.35s forwards",
           }} />
         </div>
       </div>
