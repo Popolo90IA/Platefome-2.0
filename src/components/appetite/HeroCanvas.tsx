@@ -4,19 +4,103 @@ import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
+import gsap from "gsap";
 
 interface HeroCanvasProps {
   modelUrl: string;
 }
 
 export function HeroCanvas({ modelUrl }: HeroCanvasProps) {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const wrapRef = useRef<HTMLDivElement>(null);
+  const canvasRef  = useRef<HTMLCanvasElement>(null);
+  const wrapRef    = useRef<HTMLDivElement>(null);
+  const flashRef   = useRef<HTMLDivElement>(null);
+  const glowRef    = useRef<HTMLDivElement>(null);
   const [loaded, setLoaded] = useState(false);
 
+  // ── GSAP intro: fires once when `loaded` flips to true ──────────────────
+  useEffect(() => {
+    if (!loaded || !wrapRef.current) return;
+
+    const wrap  = wrapRef.current;
+    const flash = flashRef.current;
+
+    const tl = gsap.timeline();
+
+    // Wrapper slides up from below + fades in
+    tl.fromTo(
+      wrap,
+      { y: 48, autoAlpha: 0, scale: 0.96, filter: "blur(8px)" },
+      { y: 0,  autoAlpha: 1, scale: 1,    filter: "blur(0px)",
+        duration: 1.1, ease: "power3.out" },
+      0
+    );
+
+    // Gold flash burst at peak
+    if (flash) {
+      tl.fromTo(
+        flash,
+        { autoAlpha: 0, scale: 0.8 },
+        { autoAlpha: 0.7, scale: 1.15, duration: 0.25, ease: "power2.out" },
+        0.3
+      ).to(flash, { autoAlpha: 0, scale: 1.4, duration: 0.55, ease: "power2.in" }, 0.55);
+    }
+  }, [loaded]);
+
+  // ── GSAP switch: fires when modelUrl changes (but not on first mount) ───
+  const prevUrl = useRef<string | null>(null);
+
+  useEffect(() => {
+    if (prevUrl.current === null) {
+      prevUrl.current = modelUrl;
+      return;
+    }
+    if (prevUrl.current === modelUrl) return;
+    prevUrl.current = modelUrl;
+
+    const wrap  = wrapRef.current;
+    const flash = flashRef.current;
+    if (!wrap) return;
+
+    const tl = gsap.timeline();
+
+    // Scale down + blur out
+    tl.to(wrap, {
+      scale: 0.92, filter: "blur(10px)", autoAlpha: 0.4,
+      duration: 0.35, ease: "power2.in",
+    });
+
+    // Gold flash burst
+    if (flash) {
+      tl.to(flash, {
+        autoAlpha: 0.85, scale: 1.1,
+        duration: 0.2, ease: "power2.out",
+      }, "-=0.05").to(flash, {
+        autoAlpha: 0, scale: 1.5,
+        duration: 0.45, ease: "power2.in",
+      });
+    }
+
+    // Scale back up + clear blur (new model will load inside)
+    tl.to(wrap, {
+      scale: 1, filter: "blur(0px)", autoAlpha: 1,
+      duration: 0.6, ease: "back.out(1.3)",
+    }, "-=0.3");
+  }, [modelUrl]);
+
+  // ── GSAP hover glow ─────────────────────────────────────────────────────
+  function onMouseEnter() {
+    if (!glowRef.current) return;
+    gsap.to(glowRef.current, { autoAlpha: 1, scale: 1.15, duration: 0.5, ease: "power2.out" });
+  }
+  function onMouseLeave() {
+    if (!glowRef.current) return;
+    gsap.to(glowRef.current, { autoAlpha: 0, scale: 1, duration: 0.6, ease: "power2.inOut" });
+  }
+
+  // ── Three.js scene ───────────────────────────────────────────────────────
   useEffect(() => {
     const canvas = canvasRef.current;
-    const wrap = wrapRef.current;
+    const wrap   = wrapRef.current;
     if (!canvas || !wrap) return;
 
     setLoaded(false);
@@ -31,7 +115,7 @@ export function HeroCanvas({ modelUrl }: HeroCanvasProps) {
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
     // Scene + Camera
-    const scene = new THREE.Scene();
+    const scene  = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 100);
     camera.position.set(0, 0.5, 4);
 
@@ -54,26 +138,26 @@ export function HeroCanvas({ modelUrl }: HeroCanvasProps) {
 
     // Controls
     const controls = new OrbitControls(camera, canvas);
-    controls.enableDamping = true;
-    controls.dampingFactor = 0.05;
-    controls.enableZoom = false;
-    controls.enablePan = false;
-    controls.minPolarAngle = Math.PI / 4;
-    controls.maxPolarAngle = Math.PI * 0.7;
-    controls.autoRotate = true;
-    controls.autoRotateSpeed = 0.8;
+    controls.enableDamping    = true;
+    controls.dampingFactor    = 0.05;
+    controls.enableZoom       = false;
+    controls.enablePan        = false;
+    controls.minPolarAngle    = Math.PI / 4;
+    controls.maxPolarAngle    = Math.PI * 0.7;
+    controls.autoRotate       = true;
+    controls.autoRotateSpeed  = 0.8;
 
     let model: THREE.Object3D | null = null;
 
     function showFallback() {
-      const geo = new THREE.SphereGeometry(0.9, 64, 64);
-      const mat = new THREE.MeshStandardMaterial({ color: 0x1a1c22, metalness: 0.6, roughness: 0.3 });
+      const geo    = new THREE.SphereGeometry(0.9, 64, 64);
+      const mat    = new THREE.MeshStandardMaterial({ color: 0x1a1c22, metalness: 0.6, roughness: 0.3 });
       const sphere = new THREE.Mesh(geo, mat);
       sphere.castShadow = true;
       scene.add(sphere);
       const ringGeo = new THREE.TorusGeometry(1.2, 0.01, 8, 80);
       const ringMat = new THREE.MeshBasicMaterial({ color: 0xf0ebe2, transparent: true, opacity: 0.15 });
-      const ring = new THREE.Mesh(ringGeo, ringMat);
+      const ring    = new THREE.Mesh(ringGeo, ringMat);
       ring.rotation.x = Math.PI / 2;
       scene.add(ring);
       model = sphere;
@@ -84,17 +168,17 @@ export function HeroCanvas({ modelUrl }: HeroCanvasProps) {
       modelUrl,
       (gltf) => {
         model = gltf.scene;
-        const box = new THREE.Box3().setFromObject(model);
+        const box    = new THREE.Box3().setFromObject(model);
         const center = box.getCenter(new THREE.Vector3());
-        const size = box.getSize(new THREE.Vector3());
+        const size   = box.getSize(new THREE.Vector3());
         const maxDim = Math.max(size.x, size.y, size.z);
-        const scale = 2.2 / maxDim;
+        const scale  = 2.2 / maxDim;
         model.scale.setScalar(scale);
         model.position.sub(center.multiplyScalar(scale));
         model.position.y -= size.y * scale * 0.15;
         model.traverse((child) => {
           if ((child as THREE.Mesh).isMesh) {
-            child.castShadow = true;
+            child.castShadow    = true;
             child.receiveShadow = true;
             const m = (child as THREE.Mesh).material as THREE.MeshStandardMaterial;
             if (m) m.envMapIntensity = 1.4;
@@ -122,10 +206,10 @@ export function HeroCanvas({ modelUrl }: HeroCanvasProps) {
 
     // Interact
     let userInteracting = false;
-    const onDown = () => { userInteracting = true; controls.autoRotate = false; };
-    const onUp = () => { userInteracting = false; setTimeout(() => { controls.autoRotate = true; }, 2000); };
+    const onDown = () => { userInteracting = true;  controls.autoRotate = false; };
+    const onUp   = () => { userInteracting = false; setTimeout(() => { controls.autoRotate = true; }, 2000); };
     canvas.addEventListener("pointerdown", onDown);
-    canvas.addEventListener("pointerup", onUp);
+    canvas.addEventListener("pointerup",   onUp);
 
     const clock = new THREE.Clock();
     let rafId: number;
@@ -143,16 +227,54 @@ export function HeroCanvas({ modelUrl }: HeroCanvasProps) {
       cancelAnimationFrame(rafId);
       ro.disconnect();
       canvas.removeEventListener("pointerdown", onDown);
-      canvas.removeEventListener("pointerup", onUp);
+      canvas.removeEventListener("pointerup",   onUp);
       renderer.dispose();
     };
   }, [modelUrl]);
 
   return (
-    <div ref={wrapRef} style={{ position: "relative", width: "100%", height: "420px", borderRadius: 8, overflow: "hidden", background: "radial-gradient(ellipse at 50% 40%,hsl(36,28%,92%,.07) 0%,transparent 60%)" }}>
-      <canvas ref={canvasRef} style={{ width: "100%", height: "100%", display: "block", cursor: "grab" }} />
+    <div
+      ref={wrapRef}
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
+      style={{
+        position: "relative", width: "100%", height: "420px",
+        borderRadius: 8, overflow: "hidden",
+        background: "radial-gradient(ellipse at 50% 40%,hsl(36,28%,92%,.07) 0%,transparent 60%)",
+        // start hidden — GSAP intro will reveal
+        opacity: 0, visibility: "hidden",
+      }}
+    >
+      {/* Persistent hover glow — GSAP controls opacity */}
+      <div
+        ref={glowRef}
+        style={{
+          position: "absolute", inset: "-10%",
+          background: "radial-gradient(ellipse at 50% 60%, hsl(36,80%,58%,.18) 0%, transparent 65%)",
+          filter: "blur(24px)",
+          pointerEvents: "none",
+          opacity: 0, visibility: "hidden",
+          zIndex: 2,
+        }}
+      />
+
+      {/* Gold flash burst — triggered on load + switch */}
+      <div
+        ref={flashRef}
+        style={{
+          position: "absolute", inset: 0,
+          background: "radial-gradient(ellipse at 50% 50%, hsl(38,90%,62%,.55) 0%, transparent 60%)",
+          filter: "blur(30px)",
+          pointerEvents: "none",
+          opacity: 0, visibility: "hidden",
+          zIndex: 3,
+        }}
+      />
+
+      <canvas ref={canvasRef} style={{ width: "100%", height: "100%", display: "block", cursor: "grab", position: "relative", zIndex: 1 }} />
+
       {!loaded && (
-        <div style={{ position: "absolute", inset: 0, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 16, pointerEvents: "none" }}>
+        <div style={{ position: "absolute", inset: 0, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 16, pointerEvents: "none", zIndex: 4 }}>
           <div style={{ width: 32, height: 32, border: "1px solid hsl(220,7%,16%)", borderTopColor: "hsl(36,28%,92%)", borderRadius: "50%", animation: "spin 1s linear infinite" }} />
           <span style={{ fontFamily: "'DM Mono',monospace", fontSize: ".5625rem", letterSpacing: ".18em", textTransform: "uppercase", color: "hsl(220,5%,32%)" }}>טוען מודל</span>
         </div>
