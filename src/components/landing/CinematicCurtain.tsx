@@ -6,31 +6,21 @@ import { useGSAP } from "@gsap/react";
 
 gsap.registerPlugin(useGSAP);
 
-const WORD = "PLATFORME";
-
 export function CinematicCurtain() {
-  const curtainRef   = useRef<HTMLDivElement>(null);
-  const panelTopRef  = useRef<HTMLDivElement>(null);
-  const panelBotRef  = useRef<HTMLDivElement>(null);
-  const lineTopRef   = useRef<HTMLDivElement>(null);
-  const lineBotRef   = useRef<HTMLDivElement>(null);
-  const haloRef      = useRef<HTMLDivElement>(null);
-  // Un ref par lettre, indexé 0→8 = P→E
-  const l0 = useRef<HTMLSpanElement>(null);
-  const l1 = useRef<HTMLSpanElement>(null);
-  const l2 = useRef<HTMLSpanElement>(null);
-  const l3 = useRef<HTMLSpanElement>(null);
-  const l4 = useRef<HTMLSpanElement>(null);
-  const l5 = useRef<HTMLSpanElement>(null);
-  const l6 = useRef<HTMLSpanElement>(null);
-  const l7 = useRef<HTMLSpanElement>(null);
-  const l8 = useRef<HTMLSpanElement>(null);
+  const curtainRef  = useRef<HTMLDivElement>(null);
+  const panelTopRef = useRef<HTMLDivElement>(null);
+  const panelBotRef = useRef<HTMLDivElement>(null);
+  const lineTopRef  = useRef<HTMLDivElement>(null);
+  const lineBotRef  = useRef<HTMLDivElement>(null);
+  const haloRef     = useRef<HTMLDivElement>(null);
+  const wordRef     = useRef<HTMLDivElement>(null);
 
   useGSAP(() => {
-    const letters = [
-      l0.current, l1.current, l2.current, l3.current, l4.current,
-      l5.current, l6.current, l7.current, l8.current,
-    ];
+    // Sélectionner les lettres via querySelectorAll dans le container du mot
+    // — ordre garanti par l'ordre du DOM
+    const letters = Array.from(
+      wordRef.current!.querySelectorAll<HTMLSpanElement>("span")
+    );
 
     const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
 
@@ -63,16 +53,14 @@ export function CinematicCurtain() {
       .set(curtainRef.current, { autoAlpha: 0, pointerEvents: "none" }, "+=0.05");
 
     // Phase 3 — hero reveal
-    const heroSelectors = [".hero-fade-a",".hero-fade-b",".hero-fade-c",".hero-fade-d",".hero-fade-e",".hero-fade-f"];
-    heroSelectors.forEach((sel, i) => {
-      const el = document.querySelector(sel);
-      if (!el) return;
-      gsap.set(el, { opacity: 0, y: 32, filter: "blur(6px)" });
-      tl.to(el, { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.9, ease: "power3.out" }, 2.8 + i * 0.14);
-    });
+    [".hero-fade-a",".hero-fade-b",".hero-fade-c",".hero-fade-d",".hero-fade-e",".hero-fade-f"]
+      .forEach((sel, i) => {
+        const el = document.querySelector(sel);
+        if (!el) return;
+        gsap.set(el, { opacity: 0, y: 32, filter: "blur(6px)" });
+        tl.to(el, { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.9, ease: "power3.out" }, 2.8 + i * 0.14);
+      });
   }, { scope: curtainRef });
-
-  const letterRefs = [l0, l1, l2, l3, l4, l5, l6, l7, l8];
 
   return (
     <div ref={curtainRef} aria-hidden style={{ position: "fixed", inset: 0, zIndex: 99998, pointerEvents: "none", overflow: "hidden" }}>
@@ -92,11 +80,17 @@ export function CinematicCurtain() {
         {/* Ligne haut */}
         <div ref={lineTopRef} style={{ height: 1, width: 160, background: "linear-gradient(90deg, transparent, hsl(28,70%,62%), transparent)" }} />
 
-        {/* Wordmark — chaque lettre a son propre ref fixe */}
-        <div style={{ display: "flex", alignItems: "center", fontFamily: "'DM Sans', sans-serif", fontSize: "1.2rem", fontWeight: 400, letterSpacing: ".44em", textTransform: "uppercase", color: "hsl(38,35%,96%)", textShadow: "0 0 40px hsl(28,62%,52%,.5)", paddingLeft: ".44em" }}>
-          {WORD.split("").map((letter, i) => (
-            <span key={i} ref={letterRefs[i]} style={{ display: "inline-block" }}>{letter}</span>
-          ))}
+        {/* Wordmark — spans dans l'ordre exact du DOM : P-L-A-T-F-O-R-M-E */}
+        <div ref={wordRef} style={{ display: "flex", alignItems: "center", fontFamily: "'DM Sans', sans-serif", fontSize: "1.2rem", fontWeight: 400, letterSpacing: ".44em", textTransform: "uppercase", color: "hsl(38,35%,96%)", textShadow: "0 0 40px hsl(28,62%,52%,.5)", paddingLeft: ".44em" }}>
+          <span style={{ display: "inline-block" }}>P</span>
+          <span style={{ display: "inline-block" }}>L</span>
+          <span style={{ display: "inline-block" }}>A</span>
+          <span style={{ display: "inline-block" }}>T</span>
+          <span style={{ display: "inline-block" }}>F</span>
+          <span style={{ display: "inline-block" }}>O</span>
+          <span style={{ display: "inline-block" }}>R</span>
+          <span style={{ display: "inline-block" }}>M</span>
+          <span style={{ display: "inline-block" }}>E</span>
         </div>
 
         {/* Ligne bas */}
