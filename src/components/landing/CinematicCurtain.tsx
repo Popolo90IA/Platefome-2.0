@@ -34,21 +34,21 @@ export function CinematicCurtain() {
     gsap.set([panelTopRef.current, panelBotRef.current], { yPercent: 0 });
     gsap.set(lineTopRef.current, { scaleX: 0, opacity: 0, transformOrigin: "center" });
     gsap.set(lineBotRef.current, { scaleX: 0, opacity: 0, transformOrigin: "center" });
-    gsap.set(letterRefs.current, { opacity: 0, y: 14, filter: "blur(4px)" });
+    gsap.set(letterRefs.current, { opacity: 0, scaleY: 0.3, transformOrigin: "bottom center", filter: "blur(3px)" });
     gsap.set(haloRef.current, { opacity: 0, scale: 0.7 });
 
     // ── Phase 1 : logo appear (0.3s) ────────────────────────
     tl.to(haloRef.current, { opacity: 1, scale: 1, duration: 0.6, ease: "power2.out" }, 0.3)
       .to(lineTopRef.current, { scaleX: 1, opacity: 1, duration: 0.7, ease: "power2.inOut" }, 0.4)
       .to(lineBotRef.current, { scaleX: 1, opacity: 1, duration: 0.7, ease: "power2.inOut" }, 0.5)
-      // Lettres P→E : stagger simple gauche→droite
+      // Lettres P→E : chaque lettre monte depuis son bas, pas de déplacement horizontal
       .to(letterRefs.current, {
         opacity: 1,
-        y: 0,
+        scaleY: 1,
         filter: "blur(0px)",
-        duration: 0.5,
+        duration: 0.45,
         stagger: 0.06,
-        ease: "power2.out",
+        ease: "back.out(1.4)",
       }, 0.65);
 
     // ── Phase 2 : logo fade + panneaux s'ouvrent (1.6s) ─────
@@ -59,9 +59,9 @@ export function CinematicCurtain() {
       }, 1.65)
       .to(letterRefs.current, {
         opacity: 0,
-        y: -10,
-        filter: "blur(6px)",
-        duration: 0.35,
+        scaleY: 0,
+        filter: "blur(4px)",
+        duration: 0.3,
         stagger: 0.03,
         ease: "power2.in",
       }, 1.65)
