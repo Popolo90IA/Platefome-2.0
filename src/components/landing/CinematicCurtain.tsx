@@ -42,7 +42,7 @@ export function CinematicCurtain() {
       .to(lineTopRef.current, { scaleX: 1, opacity: 1, duration: 0.7, ease: "power2.inOut" }, 0.4)
       .to(lineBotRef.current, { scaleX: 1, opacity: 1, duration: 0.7, ease: "power2.inOut" }, 0.5)
       // Lettres en stagger
-      .to([...letterRefs.current].reverse(), {
+      .to(letterRefs.current, {
         opacity: 1,
         y: 0,
         filter: "blur(0px)",
@@ -102,7 +102,9 @@ export function CinematicCurtain() {
     });
   }, { scope: curtainRef });
 
-  const LETTERS = "PLATFORME".split("");
+  // Lettres dans l'ordre d'animation : E en premier, P en dernier
+  // Le flex-direction:row-reverse affiche PLATFORME à l'endroit visuellement
+  const LETTERS = "PLATFORME".split("").reverse(); // ["E","M","R","O","F","T","A","L","P"]
 
   return (
     <div
@@ -187,10 +189,11 @@ export function CinematicCurtain() {
           }}
         />
 
-        {/* Wordmark lettre par lettre */}
+        {/* Wordmark lettre par lettre — flex-direction:row-reverse pour lire PLATFORME */}
         <div
           style={{
             display: "flex",
+            flexDirection: "row-reverse",
             alignItems: "center",
             gap: 0,
             fontFamily: "'DM Sans', sans-serif",
@@ -200,7 +203,7 @@ export function CinematicCurtain() {
             textTransform: "uppercase",
             color: "hsl(38,35%,96%)",
             textShadow: "0 0 40px hsl(28,62%,52%,.5)",
-            paddingLeft: ".44em", // compense le letter-spacing sur le dernier char
+            paddingRight: ".44em",
           }}
         >
           {LETTERS.map((l, i) => (
