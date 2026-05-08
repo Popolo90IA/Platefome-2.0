@@ -21,45 +21,49 @@ export function HeroCanvas({ modelUrl }: HeroCanvasProps) {
   // ── GSAP intro ───────────────────────────────────────────────────────────
   useEffect(() => {
     if (!loaded) return;
-    const wrap  = wrapRef.current;
-    const flash = flashRef.current;
-    const ring  = ringRef.current;
-    const amb   = ambientRef.current;
-    if (!wrap) return;
+    // rAF garantit que React a fini le rendu et les refs sont attachés
+    const raf = requestAnimationFrame(() => {
+      const wrap  = wrapRef.current;
+      const flash = flashRef.current;
+      const ring  = ringRef.current;
+      const amb   = ambientRef.current;
+      if (!wrap) return;
 
-    const tl = gsap.timeline();
+      const tl = gsap.timeline();
 
-    // 1. Slide up + dézoom + blur → reveal
-    tl.fromTo(wrap,
-      { y: 60, autoAlpha: 0, scale: 0.88, filter: "blur(14px)" },
-      { y: 0,  autoAlpha: 1, scale: 1,    filter: "blur(0px)", duration: 1.2, ease: "power3.out" },
-      0
-    );
-
-    // 2. Grand flash doré central
-    if (flash) {
-      tl.fromTo(flash,
-        { autoAlpha: 0, scale: 0.5 },
-        { autoAlpha: 1, scale: 1.3, duration: 0.3, ease: "power2.out" },
-        0.4
-      ).to(flash, { autoAlpha: 0, scale: 2, duration: 0.7, ease: "power2.in" }, 0.7);
-    }
-
-    // 3. Ring qui apparaît en tournant
-    if (ring) {
-      tl.fromTo(ring,
-        { autoAlpha: 0, scale: 0.6, rotation: -45 },
-        { autoAlpha: 1, scale: 1,   rotation: 0, duration: 0.9, ease: "back.out(1.6)" },
-        0.5
+      // 1. Slide up + dézoom + blur → reveal
+      tl.fromTo(wrap,
+        { y: 60, autoAlpha: 0, scale: 0.88, filter: "blur(14px)" },
+        { y: 0,  autoAlpha: 1, scale: 1,    filter: "blur(0px)", duration: 1.2, ease: "power3.out" },
+        0
       );
-      // Loop de rotation permanente
-      gsap.to(ring, { rotation: 360, duration: 12, ease: "none", repeat: -1 });
-    }
 
-    // 4. Ambient glow permanent
-    if (amb) {
-      tl.to(amb, { autoAlpha: 1, duration: 1.2, ease: "power2.out" }, 0.6);
-    }
+      // 2. Grand flash doré central
+      if (flash) {
+        tl.fromTo(flash,
+          { autoAlpha: 0, scale: 0.5 },
+          { autoAlpha: 1, scale: 1.3, duration: 0.3, ease: "power2.out" },
+          0.4
+        ).to(flash, { autoAlpha: 0, scale: 2, duration: 0.7, ease: "power2.in" }, 0.7);
+      }
+
+      // 3. Ring qui apparaît en tournant
+      if (ring) {
+        tl.fromTo(ring,
+          { autoAlpha: 0, scale: 0.6, rotation: -45 },
+          { autoAlpha: 1, scale: 1,   rotation: 0, duration: 0.9, ease: "back.out(1.6)" },
+          0.5
+        );
+        // Loop de rotation permanente
+        gsap.to(ring, { rotation: 360, duration: 12, ease: "none", repeat: -1 });
+      }
+
+      // 4. Ambient glow permanent
+      if (amb) {
+        tl.to(amb, { autoAlpha: 1, duration: 1.2, ease: "power2.out" }, 0.6);
+      }
+    });
+    return () => cancelAnimationFrame(raf);
   }, [loaded]);
 
   // ── GSAP switch modèle ───────────────────────────────────────────────────
