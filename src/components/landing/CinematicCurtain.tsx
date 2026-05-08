@@ -41,13 +41,13 @@ export function CinematicCurtain() {
     tl.to(haloRef.current, { opacity: 1, scale: 1, duration: 0.6, ease: "power2.out" }, 0.3)
       .to(lineTopRef.current, { scaleX: 1, opacity: 1, duration: 0.7, ease: "power2.inOut" }, 0.4)
       .to(lineBotRef.current, { scaleX: 1, opacity: 1, duration: 0.7, ease: "power2.inOut" }, 0.5)
-      // Lettres en stagger
+      // Lettres en stagger de droite à gauche : E apparaît en premier, P en dernier
       .to(letterRefs.current, {
         opacity: 1,
         y: 0,
         filter: "blur(0px)",
         duration: 0.5,
-        stagger: 0.06,
+        stagger: { each: 0.06, from: "end" },
         ease: "power2.out",
       }, 0.65);
 
@@ -102,9 +102,7 @@ export function CinematicCurtain() {
     });
   }, { scope: curtainRef });
 
-  // Lettres dans l'ordre d'animation : E en premier, P en dernier
-  // Le flex-direction:row-reverse affiche PLATFORME à l'endroit visuellement
-  const LETTERS = "PLATFORME".split("").reverse(); // ["E","M","R","O","F","T","A","L","P"]
+  const LETTERS = "PLATFORME".split(""); // P L A T F O R M E — stagger from:"end" anime E en premier
 
   return (
     <div
@@ -189,11 +187,11 @@ export function CinematicCurtain() {
           }}
         />
 
-        {/* Wordmark lettre par lettre — flex-direction:row-reverse pour lire PLATFORME */}
+        {/* Wordmark lettre par lettre */}
         <div
           style={{
             display: "flex",
-            flexDirection: "row-reverse",
+            flexDirection: "row",
             alignItems: "center",
             gap: 0,
             fontFamily: "'DM Sans', sans-serif",
@@ -203,7 +201,7 @@ export function CinematicCurtain() {
             textTransform: "uppercase",
             color: "hsl(38,35%,96%)",
             textShadow: "0 0 40px hsl(28,62%,52%,.5)",
-            paddingRight: ".44em",
+            paddingLeft: ".44em",
           }}
         >
           {LETTERS.map((l, i) => (
