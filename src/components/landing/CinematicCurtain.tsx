@@ -80,8 +80,8 @@ export function CinematicCurtain() {
         {/* Ligne haut */}
         <div ref={lineTopRef} style={{ height: 1, width: 160, background: "linear-gradient(90deg, transparent, hsl(28,70%,62%), transparent)" }} />
 
-        {/* Wordmark — direction:ltr force l'ordre P→E malgré le RTL global de la page */}
-        <div ref={wordRef} style={{ display: "flex", direction: "ltr", alignItems: "center", fontFamily: "'DM Sans', sans-serif", fontSize: "1.2rem", fontWeight: 400, letterSpacing: ".44em", textTransform: "uppercase", color: "hsl(38,35%,96%)", textShadow: "0 0 40px hsl(28,62%,52%,.5)", paddingLeft: ".44em" }}>
+        {/* Wordmark — bidi-override + ltr isole du RTL hébreu global */}
+        <div ref={wordRef} style={{ display: "flex", direction: "ltr", unicodeBidi: "bidi-override", alignItems: "center", fontFamily: "'DM Sans', sans-serif", fontSize: "1.2rem", fontWeight: 400, letterSpacing: ".44em", textTransform: "uppercase", color: "hsl(38,35%,96%)", textShadow: "0 0 40px hsl(28,62%,52%,.5)", paddingLeft: ".44em" }}>
           <span style={{ display: "inline-block" }}>P</span>
           <span style={{ display: "inline-block" }}>L</span>
           <span style={{ display: "inline-block" }}>A</span>
