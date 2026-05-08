@@ -6,6 +6,7 @@ import dynamic from "next/dynamic";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
+import { CinematicCurtain } from "@/components/landing/CinematicCurtain";
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
 
@@ -155,59 +156,15 @@ const KEYFRAMES = `
   @keyframes navPill { from{opacity:0;transform:translateX(-50%) translateY(-16px)} to{opacity:1;transform:translateX(-50%) translateY(0)} }
   @keyframes badgeDot { 0%,100%{box-shadow:0 0 0 0 hsl(28,62%,42%,.35)} 50%{box-shadow:0 0 0 8px hsl(28,62%,42%,0)} }
 
-  /* ── Cinematic curtain ── */
-  @keyframes curtainRise {
-    0%   { transform: scaleY(1); }
-    100% { transform: scaleY(0); }
+  /* ── Hero elements: état initial invisible, révélés par GSAP CinematicCurtain ── */
+  .hero-fade-a,.hero-fade-b,.hero-fade-c,.hero-fade-d,.hero-fade-e,.hero-fade-f {
+    opacity: 0;
   }
-  /* Logo visible 0→70% du rideau, fade seulement à la fin */
-  @keyframes curtainLogoFade {
-    0%        { opacity:0; transform: translate(-50%,-50%) scale(.96); }
-    12%       { opacity:1; transform: translate(-50%,-50%) scale(1);   }
-    70%       { opacity:1; transform: translate(-50%,-50%) scale(1);   }
-    100%      { opacity:0; transform: translate(-50%,-50%) scale(1.04) translateY(-12px); }
-  }
-  /* Lines: scaleX depuis center — GPU, pas de conflit avec inline width */
-  @keyframes curtainLineDraw {
-    0%   { transform: scaleX(0); opacity:0; }
-    25%  { opacity:1; }
-    70%  { transform: scaleX(1); opacity:1; }
-    100% { transform: scaleX(1); opacity:0; }
-  }
-
-  /* ── Hero title clip-path reveal (cinematic) ── */
-  @keyframes titleReveal {
-    from { opacity:0; transform:translateY(48px); filter:blur(8px); }
-    to   { opacity:1; transform:translateY(0);    filter:blur(0); }
-  }
-  @keyframes titleReveal2 {
-    from { opacity:0; transform:translateY(32px); filter:blur(4px); }
-    to   { opacity:1; transform:translateY(0);    filter:blur(0); }
-  }
-  @keyframes heroBadgeIn {
-    from { opacity:0; transform:translateY(16px) scale(.95); }
-    to   { opacity:1; transform:translateY(0) scale(1); }
-  }
-  @keyframes heroSubIn {
-    from { opacity:0; transform:translateY(20px); }
-    to   { opacity:1; transform:translateY(0); }
-  }
-  @keyframes heroBronzeLine {
-    from { scaleX:0; opacity:0; }
-    to   { scaleX:1; opacity:1; }
-  }
-
-  /* ── Post-curtain: décalage démarrage ── */
-  .hero-fade-a { animation: heroBadgeIn  .9s cubic-bezier(.16,1,.3,1) 2.5s  both; }
-  .hero-fade-b { animation: titleReveal  1.1s cubic-bezier(.16,1,.3,1) 2.65s both; }
-  .hero-fade-c { animation: titleReveal2 1.0s cubic-bezier(.16,1,.3,1) 2.9s  both; }
-  .hero-fade-d { animation: heroSubIn    .9s cubic-bezier(.16,1,.3,1)  3.1s  both; }
-  .hero-fade-e { animation: heroSubIn    .8s cubic-bezier(.16,1,.3,1)  3.25s both; }
-  .hero-fade-f { animation: heroSubIn    .8s cubic-bezier(.16,1,.3,1)  3.4s  both; }
-
   @media (prefers-reduced-motion: reduce) {
     .hero-fade-a,.hero-fade-b,.hero-fade-c,.hero-fade-d,.hero-fade-e,.hero-fade-f {
-      animation: fadeIn .3s ease both;
+      opacity: 1 !important;
+      filter: none !important;
+      transform: none !important;
     }
   }
   .fade-a{animation:fadeUp 1s cubic-bezier(.16,1,.3,1) both}
@@ -335,63 +292,8 @@ export default function HomePage() {
     <div style={{ background: "hsl(var(--void))", color: "hsl(var(--cream))", overflowX: "hidden", minHeight: "100vh" }}>
       <style>{KEYFRAMES}</style>
 
-      {/* ═══ CINEMATIC CURTAIN ═══ */}
-      <div
-        aria-hidden
-        style={{
-          position: "fixed", inset: 0, zIndex: 99998,
-          background: "hsl(28,18%,8%)",
-          transformOrigin: "top",
-          animation: "curtainRise 2.2s cubic-bezier(.76,0,.24,1) 0.3s forwards",
-          pointerEvents: "none",
-        }}
-      >
-        {/* Halo ambiant bronze derrière le logo */}
-        <div style={{
-          position: "absolute", top: "50%", left: "50%",
-          transform: "translate(-50%,-50%)",
-          width: 320, height: 160,
-          background: "radial-gradient(ellipse at center, hsl(28,62%,38%,.18) 0%, transparent 70%)",
-          animation: "curtainLogoFade 2.2s ease 0.3s forwards",
-          opacity: 0,
-        }} />
-        {/* Wordmark container */}
-        <div style={{
-          position: "absolute", top: "50%", left: "50%",
-          transform: "translate(-50%,-50%)",
-          display: "flex", flexDirection: "column", alignItems: "center", gap: 16,
-          animation: "curtainLogoFade 2.2s cubic-bezier(.4,0,.2,1) 0.3s forwards",
-          opacity: 0,
-          width: "max-content",
-        }}>
-          {/* Bronze line top */}
-          <div style={{
-            height: 1,
-            width: 140,
-            background: "linear-gradient(90deg, transparent, hsl(28,70%,60%), transparent)",
-            transformOrigin: "center",
-            transform: "scaleX(0)",
-            animation: "curtainLineDraw 2.2s ease 0.3s forwards",
-          }} />
-          {/* PLATFORME wordmark */}
-          <span style={{
-            fontFamily: "'DM Sans', sans-serif",
-            fontSize: "1.15rem", fontWeight: 400,
-            letterSpacing: ".45em", textTransform: "uppercase",
-            color: "hsl(38,35%,96%)",
-            textShadow: "0 0 40px hsl(28,62%,52%,.4)",
-          }}>PLATFORME</span>
-          {/* Bronze line bottom */}
-          <div style={{
-            height: 1,
-            width: 140,
-            background: "linear-gradient(90deg, transparent, hsl(28,70%,60%), transparent)",
-            transformOrigin: "center",
-            transform: "scaleX(0)",
-            animation: "curtainLineDraw 2.2s ease 0.35s forwards",
-          }} />
-        </div>
-      </div>
+      {/* ═══ CINEMATIC CURTAIN — GSAP ═══ */}
+      <CinematicCurtain />
 
       {/* Grain */}
       <div aria-hidden style={{ position: "fixed", inset: 0, pointerEvents: "none", zIndex: 9999, opacity: 0.028, mixBlendMode: "multiply", backgroundImage: GRAIN_SVG, backgroundSize: "256px" }} />
