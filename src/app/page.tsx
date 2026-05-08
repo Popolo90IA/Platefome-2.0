@@ -3,99 +3,108 @@
 import React, { useEffect, useState, useRef } from "react";
 import Link from "next/link";
 import dynamic from "next/dynamic";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useGSAP } from "@gsap/react";
+
+gsap.registerPlugin(ScrollTrigger, useGSAP);
 
 const HeroCanvas = dynamic(
   () => import("@/components/appetite/HeroCanvas").then(m => m.HeroCanvas),
   { ssr: false }
 );
 
-/* ─── Scroll reveal ─────────────────────────────────────── */
+/* ─── Scroll reveal — GSAP ScrollTrigger ───────────────── */
 function useReveal() {
-  useEffect(() => {
-    const els = document.querySelectorAll(".reveal, .reveal-left, .reveal-scale, .reveal-blur");
-    const obs = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((e) => {
-          if (e.isIntersecting) {
-            const el = e.target as HTMLElement;
-            const delay = el.dataset.delay || "0";
-            setTimeout(() => el.classList.add("visible"), Number(delay));
-          }
-        });
-      },
-      { threshold: 0.06, rootMargin: "0px 0px -40px 0px" }
-    );
-    els.forEach((el) => obs.observe(el));
-    return () => obs.disconnect();
-  }, []);
+  useGSAP(() => {
+    const els = gsap.utils.toArray<HTMLElement>(".reveal, .reveal-left, .reveal-scale, .reveal-blur");
+    els.forEach((el) => {
+      const delay = Number(el.dataset.delay || 0) / 1000;
+      gsap.fromTo(
+        el,
+        { opacity: 0, y: 36 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.9,
+          delay,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: el,
+            start: "top 94%",
+            toggleActions: "play none none none",
+          },
+        }
+      );
+    });
+  });
 }
 
-/* ─── Header scroll effect ──────────────────────────────── */
+/* ─── Header scroll effect — GSAP ScrollTrigger ─────────── */
 function useHeaderScroll() {
-  useEffect(() => {
+  useGSAP(() => {
     const header = document.getElementById("site-header");
     if (!header) return;
     const inner = header.firstElementChild as HTMLElement | null;
-    const handler = () => {
-      if (!inner) return;
-      if (window.scrollY > 60) {
-        inner.style.background = "hsl(38,28%,94%,.92)";
-        inner.style.borderColor = "hsl(30,18%,78%)";
-        inner.style.boxShadow = "0 8px 40px rgba(0,0,0,.6), inset 0 1px 0 hsl(30,18%,82%,.5)";
-      } else {
-        inner.style.background = "hsl(38,28%,94%,.75)";
-        inner.style.borderColor = "hsl(30,18%,82%,.5)";
-        inner.style.boxShadow = "0 8px 32px rgba(0,0,0,.4), inset 0 1px 0 hsl(30,18%,82%,.3)";
-      }
-    };
-    window.addEventListener("scroll", handler, { passive: true });
-    return () => window.removeEventListener("scroll", handler);
-  }, []);
+    if (!inner) return;
+
+    ScrollTrigger.create({
+      start: "top+=60 top",
+      onEnter: () =>
+        gsap.to(inner, {
+          duration: 0.35,
+          ease: "power2.out",
+          "--bg": "hsl(38,28%,94%,.92)",
+          borderColor: "hsl(30,18%,78%)",
+          boxShadow: "0 8px 40px rgba(0,0,0,.6), inset 0 1px 0 hsl(30,18%,82%,.5)",
+        }),
+      onLeaveBack: () =>
+        gsap.to(inner, {
+          duration: 0.35,
+          ease: "power2.out",
+          borderColor: "hsl(30,18%,82%,.5)",
+          boxShadow: "0 8px 32px rgba(0,0,0,.4), inset 0 1px 0 hsl(30,18%,82%,.3)",
+        }),
+    });
+  });
 }
 
-/* ─── Count-up animation ─────────────────────────────────── */
-function useCountUp(target: number, duration = 2000, start = false) {
-  const [count, setCount] = useState(0);
-  useEffect(() => {
-    if (!start) return;
-    let startTime: number | null = null;
-    const step = (timestamp: number) => {
-      if (!startTime) startTime = timestamp;
-      const progress = Math.min((timestamp - startTime) / duration, 1);
-      const eased = 1 - Math.pow(1 - progress, 3);
-      setCount(Math.floor(eased * target));
-      if (progress < 1) requestAnimationFrame(step);
-    };
-    requestAnimationFrame(step);
-  }, [target, duration, start]);
-  return count;
-}
-
-/* ─── Stats count-up component ───────────────────────────── */
+/* ─── Stats count-up component — GSAP ───────────────────── */
 function StatNumber({ value, color }: { value: string; color: string }) {
   const ref = useRef<HTMLDivElement>(null);
-  const [started, setStarted] = useState(false);
-  // Parse: find numeric part (supports decimals)
   const numMatch = value.match(/([\d]+(?:\.[\d]+)?)/);
   const numVal = numMatch ? Math.round(parseFloat(numMatch[1])) : 0;
-  const count = useCountUp(numVal, 1600, started);
-  // Reconstruct: replace numeric part with animated count
-  const display = value.replace(/([\d]+(?:\.[\d]+)?)/, String(count));
+  const proxy = useRef({ val: 0 });
 
-  useEffect(() => {
+  useGSAP(() => {
     const el = ref.current;
-    if (!el) return;
-    const obs = new IntersectionObserver(
-      ([entry]) => { if (entry.isIntersecting) { setStarted(true); obs.disconnect(); } },
-      { threshold: 0.3 }
+    if (!el || numVal === 0) return;
+    gsap.fromTo(
+      proxy.current,
+      { val: 0 },
+      {
+        val: numVal,
+        duration: 1.6,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: el,
+          start: "top 85%",
+          toggleActions: "play none none none",
+        },
+        onUpdate() {
+          const cur = Math.floor(proxy.current.val);
+          el.textContent = value.replace(/([\d]+(?:\.[\d]+)?)/, String(cur));
+        },
+        onComplete() {
+          el.textContent = value;
+        },
+      }
     );
-    obs.observe(el);
-    return () => obs.disconnect();
-  }, []);
+  }, { scope: ref });
 
   return (
     <div ref={ref} style={{ fontFamily: "'Cormorant Garamond',serif", fontWeight: 300, fontSize: "clamp(2.2rem,3.5vw,3.25rem)", letterSpacing: "-.05em", color, lineHeight: 1, marginBottom: 10 }}>
-      {started ? display : value}
+      {value}
     </div>
   );
 }
@@ -306,25 +315,21 @@ export default function HomePage() {
     return () => window.removeEventListener("keydown", handler);
   }, []);
 
-  /* Steps scroll tracking */
-  useEffect(() => {
+  /* Steps scroll tracking — GSAP ScrollTrigger */
+  useGSAP(() => {
     const el = stepsRef.current;
     if (!el) return;
-    const items = el.querySelectorAll("[data-step]");
-    const obs = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((e) => {
-          if (e.isIntersecting) {
-            const idx = Number((e.target as HTMLElement).dataset.step);
-            setActiveStep(idx);
-          }
-        });
-      },
-      { threshold: 0.5 }
-    );
-    items.forEach((el) => obs.observe(el));
-    return () => obs.disconnect();
-  }, []);
+    const items = el.querySelectorAll<HTMLElement>("[data-step]");
+    items.forEach((item) => {
+      ScrollTrigger.create({
+        trigger: item,
+        start: "top 55%",
+        end: "bottom 45%",
+        onEnter: () => setActiveStep(Number(item.dataset.step)),
+        onEnterBack: () => setActiveStep(Number(item.dataset.step)),
+      });
+    });
+  }, { scope: stepsRef });
 
   return (
     <div style={{ background: "hsl(var(--void))", color: "hsl(var(--cream))", overflowX: "hidden", minHeight: "100vh" }}>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { ArrowLeft, Sparkles } from "lucide-react";
 import { EditableText } from "@/components/editable/EditableText";
 import { TableTextureBg } from "./TableTextureBg";
@@ -10,6 +10,11 @@ import { FloatingBadges } from "./FloatingBadges";
 import { ExperiencePath } from "./ExperiencePath";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useGSAP } from "@gsap/react";
+
+gsap.registerPlugin(ScrollTrigger, useGSAP);
 
 /**
  * LivingTable — the signature scroll-driven showcase.
@@ -23,38 +28,23 @@ import { Button } from "@/components/ui/button";
 export function LivingTable() {
   const sectionRef = useRef<HTMLElement>(null);
   const [progress, setProgress] = useState(0);
+  const proxy = useRef({ p: 0 });
 
-  useEffect(() => {
+  useGSAP(() => {
     const el = sectionRef.current;
     if (!el) return;
 
-    let raf = 0;
-    const update = () => {
-      const rect = el.getBoundingClientRect();
-      const vh = window.innerHeight;
-      // Total scrollable range: when top of section reaches viewport top
-      // until bottom of section leaves viewport top. We use the sticky body.
-      const total = rect.height - vh;
-      const scrolled = -rect.top;
-      const p = Math.max(0, Math.min(1, scrolled / Math.max(1, total)));
-      setProgress(p);
-      raf = 0;
-    };
-
-    const onScroll = () => {
-      if (raf) return;
-      raf = requestAnimationFrame(update);
-    };
-
-    update();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll);
-    return () => {
-      window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", onScroll);
-      if (raf) cancelAnimationFrame(raf);
-    };
-  }, []);
+    ScrollTrigger.create({
+      trigger: el,
+      start: "top top",
+      end: "bottom bottom",
+      scrub: 0.6,
+      onUpdate(self) {
+        proxy.current.p = self.progress;
+        setProgress(self.progress);
+      },
+    });
+  }, { scope: sectionRef });
 
   // Chapter detection
   const act =
