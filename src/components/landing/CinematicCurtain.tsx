@@ -42,7 +42,7 @@ export function CinematicCurtain() {
       .to(lineTopRef.current, { scaleX: 1, opacity: 1, duration: 0.7, ease: "power2.inOut" }, 0.4)
       .to(lineBotRef.current, { scaleX: 1, opacity: 1, duration: 0.7, ease: "power2.inOut" }, 0.5)
       // Lettres en stagger
-      .to(letterRefs.current, {
+      .to([...letterRefs.current].reverse(), {
         opacity: 1,
         y: 0,
         filter: "blur(0px)",
