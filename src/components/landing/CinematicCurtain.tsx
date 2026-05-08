@@ -41,13 +41,13 @@ export function CinematicCurtain() {
     tl.to(haloRef.current, { opacity: 1, scale: 1, duration: 0.6, ease: "power2.out" }, 0.3)
       .to(lineTopRef.current, { scaleX: 1, opacity: 1, duration: 0.7, ease: "power2.inOut" }, 0.4)
       .to(lineBotRef.current, { scaleX: 1, opacity: 1, duration: 0.7, ease: "power2.inOut" }, 0.5)
-      // Lettres en stagger de droite à gauche : E apparaît en premier, P en dernier
+      // Lettres P→E : stagger simple gauche→droite
       .to(letterRefs.current, {
         opacity: 1,
         y: 0,
         filter: "blur(0px)",
         duration: 0.5,
-        stagger: { each: 0.06, from: "end" },
+        stagger: 0.06,
         ease: "power2.out",
       }, 0.65);
 
