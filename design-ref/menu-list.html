@@ -1,0 +1,355 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<title>Plateform — Menu</title>
+<link rel="stylesheet" href="colors_and_type.css">
+<style>
+  body { margin: 0; background: var(--void); padding: 28px 36px 60px; min-height: 100vh; font-family: var(--font-sans);}
+
+  .head { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 28px; gap: 24px;}
+  h1 { font-family: var(--font-hebrew), var(--font-display); font-size: 48px; font-weight: 600; line-height: 1; letter-spacing: -.02em; color: var(--fog); margin: 0;}
+  h1 em { font-style: italic; color: var(--accent-bright); }
+  .sub { font-family: var(--font-sans); font-size: 14px; color: var(--subtle); margin-top: 8px; max-width: 540px;}
+
+  .btn { display: inline-flex; align-items: center; gap: 8px; padding: 11px 22px; border-radius: 10px; font-family: var(--font-sans); font-size: 13.5px; font-weight: 600; cursor: pointer; border: none;}
+  .btn-primary { background: var(--grad-bronze); color: white; box-shadow: var(--shadow-cta);}
+  .btn-ghost { background: transparent; color: var(--fog); border: 1px solid var(--line);}
+
+  /* meta strip */
+  .meta-strip { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 24px;}
+  .meta-card { background: var(--deep); border: 1px solid var(--line); border-radius: 12px; padding: 16px 18px;}
+  .meta-card .lab { font-family: var(--font-mono); font-size: 10px; letter-spacing: .15em; text-transform: uppercase; color: var(--dim);}
+  .meta-card .val { font-family: var(--font-display); font-size: 28px; color: var(--fog); font-weight: 500; margin-top: 4px; line-height: 1;}
+  .meta-card .delta { font-family: var(--font-mono); font-size: 11px; color: hsl(120,30%,40%); margin-top: 6px;}
+  .meta-card .delta.warn { color: hsl(0,55%,55%);}
+
+  /* toolbar */
+  .toolbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; padding: 12px 16px; background: var(--deep); border: 1px solid var(--line); border-radius: 12px;}
+  .toolbar-left { display: flex; align-items: center; gap: 8px;}
+  .filter-pill { padding: 7px 14px; border-radius: 99px; font-family: var(--font-sans); font-size: 12.5px; font-weight: 500; color: var(--subtle); border: 1px solid var(--line); cursor: pointer; background: transparent; display: inline-flex; align-items: center; gap: 6px;}
+  .filter-pill.on { background: var(--accent-bright); color: white; border-color: transparent;}
+  .filter-pill .count { padding: 1px 6px; background: rgba(255,255,255,.18); border-radius: 99px; font-family: var(--font-mono); font-size: 10px;}
+  .filter-pill:not(.on) .count { background: var(--abyss); color: var(--dim);}
+  .toolbar-right { display: flex; align-items: center; gap: 12px;}
+  .search { display: flex; align-items: center; gap: 8px; padding: 7px 12px; background: var(--abyss); border-radius: 8px; border: 1px solid transparent; min-width: 240px;}
+  .search input { flex: 1; border: none; background: transparent; outline: none; color: var(--fog); font-family: var(--font-sans); font-size: 13px;}
+  .search svg { color: var(--dim);}
+  .sort { font-family: var(--font-mono); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--subtle); display: inline-flex; align-items: center; gap: 6px; cursor: pointer;}
+
+  /* dish table */
+  .dishes { background: var(--deep); border: 1px solid var(--line); border-radius: 14px; overflow: hidden;}
+  .row { display: grid; grid-template-columns: 36px 70px 1fr 110px 100px 120px 100px 32px; gap: 18px; align-items: center; padding: 14px 18px; border-bottom: 1px solid var(--line); transition: background .12s;}
+  .row:last-child { border-bottom: none;}
+  .row:hover { background: hsl(28,15%,12%,.4);}
+  .row.h { font-family: var(--font-mono); font-size: 10px; letter-spacing: .15em; text-transform: uppercase; color: var(--dim); padding-top: 12px; padding-bottom: 12px; background: var(--abyss);}
+  .row.h:hover { background: var(--abyss);}
+
+  .cb { width: 16px; height: 16px; border: 1.5px solid var(--line); border-radius: 4px; cursor: pointer;}
+  .cb.on { background: var(--accent-bright); border-color: var(--accent-bright); display: grid; place-items: center;}
+
+  .thumb { width: 56px; height: 56px; border-radius: 8px; position: relative; overflow: hidden; background: linear-gradient(135deg, hsl(28,40%,32%), hsl(28,55%,45%));}
+  .thumb.t1 { background: linear-gradient(135deg, hsl(34,60%,55%), hsl(28,55%,40%));}
+  .thumb.t2 { background: linear-gradient(135deg, hsl(120,35%,40%), hsl(80,35%,45%));}
+  .thumb.t3 { background: linear-gradient(135deg, hsl(15,55%,50%), hsl(28,60%,40%));}
+  .thumb.t4 { background: linear-gradient(135deg, hsl(45,55%,55%), hsl(35,50%,45%));}
+  .thumb.t5 { background: linear-gradient(135deg, hsl(0,40%,45%), hsl(15,45%,40%));}
+  .thumb.t6 { background: linear-gradient(135deg, hsl(60,35%,55%), hsl(45,40%,50%));}
+  .thumb.t7 { background: linear-gradient(135deg, hsl(190,35%,45%), hsl(170,35%,40%));}
+  .thumb .badge3d { position: absolute; bottom: 4px; right: 4px; background: rgba(255,255,255,.95); border-radius: 99px; padding: 2px 6px; font-family: var(--font-mono); font-size: 8px; letter-spacing: .1em; color: var(--accent-bright); display: flex; align-items: center; gap: 3px;}
+  .thumb .badge3d .dot { width: 3px; height: 3px; border-radius: 99px; background: var(--accent-bright);}
+  .thumb.no3d::after { content: ""; position: absolute; bottom: 4px; right: 4px; width: 6px; height: 6px; border-radius: 99px; background: hsl(0,55%,55%); box-shadow: 0 0 0 2px var(--deep);}
+
+  .name-cell { display: flex; flex-direction: column; gap: 3px; min-width: 0;}
+  .name-cell .name { font-family: var(--font-hebrew), var(--font-sans); font-size: 15px; font-weight: 500; color: var(--fog);}
+  .name-cell .meta { font-family: var(--font-mono); font-size: 10.5px; color: var(--dim); display: flex; gap: 8px;}
+  .name-cell .meta .cat { color: var(--subtle);}
+
+  .price { font-family: var(--font-mono); font-size: 14px; color: var(--fog); letter-spacing: .04em;}
+
+  .scans { display: flex; flex-direction: column; gap: 4px;}
+  .scans .num { font-family: var(--font-mono); font-size: 14px; color: var(--fog);}
+  .scans .bar { height: 3px; background: var(--abyss); border-radius: 99px; overflow: hidden;}
+  .scans .bar-fill { height: 100%; background: var(--grad-bronze);}
+
+  .conv { font-family: var(--font-mono); font-size: 13px;}
+  .conv.up { color: hsl(120,30%,42%);}
+  .conv.down { color: hsl(0,55%,55%);}
+  .conv .arr { font-size: 9px; vertical-align: 1px;}
+
+  .status { padding: 3px 9px; border-radius: 99px; font-family: var(--font-mono); font-size: 10px; letter-spacing: .14em; text-transform: uppercase; display: inline-flex; align-items: center; gap: 5px; width: fit-content;}
+  .status.live { background: hsl(120,30%,40%,.1); color: hsl(120,30%,32%); border: 1px solid hsl(120,30%,40%,.18);}
+  .status.draft { background: hsl(28,15%,30%,.15); color: var(--subtle); border: 1px solid var(--line);}
+  .status.warn { background: hsl(0,55%,50%,.08); color: hsl(0,55%,55%); border: 1px solid hsl(0,55%,50%,.18);}
+  .status .dot { width: 5px; height: 5px; border-radius: 99px; background: currentColor;}
+
+  .more { color: var(--dim); cursor: pointer;}
+
+  /* category headers */
+  .cat-head { padding: 16px 18px 8px; background: var(--abyss); border-bottom: 1px solid var(--line); display: flex; align-items: center; gap: 12px;}
+  .cat-head .name { font-family: var(--font-display); font-size: 17px; font-weight: 600; color: var(--fog); letter-spacing: -.01em;}
+  .cat-head .count { font-family: var(--font-mono); font-size: 10px; letter-spacing: .15em; text-transform: uppercase; color: var(--dim);}
+
+  /* selection bar */
+  .selbar { position: sticky; bottom: 24px; margin-top: 18px; padding: 14px 22px; background: hsl(28,15%,12%); border: 1px solid hsl(28,62%,42%,.3); border-radius: 12px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 12px 40px -12px rgba(0,0,0,.5); transform: translateY(0); transition: transform .2s;}
+  .selbar .sel-info { color: var(--fog); font-family: var(--font-sans); font-size: 13.5px; display: flex; align-items: center; gap: 14px;}
+  .selbar .sel-info strong { color: var(--accent-bright); font-weight: 600;}
+  .selbar-actions { display: flex; gap: 6px;}
+  .sel-btn { padding: 7px 14px; border: 1px solid var(--line); border-radius: 8px; background: transparent; color: var(--fog); font-family: var(--font-sans); font-size: 12.5px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px;}
+  .sel-btn.danger { color: hsl(0,55%,60%); border-color: hsl(0,55%,50%,.3);}
+</style>
+</head>
+<body>
+
+<div class="head">
+  <div>
+    <h1><em>תפריט</em> · 47 מנות</h1>
+    <p class="sub">Mizrahi Tel Aviv · עודכן לפני 12 דקות · 38 ב-3D, 9 ממתינות לסריקה</p>
+  </div>
+  <div style="display: flex; gap: 10px;">
+    <button class="btn btn-ghost">ייבא מ-Excel</button>
+    <button class="btn btn-primary">הוסף מנה
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 5v14M5 12h14"/></svg>
+    </button>
+  </div>
+</div>
+
+<!-- Meta strip -->
+<div class="meta-strip">
+  <div class="meta-card">
+    <div class="lab">סריקות 7 ימים</div>
+    <div class="val">12,847</div>
+    <div class="delta">↑ 18.3% מהשבוע שעבר</div>
+  </div>
+  <div class="meta-card">
+    <div class="lab">המרת הזמנה</div>
+    <div class="val">38.4<span style="color: var(--dim); font-size: 18px;">%</span></div>
+    <div class="delta">↑ 2.1 נק'</div>
+  </div>
+  <div class="meta-card">
+    <div class="lab">מנה הכי נצפית</div>
+    <div class="val" style="font-size: 19px; font-family: var(--font-hebrew);">חומוס מסבחה</div>
+    <div class="delta" style="color: var(--subtle);">2,184 צפיות 3D</div>
+  </div>
+  <div class="meta-card">
+    <div class="lab">חסרות 3D</div>
+    <div class="val" style="color: hsl(0,55%,60%);">9</div>
+    <div class="delta warn">דורש פעולה</div>
+  </div>
+</div>
+
+<!-- Toolbar -->
+<div class="toolbar">
+  <div class="toolbar-left">
+    <button class="filter-pill on">הכל <span class="count">47</span></button>
+    <button class="filter-pill">פתיחות <span class="count">12</span></button>
+    <button class="filter-pill">עיקריות <span class="count">18</span></button>
+    <button class="filter-pill">קינוחים <span class="count">8</span></button>
+    <button class="filter-pill">משקאות <span class="count">9</span></button>
+    <button class="filter-pill" style="color: hsl(0,55%,60%); border-color: hsl(0,55%,50%,.3);"><span class="dot" style="display:inline-block;width:5px;height:5px;border-radius:99px;background:hsl(0,55%,55%);"></span>ללא 3D <span class="count">9</span></button>
+  </div>
+  <div class="toolbar-right">
+    <div class="search">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <input type="text" placeholder="חפש מנה...">
+    </div>
+    <span class="sort">מיון · סריקות
+      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m6 9 6 6 6-6"/></svg>
+    </span>
+  </div>
+</div>
+
+<!-- Dishes -->
+<div class="dishes">
+
+  <!-- header row -->
+  <div class="row h">
+    <div><div class="cb"></div></div>
+    <div></div>
+    <div>שם המנה</div>
+    <div>מחיר</div>
+    <div>סריקות 7 ימים</div>
+    <div>המרה</div>
+    <div>סטטוס</div>
+    <div></div>
+  </div>
+
+  <!-- category: פתיחות -->
+  <div class="cat-head"><span class="name">פתיחות</span><span class="count">12 מנות · 4,218 סריקות</span></div>
+
+  <div class="row">
+    <div><div class="cb on"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg></div></div>
+    <div class="thumb t1"><span class="badge3d"><span class="dot"></span>3D</span></div>
+    <div class="name-cell">
+      <span class="name">חומוס מסבחה</span>
+      <span class="meta"><span class="cat">פתיחה</span> · 38 ש"ח · צמחוני</span>
+    </div>
+    <div class="price">₪38</div>
+    <div class="scans"><span class="num">2,184</span><div class="bar"><div class="bar-fill" style="width:92%"></div></div></div>
+    <div class="conv up">42% <span class="arr">▲</span></div>
+    <div><span class="status live"><span class="dot"></span>פורסם</span></div>
+    <div class="more">⋯</div>
+  </div>
+
+  <div class="row">
+    <div><div class="cb"></div></div>
+    <div class="thumb t2"><span class="badge3d"><span class="dot"></span>3D</span></div>
+    <div class="name-cell">
+      <span class="name">סלט פיסטוק וברוקולי</span>
+      <span class="meta"><span class="cat">פתיחה</span> · 52 ש"ח · טבעוני</span>
+    </div>
+    <div class="price">₪52</div>
+    <div class="scans"><span class="num">1,624</span><div class="bar"><div class="bar-fill" style="width:68%"></div></div></div>
+    <div class="conv up">36% <span class="arr">▲</span></div>
+    <div><span class="status live"><span class="dot"></span>פורסם</span></div>
+    <div class="more">⋯</div>
+  </div>
+
+  <div class="row">
+    <div><div class="cb"></div></div>
+    <div class="thumb t3 no3d"></div>
+    <div class="name-cell">
+      <span class="name">קובה נייה</span>
+      <span class="meta"><span class="cat">פתיחה</span> · 64 ש"ח · ללא גלוטן</span>
+    </div>
+    <div class="price">₪64</div>
+    <div class="scans"><span class="num">412</span><div class="bar"><div class="bar-fill" style="width:18%; background: hsl(0,55%,50%);"></div></div></div>
+    <div class="conv down">11% <span class="arr">▼</span></div>
+    <div><span class="status warn"><span class="dot"></span>חסר 3D</span></div>
+    <div class="more">⋯</div>
+  </div>
+
+  <div class="row">
+    <div><div class="cb"></div></div>
+    <div class="thumb t4"><span class="badge3d"><span class="dot"></span>3D</span></div>
+    <div class="name-cell">
+      <span class="name">פלאפל ערמונים</span>
+      <span class="meta"><span class="cat">פתיחה</span> · 42 ש"ח · טבעוני · חדש</span>
+    </div>
+    <div class="price">₪42</div>
+    <div class="scans"><span class="num">998</span><div class="bar"><div class="bar-fill" style="width:42%"></div></div></div>
+    <div class="conv up">29% <span class="arr">▲</span></div>
+    <div><span class="status draft"><span class="dot"></span>טיוטה</span></div>
+    <div class="more">⋯</div>
+  </div>
+
+  <!-- category: עיקריות -->
+  <div class="cat-head"><span class="name">עיקריות</span><span class="count">18 מנות · 6,294 סריקות</span></div>
+
+  <div class="row">
+    <div><div class="cb on"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg></div></div>
+    <div class="thumb t5"><span class="badge3d"><span class="dot"></span>3D</span></div>
+    <div class="name-cell">
+      <span class="name">בקר מעושן 14 שעות</span>
+      <span class="meta"><span class="cat">עיקרית</span> · 138 ש"ח · בשרי</span>
+    </div>
+    <div class="price">₪138</div>
+    <div class="scans"><span class="num">1,892</span><div class="bar"><div class="bar-fill" style="width:80%"></div></div></div>
+    <div class="conv up">48% <span class="arr">▲</span></div>
+    <div><span class="status live"><span class="dot"></span>פורסם</span></div>
+    <div class="more">⋯</div>
+  </div>
+
+  <div class="row">
+    <div><div class="cb"></div></div>
+    <div class="thumb t6"><span class="badge3d"><span class="dot"></span>3D</span></div>
+    <div class="name-cell">
+      <span class="name">דג ברמונדי בתנור פחמים</span>
+      <span class="meta"><span class="cat">עיקרית</span> · 124 ש"ח · ים</span>
+    </div>
+    <div class="price">₪124</div>
+    <div class="scans"><span class="num">1,422</span><div class="bar"><div class="bar-fill" style="width:60%"></div></div></div>
+    <div class="conv up">34% <span class="arr">▲</span></div>
+    <div><span class="status live"><span class="dot"></span>פורסם</span></div>
+    <div class="more">⋯</div>
+  </div>
+
+  <div class="row">
+    <div><div class="cb"></div></div>
+    <div class="thumb t7"><span class="badge3d"><span class="dot"></span>3D</span></div>
+    <div class="name-cell">
+      <span class="name">ריזוטו פטריות שמפיניון</span>
+      <span class="meta"><span class="cat">עיקרית</span> · 86 ש"ח · צמחוני</span>
+    </div>
+    <div class="price">₪86</div>
+    <div class="scans"><span class="num">1,108</span><div class="bar"><div class="bar-fill" style="width:48%"></div></div></div>
+    <div class="conv up">31% <span class="arr">▲</span></div>
+    <div><span class="status live"><span class="dot"></span>פורסם</span></div>
+    <div class="more">⋯</div>
+  </div>
+
+  <div class="row">
+    <div><div class="cb"></div></div>
+    <div class="thumb t1 no3d"></div>
+    <div class="name-cell">
+      <span class="name">סטייק אנטרקוט 350g</span>
+      <span class="meta"><span class="cat">עיקרית</span> · 198 ש"ח · בשרי</span>
+    </div>
+    <div class="price">₪198</div>
+    <div class="scans"><span class="num">242</span><div class="bar"><div class="bar-fill" style="width:11%; background: hsl(0,55%,50%);"></div></div></div>
+    <div class="conv down">8% <span class="arr">▼</span></div>
+    <div><span class="status warn"><span class="dot"></span>חסר 3D</span></div>
+    <div class="more">⋯</div>
+  </div>
+
+  <!-- category: קינוחים -->
+  <div class="cat-head"><span class="name">קינוחים</span><span class="count">8 מנות · 2,335 סריקות</span></div>
+
+  <div class="row">
+    <div><div class="cb"></div></div>
+    <div class="thumb t4"><span class="badge3d"><span class="dot"></span>3D</span></div>
+    <div class="name-cell">
+      <span class="name">מלבי ורד וגרגירי רימון</span>
+      <span class="meta"><span class="cat">קינוח</span> · 38 ש"ח · חלבי</span>
+    </div>
+    <div class="price">₪38</div>
+    <div class="scans"><span class="num">848</span><div class="bar"><div class="bar-fill" style="width:38%"></div></div></div>
+    <div class="conv up">52% <span class="arr">▲</span></div>
+    <div><span class="status live"><span class="dot"></span>פורסם</span></div>
+    <div class="more">⋯</div>
+  </div>
+
+  <div class="row">
+    <div><div class="cb"></div></div>
+    <div class="thumb t3"><span class="badge3d"><span class="dot"></span>3D</span></div>
+    <div class="name-cell">
+      <span class="name">קנאפה קלאסית · אגוזי מלך</span>
+      <span class="meta"><span class="cat">קינוח</span> · 44 ש"ח · חלבי · חם</span>
+    </div>
+    <div class="price">₪44</div>
+    <div class="scans"><span class="num">1,124</span><div class="bar"><div class="bar-fill" style="width:48%"></div></div></div>
+    <div class="conv up">58% <span class="arr">▲</span></div>
+    <div><span class="status live"><span class="dot"></span>פורסם</span></div>
+    <div class="more">⋯</div>
+  </div>
+
+</div>
+
+<!-- selection bar -->
+<div class="selbar">
+  <div class="sel-info">
+    <strong>2 מנות נבחרו</strong>
+    <span style="color: var(--subtle);">חומוס מסבחה · בקר מעושן 14 שעות</span>
+  </div>
+  <div class="selbar-actions">
+    <button class="sel-btn">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 11l3 3L22 4"/></svg>
+      פרסם הכל
+    </button>
+    <button class="sel-btn">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+      ייצא
+    </button>
+    <button class="sel-btn">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+      שכפל
+    </button>
+    <button class="sel-btn danger">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/></svg>
+      מחק
+    </button>
+  </div>
+</div>
+
+</body>
+</html>

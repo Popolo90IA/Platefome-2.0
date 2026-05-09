@@ -1,0 +1,275 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<title>Plateform — Dish editor</title>
+<link rel="stylesheet" href="colors_and_type.css">
+<script src="../public/brand/image-slot.js"></script>
+<style>
+  body { margin: 0; background: var(--void); padding: 28px 36px 60px; min-height: 100vh; }
+  .crumbs { display: flex; align-items: center; gap: 8px; font-family: var(--font-mono); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--dim); margin-bottom: 18px;}
+  .crumbs a { color: var(--subtle); text-decoration: none; }
+  .crumbs .sep { opacity: .5;}
+  .crumbs .here { color: var(--accent-bright);}
+
+  .head { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 28px; gap: 24px;}
+  h1 { font-family: var(--font-hebrew), var(--font-display); font-size: 48px; font-weight: 600; line-height: 1; letter-spacing: -.02em; color: var(--fog); margin: 0;}
+  h1 em { font-style: italic; color: var(--accent-bright); }
+  .sub { font-family: var(--font-sans); font-size: 14px; color: var(--subtle); margin-top: 8px; max-width: 540px;}
+  .head-actions { display: flex; gap: 10px; align-items: center;}
+  .btn { display: inline-flex; align-items: center; gap: 8px; padding: 11px 22px; border-radius: 10px; font-family: var(--font-sans); font-size: 13.5px; font-weight: 600; cursor: pointer; border: none; transition: all .15s;}
+  .btn-primary { background: var(--grad-bronze); color: white; box-shadow: var(--shadow-cta);}
+  .btn-ghost { background: transparent; color: var(--fog); border: 1px solid var(--line);}
+  .btn-ghost:hover { background: var(--surface);}
+  .save-state { font-family: var(--font-mono); font-size: 11px; letter-spacing: .15em; text-transform: uppercase; color: var(--dim); display: flex; align-items: center; gap: 6px;}
+  .save-state .pulse { width: 6px; height: 6px; border-radius: 99px; background: var(--accent-bright); animation: pulse 2s infinite;}
+  @keyframes pulse { 0%, 100% { opacity: .4;} 50% { opacity: 1;}}
+
+  .grid { display: grid; grid-template-columns: 1fr 380px; gap: 24px; }
+
+  /* card system */
+  .card { background: var(--deep); border: 1px solid var(--line); border-radius: 16px; padding: 24px; }
+  .card + .card { margin-top: 16px; }
+  .card-h { display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px;}
+  .card-h h3 { font-family: var(--font-display); font-size: 19px; font-weight: 600; color: var(--fog); margin: 0;}
+  .card-h .opt { font-family: var(--font-mono); font-size: 10px; letter-spacing: .18em; text-transform: uppercase; color: var(--dim);}
+  .card-h .req { color: var(--accent-bright);}
+
+  /* form fields */
+  .field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px;}
+  .field:last-child { margin-bottom: 0;}
+  .field label { font-family: var(--font-mono); font-size: 10.5px; letter-spacing: .16em; text-transform: uppercase; color: var(--subtle);}
+  .field input, .field textarea, .field select { font-family: var(--font-sans); font-size: 14px; padding: 11px 14px; background: var(--void); border: 1px solid var(--line); border-radius: 8px; color: var(--fog); outline: none; transition: border-color .15s;}
+  .field input:focus, .field textarea:focus { border-color: var(--accent-bright);}
+  .field textarea { resize: vertical; min-height: 80px; line-height: 1.5;}
+  .field .hint { font-family: var(--font-sans); font-size: 12px; color: var(--dim);}
+  .row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px;}
+  .row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px;}
+
+  /* tag input */
+  .tags { display: flex; flex-wrap: wrap; gap: 6px; padding: 8px; background: var(--void); border: 1px solid var(--line); border-radius: 8px; min-height: 40px;}
+  .tag { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; background: hsl(28,62%,42%,.1); border: 1px solid hsl(28,62%,42%,.25); border-radius: 99px; font-family: var(--font-sans); font-size: 12px; color: var(--accent-bright);}
+  .tag.diet { background: hsl(120,30%,40%,.08); border-color: hsl(120,30%,40%,.2); color: hsl(120,30%,32%);}
+  .tag.spicy { background: hsl(0,60%,50%,.08); border-color: hsl(0,60%,50%,.2); color: hsl(0,55%,42%);}
+  .tag .x { font-family: var(--font-mono); cursor: pointer; opacity: .5;}
+  .tag-add { padding: 4px 10px; border: 1px dashed var(--line); border-radius: 99px; font-family: var(--font-sans); font-size: 12px; color: var(--dim); cursor: pointer; background: transparent;}
+
+  /* media tabs */
+  .media-tabs { display: flex; gap: 4px; padding: 4px; background: var(--abyss); border-radius: 10px; margin-bottom: 14px; width: fit-content;}
+  .media-tab { padding: 8px 18px; border-radius: 7px; font-family: var(--font-sans); font-size: 13px; font-weight: 500; color: var(--subtle); cursor: pointer; border: none; background: transparent; display: inline-flex; align-items: center; gap: 6px;}
+  .media-tab.on { background: var(--deep); color: var(--fog); box-shadow: 0 1px 3px rgba(0,0,0,.06);}
+  .media-tab .dot { width: 6px; height: 6px; border-radius: 99px; background: var(--accent-bright);}
+  .media-tab.on .dot { box-shadow: 0 0 0 3px hsl(28,62%,42%,.18);}
+
+  /* photo slot */
+  .photo-area { aspect-ratio: 4/3; border-radius: 12px; overflow: hidden; border: 1px solid var(--line); background: var(--abyss);}
+  .photo-area image-slot { width: 100%; height: 100%; display: block;}
+
+  /* 3D uploader */
+  .uploader-3d { aspect-ratio: 4/3; border: 2px dashed hsl(28,62%,42%,.35); border-radius: 12px; background: linear-gradient(160deg, hsl(28,62%,42%,.05), hsl(22,70%,50%,.03)); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; padding: 32px; text-align: center;}
+  .uploader-3d .ico { width: 48px; height: 48px; border-radius: 99px; background: hsl(28,62%,42%,.12); display: flex; align-items: center; justify-content: center; color: var(--accent-bright);}
+  .uploader-3d .title { font-family: var(--font-display); font-size: 22px; font-weight: 500; color: var(--fog); letter-spacing: -.01em;}
+  .uploader-3d .title em { font-style: italic; color: var(--accent-bright);}
+  .uploader-3d .hint { font-family: var(--font-sans); font-size: 13px; color: var(--subtle); max-width: 380px; line-height: 1.5;}
+  .uploader-3d .formats { font-family: var(--font-mono); font-size: 10px; letter-spacing: .18em; text-transform: uppercase; color: var(--dim); margin-top: 4px;}
+  .or-pickup { display: flex; align-items: center; gap: 14px; margin-top: 14px; padding: 14px 16px; background: var(--abyss); border-radius: 10px;}
+  .or-pickup .ico-sm { width: 36px; height: 36px; border-radius: 8px; background: var(--accent-bright); color: white; display: flex; align-items: center; justify-content: center; flex-shrink: 0;}
+  .or-pickup .text { flex: 1; font-family: var(--font-sans); font-size: 13px; color: var(--fog);}
+  .or-pickup .text strong { font-weight: 600;}
+  .or-pickup .text .lite { color: var(--subtle); display: block; margin-top: 2px; font-size: 12px;}
+  .or-pickup .arr { color: var(--dim);}
+
+  /* sidebar preview */
+  .preview-sticky { position: sticky; top: 24px;}
+  .phone { background: var(--fog); border-radius: 28px; padding: 12px 12px 16px; box-shadow: 0 30px 80px -30px rgba(0,0,0,.3);}
+  .phone-screen { background: var(--void); border-radius: 18px; overflow: hidden; aspect-ratio: 9/19;}
+  .phone-status { display: flex; justify-content: space-between; align-items: center; padding: 8px 14px; font-family: var(--font-mono); font-size: 10px; color: var(--fog);}
+  .phone-content { padding: 0 0 14px;}
+  .phone-photo { aspect-ratio: 4/3; background: linear-gradient(135deg, hsl(28,40%,32%), hsl(28,55%,45%)); position: relative;}
+  .phone-photo .badge3d { position: absolute; top: 12px; right: 12px; background: rgba(255,255,255,.95); border-radius: 99px; padding: 5px 10px; font-family: var(--font-mono); font-size: 9px; letter-spacing: .14em; color: var(--accent-bright); display: flex; align-items: center; gap: 5px;}
+  .phone-photo .badge3d .dot { width: 5px; height: 5px; border-radius: 99px; background: var(--accent-bright);}
+  .phone-info { padding: 14px 18px;}
+  .phone-info .name { font-family: var(--font-hebrew), var(--font-display); font-size: 22px; font-weight: 600; color: var(--fog); line-height: 1.1;}
+  .phone-info .price { font-family: var(--font-mono); font-size: 14px; color: var(--accent-bright); margin-top: 4px; letter-spacing: .04em;}
+  .phone-info .desc { font-family: var(--font-sans); font-size: 12.5px; color: var(--subtle); line-height: 1.5; margin-top: 10px;}
+  .phone-info .tag-row { display: flex; gap: 5px; flex-wrap: wrap; margin-top: 12px;}
+  .phone-info .tag-row .t { padding: 3px 9px; border-radius: 99px; font-family: var(--font-sans); font-size: 10.5px; font-weight: 500; color: var(--accent-bright); background: hsl(28,62%,42%,.1); border: 1px solid hsl(28,62%,42%,.18);}
+  .phone-cta { margin: 14px 18px 0; padding: 12px; background: var(--grad-bronze); border-radius: 10px; text-align: center; font-family: var(--font-sans); font-size: 13px; font-weight: 600; color: white;}
+
+  .mini-meta { display: flex; flex-direction: column; gap: 10px; margin-top: 16px;}
+  .mini-meta-row { display: flex; justify-content: space-between; font-family: var(--font-sans); font-size: 12.5px;}
+  .mini-meta-row .k { font-family: var(--font-mono); font-size: 10px; letter-spacing: .15em; text-transform: uppercase; color: var(--dim);}
+  .mini-meta-row .v { color: var(--fog); font-weight: 500;}
+
+  /* status pill in heading */
+  .status-pill { display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px; border-radius: 99px; background: hsl(120,30%,40%,.1); border: 1px solid hsl(120,30%,40%,.2); font-family: var(--font-mono); font-size: 10.5px; letter-spacing: .15em; text-transform: uppercase; color: hsl(120,30%,30%); margin-right: 12px;}
+  .status-pill .dot { width: 6px; height: 6px; border-radius: 99px; background: hsl(120,40%,40%);}
+</style>
+</head>
+<body>
+
+<div class="crumbs">
+  <a href="index.html">דשבורד</a>
+  <span class="sep">/</span>
+  <a href="#">תפריט</a>
+  <span class="sep">/</span>
+  <span class="here">חומוס מסבחה</span>
+</div>
+
+<div class="head">
+  <div>
+    <span class="status-pill"><span class="dot"></span>פורסם · נראה ל-2,847 לקוחות</span>
+    <h1>עריכת <em>מנה</em></h1>
+    <p class="sub">כל שינוי כאן מתעדכן באופן אוטומטי בכל 14 השפות, בכל השולחנות, בכל המכשירים.</p>
+  </div>
+  <div class="head-actions">
+    <span class="save-state"><span class="pulse"></span>נשמר אוטומטית</span>
+    <button class="btn btn-ghost">תצוגה מקדימה</button>
+    <button class="btn btn-primary">פרסם שינויים
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M19 12H5M11 5l-7 7 7 7"/></svg>
+    </button>
+  </div>
+</div>
+
+<div class="grid">
+
+  <!-- LEFT: form -->
+  <div>
+
+    <!-- Basics -->
+    <div class="card">
+      <div class="card-h"><h3>פרטי המנה</h3><span class="opt req">חובה</span></div>
+      <div class="field">
+        <label>שם המנה (עברית)</label>
+        <input type="text" value="חומוס מסבחה">
+      </div>
+      <div class="row-2">
+        <div class="field">
+          <label>קטגוריה</label>
+          <select><option>פתיחה</option><option>עיקריות</option><option>קינוחים</option></select>
+        </div>
+        <div class="field">
+          <label>מחיר (₪)</label>
+          <input type="text" value="38">
+        </div>
+      </div>
+      <div class="field">
+        <label>תיאור קצר</label>
+        <textarea>חומוס חם, גרגרים שלמים מטוגנים בחמאה, פטרוזיליה, פפריקה מעושנת. מוגש עם פיתה אפויה במקום.</textarea>
+        <span class="hint">תרגום אוטומטי ל-13 שפות נוספות. ניתן לערוך כל תרגום בנפרד.</span>
+      </div>
+    </div>
+
+    <!-- Media -->
+    <div class="card">
+      <div class="card-h"><h3>חזותי</h3><span class="opt">3D · 360 · AR</span></div>
+
+      <div class="media-tabs">
+        <button class="media-tab on"><span class="dot"></span>3D · scan</button>
+        <button class="media-tab">360°</button>
+        <button class="media-tab">תמונה</button>
+        <button class="media-tab">AR</button>
+      </div>
+
+      <div class="uploader-3d">
+        <div class="ico">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+        </div>
+        <div class="title">גרור קובץ <em>.glb</em> או <em>.usdz</em> כאן</div>
+        <p class="hint">או לחץ לבחירה מהמחשב. ההמרה והדחיסה אוטומטית ואורכת ~30 שניות.</p>
+        <span class="formats">.GLB · .USDZ · .OBJ · MAX 80MB</span>
+      </div>
+
+      <div class="or-pickup">
+        <div class="ico-sm">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M7 7V5a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v2"/><circle cx="12" cy="14" r="3"/></svg>
+        </div>
+        <div class="text">
+          <strong>אין קובץ 3D? נסרוק עבורך.</strong>
+          <span class="lite">קח 12 תמונות מהפלאפון, ה-AI שלנו יבנה את המודל. 8 דקות.</span>
+        </div>
+        <span class="arr">←</span>
+      </div>
+    </div>
+
+    <!-- Tags / dietary -->
+    <div class="card">
+      <div class="card-h"><h3>תגיות ודיאטה</h3><span class="opt">אופציונלי</span></div>
+      <div class="field">
+        <label>תגיות תפריט</label>
+        <div class="tags">
+          <span class="tag">פופולרי <span class="x">×</span></span>
+          <span class="tag">בית <span class="x">×</span></span>
+          <span class="tag">חם <span class="x">×</span></span>
+          <button class="tag-add">+ הוסף תגית</button>
+        </div>
+      </div>
+      <div class="field">
+        <label>דיאטה ואלרגנים</label>
+        <div class="tags">
+          <span class="tag diet">צמחוני <span class="x">×</span></span>
+          <span class="tag diet">ללא גלוטן <span class="x">×</span></span>
+          <span class="tag spicy">מכיל סומסום <span class="x">×</span></span>
+          <button class="tag-add">+ הוסף</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Composition -->
+    <div class="card">
+      <div class="card-h"><h3>הרכב</h3><span class="opt">אופציונלי</span></div>
+      <div class="row-3">
+        <div class="field"><label>קלוריות</label><input type="text" value="420"></div>
+        <div class="field"><label>זמן הכנה</label><input type="text" value="6 דקות"></div>
+        <div class="field"><label>מנה / חצי מנה</label><select><option>מנה מלאה</option><option>חצי מנה</option></select></div>
+      </div>
+      <div class="field">
+        <label>רכיבים עיקריים (מופרדים בפסיק)</label>
+        <input type="text" value="חומוס, טחינה גולמית, שמן זית, לימון, שום, פטרוזיליה, פפריקה">
+      </div>
+    </div>
+
+  </div>
+
+  <!-- RIGHT: live preview -->
+  <div>
+    <div class="preview-sticky">
+      <div class="card-h" style="margin-bottom: 14px; padding: 0 4px;">
+        <h3 style="font-size: 13px; font-family: var(--font-mono); letter-spacing: .15em; text-transform: uppercase; color: var(--subtle); font-weight: 500;">תצוגה מקדימה · חי</h3>
+        <span class="opt" style="font-family: var(--font-mono); font-size: 10px; letter-spacing: .15em; text-transform: uppercase; color: var(--accent-bright); display: flex; align-items: center; gap: 5px;"><span style="width:6px;height:6px;border-radius:99px;background:var(--accent-bright);animation:pulse 2s infinite;"></span>מסנכרן</span>
+      </div>
+      <div class="phone">
+        <div class="phone-screen">
+          <div class="phone-status"><span>9:41</span><span>●●●●</span></div>
+          <div class="phone-content">
+            <div class="phone-photo">
+              <span class="badge3d"><span class="dot"></span>3D</span>
+            </div>
+            <div class="phone-info">
+              <div class="name">חומוס מסבחה</div>
+              <div class="price">₪38</div>
+              <div class="desc">חומוס חם, גרגרים שלמים מטוגנים בחמאה, פטרוזיליה, פפריקה מעושנת.</div>
+              <div class="tag-row">
+                <span class="t">פופולרי</span>
+                <span class="t">בית</span>
+                <span class="t">חם</span>
+              </div>
+            </div>
+            <div class="phone-cta">הוסף להזמנה</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="mini-meta">
+        <div class="mini-meta-row"><span class="k">סריקות 7 ימים</span><span class="v">312</span></div>
+        <div class="mini-meta-row"><span class="k">תצוגות 3D</span><span class="v">218 · 70%</span></div>
+        <div class="mini-meta-row"><span class="k">המרת הזמנה</span><span class="v">42% ↑</span></div>
+        <div class="mini-meta-row"><span class="k">גודל קובץ</span><span class="v">2.4 MB</span></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>

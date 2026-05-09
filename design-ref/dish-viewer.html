@@ -1,0 +1,568 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<title>Plateform — 3D dish viewer</title>
+<link rel="stylesheet" href="colors_and_type.css">
+<style>
+  body { margin: 0; min-height: 100vh; background: linear-gradient(180deg, hsl(28,12%,8%), hsl(28,15%,4%)); display: grid; place-items: center; padding: 40px 20px; font-family: var(--font-sans);}
+
+  .stage { display: flex; gap: 60px; align-items: center;}
+
+  /* phone frame */
+  .phone {
+    width: 380px;
+    height: 800px;
+    background: #1a1614;
+    border-radius: 48px;
+    padding: 12px;
+    box-shadow:
+      0 60px 120px -20px rgba(0,0,0,.6),
+      0 0 0 1.5px rgba(255,255,255,.06) inset;
+    position: relative;
+  }
+  .phone-screen {
+    width: 100%;
+    height: 100%;
+    border-radius: 38px;
+    overflow: hidden;
+    background: linear-gradient(180deg, hsl(28,8%,18%), hsl(28,10%,10%));
+    position: relative;
+  }
+  .notch {
+    position: absolute;
+    top: 12px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 110px;
+    height: 28px;
+    background: #1a1614;
+    border-radius: 99px;
+    z-index: 50;
+  }
+  .status {
+    position: absolute;
+    top: 16px;
+    left: 24px;
+    right: 24px;
+    z-index: 51;
+    display: flex;
+    justify-content: space-between;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: white;
+    pointer-events: none;
+  }
+  .status-icons { display: flex; gap: 5px; align-items: center;}
+
+  /* dish view */
+  .dish-bg {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse at 50% 60%, hsl(28,55%,28%) 0%, hsl(28,30%,15%) 40%, hsl(28,15%,8%) 75%);
+  }
+  /* the dish itself - 3D plate render */
+  .dish-3d {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 320px;
+    height: 320px;
+    perspective: 1000px;
+  }
+  .plate {
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+    transform: rotateX(58deg);
+    position: relative;
+  }
+  .plate-disk {
+    position: absolute;
+    inset: 30px 0 0 0;
+    height: 280px;
+    border-radius: 50%;
+    background:
+      radial-gradient(circle at 50% 30%, hsl(28,5%,90%), hsl(28,8%,75%) 70%, hsl(28,10%,55%) 100%);
+    box-shadow:
+      0 0 0 1px hsl(28,15%,40%),
+      inset 0 0 40px hsl(28,15%,55%);
+  }
+  .plate-rim {
+    position: absolute;
+    inset: 30px 0 0 0;
+    height: 280px;
+    border-radius: 50%;
+    border: 6px solid hsl(28,5%,98%);
+    box-sizing: border-box;
+    background: hsl(28,5%,90%);
+  }
+  /* hummus mound */
+  .food-mound {
+    position: absolute;
+    top: 80px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 220px;
+    height: 220px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 50% 30%, hsl(38,55%,75%), hsl(35,45%,60%) 70%, hsl(32,40%,50%));
+    box-shadow:
+      inset 0 -20px 30px hsl(28,40%,35%),
+      inset 0 20px 30px hsl(40,55%,85%);
+    transform: translateX(-50%) translateZ(20px);
+  }
+  /* center well with chickpeas */
+  .food-well {
+    position: absolute;
+    top: 130px;
+    left: 50%;
+    transform: translateX(-50%) translateZ(30px);
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 50% 40%, hsl(35,55%,50%), hsl(28,45%,38%) 80%);
+    box-shadow: inset 0 4px 12px hsl(28,45%,25%);
+  }
+  /* chickpea blobs */
+  .chickpea {
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 35%, hsl(38,45%,75%), hsl(32,40%,55%));
+    box-shadow: 0 1px 2px rgba(0,0,0,.3);
+  }
+  .parsley {
+    position: absolute;
+    width: 8px;
+    height: 4px;
+    background: hsl(120,55%,38%);
+    border-radius: 50%;
+    transform: rotate(45deg);
+  }
+  /* paprika dust */
+  .paprika {
+    position: absolute;
+    width: 3px;
+    height: 3px;
+    border-radius: 50%;
+    background: hsl(15,75%,45%);
+    opacity: .85;
+  }
+  /* shadow under plate */
+  .plate-shadow {
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 280px;
+    height: 30px;
+    background: radial-gradient(ellipse, rgba(0,0,0,.6), transparent 70%);
+    filter: blur(10px);
+  }
+
+  /* 360° orbit indicator */
+  .orbit {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 360px;
+    height: 80px;
+    border: 1px dashed hsl(28,62%,55%,.4);
+    border-radius: 50%;
+    pointer-events: none;
+    transform: translate(-50%, calc(-50% + 60px)) rotateX(58deg);
+  }
+  .orbit-handle {
+    position: absolute;
+    top: -6px;
+    left: 50%;
+    transform: translate(-50%, 0);
+    width: 12px;
+    height: 12px;
+    background: var(--accent-bright);
+    border-radius: 99px;
+    box-shadow: 0 0 0 4px hsl(28,62%,55%,.25), 0 0 12px hsl(28,62%,55%);
+  }
+
+  /* top bar */
+  .topbar {
+    position: absolute;
+    top: 56px;
+    left: 0;
+    right: 0;
+    z-index: 10;
+    display: flex;
+    justify-content: space-between;
+    padding: 0 22px;
+  }
+  .ico-btn {
+    width: 38px;
+    height: 38px;
+    border-radius: 99px;
+    background: rgba(255,255,255,.1);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255,255,255,.1);
+    display: grid;
+    place-items: center;
+    color: white;
+  }
+
+  /* mode tabs */
+  .mode-pill {
+    position: absolute;
+    top: 110px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+    display: flex;
+    gap: 2px;
+    padding: 4px;
+    background: rgba(255,255,255,.1);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-radius: 99px;
+    border: 1px solid rgba(255,255,255,.08);
+  }
+  .mode-tab {
+    padding: 7px 16px;
+    border-radius: 99px;
+    font-family: var(--font-sans);
+    font-size: 12.5px;
+    font-weight: 600;
+    color: rgba(255,255,255,.6);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .mode-tab.on {
+    background: white;
+    color: hsl(28,15%,12%);
+  }
+  .mode-tab .dot { width: 5px; height: 5px; border-radius: 99px; background: var(--accent-bright);}
+
+  /* hint badge */
+  .hint {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, 240px);
+    z-index: 10;
+    background: rgba(0,0,0,.4);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255,255,255,.06);
+    border-radius: 99px;
+    padding: 8px 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--font-sans);
+    font-size: 11.5px;
+    color: rgba(255,255,255,.85);
+  }
+  .hint svg { color: var(--accent-bright);}
+
+  /* details sheet */
+  .sheet {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 20;
+    background: hsl(28,8%,12%);
+    border-top-left-radius: 28px;
+    border-top-right-radius: 28px;
+    padding: 18px 24px 28px;
+    box-shadow: 0 -20px 60px -20px rgba(0,0,0,.8);
+  }
+  .sheet-handle { width: 40px; height: 4px; background: rgba(255,255,255,.2); border-radius: 99px; margin: 0 auto 18px;}
+
+  .dish-name {
+    font-family: var(--font-hebrew), var(--font-display);
+    font-size: 26px;
+    font-weight: 600;
+    color: var(--fog);
+    line-height: 1.05;
+    letter-spacing: -.01em;
+  }
+  .dish-name em { font-style: italic; color: var(--accent-bright);}
+  .dish-meta { display: flex; align-items: center; gap: 8px; margin-top: 6px; font-family: var(--font-mono); font-size: 11px; color: var(--subtle); letter-spacing: .04em;}
+  .dish-meta .price { color: var(--accent-bright); font-weight: 600; font-size: 14px;}
+  .dish-meta .sep { opacity: .4;}
+  .dish-desc { font-family: var(--font-sans); font-size: 13.5px; line-height: 1.55; color: rgba(255,255,255,.75); margin-top: 12px;}
+
+  .tags { display: flex; gap: 6px; margin-top: 14px;}
+  .tag { padding: 4px 10px; border-radius: 99px; font-family: var(--font-sans); font-size: 11px; font-weight: 500; color: var(--accent-bright); background: hsl(28,62%,42%,.12); border: 1px solid hsl(28,62%,42%,.2);}
+  .tag.diet { color: hsl(120,40%,55%); background: hsl(120,40%,45%,.1); border-color: hsl(120,40%,45%,.18);}
+
+  .ingredients {
+    margin-top: 16px;
+    padding: 12px 14px;
+    background: rgba(255,255,255,.03);
+    border-radius: 10px;
+  }
+  .ingredients .lbl { font-family: var(--font-mono); font-size: 9.5px; letter-spacing: .15em; text-transform: uppercase; color: var(--dim); margin-bottom: 6px;}
+  .ingredients .list { font-family: var(--font-sans); font-size: 12px; color: rgba(255,255,255,.7); line-height: 1.5;}
+
+  .add-row { display: flex; align-items: center; gap: 12px; margin-top: 18px;}
+  .qty { display: flex; align-items: center; gap: 14px; padding: 0 14px; height: 50px; background: rgba(255,255,255,.06); border-radius: 14px;}
+  .qty button { width: 26px; height: 26px; border-radius: 99px; background: rgba(255,255,255,.1); border: none; color: white; font-size: 14px; font-weight: 600; cursor: pointer; display: grid; place-items: center;}
+  .qty .num { font-family: var(--font-mono); font-size: 16px; color: white; min-width: 16px; text-align: center;}
+  .add-btn { flex: 1; height: 50px; background: var(--grad-bronze); border: none; border-radius: 14px; color: white; font-family: var(--font-sans); font-size: 14.5px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: space-between; padding: 0 20px;}
+  .add-btn .label { display: flex; align-items: center; gap: 8px;}
+  .add-btn .total { font-family: var(--font-mono); font-size: 14px;}
+
+  /* annotations */
+  .anno-list {
+    flex: 0 0 320px;
+    color: var(--fog);
+  }
+  .anno-h {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: .15em;
+    text-transform: uppercase;
+    color: var(--subtle);
+    margin-bottom: 18px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .anno-h::before {
+    content: "";
+    width: 24px;
+    height: 1px;
+    background: var(--subtle);
+  }
+  .anno-item {
+    display: flex;
+    gap: 14px;
+    padding: 14px 0;
+    border-bottom: 1px solid rgba(255,255,255,.06);
+  }
+  .anno-num {
+    flex-shrink: 0;
+    width: 26px;
+    height: 26px;
+    border-radius: 99px;
+    background: hsl(28,62%,42%);
+    color: white;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    display: grid;
+    place-items: center;
+  }
+  .anno-text {
+    flex: 1;
+  }
+  .anno-text .ttl {
+    font-family: var(--font-display);
+    font-size: 15px;
+    color: var(--fog);
+    font-weight: 500;
+    line-height: 1.3;
+  }
+  .anno-text .lab {
+    font-family: var(--font-mono);
+    font-size: 9.5px;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--dim);
+    margin-top: 4px;
+  }
+  .anno-text .desc {
+    font-family: var(--font-sans);
+    font-size: 12.5px;
+    color: var(--subtle);
+    line-height: 1.55;
+    margin-top: 6px;
+  }
+</style>
+</head>
+<body>
+
+<div class="stage">
+
+  <!-- phone -->
+  <div class="phone">
+    <div class="notch"></div>
+    <div class="status">
+      <span>9:41</span>
+      <span class="status-icons">▮▮▮▮ · 5G · 100%</span>
+    </div>
+
+    <div class="phone-screen">
+      <div class="dish-bg"></div>
+
+      <!-- top bar -->
+      <div class="topbar">
+        <div class="ico-btn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M19 12H5M11 5l-7 7 7 7"/></svg>
+        </div>
+        <div style="display:flex;gap:8px;">
+          <div class="ico-btn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.29 1.51 4.04 3 5.5l7 7Z"/></svg>
+          </div>
+          <div class="ico-btn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- mode pill -->
+      <div class="mode-pill">
+        <button class="mode-tab on"><span class="dot"></span>תלת-מימד</button>
+        <button class="mode-tab">תמונה</button>
+        <button class="mode-tab">AR</button>
+      </div>
+
+      <!-- 3D dish render -->
+      <div class="dish-3d">
+        <div class="plate-shadow"></div>
+        <div class="plate">
+          <div class="plate-rim"></div>
+          <div class="plate-disk"></div>
+          <div class="food-mound"></div>
+          <div class="food-well">
+            <!-- chickpeas -->
+            <div class="chickpea" style="top: 20px; left: 30px;"></div>
+            <div class="chickpea" style="top: 35px; left: 60px;"></div>
+            <div class="chickpea" style="top: 25px; left: 88px;"></div>
+            <div class="chickpea" style="top: 50px; left: 45px; width: 14px; height: 14px;"></div>
+            <div class="chickpea" style="top: 60px; left: 80px;"></div>
+            <div class="chickpea" style="top: 75px; left: 30px;"></div>
+            <div class="chickpea" style="top: 85px; left: 65px; width: 13px; height: 13px;"></div>
+            <div class="chickpea" style="top: 95px; left: 95px;"></div>
+            <div class="chickpea" style="top: 70px; left: 100px;"></div>
+            <!-- parsley -->
+            <div class="parsley" style="top: 40px; left: 40px;"></div>
+            <div class="parsley" style="top: 65px; left: 90px; transform: rotate(120deg);"></div>
+            <div class="parsley" style="top: 100px; left: 50px; transform: rotate(-30deg);"></div>
+            <div class="parsley" style="top: 80px; left: 60px; transform: rotate(80deg);"></div>
+            <!-- paprika -->
+            <div class="paprika" style="top: 30px; left: 50px;"></div>
+            <div class="paprika" style="top: 45px; left: 75px;"></div>
+            <div class="paprika" style="top: 70px; left: 40px;"></div>
+            <div class="paprika" style="top: 90px; left: 80px;"></div>
+            <div class="paprika" style="top: 55px; left: 100px;"></div>
+            <div class="paprika" style="top: 105px; left: 70px;"></div>
+            <div class="paprika" style="top: 25px; left: 80px;"></div>
+            <div class="paprika" style="top: 60px; left: 60px;"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- orbit indicator -->
+      <div class="orbit"><div class="orbit-handle"></div></div>
+
+      <!-- gesture hint -->
+      <div class="hint">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 4l6 6-6 6M4 14l6-6"/></svg>
+        גרור לסיבוב · צבוט להגדלה
+      </div>
+
+      <!-- details sheet -->
+      <div class="sheet">
+        <div class="sheet-handle"></div>
+
+        <div class="dish-name">חומוס <em>מסבחה</em></div>
+        <div class="dish-meta">
+          <span class="price">₪38</span>
+          <span class="sep">·</span>
+          <span>420 קל'</span>
+          <span class="sep">·</span>
+          <span>6 דקות</span>
+        </div>
+        <p class="dish-desc">חומוס חם, גרגרים שלמים מטוגנים בחמאה, פטרוזיליה, פפריקה מעושנת. מוגש עם פיתה אפויה במקום.</p>
+
+        <div class="tags">
+          <span class="tag">פופולרי</span>
+          <span class="tag diet">צמחוני</span>
+          <span class="tag diet">ללא גלוטן</span>
+        </div>
+
+        <div class="ingredients">
+          <div class="lbl">רכיבים עיקריים</div>
+          <div class="list">חומוס · טחינה גולמית · שמן זית · לימון · שום · פטרוזיליה · פפריקה</div>
+        </div>
+
+        <div class="add-row">
+          <div class="qty">
+            <button>−</button>
+            <span class="num">1</span>
+            <button>+</button>
+          </div>
+          <button class="add-btn">
+            <span class="label">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12h14M12 5v14"/></svg>
+              הוסף להזמנה
+            </span>
+            <span class="total">₪38</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- annotations on the right -->
+  <div class="anno-list">
+    <div class="anno-h">פירוט החוויה</div>
+
+    <div class="anno-item">
+      <div class="anno-num">1</div>
+      <div class="anno-text">
+        <div class="ttl">מודל 3D מותאם למובייל</div>
+        <div class="lab">RENDERED · 60FPS</div>
+        <div class="desc">קובץ .glb של 2.4MB עם דחיסה אוטומטית. נטען בפחות מ-300ms גם ב-3G.</div>
+      </div>
+    </div>
+
+    <div class="anno-item">
+      <div class="anno-num">2</div>
+      <div class="anno-text">
+        <div class="ttl">בקרת 360° אינטואיטיבית</div>
+        <div class="lab">GESTURE · DRAG / PINCH</div>
+        <div class="desc">סבב חופשי בכל הזוויות. צביטה להגדלה. הקש כפול לחזרה למצב התחלתי.</div>
+      </div>
+    </div>
+
+    <div class="anno-item">
+      <div class="anno-num">3</div>
+      <div class="anno-text">
+        <div class="ttl">החלפת מצב חלקה</div>
+        <div class="lab">MODES · 3D · IMAGE · AR</div>
+        <div class="desc">תמונה אם הלקוח מעדיף הרגלי. AR להציב את המנה על השולחן עצמו.</div>
+      </div>
+    </div>
+
+    <div class="anno-item">
+      <div class="anno-num">4</div>
+      <div class="anno-text">
+        <div class="ttl">פרטים שמובילים להזמנה</div>
+        <div class="lab">CONVERSION · 42%</div>
+        <div class="desc">מחיר, תיוגים, רכיבים — מסודרים בהיררכיה ויזואלית שמצמצמת חיכוך.</div>
+      </div>
+    </div>
+
+    <div class="anno-item" style="border-bottom: none;">
+      <div class="anno-num">5</div>
+      <div class="anno-text">
+        <div class="ttl">הוספה להזמנה ללא יציאה</div>
+        <div class="lab">ONE-TAP · NO REGISTRATION</div>
+        <div class="desc">סלקטור כמות ופעולה ראשית. אין צורך ביצירת חשבון או הורדת אפליקציה.</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>

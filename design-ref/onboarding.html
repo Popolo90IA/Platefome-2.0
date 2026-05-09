@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<title>Plateform — Onboarding</title>
+<link rel="stylesheet" href="colors_and_type.css">
+<style>
+  body { margin: 0; min-height: 100vh; background: var(--void); font-family: var(--font-sans); display: flex; flex-direction: column;}
+
+  /* top nav */
+  .nav { display: flex; justify-content: space-between; align-items: center; padding: 22px 36px; border-bottom: 1px solid var(--line);}
+  .brand { font-family: var(--font-display); font-size: 17px; font-weight: 600; letter-spacing: .14em; color: var(--fog); display: flex; align-items: center; gap: 10px; direction: ltr;}
+  .brand em { font-style: italic; color: var(--accent-bright); font-weight: 500;}
+  .brand .mark { width: 28px; height: 28px;}
+  .nav-right { display: flex; align-items: center; gap: 18px; font-family: var(--font-mono); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--dim); white-space: nowrap;}
+  .nav-right a { color: var(--subtle); text-decoration: none;}
+
+  /* progress strip */
+  .progress { padding: 28px 36px 0; max-width: 1200px; margin: 0 auto; width: 100%; box-sizing: border-box;}
+  .steps { display: flex; align-items: center; gap: 0; max-width: 720px; margin: 0 auto;}
+  .step { display: flex; align-items: center; gap: 10px; flex: 1;}
+  .step:last-child { flex: 0 0 auto;}
+  .step-num { width: 32px; height: 32px; border-radius: 99px; display: grid; place-items: center; font-family: var(--font-mono); font-size: 12px; font-weight: 600; flex-shrink: 0;}
+  .step.done .step-num { background: var(--accent-bright); color: white;}
+  .step.now .step-num { background: var(--fog); color: hsl(28,15%,12%); box-shadow: 0 0 0 5px hsl(28,15%,30%,.5);}
+  .step.pending .step-num { background: var(--abyss); color: var(--dim); border: 1px solid var(--line);}
+  .step-label { font-family: var(--font-sans); font-size: 13px; font-weight: 500; white-space: nowrap;}
+  .step.done .step-label { color: var(--subtle);}
+  .step.now .step-label { color: var(--fog);}
+  .step.pending .step-label { color: var(--dim);}
+  .step-line { flex: 1; height: 1px; background: var(--line); margin: 0 14px; min-width: 30px;}
+  .step.done + .step-line, .step-line.done { background: var(--accent-bright);}
+
+  /* content */
+  .stage { flex: 1; padding: 50px 36px 60px; max-width: 1200px; margin: 0 auto; width: 100%; box-sizing: border-box;}
+
+  .heading { text-align: center; margin-bottom: 8px;}
+  .eyebrow { font-family: var(--font-mono); font-size: 11px; letter-spacing: .18em; text-transform: uppercase; color: var(--accent-bright); margin-bottom: 14px;}
+  h1 { font-family: var(--font-hebrew), var(--font-display); font-size: 56px; font-weight: 600; line-height: 1; letter-spacing: -.02em; color: var(--fog); margin: 0;}
+  h1 em { font-style: italic; color: var(--accent-bright);}
+  .lede { font-family: var(--font-sans); font-size: 16px; color: var(--subtle); margin-top: 16px; max-width: 540px; margin-left: auto; margin-right: auto; line-height: 1.55;}
+
+  /* upload card -- main of step 2 */
+  .upload-grid { display: grid; grid-template-columns: 1.1fr 1fr; gap: 36px; margin-top: 50px; align-items: stretch;}
+  .upload-card { background: var(--deep); border: 1px solid var(--line); border-radius: 18px; padding: 40px; display: flex; flex-direction: column;}
+  .upload-zone { flex: 1; border: 2px dashed hsl(28,62%,42%,.4); border-radius: 14px; background: linear-gradient(160deg, hsl(28,62%,42%,.05), transparent); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; padding: 40px 30px; text-align: center; min-height: 280px;}
+  .upload-zone .ico { width: 64px; height: 64px; border-radius: 99px; background: hsl(28,62%,42%,.12); display: grid; place-items: center; color: var(--accent-bright);}
+  .upload-zone .ttl { font-family: var(--font-display); font-size: 26px; font-weight: 500; color: var(--fog); letter-spacing: -.01em;}
+  .upload-zone .ttl em { font-style: italic; color: var(--accent-bright);}
+  .upload-zone .hint { font-family: var(--font-sans); font-size: 14px; color: var(--subtle); max-width: 380px; line-height: 1.55;}
+  .upload-zone .formats { font-family: var(--font-mono); font-size: 10px; letter-spacing: .18em; text-transform: uppercase; color: var(--dim); margin-top: 6px;}
+
+  /* alt option */
+  .alt { margin-top: 18px; padding: 18px; background: var(--abyss); border-radius: 12px; display: flex; gap: 14px; align-items: center;}
+  .alt .ico { width: 42px; height: 42px; border-radius: 10px; background: var(--accent-bright); color: white; display: grid; place-items: center; flex-shrink: 0;}
+  .alt .text { flex: 1;}
+  .alt .text .ttl { font-family: var(--font-sans); font-size: 14px; color: var(--fog); font-weight: 600;}
+  .alt .text .desc { font-family: var(--font-sans); font-size: 12.5px; color: var(--subtle); margin-top: 3px; line-height: 1.5;}
+  .alt .arr { color: var(--dim);}
+
+  /* preview side */
+  .preview-card { background: linear-gradient(170deg, hsl(28,55%,28%) 0%, hsl(28,30%,15%) 50%, hsl(28,15%,8%) 100%); border-radius: 18px; padding: 40px 30px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 22px; position: relative; overflow: hidden; min-height: 460px;}
+  .preview-card::before { content: ""; position: absolute; inset: 0; background: radial-gradient(ellipse at 50% 100%, hsl(28,62%,55%,.15), transparent 60%);}
+  .preview-eyebrow { font-family: var(--font-mono); font-size: 10px; letter-spacing: .18em; text-transform: uppercase; color: hsl(28,62%,65%); position: relative;}
+  .demo-phone { width: 220px; height: 360px; background: #1a1614; border-radius: 28px; padding: 8px; box-shadow: 0 30px 80px -20px rgba(0,0,0,.6); position: relative; z-index: 1;}
+  .demo-screen { width: 100%; height: 100%; background: linear-gradient(180deg, hsl(28,12%,18%), hsl(28,12%,10%)); border-radius: 22px; padding: 18px 14px; box-sizing: border-box; position: relative; overflow: hidden;}
+  .mini-plate { width: 130px; height: 130px; margin: 22px auto 14px; border-radius: 50%; background: radial-gradient(circle at 50% 30%, hsl(28,5%,90%), hsl(28,8%,70%)); position: relative; box-shadow: 0 18px 30px -10px rgba(0,0,0,.5);}
+  .mini-food { position: absolute; top: 18px; left: 18px; right: 18px; bottom: 18px; border-radius: 50%; background: radial-gradient(circle at 50% 30%, hsl(38,55%,68%), hsl(32,40%,48%));}
+  .mini-orbit { position: absolute; top: 50%; left: 50%; transform: translate(-50%, calc(-50% - 28px)) scaleY(.3); width: 170px; height: 170px; border: 1px dashed hsl(28,62%,55%,.5); border-radius: 50%; pointer-events: none;}
+  .mini-name { font-family: var(--font-hebrew), var(--font-display); font-size: 18px; color: var(--fog); text-align: center; font-weight: 600;}
+  .mini-name em { font-style: italic; color: hsl(28,62%,65%);}
+  .mini-price { font-family: var(--font-mono); color: hsl(28,62%,65%); text-align: center; margin-top: 4px; font-size: 13px;}
+  .mini-cta { margin: 18px 6px 0; padding: 10px; background: var(--grad-bronze); border-radius: 10px; text-align: center; font-family: var(--font-sans); font-size: 11.5px; font-weight: 600; color: white;}
+  .preview-note { font-family: var(--font-sans); font-size: 12px; color: hsl(28,30%,75%); text-align: center; max-width: 220px; line-height: 1.5; position: relative;}
+
+  /* footer */
+  .foot { position: sticky; bottom: 0; background: hsl(28,15%,4%); border-top: 1px solid var(--line); padding: 18px 36px; display: flex; justify-content: space-between; align-items: center; gap: 24px;}
+  .foot-meta { font-family: var(--font-mono); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--dim);}
+  .foot-meta strong { color: var(--accent-bright); font-weight: 500;}
+  .foot-actions { display: flex; gap: 10px;}
+  .btn { display: inline-flex; align-items: center; gap: 8px; padding: 12px 26px; border-radius: 10px; font-family: var(--font-sans); font-size: 14px; font-weight: 600; cursor: pointer; border: none;}
+  .btn-primary { background: var(--grad-bronze); color: white; box-shadow: var(--shadow-cta);}
+  .btn-ghost { background: transparent; color: var(--fog); border: 1px solid var(--line);}
+  .btn-text { background: transparent; color: var(--subtle); border: none; padding: 12px 16px;}
+
+  /* progress percent on right */
+  .help-pill { display: inline-flex; align-items: center; gap: 8px; padding: 7px 14px; border-radius: 99px; background: hsl(28,62%,42%,.08); border: 1px solid hsl(28,62%,42%,.2); font-family: var(--font-sans); font-size: 12px; color: var(--fog); margin-top: 22px;}
+  .help-pill .dot { width: 6px; height: 6px; border-radius: 99px; background: var(--accent-bright); animation: pulse 2s infinite;}
+  @keyframes pulse { 0%, 100% { opacity: .4;} 50% { opacity: 1;}}
+</style>
+</head>
+<body>
+
+<!-- top nav -->
+<nav class="nav">
+  <div class="brand">
+    <svg class="mark" viewBox="0 0 80 80">
+      <circle cx="40" cy="40" r="28" fill="#f6f4ef" stroke="hsl(28,15%,18%)" stroke-width="1.5"/>
+      <circle cx="40" cy="40" r="20" fill="none" stroke="hsl(28,15%,18%)" stroke-width=".5" stroke-dasharray="1.5 2"/>
+      <text x="40" y="49" text-anchor="middle" font-family="Cormorant Garamond, serif" font-style="italic" font-weight="500" font-size="32" fill="hsl(28,62%,38%)">P</text>
+    </svg>
+    PLATE<em>FORM</em>
+  </div>
+  <div class="nav-right">
+    <span>Mizrahi Tel Aviv</span>
+    <span style="opacity:.4;">·</span>
+    <a href="#">דלג בינתיים</a>
+    <a href="#">צא</a>
+  </div>
+</nav>
+
+<!-- progress strip -->
+<div class="progress">
+  <div class="steps">
+    <div class="step done">
+      <div class="step-num">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg>
+      </div>
+      <div class="step-label">פרטי המסעדה</div>
+    </div>
+    <div class="step-line done"></div>
+    <div class="step now">
+      <div class="step-num">2</div>
+      <div class="step-label">המנה הראשונה</div>
+    </div>
+    <div class="step-line"></div>
+    <div class="step pending">
+      <div class="step-num">3</div>
+      <div class="step-label">QR לשולחנות</div>
+    </div>
+    <div class="step-line"></div>
+    <div class="step pending">
+      <div class="step-num">4</div>
+      <div class="step-label">הזמנת צוות</div>
+    </div>
+  </div>
+</div>
+
+<!-- stage -->
+<main class="stage">
+  <div class="heading">
+    <div class="eyebrow">שלב 2 מתוך 4 · 4 דקות</div>
+    <h1>בוא נמיר את <em>המנה הראשונה</em> שלך</h1>
+    <p class="lede">העלה מודל 3D, תמונות, או צלם 12 צילומים מהפלאפון — ה-AI שלנו יבנה את ההמרה. זה לוקח בערך 8 דקות.</p>
+    <div class="help-pill">
+      <span class="dot"></span>
+      צוות הקליטה זמין בצ'אט · ממוצע מענה 90 שניות
+    </div>
+  </div>
+
+  <div class="upload-grid">
+
+    <div class="upload-card">
+      <div class="upload-zone">
+        <div class="ico">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+        </div>
+        <div class="ttl">גרור קובץ <em>3D</em> או תמונות</div>
+        <p class="hint">המרה אוטומטית של .glb / .usdz / .obj. או 12 תמונות JPG מזוויות שונות וה-AI שלנו יבנה את המודל.</p>
+        <span class="formats">.GLB · .USDZ · .OBJ · JPG · MAX 80MB</span>
+      </div>
+
+      <div class="alt">
+        <div class="ico">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M7 7V5a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v2"/><circle cx="12" cy="14" r="3"/></svg>
+        </div>
+        <div class="text">
+          <div class="ttl">סרוק מהפלאפון תוך כדי</div>
+          <div class="desc">קוד QR יישלח ל-052-XXX-1847. צלם 12 תמונות בהנחייה חיה.</div>
+        </div>
+        <span class="arr">←</span>
+      </div>
+    </div>
+
+    <div class="preview-card">
+      <div class="preview-eyebrow">איך זה יראה ללקוח</div>
+      <div class="demo-phone">
+        <div class="demo-screen">
+          <div class="mini-plate">
+            <div class="mini-food"></div>
+          </div>
+          <div class="mini-orbit"></div>
+          <div class="mini-name">חומוס <em>מסבחה</em></div>
+          <div class="mini-price">₪38</div>
+          <div class="mini-cta">הוסף להזמנה</div>
+        </div>
+      </div>
+      <p class="preview-note">תצוגה מקדימה תתעדכן ברגע שהקובץ מועלה — בלי המתנה.</p>
+    </div>
+
+  </div>
+</main>
+
+<!-- footer actions -->
+<footer class="foot">
+  <div class="foot-meta">
+    שלב <strong>02 / 04</strong> · השלמה משוערת ב-12 דקות
+  </div>
+  <div class="foot-actions">
+    <button class="btn btn-text">דלג שלב זה</button>
+    <button class="btn btn-ghost">חזור</button>
+    <button class="btn btn-primary">המשך לשלב הבא
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M19 12H5M11 5l-7 7 7 7"/></svg>
+    </button>
+  </div>
+</footer>
+
+</body>
+</html>

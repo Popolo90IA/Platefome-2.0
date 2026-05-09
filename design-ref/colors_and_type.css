@@ -1,0 +1,283 @@
+/* ═══════════════════════════════════════════════════════════════
+   PLATEFORM — Colors & Type Foundations
+   Source of truth derived from Platefome-2.0-main/src/app/globals.css
+   ═══════════════════════════════════════════════════════════════ */
+
+@import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=DM+Sans:ital,opsz,wght@0,9..40,200;0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;0,9..40,800;1,9..40,300;1,9..40,400&family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Noto+Serif+Hebrew:wght@200;300;400;500;600;700&family=Heebo:wght@100;200;300;400;500;600;700&display=swap");
+
+:root {
+  /* ── BASE PALETTE — Beige Sable + Bronze ── */
+  --void:    hsl(38, 28%, 94%);   /* page bg — warm beige sable */
+  --abyss:   hsl(36, 22%, 90%);   /* alternating section bg */
+  --deep:    hsl(38, 30%, 97%);   /* off-white card bg */
+  --surface: hsl(30, 18%, 88%);   /* interactive surface */
+  --line:    hsl(30, 18%, 82%);   /* borders, separators */
+  --dim:     hsl(28, 10%, 56%);   /* disabled, placeholder */
+  --subtle:  hsl(24, 12%, 38%);   /* secondary text */
+  --pale:    hsl(24, 15%, 28%);   /* tertiary text */
+  --fog:     hsl(24, 18%, 16%);   /* primary text */
+  --cream:   hsl(24, 18%, 16%);   /* titles (alias of fog) */
+  --white:   hsl(0,   0%,  100%);
+
+  /* ── ACCENTS — bronze / copper / terracotta ── */
+  --accent-warm:    hsl(28, 52%, 52%);   /* light bronze */
+  --accent-bright:  hsl(28, 62%, 42%);   /* primary bronze */
+  --gold:           hsl(22, 70%, 50%);   /* terracotta secondary */
+  --gold-light:     hsl(36, 80%, 58%);   /* warm highlight */
+  --gold-dark:      hsl(28, 48%, 34%);   /* deep bronze */
+  --gold-dim:       hsl(28, 38%, 58%);   /* faded bronze */
+  --sage:           hsl(28, 62%, 42%);   /* alias bronze accent */
+  --ember:          hsl(0,  60%, 52%);   /* error/danger */
+
+  /* gradient pair — used everywhere on CTAs, accent stripes, logos */
+  --grad-bronze: linear-gradient(135deg, hsl(28,62%,38%) 0%, hsl(22,70%,50%) 100%);
+  --grad-bronze-warm: linear-gradient(135deg, hsl(36,80%,55%), hsl(28,62%,42%));
+  --grad-gold-shimmer: linear-gradient(135deg, hsl(28,62%,42%), hsl(22,70%,56%), hsl(28,58%,42%));
+
+  /* ── RADII ── */
+  --radius:    4px;     /* base — cards, sections */
+  --radius-sm: 2px;
+  --radius-md: 6px;
+  --radius-lg: 10px;    /* CTAs, inputs */
+  --radius-xl: 14px;    /* nav pill, soft cards */
+  --radius-2xl: 20px;   /* feature cards, dish cards */
+  --radius-pill: 99px;
+
+  /* ── SPACING (8pt-ish, with tight + airy) ── */
+  --s-1: 4px;
+  --s-2: 8px;
+  --s-3: 12px;
+  --s-4: 16px;
+  --s-5: 20px;
+  --s-6: 24px;
+  --s-8: 32px;
+  --s-10: 40px;
+  --s-12: 48px;
+  --s-16: 64px;
+  --s-20: 80px;
+  --s-24: 96px;
+
+  /* ── SHADOWS ── */
+  --shadow-card:    0 0 0 1px var(--line), 0 16px 48px -16px rgba(0,0,0,.6);
+  --shadow-cta:     0 2px 16px hsl(28,62%,38%,.4), inset 0 1px 0 rgba(255,255,255,.18);
+  --shadow-cta-hov: 0 6px 28px hsl(28,62%,38%,.5), inset 0 1px 0 rgba(255,255,255,.18);
+  --shadow-deep:    0 24px 64px -24px rgba(0,0,0,.4);
+  --shadow-pill:    0 8px 32px rgba(0,0,0,.4), inset 0 1px 0 hsl(30,18%,82%,.3);
+  --shadow-glow-gold: 0 0 0 1px hsl(22,70%,50%,.3), 0 0 32px hsl(22,70%,50%,.2);
+
+  /* ── TYPE FAMILIES ── */
+  --font-display: "Cormorant Garamond", "Noto Serif Hebrew", Georgia, serif;
+  --font-sans:    "DM Sans", system-ui, -apple-system, sans-serif;
+  --font-mono:    "DM Mono", ui-monospace, monospace;
+  --font-hebrew:  "Noto Serif Hebrew", "Heebo", serif;
+
+  /* ── SEMANTIC TYPE ── */
+  --t-h1-size: clamp(48px, 7vw, 108px);
+  --t-h1-line: 0.92;
+  --t-h1-track: -0.03em;
+  --t-h1-weight: 700;
+
+  --t-h2-size: clamp(2rem, 4.5vw, 3.5rem);
+  --t-h2-line: 1.05;
+  --t-h2-track: -0.025em;
+  --t-h2-weight: 700;
+
+  --t-h3-size: clamp(1.5rem, 3vw, 2rem);
+  --t-h3-line: 1.1;
+  --t-h3-track: -0.02em;
+  --t-h3-weight: 600;
+
+  --t-body-size: 1rem;
+  --t-body-line: 1.6;
+  --t-body-track: -0.008em;
+
+  --t-small-size: 0.875rem;
+  --t-eyebrow-size: 0.6875rem;
+  --t-eyebrow-track: 0.18em;
+
+  --t-mono-size: 0.6875rem;
+  --t-mono-track: 0.14em;
+
+  /* ── MOTION ── */
+  --ease-out:     cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-clip:    cubic-bezier(0.76, 0, 0.24, 1);
+  --dur-fast:     150ms;
+  --dur-base:     250ms;
+  --dur-slow:     900ms;
+}
+
+/* ─── BASE ─── */
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  background: var(--void);
+  color: var(--fog);
+  font-family: var(--font-sans);
+  font-size: var(--t-body-size);
+  line-height: var(--t-body-line);
+  letter-spacing: var(--t-body-track);
+}
+
+/* ─── SEMANTIC TYPE ─── */
+h1, .t-h1 {
+  font-family: var(--font-display);
+  font-weight: var(--t-h1-weight);
+  font-size: var(--t-h1-size);
+  line-height: var(--t-h1-line);
+  letter-spacing: var(--t-h1-track);
+  color: var(--fog);
+  margin: 0;
+}
+h1 em, .t-h1 em {
+  font-style: italic;
+  background: var(--grad-gold-shimmer);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+h2, .t-h2 {
+  font-family: var(--font-display);
+  font-weight: var(--t-h2-weight);
+  font-size: var(--t-h2-size);
+  line-height: var(--t-h2-line);
+  letter-spacing: var(--t-h2-track);
+  color: var(--fog);
+  margin: 0;
+}
+h2 em, .t-h2 em { font-style: italic; color: var(--accent-bright); }
+
+h3, .t-h3 {
+  font-family: var(--font-display);
+  font-weight: var(--t-h3-weight);
+  font-size: var(--t-h3-size);
+  line-height: var(--t-h3-line);
+  letter-spacing: var(--t-h3-track);
+  color: var(--fog);
+  margin: 0;
+}
+
+p, .t-body {
+  font-family: var(--font-sans);
+  font-size: var(--t-body-size);
+  line-height: var(--t-body-line);
+  color: var(--subtle);
+  margin: 0;
+}
+
+.t-lead {
+  font-family: var(--font-sans);
+  font-size: 1.0625rem;
+  line-height: 1.75;
+  color: var(--subtle);
+}
+
+.t-small {
+  font-family: var(--font-sans);
+  font-size: var(--t-small-size);
+  color: var(--subtle);
+}
+
+/* Eyebrow — DM Mono uppercase, the brand's signature label */
+.eyebrow {
+  font-family: var(--font-mono);
+  font-weight: 400;
+  font-size: var(--t-eyebrow-size);
+  letter-spacing: var(--t-eyebrow-track);
+  text-transform: uppercase;
+  color: var(--subtle);
+}
+.eyebrow-gold { color: var(--accent-bright); }
+.eyebrow-ember { color: var(--ember); }
+
+.tick-number {
+  font-family: var(--font-mono);
+  font-weight: 300;
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  color: var(--subtle);
+}
+
+.price-tag {
+  font-family: var(--font-mono);
+  font-weight: 400;
+  font-size: 0.875rem;
+  letter-spacing: 0.04em;
+  color: var(--accent-bright);
+}
+
+/* RTL Hebrew override */
+[dir="rtl"] h1, [dir="rtl"] h2, [dir="rtl"] h3,
+:lang(he) h1, :lang(he) h2, :lang(he) h3 {
+  font-family: var(--font-hebrew), var(--font-display);
+  font-weight: 400;
+  line-height: 1.1;
+}
+
+::selection {
+  background: hsl(28, 62%, 42%, 0.18);
+  color: var(--fog);
+}
+
+/* ─── PRIMITIVE COMPONENT TOKENS ─── */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 14px 32px;
+  background: var(--grad-bronze);
+  color: var(--white);
+  font-family: var(--font-sans);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  border: none;
+  border-radius: var(--radius-lg);
+  cursor: pointer;
+  box-shadow: var(--shadow-cta);
+  transition: filter var(--dur-fast), transform 180ms, box-shadow var(--dur-fast);
+  text-decoration: none;
+}
+.btn-primary:hover {
+  filter: brightness(1.1);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-cta-hov);
+}
+
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 28px;
+  background: hsl(32,20%,100%,.06);
+  color: var(--subtle);
+  font-family: var(--font-sans);
+  font-size: 0.9375rem;
+  font-weight: 500;
+  border: 1px solid hsl(32,20%,100%,.1);
+  border-radius: var(--radius-lg);
+  cursor: pointer;
+  text-decoration: none;
+  backdrop-filter: blur(8px);
+  transition: border-color var(--dur-fast), color var(--dur-fast), background var(--dur-fast);
+}
+.btn-ghost:hover {
+  border-color: hsl(28,62%,42%,.35);
+  color: var(--fog);
+  background: hsl(28,62%,42%,.08);
+}
+
+.card {
+  background: var(--abyss);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-2xl);
+  transition: border-color var(--dur-base), box-shadow var(--dur-base);
+}
+.card:hover {
+  border-color: hsl(22,70%,50%,.3);
+  box-shadow: 0 0 0 1px hsl(22,70%,50%,.12), 0 20px 60px -20px rgba(0,0,0,.2);
+}

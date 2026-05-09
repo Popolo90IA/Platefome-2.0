@@ -1,0 +1,541 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<title>Saluf & Sons — Menu</title>
+<link rel="stylesheet" href="colors_and_type.css">
+<style>
+  /* Dark menu palette — coherent with light system, same 28° hue family */
+  :root {
+    --d-page:    hsl(28, 18%, 6%);
+    --d-section: hsl(28, 20%, 9%);
+    --d-card:    hsl(28, 22%, 12%);
+    --d-surface: hsl(28, 20%, 18%);
+    --d-line:    hsl(28, 40%, 42%, .18);
+    --d-line-2:  hsl(28, 40%, 42%, .35);
+    --d-text-dim: hsl(36, 18%, 56%);
+    --d-text:    hsl(36, 30%, 80%);
+    --d-cream:   hsl(36, 40%, 92%);
+    --d-gold:    hsl(28, 62%, 52%);
+    --d-gold-lt: hsl(36, 80%, 62%);
+    --d-grad: linear-gradient(135deg, hsl(28,62%,48%), hsl(22,70%,58%));
+  }
+
+  body { margin: 0; background: var(--d-page); color: var(--d-text); font-family: var(--font-sans); position: relative; overflow-x: hidden; min-height: 100vh; }
+  body::before {
+    content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 1;
+    background-image: url("../public/brand/grain.svg");
+    background-size: 240px;
+    opacity: 0.06;
+    mix-blend-mode: screen;
+  }
+
+  /* ── Restaurant header ── */
+  .hero {
+    position: relative;
+    height: 360px;
+    overflow: hidden;
+    border-bottom: 1px solid var(--d-line);
+  }
+  .hero-bg {
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse at 30% 50%, hsl(28,62%,30%,.6), transparent 60%),
+      radial-gradient(ellipse at 70% 30%, hsl(22,70%,40%,.5), transparent 60%),
+      linear-gradient(135deg, hsl(28,30%,14%) 0%, hsl(28,18%,6%) 100%);
+    filter: blur(2px);
+  }
+  .hero-bg::after {
+    content: ""; position: absolute; inset: 0;
+    background: linear-gradient(180deg, transparent 40%, var(--d-page));
+  }
+  .hero-content {
+    position: relative; z-index: 2;
+    height: 100%;
+    max-width: 720px; margin: 0 auto;
+    padding: 0 24px;
+    display: flex; flex-direction: column; justify-content: flex-end;
+    padding-bottom: 36px;
+  }
+  .restaurant-mark {
+    display: flex; align-items: center; gap: 12px;
+    margin-bottom: 20px;
+  }
+  .mark-tile {
+    width: 48px; height: 48px;
+    background: var(--d-grad);
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center; color: #fff;
+    box-shadow: 0 0 32px hsl(28,62%,52%,.35);
+  }
+  .restaurant-mark .ey {
+    font-family: var(--font-mono); font-size: 10px; letter-spacing: .22em;
+    text-transform: uppercase; color: var(--d-gold);
+    margin-bottom: 4px;
+  }
+  .restaurant-mark .name { font-family: var(--font-mono); font-size: 11px; letter-spacing: .14em; color: var(--d-text-dim); text-transform: uppercase; }
+
+  .hero h1 {
+    font-family: var(--font-hebrew), var(--font-display);
+    font-weight: 500;
+    font-size: clamp(48px, 8vw, 72px);
+    line-height: .95;
+    letter-spacing: -.02em;
+    color: var(--d-cream);
+    margin: 0 0 12px;
+  }
+  .hero h1 em {
+    font-style: italic;
+    background: linear-gradient(135deg, var(--d-gold), var(--d-gold-lt));
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .hero .meta {
+    display: flex; gap: 18px; flex-wrap: wrap;
+    font-family: var(--font-mono); font-size: 10.5px; letter-spacing: .18em;
+    text-transform: uppercase; color: var(--d-text-dim);
+  }
+  .hero .meta span { display: flex; align-items: center; gap: 6px; }
+  .hero .meta .dot { width: 4px; height: 4px; border-radius: 99px; background: var(--d-gold); }
+
+  /* Top utility bar (lang + share) */
+  .util-bar {
+    position: absolute; top: 20px; left: 50%; transform: translateX(-50%);
+    z-index: 10; max-width: 720px; width: calc(100% - 48px);
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .util-pill {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 8px 14px; border-radius: 99px;
+    background: hsl(28,18%,6%,.6); backdrop-filter: blur(16px);
+    border: 1px solid var(--d-line);
+    font-family: var(--font-mono); font-size: 10.5px; letter-spacing: .14em;
+    text-transform: uppercase; color: var(--d-text);
+    cursor: pointer;
+  }
+
+  /* ── Section rule ── */
+  .rule {
+    margin: 56px auto 24px;
+    max-width: 720px; padding: 0 24px;
+    display: flex; align-items: center; gap: 14px;
+  }
+  .rule h2 {
+    font-family: var(--font-hebrew), var(--font-display);
+    font-weight: 500;
+    font-size: 32px; letter-spacing: -.02em;
+    color: var(--d-cream); margin: 0;
+    flex-shrink: 0;
+  }
+  .rule h2 em { font-style: italic; color: var(--d-gold); }
+  .rule .line {
+    flex: 1; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--d-line-2) 50%, transparent);
+  }
+  .rule .count { font-family: var(--font-mono); font-size: 10px; letter-spacing: .22em; text-transform: uppercase; color: var(--d-text-dim); }
+
+  /* ── Category pills ── */
+  .pill-nav {
+    position: sticky; top: 0; z-index: 20;
+    background: hsl(28,18%,6%,.85); backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--d-line);
+    padding: 14px 24px;
+    overflow-x: auto;
+    white-space: nowrap;
+    -ms-overflow-style: none; scrollbar-width: none;
+  }
+  .pill-nav::-webkit-scrollbar { display: none; }
+  .pill-nav-inner { max-width: 720px; margin: 0 auto; display: flex; gap: 6px; }
+  .pill {
+    padding: 8px 16px; border-radius: 99px;
+    background: transparent; border: 1px solid var(--d-line);
+    font-family: var(--font-sans); font-size: 13px; font-weight: 500;
+    color: var(--d-text-dim); cursor: pointer; flex-shrink: 0;
+    transition: color .15s, border-color .15s, background .15s;
+  }
+  .pill:hover { color: var(--d-cream); border-color: var(--d-line-2); }
+  .pill.active {
+    background: var(--d-grad); color: #fff; border-color: transparent;
+    box-shadow: 0 0 20px hsl(28,62%,52%,.3);
+  }
+
+  /* ── Dish list ── */
+  .dishes { max-width: 720px; margin: 0 auto; padding: 0 24px 80px; display: flex; flex-direction: column; gap: 14px; }
+  .dish {
+    display: grid; grid-template-columns: 1fr 130px; gap: 18px;
+    background: var(--d-card);
+    border: 1px solid var(--d-line);
+    border-radius: 16px;
+    padding: 16px;
+    cursor: pointer;
+    transition: border-color .25s;
+    position: relative;
+  }
+  .dish:hover { border-color: var(--d-line-2); }
+  .dish-info { min-width: 0; }
+  .dish-row1 { display: flex; align-items: baseline; gap: 12px; margin-bottom: 6px; }
+  .dish h3 {
+    font-family: var(--font-hebrew), var(--font-display);
+    font-weight: 600; font-size: 21px; line-height: 1.1;
+    color: var(--d-cream); margin: 0; flex: 1;
+  }
+  .dish .price {
+    font-family: var(--font-mono); font-size: 14px;
+    color: var(--d-gold); letter-spacing: .04em;
+    flex-shrink: 0;
+  }
+  .dish-desc {
+    font-family: var(--font-sans); font-size: 13px; line-height: 1.6;
+    color: var(--d-text-dim);
+    margin: 0 0 10px;
+  }
+  .dish-tags {
+    display: flex; gap: 6px; flex-wrap: wrap;
+  }
+  .tag {
+    font-family: var(--font-mono); font-size: 9.5px; letter-spacing: .18em;
+    text-transform: uppercase;
+    padding: 3px 9px; border-radius: 99px;
+    color: var(--d-gold-lt);
+    background: hsl(36,80%,62%,.08);
+    border: 1px solid hsl(36,80%,62%,.18);
+  }
+  .tag.veg { color: hsl(120,40%,68%); background: hsl(120,40%,50%,.06); border-color: hsl(120,40%,50%,.18); }
+  .tag.spicy { color: hsl(0,80%,68%); background: hsl(0,70%,50%,.06); border-color: hsl(0,70%,50%,.18); }
+
+  .dish-media {
+    position: relative;
+    border-radius: 12px;
+    overflow: hidden;
+    overflow: hidden;
+    aspect-ratio: 1;
+    background:
+      radial-gradient(ellipse 14% 8% at 38% 44%, hsl(20,75%,38%) 0%, transparent 70%),
+      radial-gradient(ellipse 18% 10% at 62% 56%, hsl(20,75%,38%) 0%, transparent 70%),
+      radial-gradient(circle at 50% 50%, hsl(36,55%,72%) 0%, hsl(36,45%,62%) 35%, hsl(28,40%,40%) 60%, hsl(24,35%,28%) 100%),
+      hsl(28,40%,32%);
+  }
+  /* m1 = חומוס — paprika swirl on cream */
+  .dish-media.m2 {
+    background:
+      radial-gradient(circle at 30% 35%, hsl(15,50%,28%) 6%, transparent 9%),
+      radial-gradient(circle at 65% 30%, hsl(15,50%,28%) 7%, transparent 10%),
+      radial-gradient(circle at 50% 65%, hsl(15,50%,28%) 7%, transparent 10%),
+      radial-gradient(circle at 50% 50%, hsl(8,65%,42%) 0%, hsl(5,55%,32%) 70%, hsl(5,40%,22%) 100%);
+  }
+  /* m2 = קובה — red soup with kubbeh dumplings */
+  .dish-media.m3 {
+    background:
+      radial-gradient(circle at 25% 30%, hsl(0,75%,52%) 5%, transparent 7%),
+      radial-gradient(circle at 70% 28%, hsl(0,75%,52%) 4%, transparent 6%),
+      radial-gradient(circle at 50% 60%, hsl(0,75%,52%) 6%, transparent 8%),
+      radial-gradient(circle at 30% 65%, hsl(0,75%,52%) 4%, transparent 6%),
+      radial-gradient(circle at 75% 70%, hsl(45,70%,55%) 3%, transparent 5%),
+      radial-gradient(circle at 40% 25%, hsl(45,70%,55%) 3%, transparent 4%),
+      linear-gradient(135deg, hsl(95,45%,32%), hsl(110,40%,38%));
+  }
+  /* m3 = סלט עגבניות — tomato + corn on greens */
+  .dish-media.m4 {
+    background:
+      radial-gradient(ellipse 18% 18% at 50% 48%, hsl(48,90%,72%) 0%, hsl(40,80%,58%) 60%, transparent 75%),
+      radial-gradient(circle at 50% 50%, hsl(36,75%,55%) 0%, hsl(32,65%,42%) 55%, hsl(28,55%,32%) 100%);
+  }
+  /* m4 = מלאווח עם ביצה — golden flatbread + egg yolk */
+  .dish-media.m5 {
+    background:
+      radial-gradient(circle at 28% 35%, hsl(28,55%,32%) 7%, transparent 9%),
+      radial-gradient(circle at 60% 30%, hsl(28,55%,32%) 8%, transparent 10%),
+      radial-gradient(circle at 35% 65%, hsl(28,55%,32%) 8%, transparent 10%),
+      radial-gradient(circle at 70% 65%, hsl(28,55%,32%) 7%, transparent 9%),
+      radial-gradient(circle at 50% 48%, hsl(28,55%,32%) 7%, transparent 9%),
+      linear-gradient(135deg, hsl(85,40%,35%), hsl(95,35%,42%));
+  }
+  /* m5 = פלאפל — falafel balls on parsley */
+  .dish-media.m6 {
+    background:
+      repeating-linear-gradient(135deg, transparent 0 6px, hsl(28,80%,48%,.25) 6px 7px),
+      radial-gradient(ellipse 30% 18% at 50% 50%, hsl(45,90%,68%) 0%, hsl(38,75%,55%) 65%, transparent 75%),
+      radial-gradient(circle at 50% 50%, hsl(28,55%,42%) 0%, hsl(24,45%,28%) 100%);
+  }
+  /* m6 = כנאפה — orange shredded pastry */
+  .dish-media::after {
+    content: ""; position: absolute; inset: 0;
+    background: radial-gradient(circle at 30% 30%, rgba(255,220,170,.4), transparent 60%);
+  }
+  .media-badge {
+    position: absolute; top: 8px; right: 8px;
+    font-family: var(--font-mono); font-size: 9px; letter-spacing: .14em;
+    text-transform: uppercase;
+    padding: 4px 8px; border-radius: 99px;
+    background: hsl(28,18%,6%,.75); backdrop-filter: blur(8px);
+    color: var(--d-gold-lt);
+    display: flex; align-items: center; gap: 4px;
+    z-index: 2;
+  }
+  .media-badge svg { stroke-width: 1.6; }
+
+  /* ── Footer ── */
+  .powered {
+    max-width: 720px; margin: 60px auto 0;
+    padding: 36px 24px;
+    border-top: 1px solid var(--d-line);
+    display: flex; align-items: center; justify-content: center; gap: 10px;
+  }
+  .powered .ey { font-family: var(--font-mono); font-size: 10px; letter-spacing: .22em; text-transform: uppercase; color: var(--d-text-dim); }
+  .powered .mark2 { display: flex; align-items: center; gap: 8px; color: var(--d-gold); }
+  .powered .word { font-family: var(--font-sans); font-weight: 700; font-size: 13px; letter-spacing: .18em; color: var(--d-text); }
+
+  /* ── Modal ── */
+  .modal-overlay {
+    position: fixed; inset: 0; z-index: 100;
+    background: hsl(28,18%,6%,.7); backdrop-filter: blur(12px);
+    display: none;
+    align-items: center; justify-content: center;
+    padding: 24px;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal {
+    background: var(--d-card);
+    border: 1px solid var(--d-line-2);
+    border-radius: 22px;
+    max-width: 560px; width: 100%; max-height: 90vh; overflow: auto;
+    box-shadow: 0 40px 100px rgba(0,0,0,.5);
+  }
+  .modal-art {
+    aspect-ratio: 1.6/1;
+    background: linear-gradient(135deg, hsl(28,40%,32%), hsl(28,55%,45%));
+    position: relative;
+  }
+  .modal-art::after {
+    content: ""; position: absolute; inset: 0;
+    background: radial-gradient(circle at 30% 30%, rgba(255,220,170,.4), transparent 60%);
+  }
+  .ar-toggles {
+    position: absolute; bottom: 16px; left: 50%; transform: translateX(-50%);
+    display: flex; gap: 6px;
+    background: hsl(28,18%,6%,.7); backdrop-filter: blur(16px);
+    border: 1px solid var(--d-line);
+    border-radius: 99px;
+    padding: 4px;
+  }
+  .ar-toggle {
+    padding: 7px 14px;
+    border-radius: 99px;
+    font-family: var(--font-mono); font-size: 9.5px; letter-spacing: .18em;
+    text-transform: uppercase; color: var(--d-text-dim);
+    border: none; background: transparent; cursor: pointer;
+  }
+  .ar-toggle.on { background: var(--d-grad); color: #fff; }
+  .modal-body { padding: 24px 28px 28px; }
+  .modal-body h2 {
+    font-family: var(--font-hebrew), var(--font-display);
+    font-weight: 600; font-size: 32px; letter-spacing: -.02em;
+    color: var(--d-cream); margin: 0 0 8px;
+  }
+  .modal-body .price {
+    font-family: var(--font-mono); font-size: 16px; color: var(--d-gold); letter-spacing: .04em;
+    margin-bottom: 16px;
+  }
+  .modal-body p { font-family: var(--font-sans); font-size: 14px; line-height: 1.7; color: var(--d-text); margin: 0 0 18px; }
+  .info-rows { display: flex; flex-direction: column; gap: 10px; padding: 14px 0; border-top: 1px solid var(--d-line); }
+  .info-row { display: flex; justify-content: space-between; }
+  .info-row .lbl { font-family: var(--font-mono); font-size: 10px; letter-spacing: .18em; text-transform: uppercase; color: var(--d-text-dim); }
+  .info-row .val { font-family: var(--font-sans); font-size: 13px; color: var(--d-cream); }
+  .modal-close {
+    position: absolute; top: 16px; left: 16px; z-index: 10;
+    width: 36px; height: 36px; border-radius: 99px;
+    background: hsl(28,18%,6%,.7); backdrop-filter: blur(8px);
+    border: 1px solid var(--d-line);
+    color: var(--d-cream); display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+  }
+
+  @media (max-width: 600px) {
+    .hero { height: 280px; }
+    .pill-nav { padding: 12px 16px; }
+    .dishes { padding: 0 16px 60px; }
+    .dish { grid-template-columns: 1fr 100px; gap: 14px; padding: 12px; }
+    .dish h3 { font-size: 18px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="hero-bg"></div>
+  <div class="util-bar">
+    <div class="util-pill">🇮🇱 HE / EN / FR</div>
+    <div class="util-pill">
+      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
+      Share
+    </div>
+  </div>
+  <div class="hero-content">
+    <div class="restaurant-mark">
+      <div class="mark-tile">
+        <svg width="22" height="22" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 22 Q5 12 16 12 Q27 12 27 22 Z"/><line x1="3" y1="22" x2="29" y2="22"/><circle cx="16" cy="9" r="1.5" fill="currentColor"/><line x1="16" y1="10.5" x2="16" y2="12"/></svg>
+      </div>
+      <div>
+        <div class="ey">Yemenite kitchen · Tel Aviv</div>
+        <div class="name">Saluf & Sons · est. 1980</div>
+      </div>
+    </div>
+    <h1>סלוף <em>ובניו</em></h1>
+    <div class="meta">
+      <span><span class="dot"></span>פתוח עד 22:00</span>
+      <span>·</span>
+      <span>כשר</span>
+      <span>·</span>
+      <span>טלפון 03-525-1467</span>
+    </div>
+  </div>
+</header>
+
+<nav class="pill-nav">
+  <div class="pill-nav-inner">
+    <button class="pill active">הכל</button>
+    <button class="pill">פתיחים</button>
+    <button class="pill">סלטים</button>
+    <button class="pill">מרקים</button>
+    <button class="pill">עיקריות</button>
+    <button class="pill">קינוחים</button>
+    <button class="pill">משקאות</button>
+  </div>
+</nav>
+
+<div class="rule"><h2>פתיחים <em>וסלטים</em></h2><div class="line"></div><span class="count">04 / 14</span></div>
+
+<div class="dishes">
+  <div class="dish" onclick="document.querySelector('.modal-overlay').classList.add('open')">
+    <div class="dish-info">
+      <div class="dish-row1"><h3>חומוס מסבחה</h3><span class="price">₪38</span></div>
+      <p class="dish-desc">חומוס חם, טחינה גולמית, ביצה רכה, פיתה ביתית. הקלאסיקה של סלוף.</p>
+      <div class="dish-tags">
+        <span class="tag veg">טבעוני</span>
+        <span class="tag">ללא גלוטן</span>
+      </div>
+    </div>
+    <div class="dish-media m1">
+      <span class="media-badge">
+        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="9"/><ellipse cx="12" cy="12" rx="9" ry="3"/></svg>
+        3D
+      </span>
+    </div>
+  </div>
+
+  <div class="dish">
+    <div class="dish-info">
+      <div class="dish-row1"><h3>סלט עגבניות מקולחות</h3><span class="price">₪44</span></div>
+      <p class="dish-desc">עגבניות שרי על האש, פטרוזיליה, גרעיני חמניה, שמן זית גליל ולימון מרוקני.</p>
+      <div class="dish-tags">
+        <span class="tag veg">טבעוני</span>
+        <span class="tag">קייצי</span>
+      </div>
+    </div>
+    <div class="dish-media m3">
+      <span class="media-badge">
+        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+        Video
+      </span>
+    </div>
+  </div>
+
+  <div class="dish">
+    <div class="dish-info">
+      <div class="dish-row1"><h3>פלאפל בית</h3><span class="price">₪32</span></div>
+      <p class="dish-desc">חומוס וכוסברה טריה, קלוף ביד. שמינייה מטוגנת אד-הוק על ההזמנה.</p>
+      <div class="dish-tags">
+        <span class="tag veg">טבעוני</span>
+        <span class="tag spicy">חריף 🌶</span>
+      </div>
+    </div>
+    <div class="dish-media m4">
+      <span class="media-badge">
+        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="3"/><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"/></svg>
+        AR
+      </span>
+    </div>
+  </div>
+
+  <div class="dish">
+    <div class="dish-info">
+      <div class="dish-row1"><h3>טאבולה ירושלמית</h3><span class="price">₪42</span></div>
+      <p class="dish-desc">בורגול דק, מנטה, פטרוזיליה ועגבניה. מרענן וטיכותי.</p>
+      <div class="dish-tags">
+        <span class="tag veg">טבעוני</span>
+      </div>
+    </div>
+    <div class="dish-media m6"></div>
+  </div>
+</div>
+
+<div class="rule"><h2><em>עיקריות</em></h2><div class="line"></div><span class="count">02</span></div>
+
+<div class="dishes">
+  <div class="dish">
+    <div class="dish-info">
+      <div class="dish-row1"><h3>קובה אדומה</h3><span class="price">₪52</span></div>
+      <p class="dish-desc">קובה תימנית בסומאק, מילוי בשר טלה ובורגול. הגרסה של סבתא לאה.</p>
+      <div class="dish-tags">
+        <span class="tag">מסורתי</span>
+      </div>
+    </div>
+    <div class="dish-media m2">
+      <span class="media-badge">
+        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="9"/><ellipse cx="12" cy="12" rx="9" ry="3"/></svg>
+        3D
+      </span>
+    </div>
+  </div>
+
+  <div class="dish">
+    <div class="dish-info">
+      <div class="dish-row1"><h3>מלאווח עם ביצה</h3><span class="price">₪46</span></div>
+      <p class="dish-desc">בצק עלים תימני, ביצה קשה, סחוג ועגבניה מרוסקת. ארוחת בוקר של מסעדה אמיתית.</p>
+      <div class="dish-tags">
+        <span class="tag">מסורתי</span>
+        <span class="tag spicy">סחוג חריף</span>
+      </div>
+    </div>
+    <div class="dish-media m5"></div>
+  </div>
+</div>
+
+<footer class="powered">
+  <div class="mark2">
+    <svg width="14" height="14" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 22 Q5 12 16 12 Q27 12 27 22 Z"/><line x1="3" y1="22" x2="29" y2="22"/><circle cx="16" cy="9" r="1.5" fill="currentColor"/></svg>
+  </div>
+  <span class="ey">Powered by</span>
+  <span class="word">PLATEFORM</span>
+</footer>
+
+<!-- Modal -->
+<div class="modal-overlay" onclick="if(event.target===this)this.classList.remove('open')">
+  <div class="modal">
+    <div class="modal-art" style="position:relative">
+      <button class="modal-close" onclick="document.querySelector('.modal-overlay').classList.remove('open')">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+      <div class="ar-toggles">
+        <button class="ar-toggle on">2D</button>
+        <button class="ar-toggle">3D</button>
+        <button class="ar-toggle">360°</button>
+        <button class="ar-toggle">AR</button>
+      </div>
+    </div>
+    <div class="modal-body">
+      <h2>חומוס <em>מסבחה</em></h2>
+      <div class="price">₪38.00</div>
+      <p>חומוס חם, טחינה גולמית מאומנת ביד, ביצה קשה, פיתה ביתית מהטאבון. מונח על שמן זית גליל ופלפל אדום מעושן. בעבודת יד מאז 1980.</p>
+      <div class="info-rows">
+        <div class="info-row"><span class="lbl">משקל</span><span class="val">350g</span></div>
+        <div class="info-row"><span class="lbl">קלוריות</span><span class="val">~ 580 kcal</span></div>
+        <div class="info-row"><span class="lbl">אלרגנים</span><span class="val">שומשום, ביצה, גלוטן (פיתה)</span></div>
+        <div class="info-row"><span class="lbl">תוספות</span><span class="val">+ פיתה ₪6 · + ביצה ₪4</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 120" width="520" height="120">
+  <defs>
+    <linearGradient id="wm-bronze" x1="0" y1="0" x2="1" y2="0.5">
+      <stop offset="0" stop-color="hsl(28, 62%, 38%)"></stop>
+      <stop offset="1" stop-color="hsl(22, 70%, 50%)"></stop>
+    </linearGradient>
+  </defs>
+  
+  <circle cx="34" cy="60" r="22" fill="hsl(38,28%,94%)" stroke="hsl(30,18%,82%)" stroke-width="1"></circle>
+  <circle cx="34" cy="60" r="14" fill="none" stroke="hsl(30,18%,82%)" stroke-width="0.8"></circle>
+  <text x="34" y="75" text-anchor="middle" font-family="Cormorant Garamond, Georgia, serif" font-style="italic" font-weight="600" font-size="32" fill="url(#wm-bronze)">P</text>
+
+  
+  <text x="78" y="76" font-family="Cormorant Garamond, Georgia, serif" font-weight="500" font-size="62" fill="hsl(24,18%,16%)" letter-spacing="-0.02em">Plate<tspan font-style="italic" fill="url(#wm-bronze)">form</tspan></text>
+</svg>

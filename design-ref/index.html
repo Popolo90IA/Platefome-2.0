@@ -1,0 +1,571 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<title>Plateform — Marketing</title>
+<link rel="stylesheet" href="colors_and_type.css">
+<style>
+  body { margin: 0; background: var(--void); position: relative; overflow-x: hidden; }
+  body::before {
+    content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 1;
+    background-image: url("../public/brand/grain.svg");
+    background-size: 240px;
+    opacity: 0.04;
+    mix-blend-mode: multiply;
+  }
+
+  /* ── Aurora ── */
+  .aurora { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
+  .blob {
+    position: absolute; border-radius: 50%;
+    filter: blur(110px); opacity: 0.55;
+    will-change: transform;
+  }
+  .b1 { width: 520px; height: 520px; top: -120px; left: -80px; background: radial-gradient(circle, hsl(28,62%,52%,.5), transparent 70%); animation: a1 14s ease-in-out infinite alternate; }
+  .b2 { width: 480px; height: 480px; top: 20%; right: -120px; background: radial-gradient(circle, hsl(22,70%,56%,.4), transparent 70%); animation: a2 18s ease-in-out infinite alternate; }
+  .b3 { width: 600px; height: 600px; bottom: -150px; left: 30%; background: radial-gradient(circle, hsl(36,80%,58%,.35), transparent 70%); animation: a3 16s ease-in-out infinite alternate; }
+  @keyframes a1 { to { transform: translate(80px, 60px) scale(1.1); } }
+  @keyframes a2 { to { transform: translate(-50px, 80px) scale(.9); } }
+  @keyframes a3 { to { transform: translate(40px, -80px) scale(1.08); } }
+
+  /* grid behind hero */
+  .grid-bg {
+    position: absolute; inset: 0; pointer-events: none; z-index: 0;
+    background-image:
+      linear-gradient(to right, hsl(24,18%,16%,.045) 1px, transparent 1px),
+      linear-gradient(to bottom, hsl(24,18%,16%,.045) 1px, transparent 1px);
+    background-size: 72px 72px;
+    -webkit-mask-image: radial-gradient(ellipse at center, #000, transparent 70%);
+            mask-image: radial-gradient(ellipse at center, #000, transparent 70%);
+  }
+
+  /* ── Floating nav pill ── */
+  .nav {
+    position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
+    z-index: 100;
+    background: hsl(38,28%,94%,.78);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 9px 12px 9px 14px;
+    display: flex; align-items: center; gap: 16px;
+    box-shadow: 0 8px 32px rgba(0,0,0,.06), inset 0 1px 0 rgba(255,255,255,.6);
+    width: min(1100px, calc(100vw - 32px));
+  }
+  .nav .brand { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+  .nav .tile {
+    width: 30px; height: 30px;
+    background: var(--grad-bronze);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center; color: #fff;
+  }
+  .nav .word {
+    font-family: var(--font-sans); font-weight: 700;
+    font-size: 14px; letter-spacing: .18em; color: var(--fog);
+  }
+  .nav .links { display: flex; gap: 4px; flex: 1; justify-content: center; }
+  .nav .links a {
+    font-family: var(--font-sans); font-size: 13px; font-weight: 500;
+    color: var(--subtle); text-decoration: none;
+    padding: 8px 14px; border-radius: 8px;
+    transition: color .15s, background .15s;
+  }
+  .nav .links a:hover { color: var(--fog); background: hsl(28,62%,42%,.06); }
+  .nav .lang {
+    font-family: var(--font-mono); font-size: 10.5px; letter-spacing: .14em;
+    text-transform: uppercase; color: var(--subtle);
+    display: flex; align-items: center; gap: 6px;
+    padding: 7px 12px; border-radius: 99px; border: 1px solid var(--line);
+    cursor: pointer;
+  }
+  .nav-cta {
+    padding: 9px 18px; background: var(--grad-bronze); color: #fff;
+    border-radius: 99px; font-family: var(--font-sans); font-size: 12.5px;
+    font-weight: 600; text-decoration: none;
+    box-shadow: 0 2px 12px hsl(28,62%,38%,.3), inset 0 1px 0 rgba(255,255,255,.18);
+  }
+
+  /* ── Hero ── */
+  .hero {
+    position: relative; z-index: 2;
+    padding: 140px 56px 100px;
+    max-width: 1320px; margin: 0 auto;
+    text-align: center;
+  }
+  .eyebrow-tag {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-family: var(--font-mono); font-size: 11px; letter-spacing: .22em;
+    text-transform: uppercase; color: var(--accent-bright);
+    padding: 6px 14px; border-radius: 99px;
+    background: hsl(28,62%,42%,.08);
+    border: 1px solid hsl(28,62%,42%,.18);
+    margin-bottom: 28px;
+  }
+  .eyebrow-tag .dot {
+    width: 5px; height: 5px; border-radius: 99px; background: var(--accent-bright);
+    animation: pulse 2s ease-in-out infinite;
+  }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
+
+  .hero h1 {
+    font-family: var(--font-hebrew), var(--font-display);
+    font-weight: 600;
+    font-size: clamp(56px, 8vw, 108px);
+    line-height: .94;
+    letter-spacing: -.025em;
+    color: var(--fog);
+    max-width: 1100px; margin: 0 auto 36px;
+  }
+  .hero h1 em {
+    font-style: italic; font-weight: 500;
+    background: var(--grad-gold-shimmer);
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .hero .lead {
+    font-family: var(--font-sans);
+    font-size: 19px; line-height: 1.65;
+    color: var(--subtle);
+    max-width: 620px; margin: 0 auto 44px;
+  }
+  .hero .ctas { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+
+  .btn-ghost-light {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 14px 26px; border-radius: 10px;
+    background: hsl(24,18%,16%,.04);
+    border: 1px solid var(--line);
+    color: var(--fog);
+    font-family: var(--font-sans); font-size: 15px; font-weight: 500;
+    text-decoration: none;
+    backdrop-filter: blur(8px);
+    transition: all .15s;
+  }
+  .btn-ghost-light:hover { border-color: hsl(28,62%,42%,.4); }
+
+  /* hero artwork */
+  .hero-art {
+    margin: 80px auto 0;
+    width: min(720px, 100%);
+    aspect-ratio: 1.6 / 1;
+    position: relative;
+    border-radius: 24px;
+    overflow: hidden;
+    background: linear-gradient(135deg, #2a1f15 0%, #4a2f1c 60%, #6b4a2a 100%);
+    box-shadow: 0 40px 100px -30px rgba(80,40,15,.45), 0 0 0 1px var(--line);
+  }
+  .hero-art::after {
+    content: ""; position: absolute; inset: 0;
+    background-image: url("../public/brand/grain.svg");
+    opacity: .12; mix-blend-mode: overlay;
+  }
+  .dish-3d {
+    position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%);
+    width: 64%; aspect-ratio: 1; border-radius: 50%;
+    background:
+      radial-gradient(circle at 30% 30%, #d9a96a 0%, #b07840 40%, #6b4a2a 75%, transparent 100%);
+    box-shadow:
+      0 0 60px hsl(28,62%,42%,.4),
+      inset -20px -30px 60px rgba(0,0,0,.5),
+      inset 20px 20px 40px rgba(255,200,140,.3);
+    animation: orbit 20s linear infinite;
+  }
+  @keyframes orbit { to { transform: translate(-50%,-50%) rotate(360deg); } }
+
+  .scan-frame {
+    position: absolute; left: 50%; top: 50%;
+    width: 78%; aspect-ratio: 1.6/1;
+    transform: translate(-50%,-50%);
+    pointer-events: none;
+  }
+  .scan-frame .corner {
+    position: absolute; width: 32px; height: 32px;
+    border: 2px solid hsl(36,80%,58%);
+    opacity: .8;
+  }
+  .scan-frame .tl { top: -1px; left: -1px; border-right: none; border-bottom: none; }
+  .scan-frame .tr { top: -1px; right: -1px; border-left: none; border-bottom: none; }
+  .scan-frame .bl { bottom: -1px; left: -1px; border-right: none; border-top: none; }
+  .scan-frame .br { bottom: -1px; right: -1px; border-left: none; border-top: none; }
+
+  .floating-tag {
+    position: absolute; padding: 10px 14px;
+    background: hsl(38,28%,94%,.92); backdrop-filter: blur(12px);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    font-family: var(--font-mono); font-size: 10.5px; letter-spacing: .14em;
+    text-transform: uppercase; color: var(--fog);
+    display: flex; align-items: center; gap: 8px;
+    box-shadow: 0 12px 32px rgba(0,0,0,.15);
+  }
+  .ft-1 { top: 12%; right: 10%; }
+  .ft-2 { bottom: 14%; left: 8%; color: var(--accent-bright); }
+
+  /* ── Stats ── */
+  .stats-section { position: relative; z-index: 2; padding: 80px 56px; max-width: 1320px; margin: 0 auto; }
+  .stats {
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    background: var(--line);
+    gap: 1px;
+    border-radius: 4px;
+    overflow: hidden;
+    border: 1px solid var(--line);
+  }
+  .stat-cell {
+    background: var(--void); padding: 36px 28px;
+    position: relative;
+  }
+  .stat-cell::before {
+    content: ""; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: var(--grad-bronze);
+    opacity: 0; transition: opacity .3s;
+  }
+  .stat-cell:hover::before { opacity: 1; }
+  .stat-num {
+    font-family: var(--font-sans); font-weight: 800;
+    font-size: 56px; line-height: 1;
+    letter-spacing: -.04em;
+    color: var(--fog);
+    margin-bottom: 14px;
+  }
+  .stat-num em {
+    font-family: var(--font-display); font-style: italic; font-weight: 600;
+    background: var(--grad-bronze);
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .stat-label {
+    font-family: var(--font-mono); font-size: 10.5px; letter-spacing: .22em;
+    text-transform: uppercase; color: var(--accent-bright);
+    margin-bottom: 8px;
+  }
+  .stat-desc {
+    font-family: var(--font-sans); font-size: 13px; line-height: 1.5;
+    color: var(--subtle);
+  }
+
+  /* ── Method (3 features) ── */
+  .method { position: relative; z-index: 2; padding: 100px 56px; max-width: 1320px; margin: 0 auto; }
+  .method-head { text-align: center; margin-bottom: 64px; }
+  .method-head .eyebrow-tag { margin-bottom: 24px; }
+  .method-head h2 {
+    font-family: var(--font-hebrew), var(--font-display);
+    font-weight: 600; font-size: clamp(40px, 5vw, 64px);
+    line-height: 1; letter-spacing: -.025em; color: var(--fog);
+  }
+  .method-head h2 em {
+    font-style: italic; color: var(--accent-bright);
+  }
+  .method-head .sub {
+    font-family: var(--font-sans); font-size: 17px; color: var(--subtle);
+    margin-top: 20px; max-width: 540px; margin-left: auto; margin-right: auto;
+  }
+  .features {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;
+  }
+  .feature {
+    position: relative; overflow: hidden;
+    background: linear-gradient(135deg, var(--deep), hsl(36,22%,93%));
+    border: 1px solid var(--line);
+    border-radius: 22px;
+    padding: 32px 28px;
+    min-height: 360px;
+    transition: border-color .3s, box-shadow .3s;
+  }
+  .feature::before {
+    content: ""; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: var(--grad-bronze);
+  }
+  .feature:hover {
+    border-color: hsl(22,70%,50%,.4);
+    box-shadow: 0 28px 56px -28px rgba(0,0,0,.18);
+  }
+  .feature-num {
+    position: absolute; top: 8px; right: 24px;
+    font-family: var(--font-sans); font-weight: 800;
+    font-size: 84px; letter-spacing: -.05em;
+    color: hsl(28,62%,42%,.13);
+    line-height: 1;
+  }
+  .feature .ey {
+    font-family: var(--font-mono); font-size: 10.5px;
+    letter-spacing: .22em; text-transform: uppercase; color: var(--accent-bright);
+    margin-bottom: 14px;
+  }
+  .feature h3 {
+    font-family: var(--font-display); font-size: 28px; font-weight: 600;
+    line-height: 1.1; color: var(--fog); margin: 0 0 12px;
+  }
+  .feature h3 em { font-style: italic; color: var(--accent-bright); }
+  .feature p {
+    font-family: var(--font-sans); font-size: 14px; line-height: 1.65;
+    color: var(--subtle); margin: 0;
+  }
+  .feature-mock {
+    margin-top: 24px;
+    height: 110px;
+    border-radius: 12px;
+    background: var(--void);
+    border: 1px solid var(--line);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--accent-bright);
+  }
+  .feature-mock svg { stroke: currentColor; fill: none; stroke-width: 1.5; }
+
+  /* ── Pricing strip ── */
+  .pricing { position: relative; z-index: 2; padding: 80px 56px 120px; max-width: 1100px; margin: 0 auto; }
+  .pricing h2 {
+    font-family: var(--font-hebrew), var(--font-display);
+    font-weight: 600; font-size: clamp(36px, 5vw, 56px);
+    text-align: center; color: var(--fog);
+    line-height: 1; letter-spacing: -.025em;
+    margin-bottom: 12px;
+  }
+  .pricing h2 em { font-style: italic; color: var(--accent-bright); }
+  .pricing .sub { text-align: center; font-family: var(--font-sans); font-size: 16px; color: var(--subtle); margin-bottom: 48px; }
+  .plans { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .plan {
+    background: var(--deep);
+    border: 1px solid var(--line);
+    border-radius: 20px;
+    padding: 32px 28px;
+    position: relative;
+  }
+  .plan.featured {
+    background: linear-gradient(160deg, var(--deep), hsl(28,30%,93%));
+    border-color: hsl(28,62%,42%,.4);
+    box-shadow: 0 0 0 1px hsl(28,62%,42%,.2), 0 24px 64px -24px hsl(28,62%,42%,.3);
+  }
+  .plan-tag {
+    position: absolute; top: -10px; right: 24px;
+    font-family: var(--font-mono); font-size: 9.5px; letter-spacing: .22em;
+    text-transform: uppercase; color: #fff;
+    padding: 5px 12px;
+    background: var(--grad-bronze);
+    border-radius: 99px;
+    box-shadow: 0 4px 14px hsl(28,62%,38%,.3);
+  }
+  .plan h4 {
+    font-family: var(--font-display); font-size: 22px; font-weight: 600;
+    color: var(--fog); margin: 0 0 6px;
+  }
+  .plan .desc { font-family: var(--font-sans); font-size: 13px; color: var(--subtle); margin: 0 0 24px; }
+  .plan .price {
+    font-family: var(--font-display); font-size: 56px; font-weight: 600;
+    color: var(--fog); line-height: 1;
+  }
+  .plan .price small {
+    font-family: var(--font-mono); font-size: 13px; font-weight: 400;
+    color: var(--subtle); letter-spacing: .08em;
+  }
+  .plan .features-list { list-style: none; padding: 0; margin: 28px 0 0; }
+  .plan .features-list li {
+    font-family: var(--font-sans); font-size: 13.5px; color: var(--subtle);
+    padding: 8px 0; border-top: 1px solid var(--line);
+    display: flex; align-items: center; gap: 10px;
+  }
+  .plan .features-list li:first-child { border-top: none; }
+  .plan .features-list svg { color: var(--accent-bright); flex-shrink: 0; }
+  .plan .cta {
+    margin-top: 24px; width: 100%;
+    display: flex; justify-content: center;
+  }
+
+  /* ── Footer ── */
+  .footer {
+    position: relative; z-index: 2;
+    border-top: 1px solid var(--line);
+    padding: 48px 56px 32px;
+    max-width: 1320px; margin: 0 auto;
+    display: flex; align-items: center; justify-content: space-between; gap: 24px; flex-wrap: wrap;
+  }
+  .footer .copy { font-family: var(--font-mono); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--subtle); }
+  .footer .links2 { display: flex; gap: 24px; }
+  .footer .links2 a { font-family: var(--font-sans); font-size: 13px; color: var(--subtle); text-decoration: none; }
+
+  @media (max-width: 800px) {
+    .stats { grid-template-columns: repeat(2,1fr); }
+    .features, .plans { grid-template-columns: 1fr; }
+    .nav .links { display: none; }
+    .hero { padding: 110px 24px 60px; }
+    .stats-section, .method, .pricing { padding-left: 24px; padding-right: 24px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="aurora">
+  <div class="blob b1"></div>
+  <div class="blob b2"></div>
+  <div class="blob b3"></div>
+</div>
+
+<!-- Floating nav -->
+<nav class="nav">
+  <div class="brand">
+    <div class="tile">
+      <svg width="16" height="16" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 22 Q5 12 16 12 Q27 12 27 22 Z"/><line x1="3" y1="22" x2="29" y2="22"/><circle cx="16" cy="9" r="1.5" fill="currentColor"/><line x1="16" y1="10.5" x2="16" y2="12"/></svg>
+    </div>
+    <span class="word">PLATEFORM</span>
+  </div>
+  <div class="links">
+    <a href="#method">השיטה</a>
+    <a href="#pricing">מחירים</a>
+    <a href="#about">אודות</a>
+    <a href="#contact">צור קשר</a>
+  </div>
+  <span class="lang">🇮🇱 HE</span>
+  <a href="#" class="nav-cta">התחל בחינם</a>
+</nav>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="grid-bg"></div>
+  <span class="eyebrow-tag"><span class="dot"></span>+200 מסעדות פעילות</span>
+  <h1>תפריט שגורם ללקוחות <em>להזמין יותר</em>.</h1>
+  <p class="lead">הלקוח סורק QR, רואה את המנה בתלת-מימד, ומזמין בביטחון. ללא אפליקציה. ללא הורדה.</p>
+  <div class="ctas">
+    <a href="#" class="btn-primary" style="padding:14px 30px">
+      התחל בחינם
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+    </a>
+    <a href="#" class="btn-ghost-light">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+      צפו בדמו
+    </a>
+  </div>
+
+  <div class="hero-art">
+    <div class="dish-3d"></div>
+    <div class="scan-frame">
+      <span class="corner tl"></span><span class="corner tr"></span>
+      <span class="corner bl"></span><span class="corner br"></span>
+    </div>
+    <div class="floating-tag ft-1">
+      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"/></svg>
+      תצוגה ב־3D
+    </div>
+    <div class="floating-tag ft-2">
+      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15 8.5 22 9.3 17 14 18.2 21 12 17.8 5.8 21 7 14 2 9.3 9 8.5 12 2"/></svg>
+      ×3.2 הזמנות
+    </div>
+  </div>
+</section>
+
+<!-- Stats -->
+<section class="stats-section">
+  <div class="stats">
+    <div class="stat-cell">
+      <div class="stat-num">+200</div>
+      <div class="stat-label">מסעדות</div>
+      <div class="stat-desc">פעילות ברחבי הארץ</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-num"><em>×3.2</em></div>
+      <div class="stat-label">הזמנות</div>
+      <div class="stat-desc">בממוצע מול תפריט נייר</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-num">&lt;0.8s</div>
+      <div class="stat-label">זמן טעינה</div>
+      <div class="stat-desc">מיידי, ללא אפליקציה</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-num">98%</div>
+      <div class="stat-label">שביעות רצון</div>
+      <div class="stat-desc">לקוחות חוזרים תוך חודש</div>
+    </div>
+  </div>
+</section>
+
+<!-- Method (3 cards) -->
+<section class="method" id="method">
+  <div class="method-head">
+    <span class="eyebrow-tag">השיטה</span>
+    <h2>שלושה שלבים. <em>מהפכה גסטרונומית.</em></h2>
+    <p class="sub">לסעוד עם פלטפורמה זו לא בחירה בלבד — זו השפה החדשה של חוויית האירוח.</p>
+  </div>
+  <div class="features">
+    <article class="feature">
+      <span class="feature-num">01</span>
+      <div class="ey">סריקה</div>
+      <h3>QR יחיד. <em>פתיחה מיידית.</em></h3>
+      <p>הלקוח מצלם את הקוד שעל השולחן ורואה את התפריט המלא תוך פחות משנייה.</p>
+      <div class="feature-mock">
+        <svg width="68" height="68" viewBox="0 0 24 24"><rect x="3" y="3" width="6" height="6"/><rect x="15" y="3" width="6" height="6"/><rect x="3" y="15" width="6" height="6"/><rect x="15" y="15" width="3" height="3"/><rect x="18" y="18" width="3" height="3"/><rect x="11" y="11" width="2" height="2" fill="currentColor"/></svg>
+      </div>
+    </article>
+    <article class="feature">
+      <span class="feature-num">02</span>
+      <div class="ey">תצוגה</div>
+      <h3>תלת מימד. <em>360°. AR.</em></h3>
+      <p>סובב את המנה. ראה את התוספות. הבן את המנה לפני שהיא מגיעה לשולחן.</p>
+      <div class="feature-mock">
+        <svg width="68" height="68" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><ellipse cx="12" cy="12" rx="9" ry="3"/><line x1="3" y1="12" x2="21" y2="12"/></svg>
+      </div>
+    </article>
+    <article class="feature">
+      <span class="feature-num">03</span>
+      <div class="ey">הזמנה</div>
+      <h3>החלטה. <em>בביטחון.</em></h3>
+      <p>אלרגנים, הצעות שמתאימות, ותרגום מלא לאורח. הלקוח יודע בדיוק מה הוא מקבל.</p>
+      <div class="feature-mock">
+        <svg width="68" height="68" viewBox="0 0 24 24"><path d="M3 12 8 17 21 4"/><path d="M3 6h12" opacity=".4"/><path d="M3 18h8" opacity=".4"/></svg>
+      </div>
+    </article>
+  </div>
+</section>
+
+<!-- Pricing -->
+<section class="pricing" id="pricing">
+  <h2>מחיר <em>הוגן</em>. בלי הפתעות.</h2>
+  <p class="sub">חודש ראשון חינם. בטל מתי שתרצה.</p>
+  <div class="plans">
+    <div class="plan">
+      <h4>בסיסי</h4>
+      <p class="desc">לעסקים קטנים, פעילות עיקרית בשולחן.</p>
+      <div class="price">₪0<small> / לחודש</small></div>
+      <ul class="features-list">
+        <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>עד 30 מנות</li>
+        <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>QR קוד אישי</li>
+        <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>תרגום ל־3 שפות</li>
+      </ul>
+      <div class="cta"><a class="btn-ghost-light" href="#" style="width:100%; justify-content:center">התחל בחינם</a></div>
+    </div>
+    <div class="plan featured">
+      <span class="plan-tag">הכי פופולרי</span>
+      <h4>פרו</h4>
+      <p class="desc">תצוגות 3D, AR, ואנליטיקה מלאה.</p>
+      <div class="price">₪249<small> / לחודש</small></div>
+      <ul class="features-list">
+        <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>מנות ללא הגבלה</li>
+        <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>תצוגת תלת מימד + AR</li>
+        <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>אנליטיקה מתקדמת</li>
+        <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>תרגום ל־12 שפות</li>
+      </ul>
+      <div class="cta"><a class="btn-primary" href="#" style="width:100%; justify-content:center; padding:13px 28px">בחר Pro</a></div>
+    </div>
+    <div class="plan">
+      <h4>שרשרת</h4>
+      <p class="desc">לעסקים עם מספר סניפים וניהול מרכזי.</p>
+      <div class="price">דברו<small> / איתנו</small></div>
+      <ul class="features-list">
+        <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>מספר סניפים</li>
+        <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>ממשק API</li>
+        <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>מנהל לקוח אישי</li>
+      </ul>
+      <div class="cta"><a class="btn-ghost-light" href="#" style="width:100%; justify-content:center">דברו איתנו</a></div>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="copy">© 2025 PLATEFORM · TEL AVIV</div>
+  <div class="links2">
+    <a href="#">פרטיות</a><a href="#">תנאים</a><a href="#">צור קשר</a>
+  </div>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <defs>
+    <linearGradient id="mn-bronze" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="hsl(28, 62%, 38%)"></stop>
+      <stop offset="1" stop-color="hsl(22, 70%, 50%)"></stop>
+    </linearGradient>
+  </defs>
+  
+  <rect x="8" y="8" width="184" height="184" rx="36" fill="url(#mn-bronze)"></rect>
+  
+  <rect x="14" y="14" width="172" height="172" rx="32" fill="none" stroke="hsl(38, 30%, 97%)" stroke-width="1" opacity="0.22"></rect>
+
+  
+  <circle cx="100" cy="100" r="78" fill="none" stroke="hsl(38,30%,97%)" stroke-width="1.2" stroke-dasharray="1 5" opacity="0.55"></circle>
+  
+  <circle cx="100" cy="100" r="56" fill="none" stroke="hsl(38,30%,97%)" stroke-width="1" opacity="0.32"></circle>
+
+  
+  <text x="100" y="138" text-anchor="middle" font-family="Cormorant Garamond, Georgia, serif" font-style="italic" font-weight="500" font-size="130" fill="hsl(38, 32%, 99%)" letter-spacing="-0.04em">P</text>
+
+  
+  <path d="M 168 86 L 178 94 L 172 102" fill="none" stroke="hsl(38,30%,97%)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" opacity="0.7"></path>
+</svg>
