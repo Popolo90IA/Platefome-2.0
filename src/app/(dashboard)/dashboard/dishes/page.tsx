@@ -275,26 +275,40 @@ export default function DishesPage() {
   const hasFr = availableLangs.includes("fr");
 
   return (
-    <div className="max-w-6xl mx-auto space-y-6 animate-fade-up">
-      <div className="flex items-center justify-between">
+    <div className="max-w-6xl mx-auto space-y-6">
+      {/* ── Page header ── */}
+      <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", gap: 24 }}>
         <div>
-          <h1 className="font-serif-display text-4xl font-bold">מנות</h1>
-          <p className="text-muted-foreground mt-2">נהל את התפריט שלך</p>
+          <h1
+            className="font-display"
+            style={{ fontSize: "clamp(1.75rem, 3vw, 3rem)", fontWeight: 600, lineHeight: 1, letterSpacing: "-.02em", color: "hsl(var(--fog))", margin: 0 }}
+          >
+            <em style={{ fontStyle: "italic", color: "hsl(var(--accent-bright))" }}>תפריט</em>
+            {" · "}{dishes.length} מנות
+          </h1>
+          {restaurant && (
+            <p style={{ fontFamily: "var(--font-sans)", fontSize: 14, color: "hsl(var(--subtle))", marginTop: 8 }}>
+              {restaurant.name} · {dishes.filter(d => d.model_3d_url).length} ב-3D · {dishes.filter(d => !d.is_available).length} לא זמינות
+            </p>
+          )}
         </div>
         {!showForm && (
-          <Button
-            onClick={() => setShowForm(true)}
-            className="bg-gold-gradient hover:opacity-90 shadow-gold-glow"
-          >
-            <Plus className="h-4 w-4" />
-            מנה חדשה
-          </Button>
+          <div style={{ display: "flex", gap: 10, flexShrink: 0 }}>
+            <button
+              onClick={() => setShowForm(true)}
+              className="btn-primary"
+              style={{ padding: "11px 22px", fontSize: "0.875rem" }}
+            >
+              <Plus style={{ width: 14, height: 14 }} strokeWidth={2.4} />
+              הוסף מנה
+            </button>
+          </div>
         )}
       </div>
 
-      {/* Category filter */}
+      {/* Category filter pills */}
       {categories.length > 0 && dishes.length > 0 && !showForm && (
-        <div className="flex flex-wrap gap-2 scrollbar-thin">
+        <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
           <FilterChip
             active={filterCat === "all"}
             onClick={() => setFilterCat("all")}
@@ -868,18 +882,23 @@ function FilterChip({
     <button
       type="button"
       onClick={onClick}
-      className={`inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-sm font-medium transition-all ${
-        active
-          ? "bg-gold-gradient text-white shadow-gold-glow"
-          : "bg-card border border-border hover:border-[hsl(var(--gold))]/40 text-foreground/70"
-      }`}
+      style={{
+        display: "inline-flex", alignItems: "center", gap: 6,
+        padding: "7px 14px", borderRadius: 99,
+        fontFamily: "var(--font-sans)", fontSize: "12.5px", fontWeight: 500,
+        cursor: "pointer", transition: "all .15s",
+        background: active ? "hsl(var(--accent-bright))" : "transparent",
+        color: active ? "#fff" : "hsl(var(--subtle))",
+        border: active ? "1px solid transparent" : "1px solid hsl(var(--line))",
+      }}
     >
       {children}
-      <span
-        className={`text-xs px-1.5 py-0.5 rounded-full ${
-          active ? "bg-white/20" : "bg-secondary text-muted-foreground"
-        }`}
-      >
+      <span style={{
+        padding: "1px 6px", borderRadius: 99,
+        fontFamily: "var(--font-mono)", fontSize: 10,
+        background: active ? "rgba(255,255,255,.18)" : "hsl(var(--abyss))",
+        color: active ? "#fff" : "hsl(var(--dim))",
+      }}>
         {count}
       </span>
     </button>

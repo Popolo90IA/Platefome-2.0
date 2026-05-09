@@ -374,7 +374,9 @@ export default function HomePage() {
                 <path d="M10 21v1.5a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V21"/>
               </svg>
             </div>
-            <span style={{ fontFamily: "'DM Sans',sans-serif", fontSize: ".9375rem", fontWeight: 700, letterSpacing: "-.01em", color: "#fff" }}>PLATFORME</span>
+            <span style={{ fontFamily: "'DM Sans',sans-serif", fontSize: ".9375rem", fontWeight: 700, letterSpacing: ".14em", color: "hsl(24,18%,16%)" }}>
+              PLATE<em style={{ fontStyle: "italic", background: "linear-gradient(135deg,hsl(28,62%,38%),hsl(22,70%,50%))", WebkitBackgroundClip: "text", backgroundClip: "text", WebkitTextFillColor: "transparent" }}>FORM</em>
+            </span>
           </Link>
 
           {/* ── Nav centre ── */}
@@ -1045,7 +1047,9 @@ export default function HomePage() {
                     <path d="M10 21v1.5a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V21"/>
                   </svg>
                 </div>
-                <span style={{ fontFamily: "'DM Sans',sans-serif", fontSize: "1.05rem", fontWeight: 700, letterSpacing: ".06em", color: "hsl(32,28%,92%)" }}>PLATFORME</span>
+                <span style={{ fontFamily: "'DM Sans',sans-serif", fontSize: "1.05rem", fontWeight: 700, letterSpacing: ".14em", color: "hsl(32,28%,92%)" }}>
+                  PLATE<em style={{ fontStyle: "italic", background: "linear-gradient(135deg,hsl(28,62%,62%),hsl(22,70%,70%))", WebkitBackgroundClip: "text", backgroundClip: "text", WebkitTextFillColor: "transparent" }}>FORM</em>
+                </span>
               </div>
               <p style={{ fontFamily: "'DM Sans',sans-serif", fontSize: ".9rem", lineHeight: 1.75, color: "hsl(28,10%,55%)", marginBottom: 24 }}>
                 פלטפורמת תפריטים תלת-מימד/AR למסעדות.<br />תל אביב · פריז.

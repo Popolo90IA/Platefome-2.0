@@ -55,34 +55,35 @@ export function Sidebar() {
     <aside
       className="w-56 h-screen sticky top-0 flex flex-col overflow-hidden scrollbar-none"
       style={{
-        background: "hsl(var(--abyss))",
+        background: "hsl(var(--deep))",
         borderLeft: "1px solid hsl(var(--line))",
       }}
     >
       {/* Wordmark */}
       <div
-        className="px-6 pt-8 pb-6"
+        className="px-5 pt-6 pb-5"
         style={{ borderBottom: "1px solid hsl(var(--line))" }}
       >
         <Link href="/dashboard" className="block group">
-          <div style={{ display: "flex", alignItems: "center", gap: 9 }}>
-            <div style={{ width: 28, height: 28, background: "linear-gradient(135deg,hsl(36,28%,92%,.12),hsl(36,28%,92%,.04))", border: "1px solid hsl(36,28%,92%,.3)", borderRadius: 5, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-              <svg width="16" height="16" viewBox="0 0 32 32" fill="none" stroke="hsl(36,28%,92%)" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
-                <circle cx="16" cy="5.5" r="1.5"/>
-                <path d="M16 7C9.373 7 4 12.373 4 19h24c0-6.627-5.373-12-12-12z"/>
-                <line x1="2" y1="21" x2="30" y2="21"/>
-                <path d="M10 21v1.5a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V21"/>
+          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+            {/* Brand tile — bronze gradient */}
+            <div style={{ width: 32, height: 32, background: "var(--grad-bronze)", borderRadius: 9, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, boxShadow: "0 2px 8px hsl(28 62% 38% / .3)" }}>
+              <svg width="18" height="18" viewBox="0 0 32 32" fill="none" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M5 22 Q5 12 16 12 Q27 12 27 22 Z"/>
+                <line x1="3" y1="22" x2="29" y2="22"/>
+                <circle cx="16" cy="9" r="1.5" fill="white"/>
+                <line x1="16" y1="10.5" x2="16" y2="12"/>
               </svg>
             </div>
             <div>
               <div
-                className="font-mono text-[11px] tracking-[0.2em] uppercase leading-none"
-                style={{ color: "hsl(var(--cream))", fontWeight: 500 }}
+                className="font-sans text-[13px] tracking-[0.18em] uppercase leading-none"
+                style={{ color: "hsl(var(--fog))", fontWeight: 700 }}
               >
-                PLATFORME
+                PLATEFORM
               </div>
               <div
-                className="font-mono text-[8px] tracking-[0.18em] uppercase mt-1"
+                className="font-mono text-[9.5px] tracking-[0.14em] uppercase mt-1"
                 style={{ color: "hsl(var(--subtle))" }}
               >
                 Restaurant OS
@@ -96,10 +97,10 @@ export function Sidebar() {
       <nav className="flex-1 px-2 py-4 overflow-y-auto scrollbar-none">
         {/* Section label */}
         <div
-          className="px-3 mb-3 font-mono text-[9px] tracking-[0.2em] uppercase"
-          style={{ color: "hsl(var(--dim))" }}
+          className="px-3 mb-2 font-mono text-[9.5px] tracking-[0.22em] uppercase"
+          style={{ color: "hsl(var(--dim))", paddingTop: 4 }}
         >
-          ניהול
+          תפריט
         </div>
 
         <div className="space-y-px">
@@ -115,42 +116,42 @@ export function Sidebar() {
                 key={item.href}
                 href={item.href}
                 className={cn(
-                  "group flex items-center gap-3 px-3 py-2 rounded-sm text-sm transition-all duration-150 relative",
+                  "group flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-sm transition-all duration-150 relative",
                   isActive
-                    ? "text-[hsl(var(--cream))]"
-                    : "text-[hsl(var(--subtle))] hover:text-[hsl(var(--fog))]"
+                    ? ""
+                    : "hover:text-[hsl(var(--fog))]"
                 )}
                 style={{
-                  background: isActive ? "hsl(var(--surface))" : "transparent",
+                  color: isActive ? "hsl(var(--accent-bright))" : "hsl(var(--subtle))",
+                  background: isActive ? "hsl(28 62% 42% / .10)" : "transparent",
                 }}
               >
-                {/* Active left border */}
+                {/* Active left accent indicator */}
                 {isActive && (
                   <div
-                    className="absolute right-0 top-1/2 -translate-y-1/2 w-px h-4"
-                    style={{ background: "hsl(var(--cream))" }}
+                    className="absolute right-0 top-1/2 -translate-y-1/2"
+                    style={{ width: 3, height: 16, background: "hsl(var(--accent-bright))", borderRadius: 2, marginRight: -3 }}
                   />
                 )}
 
                 <Icon
-                  className={cn(
-                    "h-[15px] w-[15px] flex-shrink-0 transition-colors duration-150",
-                    isActive
-                      ? "text-[hsl(var(--cream))]"
-                      : "text-[hsl(var(--dim))] group-hover:text-[hsl(var(--fog))]"
-                  )}
-                  strokeWidth={isActive ? 1.75 : 1.5}
+                  style={{
+                    width: 16, height: 16, flexShrink: 0,
+                    color: isActive ? "hsl(var(--accent-bright))" : "hsl(var(--dim))",
+                    transition: "color .15s",
+                  }}
+                  strokeWidth={1.6}
                 />
 
-                <span className="font-sans text-[13px] font-normal flex-1">
+                <span className="font-sans text-[13.5px] font-medium flex-1">
                   {item.label}
                 </span>
 
                 {/* Hover state bg */}
                 {!isActive && (
                   <div
-                    className="absolute inset-0 rounded-sm opacity-0 group-hover:opacity-100 transition-opacity duration-150 pointer-events-none"
-                    style={{ background: "hsl(var(--deep))" }}
+                    className="absolute inset-0 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-150 pointer-events-none"
+                    style={{ background: "hsl(28 62% 42% / .06)" }}
                   />
                 )}
               </Link>
