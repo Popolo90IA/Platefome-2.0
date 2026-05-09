@@ -20,7 +20,7 @@ export function HeroCanvas({ modelUrl }: HeroCanvasProps) {
   const switchMode = useRef(false);
   const [loaded, setLoaded] = useState(false);
 
-  // ── Overlay canvas 2D : particules + halo ───────────────────────────────
+  // ── Overlay canvas 2D : plasma ring + fire + energy arcs ────────────────
   useEffect(() => {
     if (!loaded) return;
     const ol   = overlayRef.current;
@@ -30,15 +30,29 @@ export function HeroCanvas({ modelUrl }: HeroCanvasProps) {
     ol.width  = wrap.clientWidth;
     ol.height = wrap.clientHeight;
 
-    // 16 particules dorées
-    const pts = Array.from({ length: 16 }, (_, i) => ({
-      a: (i / 16) * Math.PI * 2,
-      r: 140 + Math.random() * 70,
-      spd: (0.004 + Math.random() * 0.003) * (i % 2 ? 1 : -1),
-      sz: 1.8 + Math.random() * 2,
-      op: 0.5 + Math.random() * 0.5,
-      trail: [] as {x:number;y:number}[],
-    }));
+    // Flammes : particules montantes depuis la base du modèle
+    type Flame = { x:number; y:number; vx:number; vy:number; life:number; maxLife:number; sz:number; hue:number };
+    const flames: Flame[] = [];
+    function spawnFlame(cx: number, cy: number) {
+      const spread = 90;
+      flames.push({
+        x: cx + (Math.random()-0.5)*spread,
+        y: cy + 80 + Math.random()*20,
+        vx: (Math.random()-0.5)*0.8,
+        vy: -(1.2 + Math.random()*2.2),
+        life: 0,
+        maxLife: 55 + Math.random()*45,
+        sz: 14 + Math.random()*22,
+        hue: 18 + Math.random()*28,
+      });
+    }
+
+    // Anneaux plasma : 3 anneaux concentriques tournants
+    const rings = [
+      { r: 130, speed: 0.008,  phase: 0,          waveAmp: 8,  waveFreq: 6, color: "38,95%,62%" },
+      { r: 155, speed: -0.005, phase: Math.PI/3,  waveAmp: 12, waveFreq: 5, color: "28,90%,55%" },
+      { r: 108, speed: 0.013,  phase: Math.PI/5,  waveAmp: 6,  waveFreq: 8, color: "45,100%,72%" },
+    ];
 
     let frame = 0;
     function draw() {
@@ -46,64 +60,105 @@ export function HeroCanvas({ modelUrl }: HeroCanvasProps) {
       const ctx = ol!.getContext("2d");
       if (!ctx) return;
       const W = ol!.width, H = ol!.height;
-      const cx = W / 2, cy = H / 2;
+      const cx = W/2, cy = H/2 + 10;
       ctx.clearRect(0, 0, W, H);
       frame++;
 
-      // Halo respirant
-      const breath = 0.5 + 0.5 * Math.sin(frame * 0.02);
-      const hR = 150 + breath * 20;
-      const g = ctx.createRadialGradient(cx, cy, hR * 0.2, cx, cy, hR);
-      g.addColorStop(0, `hsla(36,85%,58%,${0.12 + breath * 0.08})`);
-      g.addColorStop(0.6, `hsla(30,70%,50%,${0.04 + breath * 0.02})`);
-      g.addColorStop(1, "hsla(0,0%,0%,0)");
-      ctx.beginPath(); ctx.arc(cx, cy, hR, 0, Math.PI*2);
-      ctx.fillStyle = g; ctx.fill();
+      const boost = switchMode.current ? 3.5 : 1;
 
-      // Particules
-      const boost = switchMode.current ? 5 : 1;
-      for (const p of pts) {
-        p.a += p.spd * boost;
-        const px = cx + Math.cos(p.a) * p.r;
-        const py = cy + Math.sin(p.a) * p.r * 0.35;
-        p.trail.push({x:px,y:py});
-        if (p.trail.length > 12) p.trail.shift();
+      // ── Grand halo de fond pulsant ──
+      const breath = 0.5 + 0.5*Math.sin(frame*0.018);
+      const hg = ctx.createRadialGradient(cx, cy, 40, cx, cy, 200);
+      hg.addColorStop(0,   `hsla(36,85%,58%,${0.10 + breath*0.10})`);
+      hg.addColorStop(0.5, `hsla(30,70%,50%,${0.05 + breath*0.04})`);
+      hg.addColorStop(1,   "hsla(0,0%,0%,0)");
+      ctx.beginPath(); ctx.ellipse(cx, cy, 200, 130, 0, 0, Math.PI*2);
+      ctx.fillStyle = hg; ctx.fill();
 
-        // Trail
-        for (let i=1; i<p.trail.length; i++) {
-          const t0=p.trail[i-1], t1=p.trail[i];
-          ctx.beginPath(); ctx.moveTo(t0.x,t0.y); ctx.lineTo(t1.x,t1.y);
-          ctx.strokeStyle=`hsla(38,90%,62%,${(i/p.trail.length)*p.op*0.6})`;
-          ctx.lineWidth=p.sz*0.4*(i/p.trail.length);
-          ctx.stroke();
+      // ── Anneaux plasma ondulés ──
+      for (const ring of rings) {
+        ring.phase += ring.speed * boost;
+        ctx.beginPath();
+        const pts2 = 180;
+        for (let i = 0; i <= pts2; i++) {
+          const a = (i/pts2)*Math.PI*2;
+          const wave = ring.waveAmp * Math.sin(a*ring.waveFreq + ring.phase*3 + frame*0.04);
+          const rx = (ring.r + wave) * 1.0;
+          const ry = (ring.r + wave) * 0.38;
+          const x = cx + Math.cos(a)*rx;
+          const y = cy + Math.sin(a)*ry;
+          i===0 ? ctx.moveTo(x,y) : ctx.lineTo(x,y);
         }
+        ctx.closePath();
+        const alpha = 0.55 + breath*0.25;
+        ctx.strokeStyle = `hsla(${ring.color},${alpha})`;
+        ctx.lineWidth = 2.2;
+        ctx.shadowColor = `hsl(${ring.color})`;
+        ctx.shadowBlur = 14;
+        ctx.stroke();
+        ctx.shadowBlur = 0;
 
-        // Dot glow
-        const dg = ctx.createRadialGradient(px,py,0,px,py,p.sz*3);
-        dg.addColorStop(0, `hsla(45,100%,82%,${p.op})`);
-        dg.addColorStop(0.5, `hsla(38,90%,62%,${p.op*0.5})`);
-        dg.addColorStop(1, "hsla(36,80%,55%,0)");
-        ctx.beginPath(); ctx.arc(px,py,p.sz*3,0,Math.PI*2);
-        ctx.fillStyle=dg; ctx.fill();
+        // Éclats brillants sur le ring
+        for (let i = 0; i < 5; i++) {
+          const a = (i/5)*Math.PI*2 + ring.phase*2;
+          const wave = ring.waveAmp * Math.sin(a*ring.waveFreq + ring.phase*3);
+          const rx = (ring.r + wave)*1.0;
+          const ry = (ring.r + wave)*0.38;
+          const x = cx + Math.cos(a)*rx;
+          const y = cy + Math.sin(a)*ry;
+          const dg = ctx.createRadialGradient(x,y,0,x,y,9);
+          dg.addColorStop(0, `hsla(55,100%,95%,0.95)`);
+          dg.addColorStop(0.4, `hsla(${ring.color},0.7)`);
+          dg.addColorStop(1, `hsla(${ring.color},0)`);
+          ctx.beginPath(); ctx.arc(x,y,9,0,Math.PI*2);
+          ctx.fillStyle = dg; ctx.fill();
+        }
       }
 
-      // Lightning au switch
+      // ── Flammes ──
+      const spawnRate = switchMode.current ? 5 : 2;
+      for (let s=0; s<spawnRate; s++) spawnFlame(cx, cy);
+
+      for (let i = flames.length-1; i >= 0; i--) {
+        const f = flames[i];
+        f.x  += f.vx * boost;
+        f.y  += f.vy * boost;
+        f.vx += (Math.random()-0.5)*0.25;
+        f.life++;
+        if (f.life > f.maxLife) { flames.splice(i,1); continue; }
+
+        const t = f.life/f.maxLife;
+        const alpha = (1-t) * (t < 0.3 ? t/0.3 : 1) * 0.85;
+        const sz = f.sz * (1 - t*0.5);
+        const hue = f.hue + t*20;
+        const fg = ctx.createRadialGradient(f.x, f.y, 0, f.x, f.y, sz);
+        fg.addColorStop(0,   `hsla(55,100%,92%,${alpha})`);
+        fg.addColorStop(0.3, `hsla(${hue},100%,65%,${alpha*0.9})`);
+        fg.addColorStop(0.7, `hsla(${hue-10},90%,45%,${alpha*0.5})`);
+        fg.addColorStop(1,   `hsla(${hue},80%,30%,0)`);
+        ctx.beginPath(); ctx.arc(f.x, f.y, sz, 0, Math.PI*2);
+        ctx.fillStyle = fg; ctx.fill();
+      }
+
+      // ── Arcs d'énergie au switch ──
       if (switchMode.current) {
-        for (let b=0; b<5; b++) {
-          const sa = (b/5)*Math.PI*2 + frame*0.4;
-          const sx = cx + Math.cos(sa)*80, sy = cy + Math.sin(sa)*35;
+        for (let b=0; b<6; b++) {
+          const sa = (b/6)*Math.PI*2 + frame*0.35;
+          const sr = 115 + Math.sin(frame*0.2+b)*15;
+          const sx = cx + Math.cos(sa)*sr, sy = cy + Math.sin(sa)*sr*0.38;
           ctx.beginPath(); ctx.moveTo(sx,sy);
           let bx=sx, by=sy;
-          for (let s=0;s<4;s++) {
-            bx += (Math.random()-0.5)*28 + (cx-sx)*0.22;
-            by += (Math.random()-0.5)*28 + (cy-sy)*0.22;
+          for (let s=0;s<5;s++) {
+            bx += (Math.random()-0.5)*32 + (cx-bx)*0.28;
+            by += (Math.random()-0.5)*20 + (cy-by)*0.28;
             ctx.lineTo(bx,by);
           }
           ctx.lineTo(cx,cy);
-          ctx.strokeStyle=`hsla(45,100%,88%,${0.5+Math.random()*0.5})`;
-          ctx.lineWidth=0.8+Math.random()*1.5;
-          ctx.shadowColor="hsl(45,100%,88%)";
-          ctx.shadowBlur=10;
+          const arc_a = 0.6+Math.random()*0.4;
+          ctx.strokeStyle=`hsla(50,100%,90%,${arc_a})`;
+          ctx.lineWidth=1.2+Math.random()*2;
+          ctx.shadowColor="hsl(50,100%,88%)";
+          ctx.shadowBlur=18;
           ctx.stroke();
           ctx.shadowBlur=0;
         }
