@@ -5,201 +5,120 @@ import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import gsap from "gsap";
+import { MotionPathPlugin } from "gsap/MotionPathPlugin";
+import { DrawSVGPlugin } from "gsap/DrawSVGPlugin";
+
+gsap.registerPlugin(MotionPathPlugin, DrawSVGPlugin);
 
 interface HeroCanvasProps {
   modelUrl: string;
 }
 
-// ── Particle system ──────────────────────────────────────────────────────────
-interface Particle {
-  angle: number;
-  radius: number;
-  speed: number;
-  size: number;
-  opacity: number;
-  y: number;
-  ySpeed: number;
-  trail: { x: number; y: number; a: number }[];
-}
-
-function createParticles(count: number): Particle[] {
-  return Array.from({ length: count }, () => ({
-    angle:   Math.random() * Math.PI * 2,
-    radius:  120 + Math.random() * 80,
-    speed:   (0.003 + Math.random() * 0.004) * (Math.random() > 0.5 ? 1 : -1),
-    size:    1.5 + Math.random() * 2.5,
-    opacity: 0.4 + Math.random() * 0.6,
-    y:       (Math.random() - 0.5) * 60,
-    ySpeed:  (Math.random() - 0.5) * 0.008,
-    trail:   [],
-  }));
-}
+const ORBIT_PATH = "M 390,210 A 230,80 0 1,1 389.9,210";   // ellipse orbitale
+const N_DOTS     = 6;
 
 export function HeroCanvas({ modelUrl }: HeroCanvasProps) {
-  const canvasRef    = useRef<HTMLCanvasElement>(null);
-  const overlayRef   = useRef<HTMLCanvasElement>(null);
-  const wrapRef      = useRef<HTMLDivElement>(null);
-  const flashRef     = useRef<HTMLDivElement>(null);
-  const ambientRef   = useRef<HTMLDivElement>(null);
-  const particlesRef = useRef<Particle[]>(createParticles(28));
-  const overlayRaf   = useRef<number>(0);
-  const switchingRef = useRef(false);
-  const [loaded, setLoaded] = useState(false);
+  const canvasRef  = useRef<HTMLCanvasElement>(null);
+  const wrapRef    = useRef<HTMLDivElement>(null);
+  const svgRef     = useRef<SVGSVGElement>(null);
+  const flashRef   = useRef<HTMLDivElement>(null);
+  const ambientRef = useRef<HTMLDivElement>(null);
+  const orbitTween = useRef<gsap.core.Tween[]>([]);
+  const [loaded, setLoaded]   = useState(false);
 
-  // ── Overlay canvas: particules + halo respirant ──────────────────────────
+  // ── GSAP intro + DrawSVG + MotionPath ────────────────────────────────────
   useEffect(() => {
     if (!loaded) return;
-    const raf = requestAnimationFrame(() => {
-      const ol = overlayRef.current;
-      if (!ol) return;
 
-      let frame = 0;
-
-      function drawOverlay() {
-        overlayRaf.current = requestAnimationFrame(drawOverlay);
-        const ctx = ol!.getContext("2d");
-        if (!ctx) return;
-
-        const W = ol!.width;
-        const H = ol!.height;
-        const cx = W / 2;
-        const cy = H / 2;
-
-        ctx.clearRect(0, 0, W, H);
-        frame++;
-
-        // ── Halo respirant ─────────────────────────────────────────────────
-        const breathe = 0.5 + 0.5 * Math.sin(frame * 0.018);
-        const haloR = 145 + breathe * 18;
-        const grad = ctx.createRadialGradient(cx, cy, haloR * 0.3, cx, cy, haloR);
-        grad.addColorStop(0, `hsla(36,85%,58%,${0.13 + breathe * 0.07})`);
-        grad.addColorStop(0.5, `hsla(30,70%,50%,${0.06 + breathe * 0.03})`);
-        grad.addColorStop(1, "hsla(0,0%,0%,0)");
-        ctx.beginPath();
-        ctx.arc(cx, cy, haloR, 0, Math.PI * 2);
-        ctx.fillStyle = grad;
-        ctx.fill();
-
-        // ── Particules orbitales ───────────────────────────────────────────
-        const particles = particlesRef.current;
-        for (const p of particles) {
-          p.angle += p.speed;
-          p.y     += p.ySpeed;
-          if (Math.abs(p.y) > 50) p.ySpeed *= -1;
-
-          const px = cx + Math.cos(p.angle) * p.radius;
-          const py = cy + Math.sin(p.angle) * p.radius * 0.38 + p.y;
-
-          // Trail
-          p.trail.push({ x: px, y: py, a: p.opacity });
-          if (p.trail.length > 10) p.trail.shift();
-
-          // Draw trail
-          for (let i = 0; i < p.trail.length - 1; i++) {
-            const t0 = p.trail[i];
-            const t1 = p.trail[i + 1];
-            const alpha = (i / p.trail.length) * p.opacity * 0.5;
-            ctx.beginPath();
-            ctx.moveTo(t0.x, t0.y);
-            ctx.lineTo(t1.x, t1.y);
-            ctx.strokeStyle = `hsla(38,90%,62%,${alpha})`;
-            ctx.lineWidth = p.size * 0.5 * (i / p.trail.length);
-            ctx.stroke();
-          }
-
-          // Draw dot
-          const dotGrad = ctx.createRadialGradient(px, py, 0, px, py, p.size * 2.5);
-          dotGrad.addColorStop(0, `hsla(45,100%,80%,${p.opacity})`);
-          dotGrad.addColorStop(0.5, `hsla(38,90%,62%,${p.opacity * 0.6})`);
-          dotGrad.addColorStop(1, "hsla(36,80%,55%,0)");
-          ctx.beginPath();
-          ctx.arc(px, py, p.size * 2.5, 0, Math.PI * 2);
-          ctx.fillStyle = dotGrad;
-          ctx.fill();
-        }
-
-        // ── Lightning au switch ─────────────────────────────────────────────
-        if (switchingRef.current) {
-          const bolts = 6;
-          for (let b = 0; b < bolts; b++) {
-            const startAngle = (b / bolts) * Math.PI * 2 + frame * 0.3;
-            const sx = cx + Math.cos(startAngle) * 90;
-            const sy = cy + Math.sin(startAngle) * 40;
-            ctx.beginPath();
-            ctx.moveTo(sx, sy);
-            let bx = sx, by = sy;
-            for (let s = 0; s < 5; s++) {
-              bx += (Math.random() - 0.5) * 30 + (cx - sx) * 0.2;
-              by += (Math.random() - 0.5) * 30 + (cy - sy) * 0.2;
-              ctx.lineTo(bx, by);
-            }
-            ctx.lineTo(cx, cy);
-            ctx.strokeStyle = `hsla(45,100%,85%,${0.6 + Math.random() * 0.4})`;
-            ctx.lineWidth   = 1 + Math.random() * 1.5;
-            ctx.shadowColor = "hsl(45,100%,85%)";
-            ctx.shadowBlur  = 12;
-            ctx.stroke();
-            ctx.shadowBlur  = 0;
-          }
-        }
-      }
-
-      drawOverlay();
-    });
-
-    return () => {
-      cancelAnimationFrame(overlayRaf.current);
-    };
-  }, [loaded]);
-
-  // ── Resize overlay ───────────────────────────────────────────────────────
-  useEffect(() => {
-    const ol   = overlayRef.current;
-    const wrap = wrapRef.current;
-    if (!ol || !wrap) return;
-    const ro = new ResizeObserver(() => {
-      ol.width  = wrap.clientWidth;
-      ol.height = wrap.clientHeight;
-    });
-    ro.observe(wrap);
-    ol.width  = wrap.clientWidth;
-    ol.height = wrap.clientHeight;
-    return () => ro.disconnect();
-  }, []);
-
-  // ── GSAP intro ───────────────────────────────────────────────────────────
-  useEffect(() => {
-    if (!loaded) return;
     const raf = requestAnimationFrame(() => {
       const wrap  = wrapRef.current;
+      const svg   = svgRef.current;
       const flash = flashRef.current;
       const amb   = ambientRef.current;
-      if (!wrap) return;
+      if (!wrap || !svg) return;
 
+      // ── 1. Reveal wrapper ────────────────────────────────────────────────
       const tl = gsap.timeline();
-
       tl.fromTo(wrap,
-        { y: 60, autoAlpha: 0, scale: 0.88, filter: "blur(14px)" },
-        { y: 0,  autoAlpha: 1, scale: 1,    filter: "blur(0px)", duration: 1.2, ease: "power3.out" },
+        { y: 50, autoAlpha: 0, scale: 0.9, filter: "blur(12px)" },
+        { y: 0,  autoAlpha: 1, scale: 1,   filter: "blur(0px)", duration: 1.1, ease: "power3.out" },
         0
       );
 
-      if (flash) {
-        tl.fromTo(flash,
-          { autoAlpha: 0, scale: 0.5 },
-          { autoAlpha: 1, scale: 1.3, duration: 0.35, ease: "power2.out" },
-          0.4
-        ).to(flash, { autoAlpha: 0, scale: 2.2, duration: 0.8, ease: "power2.in" }, 0.75);
+      // ── 2. DrawSVG — les deux arcs se dessinent depuis le centre ─────────
+      const arcTop = svg.querySelector<SVGPathElement>("#arc-top");
+      const arcBot = svg.querySelector<SVGPathElement>("#arc-bot");
+      if (arcTop && arcBot) {
+        tl.fromTo([arcTop, arcBot],
+          { drawSVG: "50% 50%" },
+          { drawSVG: "0% 100%", duration: 1.4, ease: "power2.inOut", stagger: 0.08 },
+          0.3
+        );
       }
 
+      // ── 3. DrawSVG — orbit path apparaît ─────────────────────────────────
+      const orbitEl = svg.querySelector<SVGPathElement>("#orbit");
+      if (orbitEl) {
+        tl.fromTo(orbitEl,
+          { drawSVG: "0% 0%" },
+          { drawSVG: "0% 100%", duration: 1.6, ease: "power1.inOut" },
+          0.5
+        );
+      }
+
+      // ── 4. Flash doré ────────────────────────────────────────────────────
+      if (flash) {
+        tl.fromTo(flash,
+          { autoAlpha: 0, scale: 0.6 },
+          { autoAlpha: 1, scale: 1.2, duration: 0.3, ease: "power2.out" },
+          0.4
+        ).to(flash, { autoAlpha: 0, scale: 2.0, duration: 0.7, ease: "expo.in" }, 0.7);
+      }
+
+      // ── 5. Ambient glow ──────────────────────────────────────────────────
       if (amb) {
-        tl.to(amb, { autoAlpha: 1, duration: 1.4, ease: "power2.out" }, 0.5);
+        tl.to(amb, { autoAlpha: 1, duration: 1.2, ease: "power2.out" }, 0.5);
+      }
+
+      // ── 6. MotionPath — dots orbitent autour du modèle ───────────────────
+      const dots = svg.querySelectorAll<SVGCircleElement>(".orbit-dot");
+      dots.forEach((dot, i) => {
+        gsap.set(dot, { autoAlpha: 0 });
+        const tw = gsap.to(dot, {
+          motionPath: {
+            path: "#orbit",
+            align: "#orbit",
+            alignOrigin: [0.5, 0.5],
+            start: i / N_DOTS,
+            end:   i / N_DOTS + 1,
+          },
+          duration: 5 + i * 0.4,
+          ease: "none",
+          repeat: -1,
+        });
+        orbitTween.current.push(tw);
+
+        // Fade in chaque dot avec stagger
+        tl.to(dot, { autoAlpha: 1, duration: 0.4, ease: "power2.out" }, 1.0 + i * 0.1);
+      });
+
+      // ── 7. Pulse permanent des arcs ──────────────────────────────────────
+      if (arcTop && arcBot) {
+        gsap.to([arcTop, arcBot], {
+          opacity: 0.3,
+          duration: 1.8,
+          ease: "sine.inOut",
+          yoyo: true,
+          repeat: -1,
+          stagger: 0.4,
+        });
       }
     });
+
     return () => cancelAnimationFrame(raf);
   }, [loaded]);
 
-  // ── GSAP switch ──────────────────────────────────────────────────────────
+  // ── Switch de modèle ─────────────────────────────────────────────────────
   const prevUrl = useRef<string | null>(null);
 
   useEffect(() => {
@@ -208,45 +127,41 @@ export function HeroCanvas({ modelUrl }: HeroCanvasProps) {
     prevUrl.current = modelUrl;
 
     const wrap  = wrapRef.current;
+    const svg   = svgRef.current;
     const flash = flashRef.current;
-    if (!wrap) return;
+    if (!wrap || !svg) return;
 
-    // Activer les lightnings
-    switchingRef.current = true;
-    setTimeout(() => { switchingRef.current = false; }, 700);
+    // Accélérer les dots x4
+    orbitTween.current.forEach(tw => tw.timeScale(4));
+    setTimeout(() => orbitTween.current.forEach(tw => tw.timeScale(1)), 800);
 
+    // DrawSVG efface puis redessine les arcs
+    const arcs = svg.querySelectorAll<SVGPathElement>(".arc");
     const tl = gsap.timeline();
 
-    tl.to(wrap, { scale: 0.9, filter: "blur(16px)", autoAlpha: 0.2, duration: 0.35, ease: "power3.in" });
+    tl.to(wrap, { scale: 0.88, autoAlpha: 0.15, filter: "blur(18px)", duration: 0.35, ease: "power3.in" });
+
+    tl.to(arcs, { drawSVG: "50% 50%", duration: 0.3, ease: "power2.in" }, "<");
 
     if (flash) {
-      tl.to(flash, { autoAlpha: 1, scale: 1.6, duration: 0.18, ease: "power2.out" }, "-=0.05")
-        .to(flash, { autoAlpha: 0, scale: 2.8, duration: 0.6,  ease: "expo.in" });
+      tl.to(flash, { autoAlpha: 1, scale: 1.5, duration: 0.2, ease: "power2.out" }, "-=0.05")
+        .to(flash, { autoAlpha: 0, scale: 3.0, duration: 0.55, ease: "expo.in" });
     }
 
-    tl.fromTo(wrap,
-      { scale: 0.9, filter: "blur(16px)", autoAlpha: 0.2 },
-      { scale: 1,   filter: "blur(0px)",  autoAlpha: 1, duration: 0.7, ease: "elastic.out(1, 0.6)" },
-      "-=0.35"
-    );
-
-    // Boost des particules
-    particlesRef.current.forEach(p => {
-      p.speed *= 3.5;
-      setTimeout(() => { p.speed /= 3.5; }, 900);
-    });
+    tl.to(wrap,  { scale: 1, autoAlpha: 1, filter: "blur(0px)", duration: 0.65, ease: "elastic.out(1, 0.55)" }, "-=0.4");
+    tl.to(arcs,  { drawSVG: "0% 100%", duration: 0.9, ease: "power2.out", stagger: 0.06 }, "-=0.55");
   }, [modelUrl]);
 
   // ── Hover ────────────────────────────────────────────────────────────────
   function onMouseEnter() {
     const amb = ambientRef.current;
-    if (amb) gsap.to(amb, { scale: 1.35, duration: 0.7, ease: "power2.out" });
-    particlesRef.current.forEach(p => { p.speed *= 1.8; });
+    if (amb) gsap.to(amb, { scale: 1.4, duration: 0.6, ease: "power2.out" });
+    orbitTween.current.forEach(tw => tw.timeScale(2.2));
   }
   function onMouseLeave() {
     const amb = ambientRef.current;
     if (amb) gsap.to(amb, { scale: 1, duration: 0.8, ease: "power2.inOut" });
-    particlesRef.current.forEach(p => { p.speed /= 1.8; });
+    orbitTween.current.forEach(tw => tw.timeScale(1));
   }
 
   // ── Three.js ─────────────────────────────────────────────────────────────
@@ -278,22 +193,16 @@ export function HeroCanvas({ modelUrl }: HeroCanvasProps) {
     const fillLight = new THREE.DirectionalLight(0x8ebccc, 0.5);
     fillLight.position.set(-4, 2, -2);
     scene.add(fillLight);
-    const rimLight = new THREE.DirectionalLight(0xf0ebe2, 0.8);
-    rimLight.position.set(0, -2, -4);
-    scene.add(rimLight);
+    scene.add(Object.assign(new THREE.DirectionalLight(0xf0ebe2, 0.8), { position: new THREE.Vector3(0, -2, -4) }));
     const glowLight = new THREE.PointLight(0xf0d8a0, 1.0, 6);
     glowLight.position.set(0, -1, 0.5);
     scene.add(glowLight);
 
     const controls = new OrbitControls(camera, canvas);
-    controls.enableDamping   = true;
-    controls.dampingFactor   = 0.05;
-    controls.enableZoom      = false;
-    controls.enablePan       = false;
-    controls.minPolarAngle   = Math.PI / 4;
-    controls.maxPolarAngle   = Math.PI * 0.7;
-    controls.autoRotate      = true;
-    controls.autoRotateSpeed = 0.8;
+    controls.enableDamping = true; controls.dampingFactor = 0.05;
+    controls.enableZoom = false; controls.enablePan = false;
+    controls.minPolarAngle = Math.PI / 4; controls.maxPolarAngle = Math.PI * 0.7;
+    controls.autoRotate = true; controls.autoRotateSpeed = 0.8;
 
     let model: THREE.Object3D | null = null;
 
@@ -313,8 +222,7 @@ export function HeroCanvas({ modelUrl }: HeroCanvasProps) {
       const box    = new THREE.Box3().setFromObject(model);
       const center = box.getCenter(new THREE.Vector3());
       const size   = box.getSize(new THREE.Vector3());
-      const maxDim = Math.max(size.x, size.y, size.z);
-      const scale  = 2.2 / maxDim;
+      const scale  = 2.2 / Math.max(size.x, size.y, size.z);
       model.scale.setScalar(scale);
       model.position.sub(center.multiplyScalar(scale));
       model.position.y -= size.y * scale * 0.15;
@@ -340,7 +248,7 @@ export function HeroCanvas({ modelUrl }: HeroCanvasProps) {
     ro.observe(wrap);
 
     let userInteracting = false;
-    const onDown = () => { userInteracting = true;  controls.autoRotate = false; };
+    const onDown = () => { userInteracting = true; controls.autoRotate = false; };
     const onUp   = () => { userInteracting = false; setTimeout(() => { controls.autoRotate = true; }, 2000); };
     canvas.addEventListener("pointerdown", onDown);
     canvas.addEventListener("pointerup",   onUp);
@@ -378,42 +286,98 @@ export function HeroCanvas({ modelUrl }: HeroCanvasProps) {
       }}
     >
       {/* Ambient glow */}
-      <div
-        ref={ambientRef}
-        style={{
-          position: "absolute", inset: "-20%",
-          background: "radial-gradient(ellipse at 50% 55%, hsl(36,85%,58%,.18) 0%, hsl(28,70%,50%,.06) 50%, transparent 72%)",
-          filter: "blur(36px)",
-          pointerEvents: "none",
-          opacity: 0, visibility: "hidden",
-          zIndex: 0, borderRadius: "50%",
-        }}
-      />
+      <div ref={ambientRef} style={{
+        position: "absolute", inset: "-22%", borderRadius: "50%",
+        background: "radial-gradient(ellipse at 50% 55%, hsl(36,85%,58%,.16) 0%, hsl(28,70%,50%,.05) 55%, transparent 75%)",
+        filter: "blur(40px)", pointerEvents: "none",
+        opacity: 0, visibility: "hidden", zIndex: 0,
+      }} />
 
       {/* Gold flash */}
-      <div
-        ref={flashRef}
-        style={{
-          position: "absolute", inset: 0, borderRadius: 16,
-          background: "radial-gradient(ellipse at 50% 50%, hsl(45,100%,75%,.85) 0%, hsl(36,90%,58%,.4) 30%, transparent 60%)",
-          filter: "blur(24px)",
-          pointerEvents: "none",
-          opacity: 0, visibility: "hidden",
-          zIndex: 4,
-        }}
-      />
+      <div ref={flashRef} style={{
+        position: "absolute", inset: 0, borderRadius: 16,
+        background: "radial-gradient(ellipse at 50% 50%, hsl(45,100%,78%,.9) 0%, hsl(36,90%,58%,.45) 28%, transparent 58%)",
+        filter: "blur(22px)", pointerEvents: "none",
+        opacity: 0, visibility: "hidden", zIndex: 4,
+      }} />
 
       {/* Three.js canvas */}
-      <canvas
-        ref={canvasRef}
-        style={{ width: "100%", height: "100%", display: "block", cursor: "grab", position: "relative", zIndex: 1, borderRadius: 16 }}
-      />
+      <canvas ref={canvasRef} style={{
+        width: "100%", height: "100%", display: "block",
+        cursor: "grab", position: "relative", zIndex: 1, borderRadius: 16,
+      }} />
 
-      {/* Particle overlay canvas */}
-      <canvas
-        ref={overlayRef}
-        style={{ position: "absolute", inset: 0, width: "100%", height: "100%", pointerEvents: "none", zIndex: 2, borderRadius: 16 }}
-      />
+      {/* SVG overlay — DrawSVG arcs + MotionPath dots */}
+      <svg
+        ref={svgRef}
+        viewBox="0 0 780 420"
+        preserveAspectRatio="xMidYMid meet"
+        style={{
+          position: "absolute", inset: 0,
+          width: "100%", height: "100%",
+          pointerEvents: "none", zIndex: 3, overflow: "visible",
+        }}
+      >
+        <defs>
+          <filter id="glow-gold">
+            <feGaussianBlur stdDeviation="3.5" result="blur" />
+            <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
+          </filter>
+          <filter id="glow-strong">
+            <feGaussianBlur stdDeviation="6" result="blur" />
+            <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
+          </filter>
+        </defs>
+
+        {/* Arc supérieur — DrawSVG */}
+        <path
+          id="arc-top" className="arc"
+          d="M 120,210 A 270,130 0 0,1 660,210"
+          fill="none"
+          stroke="hsl(38,85%,60%)"
+          strokeWidth="1.2"
+          strokeLinecap="round"
+          filter="url(#glow-gold)"
+          opacity="0.7"
+        />
+
+        {/* Arc inférieur — DrawSVG */}
+        <path
+          id="arc-bot" className="arc"
+          d="M 120,210 A 270,130 0 0,0 660,210"
+          fill="none"
+          stroke="hsl(36,75%,55%)"
+          strokeWidth="0.8"
+          strokeLinecap="round"
+          filter="url(#glow-gold)"
+          opacity="0.45"
+        />
+
+        {/* Orbite elliptique — MotionPath */}
+        <path
+          id="orbit"
+          d={ORBIT_PATH}
+          fill="none"
+          stroke="hsl(38,80%,62%)"
+          strokeWidth="0.6"
+          strokeLinecap="round"
+          strokeDasharray="4 8"
+          filter="url(#glow-gold)"
+          opacity="0.3"
+        />
+
+        {/* Dots orbitaux — MotionPath */}
+        {Array.from({ length: N_DOTS }, (_, i) => (
+          <circle
+            key={i}
+            className="orbit-dot"
+            r={i % 2 === 0 ? 3.5 : 2.2}
+            fill={i % 3 === 0 ? "hsl(45,100%,82%)" : "hsl(38,90%,62%)"}
+            filter="url(#glow-strong)"
+            opacity="0"
+          />
+        ))}
+      </svg>
 
       {!loaded && (
         <div style={{ position: "absolute", inset: 0, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 16, pointerEvents: "none", zIndex: 6, borderRadius: 16, background: "hsl(36,20%,96%,.6)", backdropFilter: "blur(8px)" }}>
