@@ -97,6 +97,14 @@ export function MenuView({ restaurant, categories, dishes, slug }: MenuViewProps
     dishes: dishes.filter((d) => d.category_id === cat.id),
   }));
 
+  const [activeCategory, setActiveCategory] = useState<string | null>(null);
+
+  const scrollToCategory = (catId: string) => {
+    setActiveCategory(catId);
+    const el = document.getElementById(`cat-${catId}`);
+    if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
   return (
     <div
       dir={dir}
@@ -109,7 +117,7 @@ export function MenuView({ restaurant, categories, dishes, slug }: MenuViewProps
       }}
     >
       {/* ══════════ HERO BANNER ══════════ */}
-      <div style={{ position: "relative", width: "100%", minHeight: 280, overflow: "hidden", background: C.surface }}>
+      <div style={{ position: "relative", width: "100%", minHeight: 360, overflow: "hidden", background: C.surface }}>
         {/* Warm ambient glow */}
         <div aria-hidden style={{ position: "absolute", inset: 0, background: "radial-gradient(ellipse 90% 70% at 50% 100%, rgba(180,90,20,.22) 0%, transparent 65%)", pointerEvents: "none" }} />
 
@@ -122,7 +130,7 @@ export function MenuView({ restaurant, categories, dishes, slug }: MenuViewProps
             <img
               src={restaurant.banner_url}
               alt={restaurantName}
-              style={{ position: "relative", width: "100%", height: 280, objectFit: "cover", opacity: 0.85 }}
+              style={{ position: "relative", width: "100%", height: 360, objectFit: "cover", opacity: 0.85 }}
             />
           </>
         ) : (
@@ -187,6 +195,52 @@ export function MenuView({ restaurant, categories, dishes, slug }: MenuViewProps
         </div>
       </div>
 
+      {/* ══════════ STICKY CATEGORY PILLS ══════════ */}
+      {categories.length > 1 && (
+        <div
+          style={{
+            position: "sticky", top: 0, zIndex: 30,
+            background: `${C.bg}d9`,
+            backdropFilter: "blur(20px)",
+            WebkitBackdropFilter: "blur(20px)",
+            borderBottom: `1px solid ${C.border}`,
+            overflowX: "auto",
+            whiteSpace: "nowrap",
+            scrollbarWidth: "none",
+          }}
+        >
+          <div style={{ maxWidth: 720, margin: "0 auto", padding: "12px 20px", display: "flex", gap: 6 }}>
+            {categories.map((cat) => {
+              const catName = pickLocalized(cat as unknown as Record<string, unknown>, "name", lang) || cat.name;
+              const isActive = activeCategory === cat.id;
+              return (
+                <button
+                  key={cat.id}
+                  onClick={() => scrollToCategory(cat.id)}
+                  style={{
+                    padding: "8px 16px",
+                    borderRadius: 99,
+                    border: isActive ? "none" : `1px solid ${C.border}`,
+                    background: isActive
+                      ? `linear-gradient(135deg, ${C.orange}, hsl(22,70%,58%))`
+                      : "transparent",
+                    color: isActive ? "#fff" : C.dim,
+                    fontFamily: "'DM Sans', sans-serif",
+                    fontSize: 13, fontWeight: 500,
+                    cursor: "pointer",
+                    flexShrink: 0,
+                    boxShadow: isActive ? `0 0 20px ${C.orange}4d` : "none",
+                    transition: "all 0.15s ease",
+                  }}
+                >
+                  {catName}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
       {/* ══════════ MENU ══════════ */}
       <div style={{ maxWidth: 720, margin: "0 auto", padding: "56px 20px 80px" }}>
         {dishesByCategory.length === 0 ? (
@@ -199,32 +253,19 @@ export function MenuView({ restaurant, categories, dishes, slug }: MenuViewProps
             const catName = pickLocalized(category as unknown as Record<string, unknown>, "name", lang);
             const num = String(catIdx + 1).padStart(2, "0");
             return (
-              <section key={category.id} style={{ marginBottom: 64 }}>
+              <section key={category.id} id={`cat-${category.id}`} style={{ marginBottom: 64, scrollMarginTop: 60 }}>
 
-                {/* ── Category Header ── */}
-                <div style={{ marginBottom: 32, position: "relative" }}>
-                  {/* Number + eyebrow */}
-                  <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 10 }}>
-                    <span
-                      style={{ fontFamily: "'DM Mono',monospace", fontSize: ".65rem", fontWeight: 600, letterSpacing: ".22em", color: C.orange, opacity: 0.8 }}
-                    >
-                      {num}
-                    </span>
-                    <div style={{ flex: 1, height: 1, background: `linear-gradient(90deg, rgba(200,150,60,.3), transparent)` }} />
-                  </div>
-
-                  {/* Title */}
+                {/* ── Category Rule ── */}
+                <div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 28, paddingTop: 8 }}>
                   <h2
-                    style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 500, fontSize: "clamp(1.8rem,6vw,2.4rem)", letterSpacing: "-.015em", color: C.goldLight, margin: "0 0 12px", lineHeight: 1 }}
+                    style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 500, fontSize: "clamp(1.6rem,5vw,2rem)", letterSpacing: "-.02em", color: C.cream, margin: 0, lineHeight: 1, flexShrink: 0 }}
                   >
                     {catName || category.name}
                   </h2>
-
-                  {/* Divider */}
-                  <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                    <div style={{ width: 32, height: 2, background: C.orange, borderRadius: 2 }} />
-                    <div style={{ width: 8, height: 2, background: C.gold, borderRadius: 2, opacity: 0.5 }} />
-                  </div>
+                  <div style={{ flex: 1, height: 1, background: `linear-gradient(90deg, ${C.borderHov}, transparent 60%, transparent)` }} />
+                  <span style={{ fontFamily: "'DM Mono',monospace", fontSize: ".625rem", letterSpacing: ".22em", textTransform: "uppercase", color: C.dim, flexShrink: 0 }}>
+                    {String(catIdx + 1).padStart(2, "0")} / {String(dishesByCategory.length).padStart(2, "0")}
+                  </span>
                 </div>
 
                 {catDishes.length === 0 ? (
@@ -337,7 +378,7 @@ function DishCard({
     >
       {/* ── Image (left/right selon dir) ── */}
       <div
-        style={{ position: "relative", width: 130, minWidth: 130, height: 140, overflow: "hidden", background: "#0f0c08", flexShrink: 0 }}
+        style={{ position: "relative", width: 130, minWidth: 130, height: 130, overflow: "hidden", background: "#0f0c08", flexShrink: 0, borderRadius: "0 12px 12px 0" }}
       >
         {dish.video_url ? (
           <video
