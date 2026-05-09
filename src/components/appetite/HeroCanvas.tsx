@@ -14,7 +14,6 @@ export function HeroCanvas({ modelUrl }: HeroCanvasProps) {
   const canvasRef   = useRef<HTMLCanvasElement>(null);
   const wrapRef     = useRef<HTMLDivElement>(null);
   const flashRef    = useRef<HTMLDivElement>(null);
-  const ringRef     = useRef<HTMLDivElement>(null);
   const ambientRef  = useRef<HTMLDivElement>(null);
   const [loaded, setLoaded] = useState(false);
 
@@ -25,7 +24,6 @@ export function HeroCanvas({ modelUrl }: HeroCanvasProps) {
     const raf = requestAnimationFrame(() => {
       const wrap  = wrapRef.current;
       const flash = flashRef.current;
-      const ring  = ringRef.current;
       const amb   = ambientRef.current;
       if (!wrap) return;
 
@@ -47,18 +45,7 @@ export function HeroCanvas({ modelUrl }: HeroCanvasProps) {
         ).to(flash, { autoAlpha: 0, scale: 2, duration: 0.7, ease: "power2.in" }, 0.7);
       }
 
-      // 3. Ring qui apparaît en tournant
-      if (ring) {
-        tl.fromTo(ring,
-          { autoAlpha: 0, scale: 0.6, rotation: -45 },
-          { autoAlpha: 1, scale: 1,   rotation: 0, duration: 0.9, ease: "back.out(1.6)" },
-          0.5
-        );
-        // Loop de rotation permanente
-        gsap.to(ring, { rotation: 360, duration: 12, ease: "none", repeat: -1 });
-      }
-
-      // 4. Ambient glow permanent
+      // 3. Ambient glow permanent
       if (amb) {
         tl.to(amb, { autoAlpha: 1, duration: 1.2, ease: "power2.out" }, 0.6);
       }
@@ -76,7 +63,6 @@ export function HeroCanvas({ modelUrl }: HeroCanvasProps) {
 
     const wrap  = wrapRef.current;
     const flash = flashRef.current;
-    const ring  = ringRef.current;
     if (!wrap) return;
 
     const tl = gsap.timeline();
@@ -90,12 +76,6 @@ export function HeroCanvas({ modelUrl }: HeroCanvasProps) {
         .to(flash, { autoAlpha: 0, scale: 2.2, duration: 0.5, ease: "power2.in" });
     }
 
-    // Ring pulse
-    if (ring) {
-      tl.to(ring, { scale: 1.4, autoAlpha: 0.3, duration: 0.2, ease: "power2.out" }, "<")
-        .to(ring, { scale: 1,   autoAlpha: 1,   duration: 0.5, ease: "back.out(2)" });
-    }
-
     // Spin in + scale back
     tl.fromTo(wrap,
       { rotationY: -90, scale: 0.85, filter: "blur(12px)", autoAlpha: 0.3 },
@@ -107,15 +87,11 @@ export function HeroCanvas({ modelUrl }: HeroCanvasProps) {
   // ── Hover ────────────────────────────────────────────────────────────────
   function onMouseEnter() {
     const amb = ambientRef.current;
-    const ring = ringRef.current;
-    if (amb)  gsap.to(amb,  { scale: 1.3, duration: 0.6, ease: "power2.out" });
-    if (ring) gsap.to(ring, { scale: 1.08, borderColor: "hsl(38,90%,62%,.9)", boxShadow: "0 0 30px hsl(38,80%,58%,.5)", duration: 0.5, ease: "power2.out" });
+    if (amb) gsap.to(amb, { scale: 1.3, duration: 0.6, ease: "power2.out" });
   }
   function onMouseLeave() {
     const amb = ambientRef.current;
-    const ring = ringRef.current;
-    if (amb)  gsap.to(amb,  { scale: 1,    duration: 0.7, ease: "power2.inOut" });
-    if (ring) gsap.to(ring, { scale: 1,    borderColor: "hsl(38,80%,58%,.35)", boxShadow: "0 0 16px hsl(38,80%,58%,.2)", duration: 0.6, ease: "power2.inOut" });
+    if (amb) gsap.to(amb, { scale: 1, duration: 0.7, ease: "power2.inOut" });
   }
 
   // ── Three.js ─────────────────────────────────────────────────────────────
@@ -269,23 +245,7 @@ export function HeroCanvas({ modelUrl }: HeroCanvasProps) {
         }}
       />
 
-      {/* Ring doré animé */}
-      <div
-        ref={ringRef}
-        style={{
-          position: "absolute",
-          inset: -3,
-          borderRadius: 18,
-          border: "1.5px solid hsl(38,80%,58%,.35)",
-          boxShadow: "0 0 16px hsl(38,80%,58%,.2), inset 0 0 20px hsl(38,60%,50%,.04)",
-          pointerEvents: "none",
-          opacity: 0, visibility: "hidden",
-          zIndex: 5,
-          background: "transparent",
-        }}
-      />
-
-      {/* Gold flash burst */}
+{/* Gold flash burst */}
       <div
         ref={flashRef}
         style={{
