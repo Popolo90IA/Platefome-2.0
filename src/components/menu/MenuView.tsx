@@ -28,21 +28,21 @@ import type {
   Language,
 } from "@/types/database.types";
 
-/* ── Palette ── */
+/* ── Palette — aligned with design system diner-menu tokens ── */
 const C = {
-  bg:        "#0d0b09",
-  surface:   "#131009",
-  card:      "#1a1510",
-  cardHov:   "#201a13",
-  border:    "rgba(200,150,60,.14)",
-  borderHov: "rgba(200,150,60,.38)",
-  orange:    "hsl(28,88%,52%)",
-  orangeHov: "hsl(28,88%,62%)",
-  gold:      "#c8963c",
-  goldLight: "#e8b860",
-  cream:     "#f2e8d8",
-  muted:     "rgba(242,232,216,.52)",
-  dim:       "rgba(242,232,216,.28)",
+  bg:        "hsl(28, 18%, 6%)",
+  surface:   "hsl(28, 20%, 9%)",
+  card:      "hsl(28, 22%, 12%)",
+  cardHov:   "hsl(28, 24%, 15%)",
+  border:    "hsl(28 40% 42% / .18)",
+  borderHov: "hsl(28 40% 42% / .38)",
+  orange:    "hsl(28, 62%, 52%)",
+  orangeHov: "hsl(28, 70%, 60%)",
+  gold:      "hsl(28, 62%, 52%)",
+  goldLight: "hsl(36, 80%, 62%)",
+  cream:     "hsl(36, 40%, 92%)",
+  muted:     "hsl(36, 30%, 80%)",
+  dim:       "hsl(36, 18%, 56%)",
 };
 
 const GRAIN = `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='250' height='250'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.14'/%3E%3C/svg%3E")`;

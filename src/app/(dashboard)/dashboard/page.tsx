@@ -87,12 +87,13 @@ export default function DashboardPage() {
           Overview
         </p>
         <h1
-          className="font-display font-light"
+          className="font-display"
           style={{
-            fontSize: "clamp(2rem, 4vw, 3rem)",
-            letterSpacing: "-0.04em",
-            lineHeight: 1,
-            color: "hsl(var(--cream))",
+            fontSize: "clamp(2rem, 4vw, 2.5rem)",
+            fontWeight: 600,
+            letterSpacing: "-0.025em",
+            lineHeight: 1.05,
+            color: "hsl(var(--fog))",
           }}
         >
           {restaurant?.name ? (
@@ -173,12 +174,13 @@ export default function DashboardPage() {
                     strokeWidth={1.5}
                   />
                   <div
-                    className="font-display font-light mb-1"
+                    className="font-sans mb-1"
                     style={{
-                      fontSize: "2.5rem",
-                      letterSpacing: "-0.05em",
+                      fontSize: "2.25rem",
+                      fontWeight: 800,
+                      letterSpacing: "-0.04em",
                       lineHeight: 1,
-                      color: "hsl(var(--cream))",
+                      color: "hsl(var(--fog))",
                     }}
                   >
                     {s.value.toLocaleString()}
