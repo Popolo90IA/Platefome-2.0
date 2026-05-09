@@ -5,10 +5,8 @@ import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import gsap from "gsap";
-import { MotionPathPlugin } from "gsap/MotionPathPlugin";
-import { DrawSVGPlugin } from "gsap/DrawSVGPlugin";
-
-gsap.registerPlugin(MotionPathPlugin, DrawSVGPlugin);
+import { MotionPathPlugin } from "gsap/dist/MotionPathPlugin";
+import { DrawSVGPlugin } from "gsap/dist/DrawSVGPlugin";
 
 interface HeroCanvasProps {
   modelUrl: string;
@@ -29,6 +27,8 @@ export function HeroCanvas({ modelUrl }: HeroCanvasProps) {
   // ── GSAP intro + DrawSVG + MotionPath ────────────────────────────────────
   useEffect(() => {
     if (!loaded) return;
+
+    gsap.registerPlugin(MotionPathPlugin, DrawSVGPlugin);
 
     const raf = requestAnimationFrame(() => {
       const wrap  = wrapRef.current;
