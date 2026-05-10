@@ -47,8 +47,8 @@ export default function ForgotPasswordPage() {
       <Card className="shadow-premium border-border/60 backdrop-blur-sm bg-card/95">
         <CardHeader className="text-center pb-6">
           <div className="flex justify-center mb-4">
-            <div className="h-14 w-14 rounded-2xl bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center">
-              <CheckCircle2 className="h-7 w-7 text-emerald-400" />
+            <div className="h-14 w-14 rounded-2xl bg-gold-gradient flex items-center justify-center shadow-gold-glow">
+              <CheckCircle2 className="h-7 w-7 text-white" />
             </div>
           </div>
           <CardTitle className="font-serif-display text-2xl">נשלח!</CardTitle>

@@ -521,15 +521,15 @@ export default function DishesPage() {
                     </p>
 
                     {form.photos_360 && form.photos_360.length > 0 ? (
-                      <div className="flex items-center gap-3 p-3 rounded-lg bg-emerald-500/10 border border-emerald-500/30">
-                        <div className="h-12 w-12 rounded-lg bg-emerald-500/20 flex items-center justify-center flex-shrink-0">
-                          <CheckCircle2 className="h-6 w-6 text-emerald-600" />
+                      <div className="flex items-center gap-3 p-3 rounded-lg bg-[hsl(var(--accent-bright))]/8 border border-[hsl(var(--accent-bright))]/25">
+                        <div className="h-12 w-12 rounded-lg bg-[hsl(var(--accent-bright))]/15 flex items-center justify-center flex-shrink-0">
+                          <CheckCircle2 className="h-6 w-6 text-[hsl(var(--accent-bright))]" />
                         </div>
                         <div className="flex-1 min-w-0">
-                          <div className="font-medium text-emerald-700 text-sm">
+                          <div className="font-medium text-[hsl(var(--gold-dark))] text-sm">
                             {form.photos_360.length} תמונות הועלו
                           </div>
-                          <div className="text-[11px] text-emerald-600/80">
+                          <div className="text-[11px] text-[hsl(var(--subtle))]">
                             התצוגה 360° תוצג ללקוחות בתפריט
                           </div>
                         </div>
@@ -594,7 +594,7 @@ export default function DishesPage() {
                       helperText=".glb / .gltf — עד 20MB"
                     />
                     {form.model_3d_url && (
-                      <label className="flex items-center gap-2 text-sm cursor-pointer p-3 rounded-lg bg-emerald-500/10 border border-emerald-500/30 mt-3">
+                      <label className="flex items-center gap-2 text-sm cursor-pointer p-3 rounded-lg bg-[hsl(var(--accent-bright))]/8 border border-[hsl(var(--accent-bright))]/25 mt-3">
                         <input
                           type="checkbox"
                           checked={form.ar_enabled}
@@ -604,13 +604,13 @@ export default function DishesPage() {
                               ar_enabled: e.target.checked,
                             }))
                           }
-                          className="h-4 w-4 accent-emerald-600"
+                          className="h-4 w-4 accent-[hsl(var(--accent-bright))]"
                         />
                         <div className="flex-1">
-                          <div className="font-medium text-emerald-700">
+                          <div className="font-medium text-[hsl(var(--gold-dark))]">
                             אפשר מציאות רבודה (AR)
                           </div>
-                          <div className="text-[11px] text-emerald-600/80">
+                          <div className="text-[11px] text-[hsl(var(--subtle))]">
                             הלקוח יראה את המנה בגודל אמיתי על השולחן שלו - עובד על iPhone ו-Android ללא אפליקציה
                           </div>
                         </div>
@@ -828,7 +828,7 @@ export default function DishesPage() {
                     onClick={() => toggleAvailability(dish)}
                     className={`text-xs font-medium flex items-center gap-1.5 transition-colors ${
                       dish.is_available
-                        ? "text-emerald-600 hover:text-emerald-700"
+                        ? "text-[hsl(var(--accent-bright))] hover:text-[hsl(var(--gold-dark))]"
                         : "text-muted-foreground hover:text-foreground"
                     }`}
                     title={dish.is_available ? "זמין" : "אזל"}
@@ -920,8 +920,8 @@ function ToggleChip({
 }) {
   const styles: Record<typeof color, string> = {
     gold: "bg-[hsl(var(--gold))]/20 text-[hsl(var(--gold-dark))] border-[hsl(var(--gold))]/50",
-    emerald: "bg-emerald-500/20 text-emerald-700 border-emerald-500/50",
-    rose: "bg-rose-500/20 text-rose-700 border-rose-500/50",
+    emerald: "bg-[hsl(var(--accent-bright))]/15 text-[hsl(var(--gold-dark))] border-[hsl(var(--accent-bright))]/40",
+    rose: "bg-[hsl(var(--ember))]/15 text-[hsl(var(--ember))] border-[hsl(var(--ember))]/40",
     muted: "bg-muted text-muted-foreground border-border",
   };
   return (
@@ -949,8 +949,8 @@ function TinyBadge({
 }) {
   const styles: Record<typeof color, string> = {
     gold: "bg-[hsl(var(--gold))]/15 text-[hsl(var(--gold-dark))] border-[hsl(var(--gold))]/30",
-    emerald: "bg-emerald-500/15 text-emerald-700 border-emerald-500/30",
-    rose: "bg-rose-500/15 text-rose-700 border-rose-500/30",
+    emerald: "bg-[hsl(var(--accent-bright))]/12 text-[hsl(var(--gold-dark))] border-[hsl(var(--accent-bright))]/28",
+    rose: "bg-[hsl(var(--ember))]/12 text-[hsl(var(--ember))] border-[hsl(var(--ember))]/28",
   };
   return (
     <span
