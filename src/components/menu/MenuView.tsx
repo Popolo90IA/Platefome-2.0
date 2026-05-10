@@ -1,52 +1,55 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Link from "next/link";
-import {
-  MapPin,
-  Phone,
-  Mail,
-  ImageIcon,
-  UtensilsCrossed,
-  Sparkles,
-  Flame,
-  Award,
-  CircleOff,
-  PlayCircle,
-  View,
-  ChevronLeft,
-} from "lucide-react";
-import { LanguageSwitcher } from "./LanguageSwitcher";
+import { UtensilsCrossed, X, Share2 } from "lucide-react";
 import { DishModelViewer } from "./DishModelViewer";
 import { Photo360Viewer } from "./Photo360Viewer";
 import { trackEvent } from "@/lib/analytics";
 import { LANGUAGE_META, pickLocalized, t, formatCurrency } from "@/lib/i18n";
-import type {
-  Restaurant,
-  Category,
-  Dish,
-  Language,
-} from "@/types/database.types";
+import type { Restaurant, Category, Dish, Language } from "@/types/database.types";
 
-/* ── Palette — aligned with design system diner-menu tokens ── */
-const C = {
-  bg:        "hsl(28, 18%, 6%)",
-  surface:   "hsl(28, 20%, 9%)",
-  card:      "hsl(28, 22%, 12%)",
-  cardHov:   "hsl(28, 24%, 15%)",
-  border:    "hsl(28 40% 42% / .18)",
-  borderHov: "hsl(28 40% 42% / .38)",
-  orange:    "hsl(28, 62%, 52%)",
-  orangeHov: "hsl(28, 70%, 60%)",
-  gold:      "hsl(28, 62%, 52%)",
-  goldLight: "hsl(36, 80%, 62%)",
-  cream:     "hsl(36, 40%, 92%)",
-  muted:     "hsl(36, 30%, 80%)",
-  dim:       "hsl(36, 18%, 56%)",
-};
+/* ─────────────────────────────────────────────────────────
+   Dark menu palette — coherent with design system (28° hue)
+   ───────────────────────────────────────────────────────── */
+const D = {
+  page:    "hsl(28, 18%, 6%)",
+  section: "hsl(28, 20%, 9%)",
+  card:    "hsl(28, 22%, 12%)",
+  surface: "hsl(28, 20%, 18%)",
+  line:    "hsl(28, 40%, 42%, .18)",
+  line2:   "hsl(28, 40%, 42%, .35)",
+  textDim: "hsl(36, 18%, 56%)",
+  text:    "hsl(36, 30%, 80%)",
+  cream:   "hsl(36, 40%, 92%)",
+  gold:    "hsl(28, 62%, 52%)",
+  goldLt:  "hsl(36, 80%, 62%)",
+  grad:    "linear-gradient(135deg, hsl(28,62%,48%), hsl(22,70%,58%))",
+} as const;
 
-const GRAIN = `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='250' height='250'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.14'/%3E%3C/svg%3E")`;
+/* SVG grain as inline data URI — fixed overlay, no external request */
+const GRAIN_SVG = `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)' opacity='.12'/%3E%3C/svg%3E")`;
 
+/* Deterministic placeholder gradient per dish index */
+const PLACEHOLDER_GRADIENTS = [
+  // 0 — hummus cream
+  "radial-gradient(ellipse 14% 8% at 38% 44%, hsl(20,75%,38%) 0%, transparent 70%), radial-gradient(ellipse 18% 10% at 62% 56%, hsl(20,75%,38%) 0%, transparent 70%), radial-gradient(circle at 50% 50%, hsl(36,55%,72%) 0%, hsl(36,45%,62%) 35%, hsl(28,40%,40%) 60%, hsl(24,35%,28%) 100%)",
+  // 1 — red stew
+  "radial-gradient(circle at 30% 35%, hsl(15,50%,28%) 6%, transparent 9%), radial-gradient(circle at 65% 30%, hsl(15,50%,28%) 7%, transparent 10%), radial-gradient(circle at 50% 50%, hsl(8,65%,42%) 0%, hsl(5,55%,32%) 70%, hsl(5,40%,22%) 100%)",
+  // 2 — greens with tomato
+  "radial-gradient(circle at 25% 30%, hsl(0,75%,52%) 5%, transparent 7%), radial-gradient(circle at 70% 28%, hsl(0,75%,52%) 4%, transparent 6%), radial-gradient(circle at 50% 60%, hsl(0,75%,52%) 6%, transparent 8%), linear-gradient(135deg, hsl(95,45%,32%), hsl(110,40%,38%))",
+  // 3 — golden flatbread
+  "radial-gradient(ellipse 18% 18% at 50% 48%, hsl(48,90%,72%) 0%, hsl(40,80%,58%) 60%, transparent 75%), radial-gradient(circle at 50% 50%, hsl(36,75%,55%) 0%, hsl(32,65%,42%) 55%, hsl(28,55%,32%) 100%)",
+  // 4 — falafel on parsley
+  "radial-gradient(circle at 28% 35%, hsl(28,55%,32%) 7%, transparent 9%), radial-gradient(circle at 60% 30%, hsl(28,55%,32%) 8%, transparent 10%), radial-gradient(circle at 35% 65%, hsl(28,55%,32%) 8%, transparent 10%), linear-gradient(135deg, hsl(85,40%,35%), hsl(95,35%,42%))",
+  // 5 — orange shredded pastry
+  "repeating-linear-gradient(135deg, transparent 0 6px, hsl(28,80%,48%,.25) 6px 7px), radial-gradient(ellipse 30% 18% at 50% 50%, hsl(45,90%,68%) 0%, hsl(38,75%,55%) 65%, transparent 75%), radial-gradient(circle at 50% 50%, hsl(28,55%,42%) 0%, hsl(24,45%,28%) 100%)",
+];
+
+function dishPlaceholder(idx: number): string {
+  return PLACEHOLDER_GRADIENTS[idx % PLACEHOLDER_GRADIENTS.length];
+}
+
+/* ─── Types ─────────────────────────────────────────────── */
 interface MenuViewProps {
   restaurant: Restaurant;
   categories: Category[];
@@ -54,14 +57,23 @@ interface MenuViewProps {
   slug?: string;
 }
 
+/* ═══════════════════════════════════════════════════════
+   MAIN COMPONENT
+   ═══════════════════════════════════════════════════════ */
 export function MenuView({ restaurant, categories, dishes, slug }: MenuViewProps) {
   const available: Language[] = (restaurant.languages ?? ["he"]).filter((l) =>
     ["he", "en", "fr"].includes(l)
   ) as Language[];
   const defaultLang = (restaurant.default_language ?? "he") as Language;
   const [lang, setLang] = useState<Language>(defaultLang);
+  const [langOpen, setLangOpen] = useState(false);
+  const [activeCategory, setActiveCategory] = useState<string | null>(
+    categories[0]?.id ?? null
+  );
+  const [modalDish, setModalDish] = useState<Dish | null>(null);
   const dir = LANGUAGE_META[lang].dir;
 
+  /* Persist language preference */
   useEffect(() => {
     try {
       const saved = localStorage.getItem(`menu:${restaurant.slug}:lang`);
@@ -76,28 +88,34 @@ export function MenuView({ restaurant, categories, dishes, slug }: MenuViewProps
     document.documentElement.dir = dir;
   }, [lang, dir, restaurant.slug]);
 
+  /* Track menu view once per session */
   useEffect(() => {
     try {
       const key = `menu:${restaurant.slug}:tracked`;
       if (!sessionStorage.getItem(key)) {
         trackEvent(restaurant.id, "menu_view", { language: lang });
-        const fromQr = typeof document !== "undefined" && (!document.referrer || document.referrer === "");
-        if (fromQr) trackEvent(restaurant.id, "qr_scan", { language: lang });
+        if (typeof document !== "undefined" && (!document.referrer || document.referrer === ""))
+          trackEvent(restaurant.id, "qr_scan", { language: lang });
         sessionStorage.setItem(key, "1");
       }
     } catch {}
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  /* Lock body scroll when modal open */
+  useEffect(() => {
+    document.body.style.overflow = modalDish ? "hidden" : "";
+    return () => { document.body.style.overflow = ""; };
+  }, [modalDish]);
+
   const currency = restaurant.currency || "ILS";
   const restaurantName = restaurant.name;
-  const restaurantDesc = pickLocalized(restaurant as unknown as Record<string, unknown>, "description", lang);
   const dishesByCategory = categories.map((cat) => ({
     category: cat,
     dishes: dishes.filter((d) => d.category_id === cat.id),
   }));
-
-  const [activeCategory, setActiveCategory] = useState<string | null>(null);
+  /* Flatten dish index for placeholder cycling */
+  let dishGlobalIdx = 0;
 
   const scrollToCategory = (catId: string) => {
     setActiveCategory(catId);
@@ -105,132 +123,269 @@ export function MenuView({ restaurant, categories, dishes, slug }: MenuViewProps
     if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
+  const handleShare = async () => {
+    try {
+      await navigator.share({ url: window.location.href, title: restaurantName });
+    } catch {
+      navigator.clipboard.writeText(window.location.href).catch(() => {});
+    }
+  };
+
   return (
     <div
       dir={dir}
       style={{
         minHeight: "100vh",
-        background: C.bg,
-        backgroundImage: GRAIN,
-        color: C.cream,
-        fontFamily: "'Noto Serif Hebrew', 'Georgia', serif",
+        background: D.page,
+        color: D.text,
+        fontFamily: "'DM Sans', 'Helvetica Neue', sans-serif",
+        position: "relative",
+        overflowX: "hidden",
       }}
     >
-      {/* ══════════ HERO BANNER ══════════ */}
-      <div style={{ position: "relative", width: "100%", minHeight: 360, overflow: "hidden", background: C.surface }}>
-        {/* Warm ambient glow */}
-        <div aria-hidden style={{ position: "absolute", inset: 0, background: "radial-gradient(ellipse 90% 70% at 50% 100%, rgba(180,90,20,.22) 0%, transparent 65%)", pointerEvents: "none" }} />
+      {/* ── Grain texture overlay (fixed, full-page) ── */}
+      <div
+        aria-hidden
+        style={{
+          position: "fixed", inset: 0, zIndex: 1,
+          pointerEvents: "none",
+          backgroundImage: GRAIN_SVG,
+          backgroundSize: "240px",
+          opacity: 0.06,
+          mixBlendMode: "screen",
+        }}
+      />
 
-        {restaurant.banner_url ? (
-          <>
-            <div
-              aria-hidden
-              style={{ position: "absolute", inset: 0, backgroundImage: `url(${restaurant.banner_url})`, backgroundSize: "cover", backgroundPosition: "center", filter: "blur(18px) brightness(.4) saturate(.8)", transform: "scale(1.08)" }}
-            />
-            <img
-              src={restaurant.banner_url}
-              alt={restaurantName}
-              style={{ position: "relative", width: "100%", height: 360, objectFit: "cover", opacity: 0.85 }}
-            />
-          </>
-        ) : (
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "center", minHeight: 280, background: `linear-gradient(to bottom, ${C.surface}, #1a1008)` }}>
-            <UtensilsCrossed style={{ width: 60, height: 60, color: C.gold, opacity: 0.3 }} />
-          </div>
-        )}
-
-        {/* Bottom fade */}
-        <div aria-hidden style={{ position: "absolute", bottom: 0, left: 0, right: 0, height: 140, background: `linear-gradient(to top, ${C.bg}, transparent)`, pointerEvents: "none" }} />
-
-        {/* Language switcher */}
-        <div style={{ position: "absolute", top: 16, insetInlineEnd: 16, zIndex: 20 }}>
-          <LanguageSwitcher value={lang} available={available} onChange={setLang} />
-        </div>
-      </div>
-
-      {/* ══════════ RESTAURANT INFO ══════════ */}
-      <div style={{ maxWidth: 720, margin: "0 auto", padding: "0 20px" }}>
+      {/* ══════════════════════════════════════════════
+          HERO
+          ══════════════════════════════════════════════ */}
+      <header
+        style={{
+          position: "relative",
+          height: 360,
+          overflow: "hidden",
+          borderBottom: `1px solid ${D.line}`,
+        }}
+      >
+        {/* Background */}
         <div
+          aria-hidden
           style={{
-            marginTop: -72,
-            position: "relative",
-            zIndex: 10,
-            background: `linear-gradient(160deg, #1f1912 0%, #17120d 100%)`,
-            border: `1px solid ${C.borderHov}`,
-            borderRadius: 20,
-            padding: "32px 28px",
-            boxShadow: "0 32px 64px rgba(0,0,0,.7), 0 0 0 1px rgba(200,150,60,.06), inset 0 1px 0 rgba(200,150,60,.1)",
+            position: "absolute", inset: 0,
+            background: restaurant.banner_url
+              ? undefined
+              : `radial-gradient(ellipse at 30% 50%, hsl(28,62%,30%,.6), transparent 60%),
+                 radial-gradient(ellipse at 70% 30%, hsl(22,70%,40%,.5), transparent 60%),
+                 linear-gradient(135deg, hsl(28,30%,14%) 0%, hsl(28,18%,6%) 100%)`,
           }}
         >
-          <div style={{ display: "flex", alignItems: "center", gap: 20 }}>
-            {/* Logo / Initiale */}
-            {restaurant.logo_url ? (
-              <img
-                src={restaurant.logo_url}
-                alt={restaurantName}
-                style={{ width: 76, height: 76, borderRadius: "50%", objectFit: "cover", border: `2px solid ${C.gold}`, flexShrink: 0, boxShadow: `0 0 0 4px rgba(200,150,60,.12)` }}
-              />
-            ) : (
-              <div
-                style={{ width: 76, height: 76, borderRadius: "50%", background: `linear-gradient(135deg, ${C.orange} 0%, ${C.gold} 100%)`, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, boxShadow: `0 8px 24px rgba(180,90,20,.35)` }}
-              >
-                <span style={{ fontSize: "2rem", fontWeight: 700, color: "#fff", fontFamily: "'Cormorant Garamond', serif" }}>{restaurantName.charAt(0)}</span>
-              </div>
-            )}
-
-            <div style={{ flex: 1, minWidth: 0 }}>
-              <h1
-                style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 400, fontSize: "clamp(1.5rem,5vw,2rem)", letterSpacing: "-.01em", margin: "0 0 8px", color: C.cream, lineHeight: 1.1 }}
-              >
-                {restaurantName}
-              </h1>
-              <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: restaurantDesc ? 10 : 0 }}>
-                <div style={{ flex: 1, height: 1, background: `linear-gradient(90deg, ${C.gold}, transparent)` }} />
-              </div>
-              {restaurantDesc && (
-                <p style={{ fontSize: ".875rem", color: C.muted, lineHeight: 1.65, margin: 0 }}>{restaurantDesc}</p>
-              )}
-            </div>
-          </div>
+          {restaurant.banner_url && (
+            <img
+              src={restaurant.banner_url}
+              alt=""
+              aria-hidden
+              style={{ width: "100%", height: "100%", objectFit: "cover", filter: "brightness(.4) saturate(.7)", transform: "scale(1.08)" }}
+              loading="eager"
+            />
+          )}
         </div>
-      </div>
+        {/* Bottom fade */}
+        <div
+          aria-hidden
+          style={{ position: "absolute", inset: "auto 0 0", height: 180, background: `linear-gradient(180deg, transparent 0%, ${D.page} 100%)`, pointerEvents: "none" }}
+        />
 
-      {/* ══════════ STICKY CATEGORY PILLS ══════════ */}
-      {categories.length > 1 && (
+        {/* Utility bar (top) */}
         <div
           style={{
-            position: "sticky", top: 0, zIndex: 30,
-            background: `${C.bg}d9`,
+            position: "absolute", top: 20, left: "50%", transform: "translateX(-50%)",
+            zIndex: 10, maxWidth: 720, width: "calc(100% - 48px)",
+            display: "flex", justifyContent: "space-between", alignItems: "center",
+          }}
+        >
+          {/* Language pill */}
+          <div style={{ position: "relative" }}>
+            <button
+              type="button"
+              onClick={() => setLangOpen(v => !v)}
+              onBlur={() => setTimeout(() => setLangOpen(false), 120)}
+              style={{
+                display: "inline-flex", alignItems: "center", gap: 8,
+                padding: "8px 14px", borderRadius: 99,
+                background: "hsl(28,18%,6%,.6)", backdropFilter: "blur(16px)",
+                border: `1px solid ${D.line}`,
+                fontFamily: "'DM Mono', monospace", fontSize: "10.5px", letterSpacing: ".14em",
+                textTransform: "uppercase", color: D.text, cursor: "pointer",
+              }}
+            >
+              <span style={{ fontSize: 14 }}>{LANGUAGE_META[lang].flag}</span>
+              {lang.toUpperCase()}
+              {available.length > 1 && (
+                <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" style={{ opacity: .6 }}>
+                  <polyline points="6 9 12 15 18 9"/>
+                </svg>
+              )}
+            </button>
+            {langOpen && available.length > 1 && (
+              <div style={{
+                position: "absolute", top: "calc(100% + 8px)", insetInlineStart: 0, minWidth: 160,
+                background: D.card, border: `1px solid ${D.line2}`, borderRadius: 12,
+                overflow: "hidden", zIndex: 50,
+                boxShadow: "0 16px 40px rgba(0,0,0,.5)",
+              }}>
+                {available.map(l => (
+                  <button
+                    key={l}
+                    type="button"
+                    onMouseDown={(e) => { e.preventDefault(); setLang(l); setLangOpen(false); }}
+                    style={{
+                      display: "flex", alignItems: "center", gap: 10,
+                      width: "100%", padding: "11px 16px",
+                      background: l === lang ? `${D.gold}1a` : "transparent",
+                      border: "none", cursor: "pointer",
+                      fontFamily: "'DM Sans', sans-serif", fontSize: 13.5,
+                      color: l === lang ? D.gold : D.text,
+                      textAlign: "start",
+                    }}
+                    dir={LANGUAGE_META[l].dir}
+                  >
+                    <span style={{ fontSize: 16 }}>{LANGUAGE_META[l].flag}</span>
+                    {LANGUAGE_META[l].label}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Share pill */}
+          <button
+            type="button"
+            onClick={handleShare}
+            style={{
+              display: "inline-flex", alignItems: "center", gap: 8,
+              padding: "8px 14px", borderRadius: 99,
+              background: "hsl(28,18%,6%,.6)", backdropFilter: "blur(16px)",
+              border: `1px solid ${D.line}`,
+              fontFamily: "'DM Mono', monospace", fontSize: "10.5px", letterSpacing: ".14em",
+              textTransform: "uppercase", color: D.text, cursor: "pointer",
+            }}
+          >
+            <Share2 style={{ width: 11, height: 11 }} strokeWidth={1.6} />
+            Share
+          </button>
+        </div>
+
+        {/* Hero content (bottom-aligned) */}
+        <div
+          style={{
+            position: "relative", zIndex: 2, height: "100%",
+            maxWidth: 720, margin: "0 auto", padding: "0 24px 36px",
+            display: "flex", flexDirection: "column", justifyContent: "flex-end",
+          }}
+        >
+          {/* Restaurant mark row */}
+          <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 20 }}>
+            <div style={{
+              width: 48, height: 48,
+              background: D.grad,
+              borderRadius: 12,
+              display: "flex", alignItems: "center", justifyContent: "center",
+              color: "#fff",
+              boxShadow: `0 0 32px ${D.gold}59`,
+              flexShrink: 0,
+            }}>
+              {restaurant.logo_url ? (
+                <img
+                  src={restaurant.logo_url}
+                  alt={restaurantName}
+                  style={{ width: 48, height: 48, borderRadius: 12, objectFit: "cover" }}
+                  loading="eager"
+                />
+              ) : (
+                <svg width="22" height="22" viewBox="0 0 32 32" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M5 22 Q5 12 16 12 Q27 12 27 22 Z"/>
+                  <line x1="3" y1="22" x2="29" y2="22"/>
+                  <circle cx="16" cy="9" r="1.5" fill="currentColor"/>
+                  <line x1="16" y1="10.5" x2="16" y2="12"/>
+                </svg>
+              )}
+            </div>
+            <div>
+              <div style={{ fontFamily: "'DM Mono', monospace", fontSize: 11, letterSpacing: ".14em", textTransform: "uppercase", color: D.textDim }}>
+                {restaurantName}
+                {restaurant.address && ` · ${restaurant.address}`}
+              </div>
+            </div>
+          </div>
+
+          {/* Restaurant name as h1 */}
+          <h1
+            style={{
+              fontFamily: "'Noto Serif Hebrew', 'Cormorant Garamond', serif",
+              fontWeight: 500,
+              fontSize: "clamp(48px, 8vw, 72px)",
+              lineHeight: .95,
+              letterSpacing: "-.02em",
+              color: D.cream,
+              margin: "0 0 12px",
+            }}
+          >
+            {restaurantName}
+          </h1>
+
+          {/* Meta row */}
+          <div style={{ display: "flex", gap: 18, flexWrap: "wrap", fontFamily: "'DM Mono', monospace", fontSize: "10.5px", letterSpacing: ".18em", textTransform: "uppercase", color: D.textDim }}>
+            {restaurant.phone && (
+              <span style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                <span style={{ width: 4, height: 4, borderRadius: 99, background: D.gold, display: "inline-block" }}/>
+                <a href={`tel:${restaurant.phone}`} style={{ color: "inherit", textDecoration: "none" }} dir="ltr">{restaurant.phone}</a>
+              </span>
+            )}
+            {restaurant.address && (
+              <span style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                <span style={{ width: 4, height: 4, borderRadius: 99, background: D.gold, display: "inline-block" }}/>
+                {restaurant.address}
+              </span>
+            )}
+          </div>
+        </div>
+      </header>
+
+      {/* ══════════════════════════════════════════════
+          STICKY CATEGORY NAV
+          ══════════════════════════════════════════════ */}
+      {categories.length > 0 && (
+        <nav
+          style={{
+            position: "sticky", top: 0, zIndex: 20,
+            background: "hsl(28,18%,6%,.85)",
             backdropFilter: "blur(20px)",
             WebkitBackdropFilter: "blur(20px)",
-            borderBottom: `1px solid ${C.border}`,
+            borderBottom: `1px solid ${D.line}`,
+            padding: "14px 24px",
             overflowX: "auto",
             whiteSpace: "nowrap",
             scrollbarWidth: "none",
           }}
         >
-          <div style={{ maxWidth: 720, margin: "0 auto", padding: "12px 20px", display: "flex", gap: 6 }}>
+          <div style={{ maxWidth: 720, margin: "0 auto", display: "flex", gap: 6 }}>
             {categories.map((cat) => {
               const catName = pickLocalized(cat as unknown as Record<string, unknown>, "name", lang) || cat.name;
               const isActive = activeCategory === cat.id;
               return (
                 <button
                   key={cat.id}
+                  type="button"
                   onClick={() => scrollToCategory(cat.id)}
                   style={{
-                    padding: "8px 16px",
-                    borderRadius: 99,
-                    border: isActive ? "none" : `1px solid ${C.border}`,
-                    background: isActive
-                      ? `linear-gradient(135deg, ${C.orange}, hsl(22,70%,58%))`
-                      : "transparent",
-                    color: isActive ? "#fff" : C.dim,
-                    fontFamily: "'DM Sans', sans-serif",
-                    fontSize: 13, fontWeight: 500,
-                    cursor: "pointer",
-                    flexShrink: 0,
-                    boxShadow: isActive ? `0 0 20px ${C.orange}4d` : "none",
-                    transition: "all 0.15s ease",
+                    padding: "8px 16px", borderRadius: 99,
+                    background: isActive ? D.grad : "transparent",
+                    border: `1px solid ${isActive ? "transparent" : D.line}`,
+                    color: isActive ? "#fff" : D.textDim,
+                    fontFamily: "'DM Sans', sans-serif", fontSize: 13, fontWeight: 500,
+                    cursor: "pointer", flexShrink: 0,
+                    boxShadow: isActive ? `0 0 20px ${D.gold}4d` : "none",
+                    transition: "all .15s",
                   }}
                 >
                   {catName}
@@ -238,325 +393,469 @@ export function MenuView({ restaurant, categories, dishes, slug }: MenuViewProps
               );
             })}
           </div>
-        </div>
+        </nav>
       )}
 
-      {/* ══════════ MENU ══════════ */}
-      <div style={{ maxWidth: 720, margin: "0 auto", padding: "56px 20px 80px" }}>
+      {/* ══════════════════════════════════════════════
+          MENU SECTIONS
+          ══════════════════════════════════════════════ */}
+      <main>
         {dishesByCategory.length === 0 ? (
-          <div style={{ textAlign: "center", padding: "100px 0" }}>
-            <UtensilsCrossed style={{ width: 52, height: 52, color: C.gold, opacity: 0.3, margin: "0 auto 16px" }} />
-            <p style={{ color: C.muted }}>{t(lang, "empty_menu")}</p>
+          <div style={{ textAlign: "center", padding: "120px 24px" }}>
+            <UtensilsCrossed style={{ width: 52, height: 52, color: D.gold, opacity: 0.25, margin: "0 auto 16px" }} />
+            <p style={{ color: D.textDim, fontFamily: "'DM Sans', sans-serif" }}>{t(lang, "empty_menu")}</p>
           </div>
         ) : (
           dishesByCategory.map(({ category, dishes: catDishes }, catIdx) => {
-            const catName = pickLocalized(category as unknown as Record<string, unknown>, "name", lang);
-            const num = String(catIdx + 1).padStart(2, "0");
+            const catName = pickLocalized(category as unknown as Record<string, unknown>, "name", lang) || category.name;
+            const catTotal = catDishes.length;
             return (
-              <section key={category.id} id={`cat-${category.id}`} style={{ marginBottom: 64, scrollMarginTop: 60 }}>
+              <section key={category.id} id={`cat-${category.id}`} style={{ scrollMarginTop: 64 }}>
 
-                {/* ── Category Rule ── */}
-                <div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 28, paddingTop: 8 }}>
-                  <h2
-                    style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 500, fontSize: "clamp(1.6rem,5vw,2rem)", letterSpacing: "-.02em", color: C.cream, margin: 0, lineHeight: 1, flexShrink: 0 }}
-                  >
-                    {catName || category.name}
+                {/* ── Section rule ── */}
+                <div style={{ margin: "56px auto 24px", maxWidth: 720, padding: "0 24px", display: "flex", alignItems: "center", gap: 14 }}>
+                  <h2 style={{ fontFamily: "'Noto Serif Hebrew', 'Cormorant Garamond', serif", fontWeight: 500, fontSize: 32, letterSpacing: "-.02em", color: D.cream, margin: 0, flexShrink: 0, lineHeight: 1 }}>
+                    {catName}
                   </h2>
-                  <div style={{ flex: 1, height: 1, background: `linear-gradient(90deg, ${C.borderHov}, transparent 60%, transparent)` }} />
-                  <span style={{ fontFamily: "'DM Mono',monospace", fontSize: ".625rem", letterSpacing: ".22em", textTransform: "uppercase", color: C.dim, flexShrink: 0 }}>
-                    {String(catIdx + 1).padStart(2, "0")} / {String(dishesByCategory.length).padStart(2, "0")}
+                  <div style={{ flex: 1, height: 1, background: `linear-gradient(90deg, transparent, ${D.line2} 50%, transparent)` }}/>
+                  <span style={{ fontFamily: "'DM Mono', monospace", fontSize: 10, letterSpacing: ".22em", textTransform: "uppercase", color: D.textDim }}>
+                    {String(catTotal).padStart(2, "0")}
                   </span>
                 </div>
 
-                {catDishes.length === 0 ? (
-                  <p style={{ color: C.dim, fontSize: ".875rem", paddingInlineStart: 4 }}>{t(lang, "no_dishes_in_cat")}</p>
-                ) : (
-                  <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-                    {catDishes.map((dish, i) => (
-                      <DishCard
-                        key={dish.id}
-                        dish={dish}
-                        restaurantId={restaurant.id}
-                        lang={lang}
-                        currency={currency}
-                        slug={slug}
-                        delay={catIdx * 50 + i * 35}
-                      />
-                    ))}
-                  </div>
-                )}
+                {/* ── Dish list ── */}
+                <div style={{ maxWidth: 720, margin: "0 auto", padding: "0 24px", display: "flex", flexDirection: "column", gap: 14 }}>
+                  {catDishes.length === 0 ? (
+                    <p style={{ color: D.textDim, fontSize: 13, paddingInlineStart: 4, fontFamily: "'DM Sans', sans-serif" }}>{t(lang, "no_dishes_in_cat")}</p>
+                  ) : (
+                    catDishes.map((dish) => {
+                      const idx = dishGlobalIdx++;
+                      return (
+                        <DishCard
+                          key={dish.id}
+                          dish={dish}
+                          restaurantId={restaurant.id}
+                          lang={lang}
+                          currency={currency}
+                          placeholderGradient={dishPlaceholder(idx)}
+                          onOpen={() => setModalDish(dish)}
+                        />
+                      );
+                    })
+                  )}
+                </div>
               </section>
             );
           })
         )}
-      </div>
 
-      {/* ══════════ FOOTER ══════════ */}
-      <footer
-        style={{ background: C.surface, borderTop: `1px solid ${C.border}`, padding: "48px 20px 40px" }}
-      >
-        <div style={{ maxWidth: 720, margin: "0 auto" }}>
-          <div style={{ textAlign: "center", marginBottom: 28 }}>
-            <h3
-              style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 400, fontSize: "1.5rem", color: C.goldLight, margin: "0 0 10px" }}
-            >
-              {restaurantName}
-            </h3>
-            <div style={{ width: 56, height: 1, background: `linear-gradient(90deg, transparent, ${C.gold}, transparent)`, margin: "0 auto" }} />
-          </div>
+        {/* Bottom padding */}
+        <div style={{ height: 80 }} />
+      </main>
 
-          <div style={{ display: "flex", flexWrap: "wrap", gap: 20, justifyContent: "center" }}>
-            {restaurant.address && (
-              <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                <MapPin style={{ width: 15, height: 15, color: C.orange, flexShrink: 0 }} />
-                <span style={{ fontSize: ".85rem", color: C.muted }}>{restaurant.address}</span>
-              </div>
-            )}
-            {restaurant.phone && (
-              <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                <Phone style={{ width: 15, height: 15, color: C.orange, flexShrink: 0 }} />
-                <a href={`tel:${restaurant.phone}`} style={{ fontSize: ".85rem", color: C.muted, textDecoration: "none" }} dir="ltr">{restaurant.phone}</a>
-              </div>
-            )}
-            {restaurant.email && (
-              <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                <Mail style={{ width: 15, height: 15, color: C.orange, flexShrink: 0 }} />
-                <a href={`mailto:${restaurant.email}`} style={{ fontSize: ".85rem", color: C.muted, textDecoration: "none" }} dir="ltr">{restaurant.email}</a>
-              </div>
-            )}
-          </div>
-
-          <p style={{ textAlign: "center", marginTop: 32, fontSize: ".65rem", color: C.dim, fontFamily: "'DM Mono',monospace", letterSpacing: ".1em", textTransform: "uppercase" }}>
-            {t(lang, "powered")} <span style={{ color: C.gold }}>PLATFORME</span>
-          </p>
+      {/* ══════════════════════════════════════════════
+          FOOTER
+          ══════════════════════════════════════════════ */}
+      <footer>
+        <div style={{ maxWidth: 720, margin: "60px auto 0", padding: "36px 24px", borderTop: `1px solid ${D.line}`, display: "flex", alignItems: "center", justifyContent: "center", gap: 10 }}>
+          <span style={{ color: D.gold, display: "flex", alignItems: "center" }}>
+            <svg width="14" height="14" viewBox="0 0 32 32" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M5 22 Q5 12 16 12 Q27 12 27 22 Z"/>
+              <line x1="3" y1="22" x2="29" y2="22"/>
+              <circle cx="16" cy="9" r="1.5" fill="currentColor"/>
+            </svg>
+          </span>
+          <span style={{ fontFamily: "'DM Mono', monospace", fontSize: 10, letterSpacing: ".22em", textTransform: "uppercase", color: D.textDim }}>
+            {t(lang, "powered")}
+          </span>
+          <span style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 700, fontSize: 13, letterSpacing: ".18em", color: D.text }}>
+            PLATE<em style={{ fontStyle: "italic", color: D.gold }}>FORM</em>
+          </span>
         </div>
       </footer>
+
+      {/* ══════════════════════════════════════════════
+          DISH DETAIL MODAL
+          ══════════════════════════════════════════════ */}
+      {modalDish && (
+        <DishModal
+          dish={modalDish}
+          restaurantId={restaurant.id}
+          lang={lang}
+          currency={currency}
+          onClose={() => setModalDish(null)}
+        />
+      )}
     </div>
   );
 }
 
-/* ════════════════════════════════════════
+/* ════════════════════════════════════════════════════════
    DISH CARD
-   ════════════════════════════════════════ */
+   ════════════════════════════════════════════════════════ */
 function DishCard({
-  dish, restaurantId, lang, currency, slug, delay,
+  dish, restaurantId, lang, currency, placeholderGradient, onOpen,
 }: {
-  dish: Dish; restaurantId: string; lang: Language; currency: string; slug?: string; delay?: number;
+  dish: Dish;
+  restaurantId: string;
+  lang: Language;
+  currency: string;
+  placeholderGradient: string;
+  onOpen: () => void;
 }) {
-  const name = pickLocalized(dish as unknown as Record<string, unknown>, "name", lang);
+  const [hovered, setHovered] = useState(false);
+  const [show360, setShow360] = useState(false);
+  const name = pickLocalized(dish as unknown as Record<string, unknown>, "name", lang) || dish.name;
   const desc = pickLocalized(dish as unknown as Record<string, unknown>, "description", lang);
   const soldout = !dish.is_available;
+  const has3d = !!dish.model_3d_url;
   const has360 = Array.isArray(dish.photos_360) && dish.photos_360.length > 0;
-  const [show360, setShow360] = useState(false);
-  const [hovered, setHovered] = useState(false);
+  const hasVideo = !!dish.video_url;
 
-  const open360 = () => {
+  /* Badge type — highest capability first */
+  const badgeType: "3D" | "Video" | "AR" | "360" | null =
+    has3d ? (dish.ar_enabled ? "AR" : "3D") :
+    hasVideo ? "Video" :
+    has360 ? "360" :
+    null;
+
+  const openModal = () => {
+    trackEvent(restaurantId, "dish_view", { dishId: dish.id, language: lang });
+    onOpen();
+  };
+
+  const open360 = (e: React.MouseEvent) => {
+    e.stopPropagation();
     trackEvent(restaurantId, "ar_view", { dishId: dish.id, language: lang });
     setShow360(true);
   };
 
-  const detailHref = slug ? `/menu/${slug}/dish/${dish.id}` : undefined;
-
   return (
-    <article
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-      style={{
-        position: "relative",
-        display: "flex",
-        gap: 0,
-        background: hovered ? "#1f1912" : "#191410",
-        border: `1px solid ${hovered ? "rgba(200,150,60,.36)" : "rgba(200,150,60,.12)"}`,
-        borderRadius: 16,
-        overflow: "hidden",
-        transition: "all .25s ease",
-        boxShadow: hovered
-          ? "0 12px 40px rgba(0,0,0,.55), 0 0 0 1px rgba(200,150,60,.1)"
-          : "0 2px 16px rgba(0,0,0,.3)",
-        opacity: soldout ? 0.62 : 1,
-      }}
-    >
-      {/* ── Image (left/right selon dir) ── */}
-      <div
-        style={{ position: "relative", width: 130, minWidth: 130, height: 130, overflow: "hidden", background: "#0f0c08", flexShrink: 0, borderRadius: "0 12px 12px 0" }}
+    <>
+      <article
+        tabIndex={0}
+        role="button"
+        aria-label={name}
+        onMouseEnter={() => setHovered(true)}
+        onMouseLeave={() => setHovered(false)}
+        onClick={openModal}
+        onKeyDown={(e) => e.key === "Enter" && openModal()}
+        style={{
+          display: "grid",
+          gridTemplateColumns: "1fr 130px",
+          gap: 18,
+          background: D.card,
+          border: `1px solid ${hovered ? D.line2 : D.line}`,
+          borderRadius: 16,
+          padding: 16,
+          cursor: "pointer",
+          transition: "border-color .25s",
+          position: "relative",
+          outline: "none",
+          opacity: soldout ? 0.62 : 1,
+        }}
       >
-        {dish.video_url ? (
-          <video
-            src={dish.video_url}
-            poster={dish.image_url ?? undefined}
-            style={{ width: "100%", height: "100%", objectFit: "cover", transition: "transform .5s ease", transform: hovered ? "scale(1.1)" : "scale(1)" }}
-            muted loop playsInline preload="metadata"
-            onMouseEnter={(e) => { e.currentTarget.play().catch(() => {}); trackEvent(restaurantId, "video_play", { dishId: dish.id }); }}
-            onMouseLeave={(e) => { e.currentTarget.pause(); e.currentTarget.currentTime = 0; }}
-          />
-        ) : dish.image_url ? (
-          <img
-            src={dish.image_url}
-            alt={name || dish.name}
-            style={{ width: "100%", height: "100%", objectFit: "cover", transition: "transform .5s ease", transform: hovered ? "scale(1.1)" : "scale(1)" }}
-          />
-        ) : (
-          <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center", background: "linear-gradient(135deg, #1a1408, #0f0c08)" }}>
-            <ImageIcon style={{ width: 30, height: 30, color: "rgba(200,150,60,.25)" }} />
-          </div>
-        )}
-
-        {/* Warm gradient overlay on image */}
-        {(dish.image_url || dish.video_url) && (
-          <div aria-hidden style={{ position: "absolute", inset: 0, background: "linear-gradient(to right, rgba(13,11,9,0) 50%, rgba(13,11,9,.25) 100%)", pointerEvents: "none" }} />
-        )}
-
-        {/* Video badge */}
-        {dish.video_url && (
-          <div style={{ position: "absolute", bottom: 8, insetInlineStart: 8, background: "rgba(0,0,0,.7)", borderRadius: 99, padding: "3px 8px", display: "flex", alignItems: "center", gap: 4 }}>
-            <PlayCircle style={{ width: 12, height: 12, color: "#fff" }} />
-            <span style={{ fontSize: "9px", color: "#fff", fontFamily: "'DM Mono',monospace", fontWeight: 600 }}>VIDEO</span>
-          </div>
-        )}
-
-        {/* Soldout overlay */}
-        {soldout && (
-          <div style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,.62)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-            <span style={{ fontSize: "9px", color: "#fff", fontWeight: 700, letterSpacing: ".12em", textTransform: "uppercase", background: "rgba(0,0,0,.75)", padding: "4px 10px", borderRadius: 6 }}>
-              {t(lang, "soldout")}
-            </span>
-          </div>
-        )}
-
-        {/* Full image link */}
-        {detailHref && (
-          <Link href={detailHref} style={{ position: "absolute", inset: 0, zIndex: 10 }} aria-label={name || dish.name} />
-        )}
-      </div>
-
-      {/* ── Content ── */}
-      <div
-        style={{ flex: 1, minWidth: 0, display: "flex", flexDirection: "column", justifyContent: "space-between", padding: "18px 20px" }}
-      >
-        <div>
-          {/* Name + Price row */}
-          <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 12, marginBottom: 8 }}>
-            <h3
-              style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 600, fontSize: "clamp(1rem,3vw,1.2rem)", color: "#f2e8d8", margin: 0, lineHeight: 1.2, flex: 1 }}
-            >
-              {detailHref ? (
-                <Link href={detailHref} style={{ color: "inherit", textDecoration: "none" }}>{name || dish.name}</Link>
-              ) : (name || dish.name)}
+        {/* Info column */}
+        <div style={{ minWidth: 0 }}>
+          <div style={{ display: "flex", alignItems: "baseline", gap: 12, marginBottom: 6 }}>
+            <h3 style={{ fontFamily: "'Noto Serif Hebrew', 'Cormorant Garamond', serif", fontWeight: 600, fontSize: 21, lineHeight: 1.1, color: D.cream, margin: 0, flex: 1 }}>
+              {name}
             </h3>
-            <span
-              style={{ fontFamily: "'DM Mono',monospace", fontWeight: 700, fontSize: "1rem", color: "#c8963c", whiteSpace: "nowrap", flexShrink: 0, letterSpacing: "-.01em" }}
-            >
+            <span style={{ fontFamily: "'DM Mono', monospace", fontSize: 14, color: D.gold, letterSpacing: ".04em", flexShrink: 0 }}>
               {formatCurrency(Number(dish.price), currency, lang)}
             </span>
           </div>
 
-          {/* Description */}
           {desc && (
-            <p
-              style={{ fontSize: ".82rem", color: "rgba(242,232,216,.48)", lineHeight: 1.65, margin: "0 0 10px", display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}
-            >
+            <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, lineHeight: 1.6, color: D.textDim, margin: "0 0 10px", display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}>
               {desc}
             </p>
           )}
 
-          {/* Badges */}
-          {(dish.is_new || dish.is_signature || dish.is_featured || dish.model_3d_url || has360 || soldout) && (
-            <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
-              {dish.is_signature && <WarmBadge icon={<Award style={{ width: 9, height: 9 }} />} color="gold">{t(lang, "signature")}</WarmBadge>}
-              {dish.is_new && <WarmBadge icon={<Sparkles style={{ width: 9, height: 9 }} />} color="orange">{t(lang, "new")}</WarmBadge>}
-              {dish.is_featured && <WarmBadge icon={<Flame style={{ width: 9, height: 9 }} />} color="rose">{t(lang, "featured")}</WarmBadge>}
-              {soldout && <WarmBadge icon={<CircleOff style={{ width: 9, height: 9 }} />} color="muted">{t(lang, "soldout")}</WarmBadge>}
-              {has360 && (
+          {/* Tags row */}
+          <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
+            {dish.is_signature && <DishTag color="gold">מנת השף</DishTag>}
+            {dish.is_new && <DishTag color="orange">חדש</DishTag>}
+            {dish.is_featured && <DishTag color="orange">מומלץ</DishTag>}
+            {soldout && <DishTag color="muted">{t(lang, "soldout")}</DishTag>}
+            {has360 && (
+              <button
+                type="button"
+                onClick={open360}
+                style={{ display: "inline-flex", alignItems: "center", gap: 4, fontFamily: "'DM Mono', monospace", fontSize: "9.5px", letterSpacing: ".18em", textTransform: "uppercase", padding: "3px 9px", borderRadius: 99, color: D.goldLt, background: `${D.goldLt}14`, border: `1px solid ${D.goldLt}2d`, cursor: "pointer" }}
+              >
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6"><circle cx="12" cy="12" r="3"/><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"/></svg>
+                360°
+              </button>
+            )}
+            {has3d && !has360 && (
+              <DishModelViewer
+                restaurantId={restaurantId}
+                dishId={dish.id}
+                dishName={name}
+                modelUrl={dish.model_3d_url!}
+                arEnabled={dish.ar_enabled}
+                language={lang}
+                trigger={
+                  <span style={{ display: "inline-flex", alignItems: "center", gap: 4, fontFamily: "'DM Mono', monospace", fontSize: "9.5px", letterSpacing: ".18em", textTransform: "uppercase", padding: "3px 9px", borderRadius: 99, color: D.goldLt, background: `${D.goldLt}14`, border: `1px solid ${D.goldLt}2d` }}>
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6"><circle cx="12" cy="12" r="9"/><ellipse cx="12" cy="12" rx="9" ry="3"/></svg>
+                    3D
+                  </span>
+                }
+              />
+            )}
+          </div>
+        </div>
+
+        {/* Media column (right in RTL, left in LTR) */}
+        <div
+          style={{
+            position: "relative",
+            borderRadius: 12,
+            overflow: "hidden",
+            aspectRatio: "1",
+            background: dish.image_url ? undefined : placeholderGradient,
+            flexShrink: 0,
+          }}
+        >
+          {/* Shimmer highlight */}
+          <div aria-hidden style={{ position: "absolute", inset: 0, background: "radial-gradient(circle at 30% 30%, rgba(255,220,170,.4), transparent 60%)", zIndex: 1, pointerEvents: "none" }} />
+
+          {dish.video_url ? (
+            <video
+              src={dish.video_url}
+              poster={dish.image_url ?? undefined}
+              style={{ width: "100%", height: "100%", objectFit: "cover", display: "block", transition: "transform .5s", transform: hovered ? "scale(1.08)" : "scale(1)" }}
+              muted loop playsInline preload="metadata"
+              onMouseEnter={(e) => { e.currentTarget.play().catch(() => {}); trackEvent(restaurantId, "video_play", { dishId: dish.id }); }}
+              onMouseLeave={(e) => { e.currentTarget.pause(); e.currentTarget.currentTime = 0; }}
+            />
+          ) : dish.image_url ? (
+            <img
+              src={dish.image_url}
+              alt={name}
+              style={{ width: "100%", height: "100%", objectFit: "cover", display: "block", transition: "transform .5s", transform: hovered ? "scale(1.08)" : "scale(1)" }}
+              loading="lazy"
+            />
+          ) : null}
+
+          {/* Soldout overlay */}
+          {soldout && (
+            <div style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,.55)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 2 }}>
+              <span style={{ fontSize: 9, fontFamily: "'DM Mono', monospace", letterSpacing: ".12em", textTransform: "uppercase", color: "#fff", background: "rgba(0,0,0,.7)", padding: "4px 10px", borderRadius: 6 }}>
+                {t(lang, "soldout")}
+              </span>
+            </div>
+          )}
+
+          {/* Media badge */}
+          {badgeType && (
+            <span style={{ position: "absolute", top: 8, right: 8, zIndex: 3, fontFamily: "'DM Mono', monospace", fontSize: 9, letterSpacing: ".14em", textTransform: "uppercase", padding: "4px 8px", borderRadius: 99, background: "hsl(28,18%,6%,.75)", backdropFilter: "blur(8px)", color: D.goldLt, display: "flex", alignItems: "center", gap: 4 }}>
+              {badgeType === "3D" || badgeType === "AR" ? (
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6"><circle cx="12" cy="12" r="9"/><ellipse cx="12" cy="12" rx="9" ry="3"/></svg>
+              ) : badgeType === "Video" ? (
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+              ) : (
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6"><circle cx="12" cy="12" r="3"/><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"/></svg>
+              )}
+              {badgeType}
+            </span>
+          )}
+        </div>
+      </article>
+
+      {show360 && has360 && (
+        <Photo360Viewer
+          photos={dish.photos_360 as string[]}
+          dishName={name}
+          onClose={() => setShow360(false)}
+        />
+      )}
+    </>
+  );
+}
+
+/* ════════════════════════════════════════════════════════
+   DISH DETAIL MODAL
+   ════════════════════════════════════════════════════════ */
+function DishModal({
+  dish, restaurantId, lang, currency, onClose,
+}: {
+  dish: Dish;
+  restaurantId: string;
+  lang: Language;
+  currency: string;
+  onClose: () => void;
+}) {
+  const name = pickLocalized(dish as unknown as Record<string, unknown>, "name", lang) || dish.name;
+  const desc = pickLocalized(dish as unknown as Record<string, unknown>, "description", lang);
+  const has3d = !!dish.model_3d_url;
+  const has360 = Array.isArray(dish.photos_360) && dish.photos_360.length > 0;
+  const hasVideo = !!dish.video_url;
+  const [arTab, setArTab] = useState<"2D" | "3D" | "360" | "AR">("2D");
+  const [show360, setShow360] = useState(false);
+
+  const dir = LANGUAGE_META[lang].dir;
+
+  /* Keyboard close */
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => { if (e.key === "Escape") onClose(); };
+    document.addEventListener("keydown", handler);
+    return () => document.removeEventListener("keydown", handler);
+  }, [onClose]);
+
+  return (
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-label={name}
+      dir={dir}
+      style={{ position: "fixed", inset: 0, zIndex: 100, background: "hsl(28,18%,6%,.7)", backdropFilter: "blur(12px)", display: "flex", alignItems: "center", justifyContent: "center", padding: 24 }}
+      onClick={onClose}
+    >
+      <div
+        style={{ background: D.card, border: `1px solid ${D.line2}`, borderRadius: 22, maxWidth: 560, width: "100%", maxHeight: "90vh", overflow: "auto", boxShadow: "0 40px 100px rgba(0,0,0,.5)" }}
+        onClick={e => e.stopPropagation()}
+      >
+        {/* Art / media area */}
+        <div style={{ position: "relative", aspectRatio: "1.6", background: dish.image_url ? undefined : "linear-gradient(135deg, hsl(28,40%,32%), hsl(28,55%,45%))", overflow: "hidden" }}>
+          {dish.image_url && (
+            <img src={dish.image_url} alt={name} style={{ width: "100%", height: "100%", objectFit: "cover" }} loading="lazy" />
+          )}
+          <div aria-hidden style={{ position: "absolute", inset: 0, background: "radial-gradient(circle at 30% 30%, rgba(255,220,170,.4), transparent 60%)" }}/>
+
+          {/* Close button */}
+          <button
+            type="button"
+            onClick={onClose}
+            aria-label="סגור"
+            style={{ position: "absolute", top: 16, insetInlineStart: 16, zIndex: 10, width: 36, height: 36, borderRadius: 99, background: "hsl(28,18%,6%,.7)", backdropFilter: "blur(8px)", border: `1px solid ${D.line}`, color: D.cream, display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer" }}
+          >
+            <X style={{ width: 14, height: 14 }} strokeWidth={2}/>
+          </button>
+
+          {/* AR/view toggle tabs */}
+          {(has3d || has360 || hasVideo) && (
+            <div style={{ position: "absolute", bottom: 16, left: "50%", transform: "translateX(-50%)", display: "flex", gap: 4, background: "hsl(28,18%,6%,.7)", backdropFilter: "blur(16px)", border: `1px solid ${D.line}`, borderRadius: 99, padding: 4 }}>
+              {(["2D", ...(hasVideo ? [] : []), ...(has3d ? ["3D"] : []), ...(has360 ? ["360"] : []), ...(dish.ar_enabled && has3d ? ["AR"] : [])] as ("2D"|"3D"|"360"|"AR")[]).map(tab => (
                 <button
-                  onClick={open360}
-                  style={{ display: "inline-flex", alignItems: "center", gap: 4, fontSize: "9px", fontWeight: 600, letterSpacing: ".1em", textTransform: "uppercase", padding: "2px 8px", borderRadius: 99, border: "1px solid rgba(200,150,60,.3)", background: "rgba(200,150,60,.08)", color: "#c8963c", cursor: "pointer" }}
+                  key={tab}
+                  type="button"
+                  onClick={() => setArTab(tab)}
+                  style={{ padding: "7px 14px", borderRadius: 99, fontFamily: "'DM Mono', monospace", fontSize: "9.5px", letterSpacing: ".18em", textTransform: "uppercase", color: arTab === tab ? "#fff" : D.textDim, border: "none", background: arTab === tab ? D.grad : "transparent", cursor: "pointer", transition: "all .15s" }}
                 >
-                  <View style={{ width: 9, height: 9 }} />360°
+                  {tab}
                 </button>
-              )}
-              {dish.model_3d_url && (
-                <DishModelViewer
-                  restaurantId={restaurantId}
-                  dishId={dish.id}
-                  dishName={name || dish.name}
-                  modelUrl={dish.model_3d_url}
-                  arEnabled={dish.ar_enabled}
-                  language={lang}
-                />
-              )}
+              ))}
             </div>
           )}
         </div>
 
-        {/* CTA */}
-        {detailHref && (
-          <div style={{ marginTop: 14 }}>
-            <Link
-              href={detailHref}
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: 6,
-                fontSize: "10px",
-                fontFamily: "'DM Mono',monospace",
-                fontWeight: 600,
-                letterSpacing: ".14em",
-                textTransform: "uppercase",
-                padding: "7px 18px",
-                borderRadius: 8,
-                background: "transparent",
-                border: "1px solid rgba(200,150,60,.4)",
-                color: "#c8963c",
-                textDecoration: "none",
-                transition: "all .2s",
-              }}
-              onMouseOver={(e) => {
-                const el = e.currentTarget as HTMLAnchorElement;
-                el.style.background = "hsl(28,88%,52%)";
-                el.style.borderColor = "hsl(28,88%,52%)";
-                el.style.color = "#fff";
-              }}
-              onMouseOut={(e) => {
-                const el = e.currentTarget as HTMLAnchorElement;
-                el.style.background = "transparent";
-                el.style.borderColor = "rgba(200,150,60,.4)";
-                el.style.color = "#c8963c";
-              }}
-            >
-              {t(lang, "details") || "פרטים"}
-              <ChevronLeft style={{ width: 12, height: 12 }} />
-            </Link>
+        {/* Body */}
+        <div style={{ padding: "24px 28px 28px" }}>
+          <h2 style={{ fontFamily: "'Noto Serif Hebrew', 'Cormorant Garamond', serif", fontWeight: 600, fontSize: 32, letterSpacing: "-.02em", color: D.cream, margin: "0 0 8px", lineHeight: 1.05 }}>
+            {name}
+          </h2>
+          <div style={{ fontFamily: "'DM Mono', monospace", fontSize: 16, color: D.gold, letterSpacing: ".04em", marginBottom: 16 }}>
+            {formatCurrency(Number(dish.price), currency, lang)}
           </div>
-        )}
+          {desc && (
+            <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 14, lineHeight: 1.7, color: D.text, margin: "0 0 18px" }}>
+              {desc}
+            </p>
+          )}
+
+          {/* Info rows */}
+          {dish.allergens && dish.allergens.length > 0 && (
+            <div style={{ display: "flex", flexDirection: "column", gap: 10, paddingTop: 14, borderTop: `1px solid ${D.line}` }}>
+              <InfoRow label="אלרגנים" value={dish.allergens.join(", ")} />
+            </div>
+          )}
+
+          {/* 3D viewer inline — lazy */}
+          {arTab === "3D" && has3d && (
+            <div style={{ marginTop: 20 }}>
+              <DishModelViewer
+                restaurantId={restaurantId}
+                dishId={dish.id}
+                dishName={name}
+                modelUrl={dish.model_3d_url!}
+                arEnabled={false}
+                language={lang}
+                trigger={
+                  <span style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "11px 22px", borderRadius: 10, background: D.grad, color: "#fff", fontFamily: "'DM Sans', sans-serif", fontSize: 13.5, fontWeight: 600, cursor: "pointer" }}>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6"><circle cx="12" cy="12" r="9"/><ellipse cx="12" cy="12" rx="9" ry="3"/></svg>
+                    {t(lang, "view_3d_cta")}
+                  </span>
+                }
+              />
+            </div>
+          )}
+
+          {arTab === "AR" && has3d && dish.ar_enabled && (
+            <div style={{ marginTop: 20 }}>
+              <DishModelViewer
+                restaurantId={restaurantId}
+                dishId={dish.id}
+                dishName={name}
+                modelUrl={dish.model_3d_url!}
+                arEnabled
+                language={lang}
+                trigger={
+                  <span style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "11px 22px", borderRadius: 10, background: D.grad, color: "#fff", fontFamily: "'DM Sans', sans-serif", fontSize: 13.5, fontWeight: 600, cursor: "pointer" }}>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+                    {t(lang, "view_ar")}
+                  </span>
+                }
+              />
+            </div>
+          )}
+
+          {arTab === "360" && has360 && (
+            <button
+              type="button"
+              onClick={() => setShow360(true)}
+              style={{ marginTop: 20, display: "inline-flex", alignItems: "center", gap: 8, padding: "11px 22px", borderRadius: 10, background: D.grad, color: "#fff", fontFamily: "'DM Sans', sans-serif", fontSize: 13.5, fontWeight: 600, cursor: "pointer", border: "none" }}
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6"><circle cx="12" cy="12" r="3"/><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"/></svg>
+              360°
+            </button>
+          )}
+        </div>
       </div>
 
       {show360 && has360 && (
         <Photo360Viewer
           photos={dish.photos_360 as string[]}
-          dishName={name || dish.name}
+          dishName={name}
           onClose={() => setShow360(false)}
         />
       )}
-    </article>
+    </div>
   );
 }
 
-/* ── Warm Badge ── */
-function WarmBadge({
-  icon, color, children,
-}: { icon: React.ReactNode; color: "gold" | "orange" | "rose" | "muted"; children: React.ReactNode }) {
-  const s: Record<string, { bg: string; border: string; text: string }> = {
-    gold:   { bg: "rgba(200,150,60,.1)",   border: "rgba(200,150,60,.28)",  text: "#c8963c" },
-    orange: { bg: "rgba(200,90,20,.14)",   border: "rgba(200,90,20,.3)",    text: "hsl(28,88%,60%)" },
-    rose:   { bg: "rgba(210,70,70,.1)",    border: "rgba(210,70,70,.25)",   text: "#d07070" },
-    muted:  { bg: "rgba(255,255,255,.05)", border: "rgba(255,255,255,.1)",  text: "rgba(242,232,216,.45)" },
-  };
-  const st = s[color];
+/* ── Info row (modal) ─────────────────────────────────── */
+function InfoRow({ label, value }: { label: string; value: string }) {
   return (
-    <span
-      style={{ display: "inline-flex", alignItems: "center", gap: 4, fontSize: "9px", fontWeight: 600, letterSpacing: ".1em", textTransform: "uppercase", padding: "2px 8px", borderRadius: 99, background: st.bg, border: `1px solid ${st.border}`, color: st.text }}
-    >
-      {icon}{children}
+    <div style={{ display: "flex", justifyContent: "space-between" }}>
+      <span style={{ fontFamily: "'DM Mono', monospace", fontSize: 10, letterSpacing: ".18em", textTransform: "uppercase", color: D.textDim }}>{label}</span>
+      <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: D.cream }}>{value}</span>
+    </div>
+  );
+}
+
+/* ── Dish tag badge ────────────────────────────────────── */
+function DishTag({ color, children }: { color: "gold" | "orange" | "muted"; children: React.ReactNode }) {
+  const styles: Record<string, { bg: string; border: string; text: string }> = {
+    gold:   { bg: `hsl(36,80%,62%,.08)`, border: `hsl(36,80%,62%,.18)`, text: D.goldLt },
+    orange: { bg: `hsl(28,62%,52%,.1)`,  border: `hsl(28,62%,52%,.25)`, text: D.gold },
+    muted:  { bg: `rgba(255,255,255,.04)`, border: `rgba(255,255,255,.1)`, text: D.textDim },
+  };
+  const s = styles[color];
+  return (
+    <span style={{ fontFamily: "'DM Mono', monospace", fontSize: "9.5px", letterSpacing: ".18em", textTransform: "uppercase", padding: "3px 9px", borderRadius: 99, color: s.text, background: s.bg, border: `1px solid ${s.border}` }}>
+      {children}
     </span>
   );
 }
