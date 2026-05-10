@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState, useRef } from "react";
 import Link from "next/link";
+import { LogoWordmark } from "@/components/brand";
 import dynamic from "next/dynamic";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -359,24 +360,8 @@ export default function HomePage() {
         }}>
 
           {/* ── Logo ── */}
-          <Link href="/" style={{ display: "flex", alignItems: "center", gap: 10, textDecoration: "none", flexShrink: 0 }}>
-            <div style={{
-              width: 32, height: 32,
-              background: "linear-gradient(135deg, hsl(28,62%,38%), hsl(22,70%,50%))",
-              borderRadius: 8,
-              display: "flex", alignItems: "center", justifyContent: "center",
-              boxShadow: "0 2px 12px hsl(28,62%,38%,.4)",
-            }}>
-              <svg width="17" height="17" viewBox="0 0 32 32" fill="none" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                <circle cx="16" cy="5.5" r="1.5"/>
-                <path d="M16 7C9.373 7 4 12.373 4 19h24c0-6.627-5.373-12-12-12z"/>
-                <line x1="2" y1="21" x2="30" y2="21"/>
-                <path d="M10 21v1.5a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V21"/>
-              </svg>
-            </div>
-            <span style={{ fontFamily: "'DM Sans',sans-serif", fontSize: ".9375rem", fontWeight: 700, letterSpacing: ".14em", color: "hsl(24,18%,16%)" }}>
-              PLATE<em style={{ fontStyle: "italic", background: "linear-gradient(135deg,hsl(28,62%,38%),hsl(22,70%,50%))", WebkitBackgroundClip: "text", backgroundClip: "text", WebkitTextFillColor: "transparent" }}>FORM</em>
-            </span>
+          <Link href="/" style={{ display: "flex", alignItems: "center", textDecoration: "none", flexShrink: 0 }}>
+            <LogoWordmark width={140} />
           </Link>
 
           {/* ── Nav centre ── */}
@@ -1038,18 +1023,8 @@ export default function HomePage() {
 
             {/* Brand col */}
             <div>
-              <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 16 }}>
-                <div style={{ width: 34, height: 34, borderRadius: 8, background: "linear-gradient(135deg,hsl(28,62%,42%),hsl(22,70%,50%))", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                  <svg width="18" height="18" viewBox="0 0 32 32" fill="none" stroke="#fff" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                    <circle cx="16" cy="5.5" r="1.5"/>
-                    <path d="M16 7C9.373 7 4 12.373 4 19h24c0-6.627-5.373-12-12-12z"/>
-                    <line x1="2" y1="21" x2="30" y2="21"/>
-                    <path d="M10 21v1.5a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V21"/>
-                  </svg>
-                </div>
-                <span style={{ fontFamily: "'DM Sans',sans-serif", fontSize: "1.05rem", fontWeight: 700, letterSpacing: ".14em", color: "hsl(32,28%,92%)" }}>
-                  PLATE<em style={{ fontStyle: "italic", background: "linear-gradient(135deg,hsl(28,62%,62%),hsl(22,70%,70%))", WebkitBackgroundClip: "text", backgroundClip: "text", WebkitTextFillColor: "transparent" }}>FORM</em>
-                </span>
+              <div style={{ marginBottom: 16 }}>
+                <LogoWordmark width={130} />
               </div>
               <p style={{ fontFamily: "'DM Sans',sans-serif", fontSize: ".9rem", lineHeight: 1.75, color: "hsl(28,10%,55%)", marginBottom: 24 }}>
                 פלטפורמת תפריטים תלת-מימד/AR למסעדות.<br />תל אביב · פריז.

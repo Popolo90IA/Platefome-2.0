@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
+import { LogoMark } from "@/components/brand";
 import { QRCode } from "@/components/ui/qr-code";
 import { Download, Copy, Check, ExternalLink, Settings } from "lucide-react";
 import type { Restaurant } from "@/types/database.types";
@@ -341,17 +342,16 @@ export default function QRCodePage() {
                 display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center",
               }}>
                 {/* Logo mark */}
-                <svg width="38" height="38" viewBox="0 0 80 80" style={{ marginBottom: 18 }}>
-                  <circle cx="40" cy="40" r="28" fill="#f6f4ef" stroke="hsl(28,15%,18%)" strokeWidth="1.5"/>
-                  <circle cx="40" cy="40" r="20" fill="none" stroke="hsl(28,15%,18%)" strokeWidth=".5" strokeDasharray="1.5 2"/>
-                  <text x="40" y="49" textAnchor="middle" fontFamily="Cormorant Garamond, serif" fontStyle="italic" fontWeight="500" fontSize="32" fill="hsl(28,62%,38%)">P</text>
-                </svg>
-
-                <div className="font-display" style={{ fontSize: 13, fontWeight: 600, letterSpacing: ".26em", color: "hsl(28,15%,18%)", marginBottom: 4 }}>
-                  PLATE<em style={{ fontStyle: "italic", color: "hsl(28,62%,38%)", fontWeight: 400 }}>FORM</em>
+                <div style={{ marginBottom: 12 }}>
+                  <LogoMark size={38} variant="light" />
                 </div>
-                <div className="font-mono" style={{ fontSize: 9, letterSpacing: ".2em", color: "hsl(28,15%,40%)", marginBottom: 30 }}>
-                  EVERY DISH · IN 360°
+                <div style={{ marginBottom: 30 }}>
+                  <div className="font-display" style={{ fontSize: 13, fontWeight: 600, letterSpacing: ".26em", color: "hsl(28,15%,18%)", marginBottom: 4 }}>
+                    PLATE<em style={{ fontStyle: "italic", color: "hsl(28,62%,38%)", fontWeight: 400 }}>FORM</em>
+                  </div>
+                  <div className="font-mono" style={{ fontSize: 9, letterSpacing: ".2em", color: "hsl(28,15%,40%)" }}>
+                    EVERY DISH · IN 360°
+                  </div>
                 </div>
 
                 {/* QR code */}
