@@ -15,6 +15,7 @@ import {
   BarChart3,
   Shield,
 } from "lucide-react";
+import { LogoMark } from "@/components/brand";
 
 const navItems = [
   { href: "/dashboard", label: "בית", labelEn: "Home", icon: LayoutDashboard },
@@ -65,31 +66,7 @@ export function Sidebar() {
         style={{ borderBottom: "1px solid hsl(var(--line))" }}
       >
         <Link href="/dashboard" className="block group">
-          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-            {/* Brand tile — bronze gradient */}
-            <div style={{ width: 32, height: 32, background: "var(--grad-bronze)", borderRadius: 9, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, boxShadow: "0 2px 8px hsl(28 62% 38% / .3)" }}>
-              <svg width="18" height="18" viewBox="0 0 32 32" fill="none" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M5 22 Q5 12 16 12 Q27 12 27 22 Z"/>
-                <line x1="3" y1="22" x2="29" y2="22"/>
-                <circle cx="16" cy="9" r="1.5" fill="white"/>
-                <line x1="16" y1="10.5" x2="16" y2="12"/>
-              </svg>
-            </div>
-            <div>
-              <div
-                className="font-sans text-[13px] tracking-[0.18em] uppercase leading-none"
-                style={{ color: "hsl(var(--fog))", fontWeight: 700 }}
-              >
-                PLATEFORM
-              </div>
-              <div
-                className="font-mono text-[9.5px] tracking-[0.14em] uppercase mt-1"
-                style={{ color: "hsl(var(--subtle))" }}
-              >
-                Restaurant OS
-              </div>
-            </div>
-          </div>
+          <LogoMark size={32} />
         </Link>
       </div>
 

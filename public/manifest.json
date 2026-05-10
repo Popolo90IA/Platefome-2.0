@@ -1,0 +1,27 @@
+{
+  "name": "Plateform",
+  "short_name": "Plateform",
+  "description": "תפריטים דיגיטליים למסעדות עם QR קוד",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f5ede0",
+  "theme_color": "#7a4b1f",
+  "icons": [
+    {
+      "src": "/brand/logo-monogram.svg",
+      "type": "image/svg+xml",
+      "sizes": "any",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/favicon-192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "/favicon-512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ]
+}

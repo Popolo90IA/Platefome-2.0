@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { UtensilsCrossed } from "lucide-react";
+import { LogoLockup } from "@/components/brand";
 
 export default function AuthLayout({
   children,
@@ -15,13 +15,8 @@ export default function AuthLayout({
 
       {/* Top bar with logo */}
       <div className="relative container mx-auto px-4 py-6">
-        <Link href="/" className="inline-flex items-center gap-2.5 group">
-          <div className="relative h-9 w-9 rounded-lg bg-gold-gradient flex items-center justify-center shadow-gold-glow group-hover:scale-105 transition-transform">
-            <UtensilsCrossed className="h-5 w-5 text-white" />
-          </div>
-          <span className="font-serif-display text-xl font-bold">
-            פלטפורמת מסעדות
-          </span>
+        <Link href="/" className="inline-block group-hover:opacity-90 transition-opacity">
+          <LogoLockup width={180} />
         </Link>
       </div>
 
@@ -32,7 +27,7 @@ export default function AuthLayout({
 
       {/* Footer */}
       <div className="relative container mx-auto px-4 py-6 text-center text-xs text-muted-foreground">
-        © {new Date().getFullYear()} פלטפורמת מסעדות
+        © {new Date().getFullYear()} Plateform
       </div>
     </div>
   );
