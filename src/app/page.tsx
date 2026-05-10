@@ -913,10 +913,11 @@ export default function HomePage() {
             {/* Starter */}
             <div className="reveal" style={{ background: "hsl(38,30%,97%)", border: "1px solid hsl(30,18%,82%,.5)", borderRadius: 20, overflow: "hidden", position: "relative" }}>
               <div style={{ height: 2, background: "hsl(30,18%,82%,.3)" }} />
+              <div style={{ position: "absolute", top: 16, left: 16, background: "hsl(142,52%,44%,.12)", border: "1px solid hsl(142,52%,44%,.3)", borderRadius: 8, padding: "4px 10px", fontFamily: "'DM Sans',sans-serif", fontSize: 11, fontWeight: 700, color: "hsl(142,52%,36%)", letterSpacing: ".06em" }}>חינם</div>
               <div style={{ padding: "28px 28px 24px", borderBottom: "1px solid hsl(30,18%,82%,.3)" }}>
                 <div style={{ fontFamily: "'DM Sans',sans-serif", fontSize: 11, fontWeight: 600, letterSpacing: ".1em", textTransform: "uppercase" as const, color: "hsl(28,8%,50%)", marginBottom: 16 }}>I · טעימה</div>
                 <div style={{ fontFamily: "'Cormorant Garamond',serif", fontWeight: 700, fontSize: "3.25rem", letterSpacing: "-.04em", color: "hsl(24,18%,16%)", lineHeight: 1 }}>
-                  ₪49<span style={{ fontFamily: "'DM Sans',sans-serif", fontSize: ".85rem", fontWeight: 400, color: "hsl(24,12%,38%)", letterSpacing: 0 }}>/חודש</span>
+                  ₪0<span style={{ fontFamily: "'DM Sans',sans-serif", fontSize: ".85rem", fontWeight: 400, color: "hsl(24,12%,38%)", letterSpacing: 0 }}>/חודש</span>
                 </div>
                 <div style={{ fontFamily: "'DM Sans',sans-serif", fontSize: ".8rem", color: "hsl(28,8%,42%)", marginTop: 6 }}>כניסה לעולם</div>
               </div>
