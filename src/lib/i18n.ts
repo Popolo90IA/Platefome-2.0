@@ -26,6 +26,10 @@ export const T: Dict = {
     view_ar: "צפה במציאות רבודה",
     powered: "מופעל על ידי",
     restaurant: "מסעדה",
+    details: "פרטים",
+    scan_menu: "סרוק לתפריט",
+    view_3d_cta: "צפה בתלת מימד",
+    add_to_order: "הוסף להזמנה",
   },
   en: {
     menu: "Menu",
@@ -39,6 +43,10 @@ export const T: Dict = {
     view_ar: "View in AR",
     powered: "Powered by",
     restaurant: "Restaurant",
+    details: "Details",
+    scan_menu: "Scan the menu",
+    view_3d_cta: "View in 3D",
+    add_to_order: "Add to order",
   },
   fr: {
     menu: "Menu",
@@ -52,6 +60,10 @@ export const T: Dict = {
     view_ar: "Voir en réalité augmentée",
     powered: "Propulsé par",
     restaurant: "Restaurant",
+    details: "Détails",
+    scan_menu: "Scannez le menu",
+    view_3d_cta: "Voir en 3D",
+    add_to_order: "Ajouter à la commande",
   },
 };
 
