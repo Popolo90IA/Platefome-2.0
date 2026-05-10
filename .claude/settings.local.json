@@ -17,7 +17,29 @@
       "Bash(git push:*)",
       "Bash(gh auth status:*)",
       "Bash(gh auth:*)",
-      "Bash(npm install:*)"
+      "Bash(npm install:*)",
+      "WebFetch(domain:modelviewer.dev)",
+      "WebFetch(domain:spline.design)",
+      "WebFetch(domain:bundlephobia.com)",
+      "WebFetch(domain:www.jsdelivr.com)",
+      "Bash(npx next build:*)",
+      "WebFetch(domain:github.com)",
+      "Bash(unzip:*)",
+      "Bash(echo:*)",
+      "Bash(claude mcp add magic --scope user --env API_KEY=\"9c85b14e6951e40f0d1c61eb6f5b6901e4b30e38153a8b8966f1d350ab58e8ac\" -- npx -y @21st-dev/magic@latest)",
+      "Bash(npx claude:*)",
+      "Bash(python3:*)",
+      "Bash(npx tsc:*)",
+      "Bash(npx vercel env ls:*)",
+      "Bash(tree:*)",
+      "Bash(open:*)",
+      "mcp__Claude_in_Chrome__javascript_tool",
+      "mcp__Claude_in_Chrome__computer",
+      "mcp__Claude_in_Chrome__read_console_messages",
+      "mcp__Claude_in_Chrome__navigate",
+      "Bash(pkill:*)",
+      "Bash(npx vercel logs:*)",
+      "Bash(npx vercel:*)"
     ]
   }
 }
