@@ -119,8 +119,8 @@ export default async function AdminRestaurantDetailPage({
                 className="h-20 w-20 rounded-xl object-cover border-2 border-border/60 flex-shrink-0"
               />
             ) : (
-              <div className="h-20 w-20 rounded-xl bg-secondary flex items-center justify-center text-muted-foreground flex-shrink-0">
-                <Building2 className="h-8 w-8" />
+              <div className="h-20 w-20 rounded-xl flex items-center justify-center flex-shrink-0" style={{ background: "var(--grad-bronze)" }}>
+                <Building2 className="h-8 w-8 text-white" />
               </div>
             )}
 
@@ -130,11 +130,11 @@ export default async function AdminRestaurantDetailPage({
                   {restaurant.name}
                 </h1>
                 {restaurant.is_active ? (
-                  <span className="text-xs text-emerald-600 bg-emerald-500/10 px-2 py-1 rounded-full">
+                  <span className="text-xs text-[hsl(var(--accent-bright))] bg-[hsl(var(--accent-bright))]/10 px-2 py-1 rounded-full">
                     פעילה
                   </span>
                 ) : (
-                  <span className="text-xs text-muted-foreground bg-secondary px-2 py-1 rounded-full">
+                  <span className="text-xs text-muted-foreground bg-[hsl(var(--line))]/40 px-2 py-1 rounded-full">
                     מושבתת
                   </span>
                 )}
@@ -235,7 +235,7 @@ export default async function AdminRestaurantDetailPage({
                         <span className="mr-2 text-[hsl(var(--gold-dark))]">3D</span>
                       )}
                       {d.video_url && (
-                        <span className="mr-2 text-rose-600">וידאו</span>
+                        <span className="mr-2 text-[hsl(var(--accent-bright))]">וידאו</span>
                       )}
                     </div>
                   </div>

@@ -162,7 +162,7 @@ export default function AdminUsersPage() {
                         size="sm"
                         onClick={() => setRole(u.user_id, "restaurant_owner")}
                         disabled={busy === u.user_id}
-                        className="text-amber-600 hover:bg-amber-500/10"
+                        className="text-[hsl(var(--ember))] hover:bg-[hsl(var(--ember))]/10"
                       >
                         <ArrowDownCircle className="h-4 w-4" />
                         הורד הרשאות

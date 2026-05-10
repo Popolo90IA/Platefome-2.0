@@ -171,8 +171,8 @@ export default function AdminRestaurantsPage() {
                       className="h-14 w-14 rounded-xl object-cover border border-border/60 flex-shrink-0"
                     />
                   ) : (
-                    <div className="h-14 w-14 rounded-xl bg-secondary flex items-center justify-center text-muted-foreground flex-shrink-0">
-                      <Building2 className="h-5 w-5" />
+                    <div className="h-14 w-14 rounded-xl flex items-center justify-center flex-shrink-0" style={{ background: "var(--grad-bronze)" }}>
+                      <Building2 className="h-5 w-5 text-white" />
                     </div>
                   )}
 
@@ -182,11 +182,11 @@ export default function AdminRestaurantsPage() {
                         {r.name}
                       </h3>
                       {r.is_active ? (
-                        <span className="text-[10px] text-emerald-600 bg-emerald-500/10 px-2 py-0.5 rounded-full">
+                        <span className="text-[10px] text-[hsl(var(--accent-bright))] bg-[hsl(var(--accent-bright))]/10 px-2 py-0.5 rounded-full">
                           פעילה
                         </span>
                       ) : (
-                        <span className="text-[10px] text-muted-foreground bg-secondary px-2 py-0.5 rounded-full">
+                        <span className="text-[10px] text-muted-foreground bg-[hsl(var(--line))]/40 px-2 py-0.5 rounded-full">
                           מושבתת
                         </span>
                       )}
@@ -223,8 +223,8 @@ export default function AdminRestaurantsPage() {
                       disabled={busy === r.id}
                       className={
                         r.is_active
-                          ? "text-amber-600 hover:bg-amber-500/10"
-                          : "text-emerald-600 hover:bg-emerald-500/10"
+                          ? "text-[hsl(var(--ember))] hover:bg-[hsl(var(--ember))]/10"
+                          : "text-[hsl(var(--accent-bright))] hover:bg-[hsl(var(--accent-bright))]/10"
                       }
                     >
                       <Power className="h-4 w-4" />

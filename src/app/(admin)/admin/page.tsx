@@ -130,8 +130,8 @@ export default async function AdminPage() {
                       className="h-10 w-10 rounded-lg object-cover border border-border/60"
                     />
                   ) : (
-                    <div className="h-10 w-10 rounded-lg bg-secondary flex items-center justify-center text-muted-foreground">
-                      <Building2 className="h-4 w-4" />
+                    <div className="h-10 w-10 rounded-lg flex items-center justify-center flex-shrink-0" style={{ background: "var(--grad-bronze)" }}>
+                      <Building2 className="h-4 w-4 text-white" />
                     </div>
                   )}
                   <div className="flex-1 min-w-0">
@@ -141,12 +141,12 @@ export default async function AdminPage() {
                     </div>
                   </div>
                   {r.is_active ? (
-                    <span className="inline-flex items-center gap-1 text-xs text-emerald-600 bg-emerald-500/10 px-2 py-1 rounded-full">
+                    <span className="inline-flex items-center gap-1 text-xs text-[hsl(var(--accent-bright))] bg-[hsl(var(--accent-bright))]/10 px-2 py-1 rounded-full">
                       <CircleCheck className="h-3 w-3" />
                       פעילה
                     </span>
                   ) : (
-                    <span className="inline-flex items-center gap-1 text-xs text-muted-foreground bg-secondary px-2 py-1 rounded-full">
+                    <span className="inline-flex items-center gap-1 text-xs text-muted-foreground bg-[hsl(var(--line))]/40 px-2 py-1 rounded-full">
                       <CircleOff className="h-3 w-3" />
                       מושבתת
                     </span>
