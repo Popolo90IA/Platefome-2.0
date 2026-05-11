@@ -251,7 +251,7 @@ export default function AdminAnalyticsPage() {
                         className="w-full bg-gold-gradient transition-all"
                         style={{ height: `${viewH}%` }}
                       />
-                      <div className="absolute -top-8 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 bg-charcoal-gradient text-white text-[10px] px-2 py-1 rounded whitespace-nowrap pointer-events-none">
+                      <div className="absolute -top-8 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 text-white text-[10px] px-2 py-1 rounded whitespace-nowrap pointer-events-none" style={{ background: "var(--grad-bronze)" }}>
                         {total}
                       </div>
                     </div>

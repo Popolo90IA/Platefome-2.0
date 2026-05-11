@@ -100,7 +100,7 @@ export default async function AdminRestaurantDetailPage({
       {/* Header card */}
       <Card className="shadow-premium overflow-hidden">
         {restaurant.banner_url && (
-          <div className="relative h-32 bg-charcoal-gradient">
+          <div className="relative h-32" style={{ background: "var(--grad-bronze)" }}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={restaurant.banner_url}

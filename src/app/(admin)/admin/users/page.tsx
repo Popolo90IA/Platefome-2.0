@@ -109,7 +109,7 @@ export default function AdminUsersPage() {
             <Card key={u.user_id} className="shadow-premium">
               <CardContent className="p-4">
                 <div className="flex items-center gap-4 flex-wrap">
-                  <div className="h-12 w-12 rounded-full bg-charcoal-gradient text-white flex items-center justify-center font-serif-display text-lg font-bold flex-shrink-0">
+                  <div className="h-12 w-12 rounded-full text-white flex items-center justify-center font-serif-display text-lg font-bold flex-shrink-0" style={{ background: "var(--grad-bronze)" }}>
                     {(u.email ?? "?").charAt(0).toUpperCase()}
                   </div>
 
