@@ -234,7 +234,7 @@ export default function SettingsPage() {
           </Button>
           {restaurant && (
             <Link href={`/menu/${restaurant.slug}`} target="_blank">
-              <Button className="bg-gold-gradient hover:opacity-90 shadow-gold-glow">
+              <Button className="hover:opacity-90 text-white" style={{ background: "var(--grad-bronze)" }}>
                 <ExternalLink className="h-4 w-4" />
                 פתח בלשונית
               </Button>
@@ -381,9 +381,10 @@ export default function SettingsPage() {
                         }}
                         className={`inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium border transition-all ${
                           active
-                            ? "bg-gold-gradient text-white border-transparent shadow-gold-glow"
+                            ? "text-white border-transparent"
                             : "bg-card text-foreground/70 border-border hover:border-[hsl(var(--gold))]/40"
                         }`}
+                        style={active ? { background: "var(--grad-bronze)" } : {}}
                       >
                         <span className="text-lg leading-none">{l.flag}</span>
                         {l.label}
@@ -519,7 +520,8 @@ export default function SettingsPage() {
               type="submit"
               disabled={saving}
               size="lg"
-              className="bg-gold-gradient hover:opacity-90 shadow-gold-glow"
+              className="hover:opacity-90 text-white"
+              style={{ background: "var(--grad-bronze)" }}
             >
               {saving ? (
                 <Loader2 className="h-4 w-4 animate-spin" />
@@ -636,7 +638,8 @@ export default function SettingsPage() {
               <Button
                 type="submit"
                 disabled={pwSaving || !pwForm.current || !pwForm.next || !pwForm.confirm}
-                className="bg-gold-gradient hover:opacity-90 shadow-gold-glow"
+                className="hover:opacity-90 text-white"
+                style={{ background: "var(--grad-bronze)" }}
               >
                 {pwSaving ? (
                   <Loader2 className="h-4 w-4 animate-spin" />
@@ -733,7 +736,7 @@ function LivePreview({
                 className="h-20 w-20 rounded-full object-cover ring-4 ring-[hsl(var(--gold))]/30 shadow-gold-glow bg-card"
               />
             ) : (
-              <div className="h-20 w-20 rounded-full bg-gold-gradient ring-4 ring-[hsl(var(--gold))]/20 shadow-gold-glow flex items-center justify-center">
+              <div className="h-20 w-20 rounded-full ring-4 ring-[hsl(var(--gold))]/20 flex items-center justify-center" style={{ background: "var(--grad-bronze)" }}>
                 <span className="text-2xl font-bold text-white font-serif-display">
                   {form.name.charAt(0) || "?"}
                 </span>
