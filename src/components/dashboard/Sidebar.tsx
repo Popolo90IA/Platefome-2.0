@@ -15,7 +15,7 @@ import {
   BarChart3,
   Shield,
 } from "lucide-react";
-import { LogoMark } from "@/components/brand";
+import { LogoWordmark } from "@/components/brand";
 
 const navItems = [
   { href: "/dashboard", label: "בית", labelEn: "Home", icon: LayoutDashboard },
@@ -66,7 +66,7 @@ export function Sidebar() {
         style={{ borderBottom: "1px solid hsl(var(--line))" }}
       >
         <Link href="/dashboard" className="block group">
-          <LogoMark size={32} />
+          <LogoWordmark width={120} />
         </Link>
       </div>
 

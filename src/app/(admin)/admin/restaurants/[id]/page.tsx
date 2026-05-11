@@ -177,7 +177,7 @@ export default async function AdminRestaurantDetailPage({
 
             <div className="flex flex-col gap-2 flex-shrink-0">
               <Link href={`/menu/${restaurant.slug}`} target="_blank">
-                <Button className="w-full bg-gold-gradient hover:opacity-90">
+                <Button className="w-full hover:opacity-90 text-white" style={{ background: "var(--grad-bronze)" }}>
                   <ExternalLink className="h-4 w-4" />
                   פתח תפריט
                 </Button>
@@ -265,7 +265,7 @@ function MiniStat({
       <CardContent className="p-4">
         <div className="flex items-center justify-between mb-2">
           <span className="text-xs text-muted-foreground">{label}</span>
-          <div className="h-7 w-7 rounded-md bg-gold-gradient flex items-center justify-center text-white">
+          <div className="h-7 w-7 rounded-md flex items-center justify-center text-white" style={{ background: "var(--grad-bronze)" }}>
             {icon}
           </div>
         </div>

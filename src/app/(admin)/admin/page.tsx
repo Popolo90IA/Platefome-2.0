@@ -183,7 +183,7 @@ function AdminStat({
       <CardContent className="relative p-5">
         <div className="flex items-center justify-between mb-3">
           <span className="text-xs font-medium text-muted-foreground">{label}</span>
-          <div className="h-8 w-8 rounded-lg bg-gold-gradient flex items-center justify-center text-white shadow-gold-glow">
+          <div className="h-8 w-8 rounded-lg flex items-center justify-center text-white" style={{ background: "var(--grad-bronze)", boxShadow: "0 2px 12px hsl(28 62% 38% / .35)" }}>
             {icon}
           </div>
         </div>

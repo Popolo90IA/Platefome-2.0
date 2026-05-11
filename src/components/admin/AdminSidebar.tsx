@@ -12,7 +12,7 @@ import {
   LogOut,
   ArrowRight,
 } from "lucide-react";
-import { LogoMark } from "@/components/brand";
+import { LogoWordmark } from "@/components/brand";
 
 const navItems = [
   { href: "/admin", label: "סקירה", icon: Home, exact: true },
@@ -46,7 +46,7 @@ export function AdminSidebar() {
         style={{ borderBottom: "1px solid hsl(var(--line))" }}
       >
         <Link href="/admin" className="block">
-          <LogoMark size={32} />
+          <LogoWordmark width={120} />
         </Link>
         <div
           className="mt-3 inline-flex items-center gap-1.5 px-2 py-0.5 rounded font-mono text-[9px] tracking-[0.14em] uppercase"
