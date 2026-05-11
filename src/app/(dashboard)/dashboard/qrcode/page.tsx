@@ -428,18 +428,19 @@ export default function QRCodePage() {
           }}/>
 
           {/* Canvas tabs */}
-          <div style={{ display: "inline-flex", gap: 4, padding: 4, background: "rgba(0,0,0,.3)", borderRadius: 10, marginBottom: 28, position: "relative", zIndex: 1 }}>
+          <div style={{ display: "inline-flex", gap: 3, padding: 4, background: "rgba(255,255,255,.10)", border: "1px solid rgba(255,255,255,.12)", borderRadius: 12, marginBottom: 28, position: "relative", zIndex: 1 }}>
             {TABS.map((tab, i) => (
               <button
                 key={tab}
                 onClick={() => setActiveTab(i)}
                 className="font-sans"
                 style={{
-                  padding: "9px 18px", borderRadius: 7, fontSize: 13, fontWeight: 500,
-                  color: activeTab === i ? "hsl(28,15%,12%)" : "rgba(255,255,255,.55)",
+                  padding: "8px 16px", borderRadius: 8, fontSize: 13, fontWeight: activeTab === i ? 600 : 400,
+                  color: activeTab === i ? "hsl(28,15%,10%)" : "rgba(255,255,255,.85)",
                   background: activeTab === i ? "hsl(var(--fog))" : "transparent",
                   border: "none", cursor: "pointer", whiteSpace: "nowrap",
                   transition: "all .15s",
+                  boxShadow: activeTab === i ? "0 1px 6px rgba(0,0,0,.18)" : "none",
                 }}
               >
                 {tab}
