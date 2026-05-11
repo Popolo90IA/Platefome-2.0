@@ -9,6 +9,8 @@ import {
   Building2,
   Users,
   BarChart3,
+  Sparkles,
+  Settings,
   LogOut,
   ArrowRight,
 } from "lucide-react";
@@ -19,6 +21,8 @@ const navItems = [
   { href: "/admin/restaurants", label: "מסעדות", icon: Building2, exact: false },
   { href: "/admin/users", label: "משתמשים", icon: Users, exact: false },
   { href: "/admin/analytics", label: "סטטיסטיקות", icon: BarChart3, exact: false },
+  { href: "/admin/plans", label: "תוכניות", icon: Sparkles, exact: false },
+  { href: "/admin/settings", label: "הגדרות", icon: Settings, exact: false },
 ];
 
 export function AdminSidebar() {

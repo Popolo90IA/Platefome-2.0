@@ -66,7 +66,7 @@ export default async function AdminPage() {
       </div>
 
       {/* Stats grid */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
         <AdminStat
           icon={<Building2 className="h-5 w-5" />}
           label="מסעדות"
