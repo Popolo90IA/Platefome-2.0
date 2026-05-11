@@ -97,9 +97,15 @@ export default function DashboardPage() {
 
       {/* ── Page header ─────────────────────────────────── */}
       <div style={{ marginBottom: 4 }}>
-        <p className="font-mono uppercase" style={{ fontSize: "10.5px", letterSpacing: ".22em", color: "hsl(var(--accent-bright))", marginBottom: 10 }}>
-          Overview · {today}
-        </p>
+        <div className="flex items-center gap-2.5" style={{ marginBottom: 10 }}>
+          <span className="font-mono uppercase" style={{ fontSize: "10px", letterSpacing: ".2em", color: "hsl(var(--accent-bright) / .6)" }}>
+            Overview
+          </span>
+          <span style={{ color: "hsl(var(--accent-bright) / .4)", fontSize: 11 }}>·</span>
+          <span className="font-sans" style={{ fontSize: "13px", fontWeight: 500, color: "hsl(var(--accent-bright))", letterSpacing: ".01em" }}>
+            {today}
+          </span>
+        </div>
         <h1
           className="font-display"
           style={{ fontSize: "clamp(1.75rem, 3vw, 2.5rem)", fontWeight: 600, letterSpacing: "-.02em", lineHeight: 1.05, color: "hsl(var(--fog))", margin: 0 }}
