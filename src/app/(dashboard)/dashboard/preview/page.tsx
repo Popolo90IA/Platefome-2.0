@@ -115,7 +115,7 @@ export default function PreviewPage() {
             )}
             <iframe
               key={key}
-              src={menuUrl}
+              src={menuUrl ?? undefined}
               className="w-full h-full border-0"
               style={{ borderRadius: mode === "mobile" ? 26 : 10 }}
               title="תצוגה מקדימה של התפריט"
