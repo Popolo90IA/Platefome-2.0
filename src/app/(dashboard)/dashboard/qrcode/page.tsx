@@ -25,10 +25,10 @@ const FORMATS = [
 
 // ── BG color swatches ──────────────────────────────────────────────────────
 const BG_SWATCHES = [
-  { bg: "linear-gradient(135deg, #f6f4ef, #ede7d8)", value: "#f6f4ef", label: "בז'" },
-  { bg: "hsl(28,15%,12%)",  value: "hsl(28,15%,12%)",  label: "כהה"  },
-  { bg: "hsl(28,62%,42%)",  value: "hsl(28,62%,42%)",  label: "ברונזה" },
-  { bg: "#ffffff",           value: "#ffffff",           label: "לבן",  border: true },
+  { bg: "linear-gradient(135deg, #f6f4ef, #ede7d8)", label: "בז'",    border: false },
+  { bg: "hsl(28,15%,12%)",                           label: "כהה",    border: false },
+  { bg: "hsl(28,62%,42%)",                           label: "ברונזה", border: false },
+  { bg: "#ffffff",                                   label: "לבן",    border: true  },
 ];
 
 // ── QR style presets ───────────────────────────────────────────────────────
@@ -58,8 +58,8 @@ export default function QRCodePage() {
   const selectedBg       = BG_SWATCHES[bgIdx];
   const selectedQrStyle  = QR_STYLES[qrStyleIdx];
 
-  // Derived: card text color based on bg
-  const isDarkBg = bgIdx === 1;
+  // Derived: card text color based on bg (dark bg = idx 1, bronze bg = idx 2)
+  const isDarkBg = bgIdx === 1 || bgIdx === 2;
   const textColor       = isDarkBg ? "#f6f4ef" : "hsl(28,15%,18%)";
   const subtitleColor   = isDarkBg ? "rgba(246,244,239,.55)" : "hsl(28,15%,40%)";
   const accentColor     = "hsl(28,62%,38%)";
@@ -242,11 +242,42 @@ export default function QRCodePage() {
                     transition: "all .15s",
                   }}
                 >
-                  <div style={{ aspectRatio: item.ratio, borderRadius: 6, marginBottom: 8, background: "hsl(var(--abyss))", display: "grid", placeItems: "center", padding: 12, maxHeight: 60 }}>
-                    <svg viewBox="0 0 40 40" width="100%">
-                      <rect x="8" y="6" width="24" height="32" rx="1" fill="#f6f4ef" stroke="hsl(28,15%,30%)" strokeWidth=".7"/>
-                      <rect x="14" y="14" width="12" height="12" rx="1" fill="hsl(28,15%,12%)"/>
-                    </svg>
+                  <div style={{ borderRadius: 6, marginBottom: 8, background: "hsl(var(--abyss))", display: "grid", placeItems: "center", padding: 10, height: 56 }}>
+                    {i === 0 && (
+                      /* Tent A6 — tall portrait */
+                      <svg viewBox="0 0 28 40" width={28} height={40}>
+                        <rect x="1" y="1" width="26" height="38" rx="2" fill="#f6f4ef" stroke="hsl(28,15%,30%)" strokeWidth=".8"/>
+                        <rect x="8" y="10" width="12" height="12" rx="1" fill="hsl(28,15%,12%)"/>
+                        <rect x="7" y="25" width="14" height="2" rx="1" fill="hsl(28,15%,40%)"/>
+                        <rect x="10" y="29" width="8" height="1.5" rx="1" fill="hsl(28,15%,60%)"/>
+                      </svg>
+                    )}
+                    {i === 1 && (
+                      /* Coaster — square */
+                      <svg viewBox="0 0 36 36" width={36} height={36}>
+                        <rect x="1" y="1" width="34" height="34" rx="6" fill="#f6f4ef" stroke="hsl(28,15%,30%)" strokeWidth=".8"/>
+                        <rect x="10" y="10" width="16" height="16" rx="1" fill="hsl(28,15%,12%)"/>
+                      </svg>
+                    )}
+                    {i === 2 && (
+                      /* Card — landscape */
+                      <svg viewBox="0 0 40 26" width={40} height={26}>
+                        <rect x="1" y="1" width="38" height="24" rx="2" fill="#f6f4ef" stroke="hsl(28,15%,30%)" strokeWidth=".8"/>
+                        <rect x="5" y="6" width="14" height="14" rx="1" fill="hsl(28,15%,12%)"/>
+                        <rect x="23" y="9" width="12" height="2" rx="1" fill="hsl(28,15%,40%)"/>
+                        <rect x="23" y="13" width="9" height="1.5" rx="1" fill="hsl(28,15%,60%)"/>
+                      </svg>
+                    )}
+                    {i === 3 && (
+                      /* Poster — tall with logo area */
+                      <svg viewBox="0 0 24 36" width={24} height={36}>
+                        <rect x="1" y="1" width="22" height="34" rx="1" fill="#f6f4ef" stroke="hsl(28,15%,30%)" strokeWidth=".8"/>
+                        <rect x="5" y="4" width="14" height="4" rx="1" fill="hsl(28,62%,42%)" opacity=".4"/>
+                        <rect x="6" y="11" width="12" height="12" rx="1" fill="hsl(28,15%,12%)"/>
+                        <rect x="5" y="26" width="14" height="2" rx="1" fill="hsl(28,15%,40%)"/>
+                        <rect x="7" y="30" width="10" height="1.5" rx="1" fill="hsl(28,15%,60%)"/>
+                      </svg>
+                    )}
                   </div>
                   <div className="font-mono uppercase" style={{ fontSize: 10, letterSpacing: ".12em", color: i === formatIdx ? "hsl(var(--accent-bright))" : "hsl(var(--fog))" }}>
                     {item.label}
@@ -371,7 +402,11 @@ export default function QRCodePage() {
             <p className="font-sans" style={{ fontSize: 12, color: "hsl(var(--subtle))", marginBottom: 14 }}>
               {tableCount} {selectedFormat.label} · נייר ממוחזר 350gsm · משלוח חינם
             </p>
-            <button className="btn-primary" style={{ width: "100%", justifyContent: "center", padding: "11px 20px", fontSize: 13 }}>
+            <button
+              className="btn-primary"
+              style={{ width: "100%", justifyContent: "center", padding: "11px 20px", fontSize: 13 }}
+              onClick={() => alert(`הזמנה: ${tableCount} × ${selectedFormat.label} — ₪${totalPrice}\n\nנציג יצור קשר בקרוב`)}
+            >
               הזמן עכשיו · 3 ימי עסקים
             </button>
           </div>
@@ -422,7 +457,7 @@ export default function QRCodePage() {
                 }}/>
                 <div style={{
                   position: "absolute", width: cardW, height: cardH,
-                  background: selectedBg.value.includes("gradient") ? selectedBg.bg : selectedBg.value,
+                  background: selectedBg.bg,
                   borderRadius: 6, padding: isLandscape ? "20px 24px" : "36px 30px", boxSizing: "border-box",
                   boxShadow: "0 30px 60px -20px rgba(0,0,0,.5), 0 60px 120px -40px rgba(0,0,0,.6), inset 0 1px 0 rgba(255,255,255,.5)",
                   transform: "rotateY(-12deg) rotateX(2deg)",
@@ -488,7 +523,7 @@ export default function QRCodePage() {
               /* Front view — flat */
               <div style={{
                 width: cardW, height: cardH,
-                background: selectedBg.value.includes("gradient") ? selectedBg.bg : selectedBg.value,
+                background: selectedBg.bg,
                 borderRadius: 10, padding: "28px 24px", boxSizing: "border-box",
                 boxShadow: "0 8px 32px -8px rgba(0,0,0,.4)",
                 display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center",
@@ -511,7 +546,7 @@ export default function QRCodePage() {
               /* Back view */
               <div style={{
                 width: cardW, height: cardH,
-                background: selectedBg.value.includes("gradient") ? selectedBg.bg : selectedBg.value,
+                background: selectedBg.bg,
                 borderRadius: 10, padding: "28px 24px", boxSizing: "border-box",
                 boxShadow: "0 8px 32px -8px rgba(0,0,0,.4)",
                 display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign: "center",
@@ -531,29 +566,32 @@ export default function QRCodePage() {
             )}
 
             {activeTab === 3 && (
-              /* Print layout — 4-up grid */
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
-                {[1, 2, 3, 4].map((n) => (
-                  <div key={n} style={{
-                    width: cardW * 0.55, height: cardH * 0.55,
-                    background: selectedBg.value.includes("gradient") ? selectedBg.bg : selectedBg.value,
-                    borderRadius: 8, padding: 14, boxSizing: "border-box",
-                    boxShadow: "0 4px 16px -4px rgba(0,0,0,.35)",
-                    display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center", gap: 8,
-                  }}>
-                    <div style={{ width: qrSize * 0.55, height: qrSize * 0.55, background: selectedQrStyle.bg, borderRadius: 6, padding: 6, boxSizing: "border-box", flexShrink: 0 }}>
-                      {menuUrl && (
-                        <QRCode value={`${menuUrl}?table=${n}`} size={(qrSize * 0.55) - 12} fgColor={selectedQrStyle.fg} bgColor={selectedQrStyle.bg} errorCorrectionLevel="H" />
-                      )}
+              /* Print layout — grid capped at 12 for display, shows all tableCount QR codes */
+              <div style={{ maxHeight: 520, overflowY: "auto", width: "100%" }}>
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(110px, 1fr))", gap: 12, padding: 4 }}>
+                  {Array.from({ length: Math.min(tableCount, 24) }, (_, i) => i + 1).map((n) => (
+                    <div key={n} style={{
+                      background: selectedBg.bg,
+                      borderRadius: 8, padding: 10, boxSizing: "border-box",
+                      boxShadow: "0 4px 16px -4px rgba(0,0,0,.35)",
+                      display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center", gap: 6,
+                    }}>
+                      <div style={{ width: 72, height: 72, background: selectedQrStyle.bg, borderRadius: 6, padding: 5, boxSizing: "border-box", flexShrink: 0 }}>
+                        {menuUrl && (
+                          <QRCode value={`${menuUrl}?table=${n}`} size={62} fgColor={selectedQrStyle.fg} bgColor={selectedQrStyle.bg} errorCorrectionLevel="H" />
+                        )}
+                      </div>
+                      <div className="font-mono" style={{ fontSize: 8, letterSpacing: ".14em", color: subtitleColor }}>
+                        שולחן {n}
+                      </div>
                     </div>
-                    <div className="font-mono" style={{ fontSize: 8, letterSpacing: ".14em", color: subtitleColor }}>
-                      שולחן {n}
+                  ))}
+                  {tableCount > 24 && (
+                    <div style={{ display: "flex", alignItems: "center", justifyContent: "center", background: "rgba(255,255,255,.04)", borderRadius: 8, padding: 10, fontSize: 11, color: "rgba(255,255,255,.4)", fontFamily: "monospace" }}>
+                      +{tableCount - 24} נוספים
                     </div>
-                    <div className="font-sans" style={{ fontSize: 8, color: subtitleColor, lineHeight: 1.3 }}>
-                      {cta}
-                    </div>
-                  </div>
-                ))}
+                  )}
+                </div>
               </div>
             )}
           </div>
@@ -575,12 +613,8 @@ export default function QRCodePage() {
             ].map((v, i) => (
               <button
                 key={i}
-                onClick={() => {
-                  setQrStyleIdx(i < 3 ? i : 0);
-                  if (i % 2 === 0) handleDownloadVariant(v.fg, v.bg, "png");
-                  else handleDownloadVariant(v.fg, v.bg, "svg");
-                }}
-                title={`בחר סגנון: ${v.label}`}
+                onClick={() => setQrStyleIdx(i < QR_STYLES.length ? i : QR_STYLES.length - 1)}
+                title={`החל סגנון: ${v.label}`}
                 style={{
                   background: "rgba(255,255,255,.04)", border: "1px solid rgba(255,255,255,.08)",
                   borderRadius: 12, padding: 16, textAlign: "center", cursor: "pointer",
@@ -610,6 +644,16 @@ export default function QRCodePage() {
                   {v.label}
                   <span style={{ display: "block", marginTop: 3, fontSize: 9, color: "rgba(255,255,255,.4)" }}>{v.size}</span>
                 </div>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleDownloadVariant(v.fg, v.bg, i % 2 === 0 ? "png" : "svg");
+                  }}
+                  title="הורד"
+                  style={{ marginTop: 8, padding: "4px 10px", borderRadius: 6, border: "1px solid rgba(255,255,255,.15)", background: "rgba(255,255,255,.06)", color: "rgba(255,255,255,.6)", fontSize: 9, cursor: "pointer", letterSpacing: ".1em" }}
+                >
+                  הורד
+                </button>
               </button>
             ))}
           </div>
