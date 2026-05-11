@@ -111,10 +111,10 @@ export default function CategoriesPage() {
     return (
       <Card className="max-w-md mx-auto shadow-premium">
         <CardContent className="pt-8 pb-8 text-center">
-          <FolderTree className="h-12 w-12 mx-auto text-[hsl(var(--gold))] mb-4" />
+          <FolderTree className="h-12 w-12 mx-auto mb-4" style={{ color: "hsl(var(--accent-bright))" }} />
           <p className="mb-5 text-muted-foreground">צור תחילה פרופיל מסעדה</p>
           <Link href="/dashboard/settings">
-            <Button className="bg-gold-gradient hover:opacity-90">
+            <Button className="text-white hover:opacity-90" style={{ background: "var(--grad-bronze)" }}>
               צור פרופיל
             </Button>
           </Link>
@@ -125,17 +125,24 @@ export default function CategoriesPage() {
 
   return (
     <div className="max-w-4xl mx-auto space-y-6 animate-fade-up">
+      {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="font-serif-display text-4xl font-bold">קטגוריות</h1>
+          <h1 className="font-serif-display text-4xl font-bold">
+            <span className="text-gold-gradient">קטגוריות</span>
+          </h1>
           <p className="text-muted-foreground mt-2">
-            ארגן את המנות בקטגוריות מסודרות
+            ארגן את המנות בקטגוריות מסודרות ·{" "}
+            <span style={{ color: "hsl(var(--accent-bright))" }}>
+              {categories.length} קטגוריות
+            </span>
           </p>
         </div>
         {!showForm && (
           <Button
             onClick={() => setShowForm(true)}
-            className="bg-gold-gradient hover:opacity-90 shadow-gold-glow"
+            className="text-white hover:opacity-90"
+            style={{ background: "var(--grad-bronze)", boxShadow: "0 2px 12px hsl(28 62% 38% / .30)" }}
           >
             <Plus className="h-4 w-4" />
             קטגוריה חדשה
@@ -143,8 +150,9 @@ export default function CategoriesPage() {
         )}
       </div>
 
+      {/* Form */}
       {showForm && (
-        <Card className="shadow-premium animate-scale-in border-[hsl(var(--gold))]/20">
+        <Card className="shadow-premium animate-scale-in" style={{ borderColor: "hsl(var(--gold) / .25)" }}>
           <CardHeader className="flex flex-row items-center justify-between pb-3">
             <CardTitle className="font-serif-display text-xl">
               {editingId ? "עריכת קטגוריה" : "קטגוריה חדשה"}
@@ -166,6 +174,7 @@ export default function CategoriesPage() {
                   onChange={(e) =>
                     setForm((f) => ({ ...f, name: e.target.value }))
                   }
+                  placeholder="לדוגמה: מנות ראשונות, עיקריות, קינוחים..."
                   required
                   autoFocus
                 />
@@ -184,14 +193,15 @@ export default function CategoriesPage() {
                   }
                 />
                 <p className="text-xs text-muted-foreground">
-                  מספר נמוך יופיע קודם
+                  מספר נמוך יופיע קודם בתפריט
                 </p>
               </div>
               <div className="flex gap-2 pt-2">
                 <Button
                   type="submit"
                   disabled={saving}
-                  className="bg-gold-gradient hover:opacity-90"
+                  className="text-white hover:opacity-90"
+                  style={{ background: "var(--grad-bronze)" }}
                 >
                   {saving ? (
                     <Loader2 className="h-4 w-4 animate-spin" />
@@ -208,15 +218,25 @@ export default function CategoriesPage() {
         </Card>
       )}
 
+      {/* List */}
       {categories.length === 0 ? (
         <Card className="shadow-premium">
-          <CardContent className="pt-10 pb-10 text-center">
-            <FolderTree className="h-12 w-12 mx-auto text-[hsl(var(--gold))] opacity-50 mb-4" />
-            <p className="text-muted-foreground mb-5">אין קטגוריות עדיין</p>
+          <CardContent className="pt-16 pb-16 text-center">
+            <div
+              className="h-16 w-16 rounded-2xl flex items-center justify-center mx-auto mb-4"
+              style={{ background: "hsl(var(--accent-bright) / .1)" }}
+            >
+              <FolderTree className="h-8 w-8" style={{ color: "hsl(var(--accent-bright))" }} />
+            </div>
+            <p className="font-serif-display text-xl font-bold mb-1">אין קטגוריות עדיין</p>
+            <p className="text-muted-foreground text-sm mb-6">
+              קטגוריות עוזרות ללקוחות למצוא מנות בקלות
+            </p>
             {!showForm && (
               <Button
                 onClick={() => setShowForm(true)}
-                className="bg-gold-gradient hover:opacity-90"
+                className="text-white hover:opacity-90"
+                style={{ background: "var(--grad-bronze)" }}
               >
                 <Plus className="h-4 w-4" />
                 צור קטגוריה ראשונה
@@ -229,36 +249,52 @@ export default function CategoriesPage() {
           {categories.map((cat, idx) => (
             <Card
               key={cat.id}
-              className="group shadow-sm hover:shadow-premium hover:border-[hsl(var(--gold))]/30 transition-all animate-fade-up"
-              style={{ animationDelay: `${idx * 40}ms` }}
+              className="group shadow-sm hover:shadow-premium transition-all animate-fade-up"
+              style={{
+                animationDelay: `${idx * 40}ms`,
+                borderColor: "transparent",
+              }}
+              onMouseEnter={(e) => {
+                (e.currentTarget as HTMLDivElement).style.borderColor = "hsl(var(--gold) / .25)";
+              }}
+              onMouseLeave={(e) => {
+                (e.currentTarget as HTMLDivElement).style.borderColor = "transparent";
+              }}
             >
-              <CardContent className="py-4 flex items-center justify-between gap-4">
-                <div className="flex items-center gap-3 flex-1 min-w-0">
-                  <GripVertical className="h-5 w-5 text-muted-foreground/40 flex-shrink-0" />
-                  <div className="h-10 w-10 rounded-lg bg-[hsl(var(--gold))]/10 flex items-center justify-center flex-shrink-0">
-                    <span className="font-bold text-[hsl(var(--gold-dark))]">
-                      {cat.display_order}
-                    </span>
-                  </div>
-                  <div className="min-w-0">
-                    <div className="font-semibold truncate">{cat.name}</div>
-                  </div>
+              <CardContent className="py-4 flex items-center gap-4">
+                {/* Drag handle */}
+                <GripVertical className="h-5 w-5 text-muted-foreground/30 flex-shrink-0 cursor-grab" />
+
+                {/* Order badge */}
+                <div
+                  className="h-9 w-9 rounded-lg flex items-center justify-center flex-shrink-0 font-mono text-sm font-bold text-white"
+                  style={{ background: "var(--grad-bronze)" }}
+                >
+                  {cat.display_order}
                 </div>
-                <div className="flex gap-1 flex-shrink-0">
+
+                {/* Name */}
+                <div className="flex-1 min-w-0">
+                  <div className="font-semibold truncate">{cat.name}</div>
+                </div>
+
+                {/* Actions */}
+                <div className="flex gap-1 flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
                   <Button
                     size="icon"
                     variant="ghost"
                     onClick={() => handleEdit(cat)}
+                    className="h-8 w-8 hover:bg-[hsl(var(--gold))]/10"
                   >
-                    <Edit className="h-4 w-4" />
+                    <Edit className="h-4 w-4" style={{ color: "hsl(var(--gold-dark))" }} />
                   </Button>
                   <Button
                     size="icon"
                     variant="ghost"
-                    className="text-destructive hover:text-destructive hover:bg-destructive/10"
+                    className="h-8 w-8 hover:bg-[hsl(var(--ember))]/10"
                     onClick={() => handleDelete(cat.id)}
                   >
-                    <Trash2 className="h-4 w-4" />
+                    <Trash2 className="h-4 w-4" style={{ color: "hsl(var(--ember))" }} />
                   </Button>
                 </div>
               </CardContent>
