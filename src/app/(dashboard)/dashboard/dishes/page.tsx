@@ -844,9 +844,11 @@ export default function DishesPage() {
                     <Button
                       size="sm"
                       variant="ghost"
-                      onClick={() => handleEdit(dish)}
+                      asChild
                     >
-                      <Edit className="h-4 w-4" />
+                      <Link href={`/dashboard/menu/${dish.id}/edit`}>
+                        <Edit className="h-4 w-4" />
+                      </Link>
                     </Button>
                     <Button
                       size="icon"
