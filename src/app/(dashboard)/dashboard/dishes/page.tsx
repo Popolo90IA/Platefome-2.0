@@ -841,15 +841,12 @@ export default function DishesPage() {
                     {dish.is_available ? "זמין" : "אזל"}
                   </button>
                   <div className="flex gap-0.5">
-                    <Button
-                      size="sm"
-                      variant="ghost"
-                      asChild
+                    <Link
+                      href={`/dashboard/menu/${dish.id}/edit`}
+                      className="inline-flex items-center justify-center h-9 w-9 rounded-md text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground"
                     >
-                      <Link href={`/dashboard/menu/${dish.id}/edit`}>
-                        <Edit className="h-4 w-4" />
-                      </Link>
-                    </Button>
+                      <Edit className="h-4 w-4" />
+                    </Link>
                     <Button
                       size="icon"
                       variant="ghost"
