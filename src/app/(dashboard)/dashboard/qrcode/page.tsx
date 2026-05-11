@@ -185,7 +185,10 @@ export default function QRCodePage() {
   const cardW = selectedFormat.width;
   const cardH = selectedFormat.height;
   const isLandscape = cardW > cardH;
-  const qrSize = Math.min(cardW, cardH) * 0.5;
+  const isCoaster   = formatIdx === 1; // square coaster — special layout
+  const qrSize = isCoaster
+    ? Math.round(cardW * 0.62)           // QR fills ~62% of the coaster
+    : Math.min(cardW, cardH) * 0.5;
 
   return (
     <div dir="rtl" style={{ color: "hsl(var(--fog))" }}>
@@ -458,63 +461,95 @@ export default function QRCodePage() {
                 <div style={{
                   position: "absolute", width: cardW, height: cardH,
                   background: selectedBg.bg,
-                  borderRadius: 6, padding: isLandscape ? "20px 24px" : "36px 30px", boxSizing: "border-box",
+                  borderRadius: isCoaster ? "50%" : 6,
+                  padding: isCoaster ? 20 : isLandscape ? "20px 24px" : "28px 24px",
+                  boxSizing: "border-box",
                   boxShadow: "0 30px 60px -20px rgba(0,0,0,.5), 0 60px 120px -40px rgba(0,0,0,.6), inset 0 1px 0 rgba(255,255,255,.5)",
                   transform: "rotateY(-12deg) rotateX(2deg)",
                   transformOrigin: "bottom center",
-                  display: "flex", flexDirection: isLandscape ? "row" : "column",
-                  alignItems: "center", textAlign: "center",
-                  gap: isLandscape ? 20 : 0,
+                  display: "flex",
+                  flexDirection: isLandscape ? "row" : "column",
+                  alignItems: "center",
+                  justifyContent: isCoaster ? "center" : "flex-start",
+                  textAlign: "center",
+                  gap: isLandscape ? 20 : isCoaster ? 8 : 0,
                 }}>
-                  {!isLandscape && (
-                    <div style={{ marginBottom: 12 }}>
-                      <LogoMark size={38} variant={isDarkBg ? "dark" : "light"} />
+                  {/* Coaster layout: logo top, QR centre, tagline bottom */}
+                  {isCoaster && (
+                    <>
+                      <LogoMark size={28} variant={isDarkBg ? "dark" : "light"} />
+                      <div style={{ width: qrSize, height: qrSize, background: selectedQrStyle.bg, borderRadius: 10, padding: 10, boxSizing: "border-box", flexShrink: 0 }}>
+                        {menuUrl && (
+                          <QRCode
+                            ref={svgRef}
+                            value={menuUrl}
+                            size={qrSize - 20}
+                            fgColor={selectedQrStyle.fg}
+                            bgColor={selectedQrStyle.bg}
+                            errorCorrectionLevel="H"
+                          />
+                        )}
+                      </div>
+                      <div className="font-mono" style={{ fontSize: 8, letterSpacing: ".16em", color: subtitleColor, textTransform: "uppercase" }}>
+                        {cta}
+                      </div>
+                    </>
+                  )}
+
+                  {/* Portrait layout (Tent A6, Poster) */}
+                  {!isCoaster && !isLandscape && (
+                    <div style={{ marginBottom: 10 }}>
+                      <LogoMark size={32} variant={isDarkBg ? "dark" : "light"} />
                     </div>
                   )}
-                  {!isLandscape && (
-                    <div style={{ marginBottom: 20 }}>
-                      <div className="font-display" style={{ fontSize: 13, fontWeight: 600, letterSpacing: ".26em", color: textColor, marginBottom: 4 }}>
+                  {!isCoaster && !isLandscape && (
+                    <div style={{ marginBottom: 14 }}>
+                      <div className="font-display" style={{ fontSize: 12, fontWeight: 600, letterSpacing: ".26em", color: textColor, marginBottom: 3 }}>
                         PLATE<em style={{ fontStyle: "italic", color: accentColor, fontWeight: 400 }}>FORM</em>
                       </div>
-                      <div className="font-mono" style={{ fontSize: 9, letterSpacing: ".2em", color: subtitleColor }}>
+                      <div className="font-mono" style={{ fontSize: 8, letterSpacing: ".2em", color: subtitleColor }}>
                         EVERY DISH · IN 360°
                       </div>
                     </div>
                   )}
 
-                  {/* QR code */}
-                  <div style={{
-                    width: qrSize, height: qrSize,
-                    background: selectedQrStyle.bg,
-                    borderRadius: 12, padding: 12, boxSizing: "border-box",
-                    boxShadow: "0 6px 20px -8px rgba(0,0,0,.2)",
-                    marginBottom: isLandscape ? 0 : 16,
-                    flexShrink: 0,
-                  }}>
-                    {menuUrl && (
-                      <QRCode
-                        ref={svgRef}
-                        value={menuUrl}
-                        size={qrSize - 24}
-                        fgColor={selectedQrStyle.fg}
-                        bgColor={selectedQrStyle.bg}
-                        errorCorrectionLevel="H"
-                      />
-                    )}
-                  </div>
-
-                  <div style={{ flex: isLandscape ? 1 : "unset" }}>
-                    <div className="font-display" style={{ fontStyle: "italic", fontSize: isLandscape ? 18 : 22, color: textColor, lineHeight: 1.1, marginBottom: 6 }}>
-                      {cta.split(" ").map((word, i, arr) =>
-                        i === arr.length - 1
-                          ? <em key={i} style={{ color: accentColor }}>{word}</em>
-                          : <span key={i}>{word} </span>
+                  {/* QR code — portrait + landscape */}
+                  {!isCoaster && (
+                    <div style={{
+                      width: qrSize, height: qrSize,
+                      background: selectedQrStyle.bg,
+                      borderRadius: 12, padding: 12, boxSizing: "border-box",
+                      boxShadow: "0 6px 20px -8px rgba(0,0,0,.2)",
+                      marginBottom: isLandscape ? 0 : 14,
+                      flexShrink: 0,
+                    }}>
+                      {menuUrl && (
+                        <QRCode
+                          ref={svgRef}
+                          value={menuUrl}
+                          size={qrSize - 24}
+                          fgColor={selectedQrStyle.fg}
+                          bgColor={selectedQrStyle.bg}
+                          errorCorrectionLevel="H"
+                        />
                       )}
                     </div>
-                    <div className="font-sans" style={{ fontSize: 11.5, color: subtitleColor, lineHeight: 1.4 }}>
-                      {desc}
+                  )}
+
+                  {!isCoaster && (
+                    <div style={{ flex: isLandscape ? 1 : "unset" }}>
+                      <div className="font-display" style={{ fontStyle: "italic", fontSize: isLandscape ? 16 : 18, color: textColor, lineHeight: 1.1, marginBottom: 5 }}>
+                        {cta.split(" ").map((word, wi, arr) =>
+                          wi === arr.length - 1
+                            ? <em key={wi} style={{ color: accentColor }}>{word}</em>
+                            : <span key={wi}>{word} </span>
+                        )}
+                      </div>
+                      <div className="font-sans" style={{ fontSize: 10.5, color: subtitleColor, lineHeight: 1.4 }}>
+                        {desc}
+                      </div>
                     </div>
-                  </div>
+                  )}
                 </div>
               </div>
             )}
@@ -524,21 +559,25 @@ export default function QRCodePage() {
               <div style={{
                 width: cardW, height: cardH,
                 background: selectedBg.bg,
-                borderRadius: 10, padding: "28px 24px", boxSizing: "border-box",
+                borderRadius: isCoaster ? "50%" : 10,
+                padding: isCoaster ? 18 : "24px 20px",
+                boxSizing: "border-box",
                 boxShadow: "0 8px 32px -8px rgba(0,0,0,.4)",
-                display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center",
-                gap: 12,
+                display: "flex", flexDirection: "column", alignItems: "center",
+                justifyContent: isCoaster ? "center" : "flex-start",
+                textAlign: "center",
+                gap: isCoaster ? 8 : 12,
               }}>
-                <LogoMark size={34} variant={isDarkBg ? "dark" : "light"} />
+                <LogoMark size={isCoaster ? 26 : 34} variant={isDarkBg ? "dark" : "light"} />
                 <div style={{ width: qrSize, height: qrSize, background: selectedQrStyle.bg, borderRadius: 10, padding: 10, boxSizing: "border-box", flexShrink: 0 }}>
                   {menuUrl && (
                     <QRCode value={menuUrl} size={qrSize - 20} fgColor={selectedQrStyle.fg} bgColor={selectedQrStyle.bg} errorCorrectionLevel="H" />
                   )}
                 </div>
-                <div className="font-display" style={{ fontStyle: "italic", fontSize: 18, color: textColor, lineHeight: 1.2 }}>
+                <div className="font-display" style={{ fontStyle: "italic", fontSize: isCoaster ? 10 : 18, color: textColor, lineHeight: 1.2 }}>
                   {cta}
                 </div>
-                <div className="font-sans" style={{ fontSize: 11, color: subtitleColor }}>{desc}</div>
+                {!isCoaster && <div className="font-sans" style={{ fontSize: 11, color: subtitleColor }}>{desc}</div>}
               </div>
             )}
 
@@ -547,10 +586,12 @@ export default function QRCodePage() {
               <div style={{
                 width: cardW, height: cardH,
                 background: selectedBg.bg,
-                borderRadius: 10, padding: "28px 24px", boxSizing: "border-box",
+                borderRadius: isCoaster ? "50%" : 10,
+                padding: isCoaster ? 24 : "28px 24px",
+                boxSizing: "border-box",
                 boxShadow: "0 8px 32px -8px rgba(0,0,0,.4)",
                 display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign: "center",
-                gap: 16,
+                gap: isCoaster ? 10 : 16,
               }}>
                 <LogoMark size={52} variant={isDarkBg ? "dark" : "light"} />
                 <div className="font-display" style={{ fontSize: 20, fontWeight: 600, letterSpacing: ".3em", color: textColor }}>
