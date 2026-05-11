@@ -127,7 +127,7 @@ export default function DashboardPage() {
           className="py-10 px-8 border"
           style={{ background: "hsl(var(--deep))", borderColor: "hsl(var(--line))", borderRadius: "var(--radius-xl)" }}
         >
-          <p className="font-mono uppercase mb-3" style={{ fontSize: "10.5px", letterSpacing: ".22em", color: "hsl(var(--accent-bright))" }}>
+          <p className="font-mono uppercase mb-3" style={{ fontSize: "12px", letterSpacing: ".1em", color: "hsl(var(--accent-bright))" }}>
             Getting started
           </p>
           <h2 className="font-display mb-4" style={{ fontSize: "1.5rem", fontWeight: 600, color: "hsl(var(--fog))", letterSpacing: "-.03em" }}>
@@ -204,7 +204,7 @@ export default function DashboardPage() {
                   />
                   {/* label row */}
                   <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
-                    <span className="font-mono uppercase" style={{ fontSize: "10px", letterSpacing: ".18em", color: "hsl(var(--subtle))" }}>
+                    <span className="font-mono uppercase" style={{ fontSize: "11px", letterSpacing: ".08em", color: "hsl(var(--subtle))" }}>
                       {s.label}
                     </span>
                     <div style={STAT_ICON_STYLE}>{s.icon}</div>
@@ -215,7 +215,7 @@ export default function DashboardPage() {
                   </div>
                   {/* delta */}
                   {s.delta && (
-                    <div className="font-mono" style={{ fontSize: 11, color: "hsl(var(--accent-bright))", marginTop: 8, display: "flex", alignItems: "center", gap: 5 }}>
+                    <div className="font-mono" style={{ fontSize: 12, color: "hsl(var(--accent-bright))", marginTop: 8, display: "flex", alignItems: "center", gap: 5 }}>
                       ↑ {s.delta}
                     </div>
                   )}
@@ -264,7 +264,7 @@ export default function DashboardPage() {
                   <button
                     onClick={handleCopyLink}
                     className="flex items-center gap-1.5 font-mono flex-shrink-0 transition-colors duration-150"
-                    style={{ fontSize: 11, color: copied ? "hsl(var(--accent-bright))" : "hsl(var(--dim))" }}
+                    style={{ fontSize: 12, color: copied ? "hsl(var(--accent-bright))" : "hsl(var(--dim))" }}
                     onMouseEnter={e => { if (!copied) (e.currentTarget as HTMLButtonElement).style.color = "hsl(var(--fog))"; }}
                     onMouseLeave={e => { if (!copied) (e.currentTarget as HTMLButtonElement).style.color = "hsl(var(--dim))"; }}
                   >
@@ -315,7 +315,7 @@ export default function DashboardPage() {
                   <h3 className="font-display" style={{ fontSize: 20, fontWeight: 600, color: "hsl(var(--fog))", margin: 0 }}>
                     הצעדים הראשונים
                   </h3>
-                  <span className="font-mono" style={{ fontSize: 11, color: "hsl(var(--dim))" }}>
+                  <span className="font-mono" style={{ fontSize: 12, color: "hsl(var(--dim))" }}>
                     {doneCount}/{checklistItems.length}
                   </span>
                 </div>
@@ -373,7 +373,7 @@ export default function DashboardPage() {
 
           {/* ── Quick actions ──────────────────────────── */}
           <div>
-            <p className="font-mono uppercase" style={{ fontSize: "10px", letterSpacing: ".22em", color: "hsl(var(--dim))", marginBottom: 16 }}>
+            <p className="font-mono uppercase" style={{ fontSize: "11.5px", letterSpacing: ".1em", color: "hsl(var(--dim))", marginBottom: 16 }}>
               פעולות מהירות
             </p>
             <div

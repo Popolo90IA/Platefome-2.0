@@ -76,7 +76,7 @@ export function Header() {
         {/* Role pill */}
         {role && (
           <span
-            className="hidden sm:block font-mono text-[10px] tracking-[0.15em] uppercase"
+            className="hidden sm:block font-mono text-[11px] tracking-[0.1em] uppercase"
             style={{ color: "hsl(var(--dim))" }}
           >
             {role === "super_admin" ? "Admin" : "Owner"}

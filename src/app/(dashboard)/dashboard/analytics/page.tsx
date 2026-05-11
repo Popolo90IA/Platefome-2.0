@@ -75,7 +75,7 @@ export default function AnalyticsPage() {
   if (!restaurant) {
     return (
       <div style={{ ...CARD_STYLE, maxWidth: 420, margin: "0 auto", textAlign: "center", padding: "40px 32px" }}>
-        <p className="font-mono uppercase" style={{ fontSize: "10.5px", letterSpacing: ".22em", color: "hsl(var(--accent-bright))", marginBottom: 12 }}>
+        <p className="font-mono uppercase" style={{ fontSize: "12px", letterSpacing: ".1em", color: "hsl(var(--accent-bright))", marginBottom: 12 }}>
           Getting started
         </p>
         <h2 className="font-display" style={{ fontSize: "1.5rem", fontWeight: 600, color: "hsl(var(--fog))", margin: "0 0 12px" }}>
@@ -172,7 +172,7 @@ export default function AnalyticsPage() {
     <div dir="rtl" style={{ color: "hsl(var(--fog))" }}>
       {/* ── Header ─────────────────────────────────────── */}
       <div style={{ marginBottom: 32 }}>
-        <p className="font-mono uppercase" style={{ fontSize: "10.5px", letterSpacing: ".22em", color: "hsl(var(--accent-bright))", marginBottom: 10 }}>
+        <p className="font-mono uppercase" style={{ fontSize: "12px", letterSpacing: ".1em", color: "hsl(var(--accent-bright))", marginBottom: 10 }}>
           Analytics · {range} ימים
         </p>
         <h1 className="font-display" style={{ fontSize: "clamp(2rem, 4vw, 2.75rem)", fontWeight: 600, lineHeight: 1.05, letterSpacing: "-.02em", color: "hsl(var(--fog))", margin: "0 0 8px" }}>
@@ -212,14 +212,14 @@ export default function AnalyticsPage() {
             <h3 className="font-display" style={{ fontSize: 20, fontWeight: 600, color: "hsl(var(--fog))", margin: 0, flex: 1 }}>
               סריקות לאורך זמן
             </h3>
-            <span className="font-mono uppercase" style={{ fontSize: "9.5px", letterSpacing: ".18em", padding: "3px 10px", borderRadius: 99, background: "hsl(28,62%,42%,.1)", color: "hsl(var(--accent-bright))", border: "1px solid hsl(28,62%,42%,.2)" }}>
+            <span className="font-mono uppercase" style={{ fontSize: "11px", letterSpacing: ".08em", padding: "3px 10px", borderRadius: 99, background: "hsl(28,62%,42%,.1)", color: "hsl(var(--accent-bright))", border: "1px solid hsl(28,62%,42%,.2)" }}>
               Live
             </span>
           </div>
           <div className="font-sans" style={{ fontSize: 64, lineHeight: 1, fontWeight: 800, letterSpacing: "-.04em", color: "hsl(var(--fog))" }}>
             {(totalScans + totalViews).toLocaleString()}
           </div>
-          <div className="font-mono" style={{ display: "inline-flex", alignItems: "center", gap: 5, fontSize: 11, padding: "4px 10px", borderRadius: 99, background: "hsl(28,62%,42%,.1)", color: "hsl(var(--accent-bright))", marginTop: 12, letterSpacing: ".04em" }}>
+          <div className="font-mono" style={{ display: "inline-flex", alignItems: "center", gap: 5, fontSize: 12, padding: "4px 10px", borderRadius: 99, background: "hsl(28,62%,42%,.1)", color: "hsl(var(--accent-bright))", marginTop: 12, letterSpacing: ".04em" }}>
             ↑ +24% vs prev. {range}d
           </div>
 
@@ -267,14 +267,14 @@ export default function AnalyticsPage() {
             <h3 className="font-display" style={{ fontSize: 20, fontWeight: 600, color: "hsl(var(--fog))", margin: 0, flex: 1 }}>
               תצוגות לפי מצב
             </h3>
-            <span className="font-mono uppercase" style={{ fontSize: "9.5px", letterSpacing: ".18em", padding: "3px 10px", borderRadius: 99, background: "hsl(28,62%,42%,.1)", color: "hsl(var(--accent-bright))", border: "1px solid hsl(28,62%,42%,.2)" }}>
+            <span className="font-mono uppercase" style={{ fontSize: "11px", letterSpacing: ".08em", padding: "3px 10px", borderRadius: 99, background: "hsl(28,62%,42%,.1)", color: "hsl(var(--accent-bright))", border: "1px solid hsl(28,62%,42%,.2)" }}>
               3D · 360 · AR
             </span>
           </div>
           <div className="font-sans" style={{ fontSize: 48, lineHeight: 1, fontWeight: 800, letterSpacing: "-.04em", color: "hsl(var(--fog))" }}>
             {totalEngaged.toLocaleString()}
           </div>
-          <div className="font-mono" style={{ display: "inline-flex", alignItems: "center", gap: 5, fontSize: 11, padding: "4px 10px", borderRadius: 99, background: "hsl(28,62%,42%,.1)", color: "hsl(var(--accent-bright))", marginTop: 12, letterSpacing: ".04em" }}>
+          <div className="font-mono" style={{ display: "inline-flex", alignItems: "center", gap: 5, fontSize: 12, padding: "4px 10px", borderRadius: 99, background: "hsl(28,62%,42%,.1)", color: "hsl(var(--accent-bright))", marginTop: 12, letterSpacing: ".04em" }}>
             ↑ +18% engagement
           </div>
 
@@ -306,7 +306,7 @@ export default function AnalyticsPage() {
                 <div key={leg.label} className="font-sans" style={{ display: "flex", alignItems: "center", gap: 10, fontSize: 13 }}>
                   <span style={{ width: 8, height: 8, borderRadius: 99, background: leg.color, flexShrink: 0 }}/>
                   <span style={{ color: "hsl(var(--fog))", flex: 1 }}>{leg.label}</span>
-                  <span className="font-mono" style={{ fontSize: 11.5, color: "hsl(var(--subtle))", letterSpacing: ".04em" }}>{leg.pct}</span>
+                  <span className="font-mono" style={{ fontSize: 12.5, color: "hsl(var(--subtle))", letterSpacing: ".04em" }}>{leg.pct}</span>
                 </div>
               ))}
             </div>
@@ -371,7 +371,7 @@ export default function AnalyticsPage() {
           ) : (
             topDishes.map((d, idx) => (
               <div key={d.dish!.id} style={{ display: "grid", gridTemplateColumns: "28px 1fr auto", alignItems: "center", gap: 12, padding: "12px 0", borderTop: idx > 0 ? "1px solid hsl(var(--line))" : "none" }}>
-                <span className="font-mono" style={{ fontSize: 11, color: "hsl(var(--subtle))" }}>
+                <span className="font-mono" style={{ fontSize: 12, color: "hsl(var(--subtle))" }}>
                   {String(idx + 1).padStart(2, "0")}
                 </span>
                 <div>
