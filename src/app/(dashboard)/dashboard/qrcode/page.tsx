@@ -428,7 +428,8 @@ export default function QRCodePage() {
           }}/>
 
           {/* Canvas tabs */}
-          <div style={{ display: "inline-flex", gap: 3, padding: 4, background: "rgba(255,255,255,.10)", border: "1px solid rgba(255,255,255,.12)", borderRadius: 12, marginBottom: 28, position: "relative", zIndex: 1 }}>
+          <div style={{ display: "flex", justifyContent: "center", marginBottom: 28, position: "relative", zIndex: 1 }}>
+          <div style={{ display: "inline-flex", gap: 3, padding: 4, background: "rgba(255,255,255,.10)", border: "1px solid rgba(255,255,255,.12)", borderRadius: 12 }}>
             {TABS.map((tab, i) => (
               <button
                 key={tab}
@@ -446,6 +447,7 @@ export default function QRCodePage() {
                 {tab}
               </button>
             ))}
+          </div>
           </div>
 
           {/* ── Stage ─────────────────────────────────────────────────── */}
