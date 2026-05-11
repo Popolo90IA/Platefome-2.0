@@ -162,9 +162,10 @@ export default function AdminAnalyticsPage() {
               onClick={() => setRange(opt.value)}
               className={`px-3 py-1.5 text-sm rounded-md transition-colors ${
                 range === opt.value
-                  ? "bg-gold-gradient text-white shadow-gold-glow"
+                  ? "text-white"
                   : "text-foreground/70 hover:text-foreground"
               }`}
+              style={range === opt.value ? { background: "var(--grad-bronze)", boxShadow: "0 2px 8px hsl(28 62% 38% / .30)" } : {}}
             >
               {opt.label}
             </button>
@@ -221,7 +222,7 @@ export default function AdminAnalyticsPage() {
                 </h2>
                 <div className="flex gap-3 text-xs">
                   <div className="flex items-center gap-1.5">
-                    <div className="h-2 w-2 rounded-sm bg-gold-gradient" />
+                    <div className="h-2 w-2 rounded-sm" style={{ background: "var(--grad-bronze)" }} />
                     <span className="text-muted-foreground">צפיות</span>
                   </div>
                   <div className="flex items-center gap-1.5">
@@ -248,8 +249,8 @@ export default function AdminAnalyticsPage() {
                         style={{ height: `${scanH}%` }}
                       />
                       <div
-                        className="w-full bg-gold-gradient transition-all"
-                        style={{ height: `${viewH}%` }}
+                        className="w-full transition-all"
+                        style={{ background: "var(--grad-bronze)", height: `${viewH}%` }}
                       />
                       <div className="absolute -top-8 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 text-white text-[10px] px-2 py-1 rounded whitespace-nowrap pointer-events-none" style={{ background: "var(--grad-bronze)" }}>
                         {total}
@@ -286,10 +287,9 @@ export default function AdminAnalyticsPage() {
                     >
                       <div
                         className={`h-8 w-8 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 ${
-                          i === 0
-                            ? "bg-gold-gradient text-white shadow-gold-glow"
-                            : "bg-secondary text-foreground"
+                          i === 0 ? "text-white" : "bg-secondary text-foreground"
                         }`}
+                        style={i === 0 ? { background: "var(--grad-bronze)", boxShadow: "0 2px 10px hsl(28 62% 38% / .35)" } : {}}
                       >
                         {i + 1}
                       </div>
@@ -300,8 +300,8 @@ export default function AdminAnalyticsPage() {
                         </div>
                         <div className="mt-1.5 h-1.5 rounded-full bg-secondary overflow-hidden">
                           <div
-                            className="h-full bg-gold-gradient"
-                            style={{ width: `${(r.views / maxTop) * 100}%` }}
+                            className="h-full"
+                            style={{ background: "var(--grad-bronze)", width: `${(r.views / maxTop) * 100}%` }}
                           />
                         </div>
                       </div>
@@ -347,7 +347,10 @@ function BigStat({
           <span className="text-[11px] font-medium text-muted-foreground">
             {label}
           </span>
-          <div className="h-7 w-7 rounded-md bg-gold-gradient flex items-center justify-center text-white shadow-gold-glow">
+          <div
+            className="h-7 w-7 rounded-md flex items-center justify-center text-white"
+            style={{ background: "var(--grad-bronze)", boxShadow: "0 2px 10px hsl(28 62% 38% / .35)" }}
+          >
             {icon}
           </div>
         </div>
