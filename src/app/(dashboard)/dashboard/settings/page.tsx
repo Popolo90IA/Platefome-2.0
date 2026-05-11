@@ -551,6 +551,7 @@ export default function SettingsPage() {
                   folder={UPLOAD_FOLDERS.BANNERS}
                   currentImage={form.banner_url}
                   onUploadComplete={(url) => setForm((f) => ({ ...f, banner_url: url }))}
+                  previewMeta={{ logoUrl: form.logo_url, restaurantName: form.name }}
                 />
               </CardContent>
             </Card>
