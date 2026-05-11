@@ -21,8 +21,29 @@ import {
   Sparkles,
   Lock,
   AlertCircle,
+  Store,
+  Globe,
+  ImageIcon,
+  Bell,
+  AlertTriangle,
+  User,
+  ToggleLeft,
+  ToggleRight,
+  Crown,
 } from "lucide-react";
 import type { Restaurant } from "@/types/database.types";
+
+/* ─── tiny section-icon helper ─── */
+function SectionIcon({ children }: { children: React.ReactNode }) {
+  return (
+    <div
+      className="h-7 w-7 rounded-md flex items-center justify-center text-white flex-shrink-0"
+      style={{ background: "var(--grad-bronze)" }}
+    >
+      {children}
+    </div>
+  );
+}
 
 export default function SettingsPage() {
   const [restaurant, setRestaurant] = useState<Restaurant | null>(null);
@@ -31,6 +52,15 @@ export default function SettingsPage() {
   const [saved, setSaved] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [showPreview, setShowPreview] = useState(true);
+
+  /* account info */
+  const [userEmail, setUserEmail] = useState<string>("");
+  const [userCreatedAt, setUserCreatedAt] = useState<string>("");
+
+  /* menu visibility */
+  const [isActive, setIsActive] = useState(true);
+
+  /* form */
   const [form, setForm] = useState({
     name: "",
     slug: "",
@@ -48,54 +78,36 @@ export default function SettingsPage() {
   });
   const supabase = createClient();
 
-  // Password change state
+  /* password */
   const [pwForm, setPwForm] = useState({ current: "", next: "", confirm: "" });
   const [pwSaving, setPwSaving] = useState(false);
   const [pwSaved, setPwSaved] = useState(false);
   const [pwError, setPwError] = useState<string | null>(null);
   const [showPw, setShowPw] = useState({ current: false, next: false, confirm: false });
 
-  const handlePasswordChange = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setPwError(null);
-    if (pwForm.next.length < 6) {
-      setPwError("הסיסמה חייבת להכיל לפחות 6 תווים");
-      return;
-    }
-    if (pwForm.next !== pwForm.confirm) {
-      setPwError("הסיסמאות אינן תואמות");
-      return;
-    }
-    setPwSaving(true);
-    const { data: { user } } = await supabase.auth.getUser();
-    if (user?.email) {
-      const { error: signInError } = await supabase.auth.signInWithPassword({
-        email: user.email,
-        password: pwForm.current,
-      });
-      if (signInError) {
-        setPwError("הסיסמה הנוכחית שגויה");
-        setPwSaving(false);
-        return;
-      }
-    }
-    const { error } = await supabase.auth.updateUser({ password: pwForm.next });
-    if (error) {
-      setPwError(error.message);
-    } else {
-      setPwSaved(true);
-      setPwForm({ current: "", next: "", confirm: "" });
-      setTimeout(() => setPwSaved(false), 3000);
-    }
-    setPwSaving(false);
-  };
+  /* danger zone */
+  const [dangerConfirm, setDangerConfirm] = useState("");
+  const [deactivating, setDeactivating] = useState(false);
 
+  /* notifications */
+  const [notifWeekly, setNotifWeekly] = useState(false);
+
+  /* ─── load ─── */
   useEffect(() => {
     const load = async () => {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
+      const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
+
+      setUserEmail(user.email ?? "");
+      if (user.created_at) {
+        setUserCreatedAt(
+          new Date(user.created_at).toLocaleDateString("he-IL", {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+          })
+        );
+      }
 
       const { data } = await supabase
         .from("restaurants")
@@ -105,6 +117,7 @@ export default function SettingsPage() {
 
       if (data) {
         setRestaurant(data);
+        setIsActive((data as { is_active?: boolean }).is_active !== false);
         setForm({
           name: data.name,
           slug: data.slug,
@@ -124,8 +137,10 @@ export default function SettingsPage() {
       setLoading(false);
     };
     load();
-  }, [supabase]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
+  /* ─── handlers ─── */
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const name = e.target.value;
     setForm((f) => ({
@@ -141,14 +156,8 @@ export default function SettingsPage() {
     setError(null);
     setSaved(false);
 
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-    if (!user) {
-      setError("לא מחובר");
-      setSaving(false);
-      return;
-    }
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) { setError("לא מחובר"); setSaving(false); return; }
 
     const payload = {
       user_id: user.id,
@@ -167,22 +176,16 @@ export default function SettingsPage() {
         ? form.default_language
         : form.languages[0] ?? "he",
       currency: form.currency,
+      is_active: isActive,
     };
 
     let result;
     if (restaurant) {
       result = await supabase
-        .from("restaurants")
-        .update(payload)
-        .eq("id", restaurant.id)
-        .select()
-        .single();
+        .from("restaurants").update(payload).eq("id", restaurant.id).select().single();
     } else {
       result = await supabase
-        .from("restaurants")
-        .insert(payload)
-        .select()
-        .single();
+        .from("restaurants").insert(payload).select().single();
     }
 
     if (result.error) {
@@ -195,6 +198,42 @@ export default function SettingsPage() {
     setSaving(false);
   };
 
+  const handlePasswordChange = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setPwError(null);
+    if (pwForm.next.length < 6) { setPwError("הסיסמה חייבת להכיל לפחות 6 תווים"); return; }
+    if (pwForm.next !== pwForm.confirm) { setPwError("הסיסמאות אינן תואמות"); return; }
+    setPwSaving(true);
+    const { data: { user } } = await supabase.auth.getUser();
+    if (user?.email) {
+      const { error: signInError } = await supabase.auth.signInWithPassword({
+        email: user.email,
+        password: pwForm.current,
+      });
+      if (signInError) { setPwError("הסיסמה הנוכחית שגויה"); setPwSaving(false); return; }
+    }
+    const { error } = await supabase.auth.updateUser({ password: pwForm.next });
+    if (error) {
+      setPwError(error.message);
+    } else {
+      setPwSaved(true);
+      setPwForm({ current: "", next: "", confirm: "" });
+      setTimeout(() => setPwSaved(false), 3000);
+    }
+    setPwSaving(false);
+  };
+
+  const handleDeactivate = async () => {
+    if (!restaurant) return;
+    setDeactivating(true);
+    await supabase.from("restaurants").update({ is_active: false }).eq("id", restaurant.id);
+    setIsActive(false);
+    setDeactivating(false);
+    setDangerConfirm("");
+    alert("התפריט הושבת. תוכל להפעיל אותו מחדש בכל עת.");
+  };
+
+  /* ─── loading ─── */
   if (loading) {
     return (
       <div className="flex items-center justify-center py-24">
@@ -203,12 +242,14 @@ export default function SettingsPage() {
     );
   }
 
+  /* ─── page ─── */
   return (
     <div className="max-w-5xl mx-auto animate-fade-up">
+      {/* Header */}
       <div className="mb-8 flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
         <div>
           <h1 className="font-serif-display text-4xl font-bold">
-            הגדרות המסעדה
+            <span className="text-gold-gradient">הגדרות המסעדה</span>
           </h1>
           <p className="text-muted-foreground mt-2">
             נהל את פרטי המסעדה והתצוגה הציבורית
@@ -219,456 +260,531 @@ export default function SettingsPage() {
             type="button"
             variant="outline"
             onClick={() => setShowPreview((v) => !v)}
+            className={showPreview ? "border-[hsl(var(--gold))]/40 text-[hsl(var(--gold-dark))]" : ""}
           >
             {showPreview ? (
-              <>
-                <EyeOff className="h-4 w-4" />
-                הסתר תצוגה
-              </>
+              <><EyeOff className="h-4 w-4" />הסתר תצוגה</>
             ) : (
-              <>
-                <Eye className="h-4 w-4" />
-                הצג תצוגה
-              </>
+              <><Eye className="h-4 w-4" />הצג תצוגה</>
             )}
           </Button>
           {restaurant && (
             <Link href={`/menu/${restaurant.slug}`} target="_blank">
               <Button className="hover:opacity-90 text-white" style={{ background: "var(--grad-bronze)" }}>
                 <ExternalLink className="h-4 w-4" />
-                פתח בלשונית
+                פתח תפריט
               </Button>
             </Link>
           )}
         </div>
       </div>
 
-      <div
-        className={`grid gap-6 ${
-          showPreview ? "lg:grid-cols-[1fr_420px]" : "grid-cols-1"
-        }`}
-      >
-        {/* Form */}
-        <form onSubmit={handleSubmit} className="space-y-6">
+      <div className={`grid gap-6 ${showPreview ? "lg:grid-cols-[1fr_380px]" : "grid-cols-1"}`}>
+
+        {/* ═══ LEFT COLUMN — all forms ═══ */}
+        <div className="space-y-6">
+
+          {/* ── Account info ── */}
           <Card className="shadow-premium">
             <CardHeader>
-              <CardTitle className="font-serif-display text-xl">
-                פרטי מסעדה
+              <CardTitle className="font-serif-display text-xl flex items-center gap-2.5">
+                <SectionIcon><User className="h-3.5 w-3.5" /></SectionIcon>
+                חשבון
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="name">שם המסעדה *</Label>
-                <Input
-                  id="name"
-                  value={form.name}
-                  onChange={handleNameChange}
-                  required
-                />
+              <div className="flex items-center justify-between gap-4 py-3 border-b border-border/50">
+                <div>
+                  <div className="text-sm font-medium">כתובת אימייל</div>
+                  <div className="text-xs text-muted-foreground mt-0.5" dir="ltr">{userEmail || "—"}</div>
+                </div>
+                <span
+                  className="text-xs font-medium px-2.5 py-1 rounded-full text-white"
+                  style={{ background: "var(--grad-bronze)" }}
+                >
+                  חינם
+                </span>
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="slug">כתובת (slug) *</Label>
-                <Input
-                  id="slug"
-                  value={form.slug}
-                  onChange={(e) =>
-                    setForm((f) => ({ ...f, slug: slugify(e.target.value) }))
-                  }
-                  required
-                  dir="ltr"
-                />
-                <p className="text-xs text-muted-foreground">
-                  התפריט שלך יהיה זמין ב־
-                  <code className="bg-secondary px-1.5 py-0.5 rounded text-foreground/80">
-                    /menu/{form.slug || "..."}
-                  </code>
+              <div className="flex items-center justify-between gap-4 py-3 border-b border-border/50">
+                <div>
+                  <div className="text-sm font-medium">חבר מאז</div>
+                  <div className="text-xs text-muted-foreground mt-0.5">{userCreatedAt || "—"}</div>
+                </div>
+              </div>
+
+              {/* Plan upgrade banner */}
+              <div
+                className="rounded-xl p-4 flex items-center justify-between gap-3"
+                style={{ background: "hsl(var(--gold) / .08)", border: "1px solid hsl(var(--gold) / .2)" }}
+              >
+                <div className="flex items-center gap-2.5">
+                  <Crown className="h-5 w-5 flex-shrink-0" style={{ color: "hsl(var(--gold))" }} />
+                  <div>
+                    <div className="text-sm font-semibold">שדרג ל-Pro</div>
+                    <div className="text-xs text-muted-foreground">תמונות 3D · אנליטיקס · QR מותאם</div>
+                  </div>
+                </div>
+                <Link href="/dashboard/billing">
+                  <Button
+                    size="sm"
+                    className="text-white text-xs hover:opacity-90 flex-shrink-0"
+                    style={{ background: "var(--grad-bronze)" }}
+                  >
+                    שדרג
+                  </Button>
+                </Link>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* ── Restaurant profile ── */}
+          <form onSubmit={handleSubmit} className="space-y-6" id="profile-form">
+            <Card className="shadow-premium">
+              <CardHeader>
+                <CardTitle className="font-serif-display text-xl flex items-center gap-2.5">
+                  <SectionIcon><Store className="h-3.5 w-3.5" /></SectionIcon>
+                  פרטי מסעדה
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="name">שם המסעדה *</Label>
+                  <Input id="name" value={form.name} onChange={handleNameChange} required />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="slug">כתובת URL *</Label>
+                  <Input
+                    id="slug"
+                    value={form.slug}
+                    onChange={(e) => setForm((f) => ({ ...f, slug: slugify(e.target.value) }))}
+                    required
+                    dir="ltr"
+                  />
+                  <p className="text-xs text-muted-foreground">
+                    התפריט זמין ב־
+                    <code className="bg-secondary px-1.5 py-0.5 rounded text-foreground/80">
+                      /menu/{form.slug || "..."}
+                    </code>
+                  </p>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="description">תיאור</Label>
+                  <Textarea
+                    id="description"
+                    value={form.description}
+                    onChange={(e) => setForm((f) => ({ ...f, description: e.target.value }))}
+                    rows={3}
+                    placeholder="כמה מילים על המסעדה, אווירה, סגנון..."
+                  />
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="address">כתובת</Label>
+                    <Input
+                      id="address"
+                      value={form.address}
+                      onChange={(e) => setForm((f) => ({ ...f, address: e.target.value }))}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="phone">טלפון</Label>
+                    <Input
+                      id="phone"
+                      type="tel"
+                      value={form.phone}
+                      onChange={(e) => setForm((f) => ({ ...f, phone: e.target.value }))}
+                      dir="ltr"
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="email">אימייל ליצירת קשר</Label>
+                  <Input
+                    id="email"
+                    type="email"
+                    value={form.email}
+                    onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))}
+                    dir="ltr"
+                  />
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* ── Languages & currency ── */}
+            <Card className="shadow-premium">
+              <CardHeader>
+                <CardTitle className="font-serif-display text-xl flex items-center gap-2.5">
+                  <SectionIcon><Globe className="h-3.5 w-3.5" /></SectionIcon>
+                  שפות ומטבע
+                </CardTitle>
+                <p className="text-sm text-muted-foreground pt-1">
+                  בחר אילו שפות יוצגו ללקוח ובאיזה מטבע
                 </p>
-              </div>
+              </CardHeader>
+              <CardContent className="space-y-5">
+                <div className="space-y-2">
+                  <Label>שפות זמינות</Label>
+                  <div className="flex flex-wrap gap-2">
+                    {[
+                      { code: "he", flag: "🇮🇱", label: "עברית" },
+                      { code: "en", flag: "🇬🇧", label: "English" },
+                      { code: "fr", flag: "🇫🇷", label: "Français" },
+                    ].map((l) => {
+                      const active = form.languages.includes(l.code);
+                      return (
+                        <button
+                          key={l.code}
+                          type="button"
+                          onClick={() => {
+                            setForm((f) => {
+                              const has = f.languages.includes(l.code);
+                              let next = has
+                                ? f.languages.filter((x) => x !== l.code)
+                                : [...f.languages, l.code];
+                              if (next.length === 0) next = ["he"];
+                              const defaultLang = next.includes(f.default_language)
+                                ? f.default_language
+                                : next[0];
+                              return { ...f, languages: next, default_language: defaultLang };
+                            });
+                          }}
+                          className={`inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium border transition-all ${
+                            active
+                              ? "text-white border-transparent"
+                              : "bg-card text-foreground/70 border-border hover:border-[hsl(var(--gold))]/40"
+                          }`}
+                          style={active ? { background: "var(--grad-bronze)" } : {}}
+                        >
+                          <span className="text-lg leading-none">{l.flag}</span>
+                          {l.label}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="description">תיאור</Label>
-                <Textarea
-                  id="description"
-                  value={form.description}
-                  onChange={(e) =>
-                    setForm((f) => ({ ...f, description: e.target.value }))
-                  }
-                  rows={3}
-                  placeholder="כמה מילים על המסעדה, אווירה, סגנון..."
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label>שפת ברירת מחדל</Label>
+                    <select
+                      value={form.default_language}
+                      onChange={(e) => setForm((f) => ({ ...f, default_language: e.target.value }))}
+                      className="flex h-10 w-full rounded-lg border border-input bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[hsl(var(--gold))]"
+                    >
+                      {form.languages.map((code) => (
+                        <option key={code} value={code}>
+                          {code === "he" ? "עברית" : code === "en" ? "English" : "Français"}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  <div className="space-y-2">
+                    <Label>מטבע</Label>
+                    <select
+                      value={form.currency}
+                      onChange={(e) => setForm((f) => ({ ...f, currency: e.target.value }))}
+                      className="flex h-10 w-full rounded-lg border border-input bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[hsl(var(--gold))]"
+                      dir="ltr"
+                    >
+                      <option value="ILS">₪ ILS — שקל</option>
+                      <option value="EUR">€ EUR — אירו</option>
+                      <option value="USD">$ USD — דולר</option>
+                      <option value="GBP">£ GBP — לירה שטרלינג</option>
+                    </select>
+                  </div>
+                </div>
+
+                {form.languages.includes("en") && (
+                  <div className="space-y-2">
+                    <Label htmlFor="desc_en" dir="ltr">🇬🇧 Description (English)</Label>
+                    <Textarea
+                      id="desc_en"
+                      dir="ltr"
+                      rows={2}
+                      value={form.description_en}
+                      onChange={(e) => setForm((f) => ({ ...f, description_en: e.target.value }))}
+                      placeholder="A short description in English"
+                    />
+                  </div>
+                )}
+                {form.languages.includes("fr") && (
+                  <div className="space-y-2">
+                    <Label htmlFor="desc_fr" dir="ltr">🇫🇷 Description (Français)</Label>
+                    <Textarea
+                      id="desc_fr"
+                      dir="ltr"
+                      rows={2}
+                      value={form.description_fr}
+                      onChange={(e) => setForm((f) => ({ ...f, description_fr: e.target.value }))}
+                      placeholder="Une courte description en français"
+                    />
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+
+            {/* ── Images ── */}
+            <Card className="shadow-premium">
+              <CardHeader>
+                <CardTitle className="font-serif-display text-xl flex items-center gap-2.5">
+                  <SectionIcon><ImageIcon className="h-3.5 w-3.5" /></SectionIcon>
+                  תמונות
+                </CardTitle>
+                <p className="text-sm text-muted-foreground pt-1">
+                  הלוגו מופיע עגול · הבאנר מופיע בראש הדף בגודל מלא
+                </p>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <ImageUpload
+                  label="לוגו"
+                  folder={UPLOAD_FOLDERS.LOGOS}
+                  currentImage={form.logo_url}
+                  onUploadComplete={(url) => setForm((f) => ({ ...f, logo_url: url }))}
                 />
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="address">כתובת</Label>
-                  <Input
-                    id="address"
-                    value={form.address}
-                    onChange={(e) =>
-                      setForm((f) => ({ ...f, address: e.target.value }))
-                    }
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="phone">טלפון</Label>
-                  <Input
-                    id="phone"
-                    type="tel"
-                    value={form.phone}
-                    onChange={(e) =>
-                      setForm((f) => ({ ...f, phone: e.target.value }))
-                    }
-                    dir="ltr"
-                  />
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="email">אימייל ליצירת קשר</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  value={form.email}
-                  onChange={(e) =>
-                    setForm((f) => ({ ...f, email: e.target.value }))
-                  }
-                  dir="ltr"
+                <ImageUpload
+                  label="באנר"
+                  folder={UPLOAD_FOLDERS.BANNERS}
+                  currentImage={form.banner_url}
+                  onUploadComplete={(url) => setForm((f) => ({ ...f, banner_url: url }))}
                 />
-              </div>
-            </CardContent>
-          </Card>
+              </CardContent>
+            </Card>
 
-          <Card className="shadow-premium">
-            <CardHeader>
-              <CardTitle className="font-serif-display text-xl">
-                שפות ומטבע
-              </CardTitle>
-              <p className="text-sm text-muted-foreground pt-1">
-                בחר אילו שפות יוצגו ללקוח, איזו ברירת מחדל ובאיזה מטבע
-              </p>
-            </CardHeader>
-            <CardContent className="space-y-5">
-              <div className="space-y-2">
-                <Label>שפות זמינות</Label>
-                <div className="flex flex-wrap gap-2">
-                  {[
-                    { code: "he", flag: "🇮🇱", label: "עברית" },
-                    { code: "en", flag: "🇬🇧", label: "English" },
-                    { code: "fr", flag: "🇫🇷", label: "Français" },
-                  ].map((l) => {
-                    const active = form.languages.includes(l.code);
-                    return (
-                      <button
-                        key={l.code}
-                        type="button"
-                        onClick={() => {
-                          setForm((f) => {
-                            const has = f.languages.includes(l.code);
-                            let next = has
-                              ? f.languages.filter((x) => x !== l.code)
-                              : [...f.languages, l.code];
-                            if (next.length === 0) next = ["he"];
-                            const defaultLang = next.includes(f.default_language)
-                              ? f.default_language
-                              : next[0];
-                            return {
-                              ...f,
-                              languages: next,
-                              default_language: defaultLang,
-                            };
-                          });
-                        }}
-                        className={`inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium border transition-all ${
-                          active
-                            ? "text-white border-transparent"
-                            : "bg-card text-foreground/70 border-border hover:border-[hsl(var(--gold))]/40"
-                        }`}
-                        style={active ? { background: "var(--grad-bronze)" } : {}}
-                      >
-                        <span className="text-lg leading-none">{l.flag}</span>
-                        {l.label}
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label>שפת ברירת מחדל</Label>
-                  <select
-                    value={form.default_language}
-                    onChange={(e) =>
-                      setForm((f) => ({
-                        ...f,
-                        default_language: e.target.value,
-                      }))
-                    }
-                    className="flex h-10 w-full rounded-lg border border-input bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[hsl(var(--gold))]"
+            {/* ── Menu visibility ── */}
+            <Card className="shadow-premium">
+              <CardHeader>
+                <CardTitle className="font-serif-display text-xl flex items-center gap-2.5">
+                  <SectionIcon><Eye className="h-3.5 w-3.5" /></SectionIcon>
+                  נראות התפריט
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="flex items-center justify-between gap-4">
+                  <div>
+                    <div className="text-sm font-medium">הצג תפריט ללקוחות</div>
+                    <div className="text-xs text-muted-foreground mt-0.5">
+                      {isActive
+                        ? "התפריט ציבורי וגלוי לכל מי שיש לו את הקישור"
+                        : "התפריט מוסתר — לקוחות יראו עמוד 'לא זמין'"}
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setIsActive((v) => !v)}
+                    className="flex-shrink-0 transition-opacity hover:opacity-80"
+                    title={isActive ? "לחץ להסתרה" : "לחץ להפעלה"}
                   >
-                    {form.languages.map((code) => (
-                      <option key={code} value={code}>
-                        {code === "he"
-                          ? "עברית"
-                          : code === "en"
-                            ? "English"
-                            : "Français"}
-                      </option>
-                    ))}
-                  </select>
+                    {isActive ? (
+                      <ToggleRight className="h-9 w-9" style={{ color: "hsl(var(--accent-bright))" }} />
+                    ) : (
+                      <ToggleLeft className="h-9 w-9 text-muted-foreground" />
+                    )}
+                  </button>
                 </div>
-                <div className="space-y-2">
-                  <Label>מטבע</Label>
-                  <select
-                    value={form.currency}
-                    onChange={(e) =>
-                      setForm((f) => ({ ...f, currency: e.target.value }))
-                    }
-                    className="flex h-10 w-full rounded-lg border border-input bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[hsl(var(--gold))]"
-                    dir="ltr"
-                  >
-                    <option value="ILS">₪ ILS — שקל</option>
-                    <option value="EUR">€ EUR — אירו</option>
-                    <option value="USD">$ USD — דולר</option>
-                    <option value="GBP">£ GBP — לירה שטרלינג</option>
-                  </select>
-                </div>
+              </CardContent>
+            </Card>
+
+            {error && (
+              <div className="text-sm text-destructive bg-destructive/10 p-3.5 rounded-xl border border-destructive/20 flex items-start gap-2">
+                <AlertCircle className="h-4 w-4 flex-shrink-0 mt-0.5" />
+                <span>{error}</span>
               </div>
+            )}
 
-              {form.languages.includes("en") && (
-                <div className="space-y-2">
-                  <Label htmlFor="desc_en" dir="ltr">
-                    🇬🇧 Description (English)
-                  </Label>
-                  <Textarea
-                    id="desc_en"
-                    dir="ltr"
-                    rows={2}
-                    value={form.description_en}
-                    onChange={(e) =>
-                      setForm((f) => ({
-                        ...f,
-                        description_en: e.target.value,
-                      }))
-                    }
-                    placeholder="A short description in English"
-                  />
-                </div>
-              )}
-              {form.languages.includes("fr") && (
-                <div className="space-y-2">
-                  <Label htmlFor="desc_fr" dir="ltr">
-                    🇫🇷 Description (Français)
-                  </Label>
-                  <Textarea
-                    id="desc_fr"
-                    dir="ltr"
-                    rows={2}
-                    value={form.description_fr}
-                    onChange={(e) =>
-                      setForm((f) => ({
-                        ...f,
-                        description_fr: e.target.value,
-                      }))
-                    }
-                    placeholder="Une courte description en français"
-                  />
-                </div>
-              )}
-            </CardContent>
-          </Card>
-
-          <Card className="shadow-premium">
-            <CardHeader>
-              <CardTitle className="font-serif-display text-xl">
-                תמונות
-              </CardTitle>
-              <p className="text-sm text-muted-foreground pt-1">
-                הלוגו מופיע עגול • הבאנר מופיע בראש הדף בגודל מלא ללא חיתוך
-              </p>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <ImageUpload
-                label="לוגו"
-                folder={UPLOAD_FOLDERS.LOGOS}
-                currentImage={form.logo_url}
-                onUploadComplete={(url) =>
-                  setForm((f) => ({ ...f, logo_url: url }))
-                }
-              />
-              <ImageUpload
-                label="באנר"
-                folder={UPLOAD_FOLDERS.BANNERS}
-                currentImage={form.banner_url}
-                onUploadComplete={(url) =>
-                  setForm((f) => ({ ...f, banner_url: url }))
-                }
-              />
-            </CardContent>
-          </Card>
-
-          {error && (
-            <div className="text-sm text-destructive bg-destructive/10 p-3.5 rounded-xl border border-destructive/20">
-              {error}
-            </div>
-          )}
-
-          <div className="flex gap-2 sticky bottom-4 z-10">
-
-            <Button
-              type="submit"
-              disabled={saving}
-              size="lg"
-              className="hover:opacity-90 text-white"
-              style={{ background: "var(--grad-bronze)" }}
+            <div
+              className="sticky bottom-4 z-10"
+              style={{ filter: "drop-shadow(0 4px 16px hsl(28 62% 38% / .25))" }}
             >
-              {saving ? (
-                <Loader2 className="h-4 w-4 animate-spin" />
-              ) : saved ? (
-                <>
-                  <Check className="h-4 w-4" />
-                  נשמר!
-                </>
-              ) : (
-                <>
-                  <Save className="h-4 w-4" />
-                  שמור שינויים
-                </>
-              )}
-            </Button>
-          </div>
-        </form>
-
-        {/* ── Password Change ── */}
-        <form onSubmit={handlePasswordChange} className="space-y-6">
-          <Card className="shadow-premium">
-            <CardHeader>
-              <CardTitle className="font-serif-display text-xl flex items-center gap-2">
-                <Lock className="h-5 w-5 text-[hsl(var(--gold))]" />
-                שינוי סיסמה
-              </CardTitle>
-              <p className="text-sm text-muted-foreground pt-1">
-                עדכן את הסיסמה שלך לחשבון
-              </p>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              {/* Current password */}
-              <div className="space-y-2">
-                <Label htmlFor="pw_current">סיסמה נוכחית</Label>
-                <div className="relative">
-                  <Input
-                    id="pw_current"
-                    type={showPw.current ? "text" : "password"}
-                    value={pwForm.current}
-                    onChange={(e) => setPwForm((f) => ({ ...f, current: e.target.value }))}
-                    placeholder="••••••••"
-                    required
-                    dir="ltr"
-                    className="pr-10"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowPw((s) => ({ ...s, current: !s.current }))}
-                    className="absolute inset-y-0 right-0 flex items-center px-3 text-muted-foreground hover:text-foreground transition-colors"
-                    tabIndex={-1}
-                  >
-                    {showPw.current ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                  </button>
-                </div>
-              </div>
-
-              {/* New password */}
-              <div className="space-y-2">
-                <Label htmlFor="pw_next">סיסמה חדשה</Label>
-                <div className="relative">
-                  <Input
-                    id="pw_next"
-                    type={showPw.next ? "text" : "password"}
-                    value={pwForm.next}
-                    onChange={(e) => setPwForm((f) => ({ ...f, next: e.target.value }))}
-                    placeholder="לפחות 6 תווים"
-                    required
-                    dir="ltr"
-                    className="pr-10"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowPw((s) => ({ ...s, next: !s.next }))}
-                    className="absolute inset-y-0 right-0 flex items-center px-3 text-muted-foreground hover:text-foreground transition-colors"
-                    tabIndex={-1}
-                  >
-                    {showPw.next ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                  </button>
-                </div>
-              </div>
-
-              {/* Confirm password */}
-              <div className="space-y-2">
-                <Label htmlFor="pw_confirm">אימות סיסמה חדשה</Label>
-                <div className="relative">
-                  <Input
-                    id="pw_confirm"
-                    type={showPw.confirm ? "text" : "password"}
-                    value={pwForm.confirm}
-                    onChange={(e) => setPwForm((f) => ({ ...f, confirm: e.target.value }))}
-                    placeholder="חזור על הסיסמה החדשה"
-                    required
-                    dir="ltr"
-                    className="pr-10"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowPw((s) => ({ ...s, confirm: !s.confirm }))}
-                    className="absolute inset-y-0 right-0 flex items-center px-3 text-muted-foreground hover:text-foreground transition-colors"
-                    tabIndex={-1}
-                  >
-                    {showPw.confirm ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                  </button>
-                </div>
-              </div>
-
-              {pwError && (
-                <div className="flex items-start gap-2 text-sm text-destructive bg-destructive/10 p-3.5 rounded-xl border border-destructive/20">
-                  <AlertCircle className="h-4 w-4 flex-shrink-0 mt-0.5" />
-                  <span>{pwError}</span>
-                </div>
-              )}
-
               <Button
                 type="submit"
-                disabled={pwSaving || !pwForm.current || !pwForm.next || !pwForm.confirm}
-                className="hover:opacity-90 text-white"
+                disabled={saving}
+                size="lg"
+                className="w-full hover:opacity-90 text-white"
                 style={{ background: "var(--grad-bronze)" }}
               >
-                {pwSaving ? (
+                {saving ? (
                   <Loader2 className="h-4 w-4 animate-spin" />
-                ) : pwSaved ? (
-                  <>
-                    <Check className="h-4 w-4" />
-                    הסיסמה עודכנה!
-                  </>
+                ) : saved ? (
+                  <><Check className="h-4 w-4" />נשמר!</>
+                ) : (
+                  <><Save className="h-4 w-4" />שמור שינויים</>
+                )}
+              </Button>
+            </div>
+          </form>
+
+          {/* ── Notifications ── */}
+          <Card className="shadow-premium">
+            <CardHeader>
+              <CardTitle className="font-serif-display text-xl flex items-center gap-2.5">
+                <SectionIcon><Bell className="h-3.5 w-3.5" /></SectionIcon>
+                התראות
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="flex items-center justify-between gap-4">
+                <div>
+                  <div className="text-sm font-medium">סיכום שבועי</div>
+                  <div className="text-xs text-muted-foreground mt-0.5">
+                    קבל אימייל שבועי עם סטטיסטיקות התפריט
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setNotifWeekly((v) => !v)}
+                  className="flex-shrink-0 transition-opacity hover:opacity-80"
+                >
+                  {notifWeekly ? (
+                    <ToggleRight className="h-9 w-9" style={{ color: "hsl(var(--accent-bright))" }} />
+                  ) : (
+                    <ToggleLeft className="h-9 w-9 text-muted-foreground" />
+                  )}
+                </button>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* ── Password change ── */}
+          <form onSubmit={handlePasswordChange}>
+            <Card className="shadow-premium">
+              <CardHeader>
+                <CardTitle className="font-serif-display text-xl flex items-center gap-2.5">
+                  <SectionIcon><Lock className="h-3.5 w-3.5" /></SectionIcon>
+                  שינוי סיסמה
+                </CardTitle>
+                <p className="text-sm text-muted-foreground pt-1">עדכן את הסיסמה לחשבון</p>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                {(["current", "next", "confirm"] as const).map((field) => {
+                  const labels = { current: "סיסמה נוכחית", next: "סיסמה חדשה", confirm: "אימות סיסמה חדשה" };
+                  const placeholders = { current: "••••••••", next: "לפחות 6 תווים", confirm: "חזור על הסיסמה החדשה" };
+                  return (
+                    <div key={field} className="space-y-2">
+                      <Label htmlFor={`pw_${field}`}>{labels[field]}</Label>
+                      <div className="relative">
+                        <Input
+                          id={`pw_${field}`}
+                          type={showPw[field] ? "text" : "password"}
+                          value={pwForm[field]}
+                          onChange={(e) => setPwForm((f) => ({ ...f, [field]: e.target.value }))}
+                          placeholder={placeholders[field]}
+                          required
+                          dir="ltr"
+                          className="pr-10"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => setShowPw((s) => ({ ...s, [field]: !s[field] }))}
+                          className="absolute inset-y-0 right-0 flex items-center px-3 text-muted-foreground hover:text-foreground transition-colors"
+                          tabIndex={-1}
+                        >
+                          {showPw[field] ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                        </button>
+                      </div>
+                    </div>
+                  );
+                })}
+
+                {pwError && (
+                  <div className="flex items-start gap-2 text-sm text-destructive bg-destructive/10 p-3.5 rounded-xl border border-destructive/20">
+                    <AlertCircle className="h-4 w-4 flex-shrink-0 mt-0.5" />
+                    <span>{pwError}</span>
+                  </div>
+                )}
+
+                <Button
+                  type="submit"
+                  disabled={pwSaving || !pwForm.current || !pwForm.next || !pwForm.confirm}
+                  className="hover:opacity-90 text-white"
+                  style={{ background: "var(--grad-bronze)" }}
+                >
+                  {pwSaving ? (
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  ) : pwSaved ? (
+                    <><Check className="h-4 w-4" />הסיסמה עודכנה!</>
+                  ) : (
+                    <><Lock className="h-4 w-4" />עדכן סיסמה</>
+                  )}
+                </Button>
+              </CardContent>
+            </Card>
+          </form>
+
+          {/* ── Danger zone ── */}
+          <Card
+            className="shadow-premium"
+            style={{ borderColor: "hsl(var(--ember) / .3)" }}
+          >
+            <CardHeader>
+              <CardTitle className="font-serif-display text-xl flex items-center gap-2.5">
+                <div
+                  className="h-7 w-7 rounded-md flex items-center justify-center flex-shrink-0"
+                  style={{ background: "hsl(var(--ember) / .15)" }}
+                >
+                  <AlertTriangle className="h-3.5 w-3.5" style={{ color: "hsl(var(--ember))" }} />
+                </div>
+                <span style={{ color: "hsl(var(--ember))" }}>אזור מסוכן</span>
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <p className="text-sm text-muted-foreground">
+                השבתת התפריט תסתיר אותו מהציבור. הנתונים לא יימחקו ותוכל להפעיל מחדש בכל עת.
+              </p>
+              <div className="space-y-2">
+                <Label htmlFor="danger-confirm" className="text-sm">
+                  כדי להמשיך, הקלד{" "}
+                  <code
+                    className="px-1.5 py-0.5 rounded text-xs"
+                    style={{ background: "hsl(var(--ember) / .1)", color: "hsl(var(--ember))" }}
+                  >
+                    {form.name || "שם המסעדה"}
+                  </code>
+                </Label>
+                <Input
+                  id="danger-confirm"
+                  value={dangerConfirm}
+                  onChange={(e) => setDangerConfirm(e.target.value)}
+                  placeholder={form.name || "שם המסעדה"}
+                />
+              </div>
+              <Button
+                type="button"
+                variant="outline"
+                disabled={dangerConfirm !== form.name || deactivating || !restaurant}
+                onClick={handleDeactivate}
+                className="border-[hsl(var(--ember))]/40 hover:bg-[hsl(var(--ember))]/10"
+                style={{ color: "hsl(var(--ember))" }}
+              >
+                {deactivating ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
                 ) : (
                   <>
-                    <Lock className="h-4 w-4" />
-                    עדכן סיסמה
+                    <AlertTriangle className="h-4 w-4" />
+                    השבת תפריט
                   </>
                 )}
               </Button>
             </CardContent>
           </Card>
-        </form>
 
-        {/* Live Preview */}
+        </div>
+
+        {/* ═══ RIGHT COLUMN — live preview ═══ */}
         {showPreview && (
           <div className="lg:sticky lg:top-24 lg:self-start space-y-3 h-fit">
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
-              <Sparkles className="h-4 w-4 text-[hsl(var(--gold))]" />
+              <Sparkles className="h-4 w-4" style={{ color: "hsl(var(--gold))" }} />
               <span className="font-medium">תצוגת לקוח בזמן אמת</span>
             </div>
-            <LivePreview form={form} />
+            <LivePreview form={form} isActive={isActive} />
           </div>
         )}
+
       </div>
     </div>
   );
@@ -676,6 +792,7 @@ export default function SettingsPage() {
 
 function LivePreview({
   form,
+  isActive,
 }: {
   form: {
     name: string;
@@ -685,59 +802,81 @@ function LivePreview({
     address: string;
     phone: string;
   };
+  isActive: boolean;
 }) {
   return (
     <div className="rounded-2xl overflow-hidden bg-background border border-border shadow-premium">
-      {/* Mock phone frame header */}
-      <div className="bg-charcoal-gradient px-4 py-2 flex items-center gap-1.5">
+      {/* Mock browser chrome */}
+      <div
+        className="px-4 py-2 flex items-center gap-1.5"
+        style={{ background: "hsl(var(--deep))" }}
+      >
         <div className="h-2.5 w-2.5 rounded-full bg-red-400/80" />
         <div className="h-2.5 w-2.5 rounded-full bg-yellow-400/80" />
         <div className="h-2.5 w-2.5 rounded-full bg-green-400/80" />
-        <div className="flex-1 text-center">
-          <div className="text-xs text-white/50" dir="ltr">
-            /menu/{form.name ? "..." : "..."}
+        <div className="flex-1 mx-3">
+          <div
+            className="text-xs text-white/40 rounded px-2 py-0.5 text-center truncate"
+            style={{ background: "hsl(var(--abyss) / .5)" }}
+            dir="ltr"
+          >
+            /menu/{form.name ? slugifySimple(form.name) : "..."}
           </div>
         </div>
+        {/* visibility badge */}
+        <span
+          className="text-xs px-2 py-0.5 rounded-full font-medium flex-shrink-0"
+          style={
+            isActive
+              ? { background: "hsl(142 72% 29% / .2)", color: "hsl(142 72% 45%)" }
+              : { background: "hsl(var(--ember) / .15)", color: "hsl(var(--ember))" }
+          }
+        >
+          {isActive ? "פעיל" : "מוסתר"}
+        </span>
       </div>
 
-      <div className="max-h-[600px] overflow-y-auto scrollbar-thin">
+      <div className="max-h-[580px] overflow-y-auto scrollbar-thin">
         {/* Banner */}
         {form.banner_url ? (
-          <div className="relative w-full bg-charcoal-gradient overflow-hidden">
+          <div className="relative w-full overflow-hidden" style={{ background: "hsl(var(--deep))" }}>
             <div
               className="absolute inset-0 bg-cover bg-center scale-110 blur-2xl opacity-50"
               style={{ backgroundImage: `url(${form.banner_url})` }}
             />
-            <div className="relative flex items-center justify-center max-h-[280px]">
+            <div className="relative flex items-center justify-center max-h-[240px]">
               <img
                 src={form.banner_url}
-                alt="banner preview"
-                className="w-full h-auto max-h-[280px] object-contain"
+                alt="banner"
+                className="w-full h-auto max-h-[240px] object-contain"
               />
             </div>
             <div className="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent pointer-events-none" />
           </div>
         ) : (
-          <div className="h-32 bg-charcoal-gradient relative overflow-hidden">
-            <div className="absolute inset-0 bg-grain opacity-30" />
-            <div className="absolute inset-0 flex items-center justify-center text-white/40 text-xs">
+          <div className="h-28 relative overflow-hidden" style={{ background: "hsl(var(--deep))" }}>
+            <div className="absolute inset-0 flex items-center justify-center text-white/30 text-xs">
               אין באנר
             </div>
           </div>
         )}
 
         {/* Info card */}
-        <div className="px-4 -mt-12 relative z-10">
+        <div className="px-4 -mt-10 relative z-10">
           <div className="bg-card rounded-xl shadow-premium p-4 flex flex-col items-center gap-3 text-center">
             {form.logo_url ? (
               <img
                 src={form.logo_url}
-                alt="logo preview"
-                className="h-20 w-20 rounded-full object-cover ring-4 ring-[hsl(var(--gold))]/30 shadow-gold-glow bg-card"
+                alt="logo"
+                className="h-18 w-18 rounded-full object-cover ring-4 ring-[hsl(var(--gold))]/30 shadow-premium bg-card"
+                style={{ height: 72, width: 72 }}
               />
             ) : (
-              <div className="h-20 w-20 rounded-full ring-4 ring-[hsl(var(--gold))]/20 flex items-center justify-center" style={{ background: "var(--grad-bronze)" }}>
-                <span className="text-2xl font-bold text-white font-serif-display">
+              <div
+                className="h-[72px] w-[72px] rounded-full ring-4 ring-[hsl(var(--gold))]/20 flex items-center justify-center"
+                style={{ background: "var(--grad-bronze)" }}
+              >
+                <span className="text-xl font-bold text-white font-serif-display">
                   {form.name.charAt(0) || "?"}
                 </span>
               </div>
@@ -756,34 +895,30 @@ function LivePreview({
           </div>
         </div>
 
-        {/* Mock menu section */}
-        <div className="p-4 pt-6">
+        {/* Mock menu */}
+        <div className="p-4 pt-5">
           <div className="text-center mb-4">
-            <h2 className="font-serif-display text-xl font-bold">תפריט</h2>
-            <div className="divider-gold w-12 mx-auto mt-1.5" />
+            <h2 className="font-serif-display text-lg font-bold">תפריט</h2>
+            <div className="divider-gold w-10 mx-auto mt-1.5" />
           </div>
-
           <div className="space-y-2">
             {[1, 2].map((i) => (
-              <div
-                key={i}
-                className="flex gap-3 p-3 rounded-lg bg-card border border-border/60"
-              >
-                <div className="h-16 w-16 rounded-md bg-secondary flex-shrink-0" />
+              <div key={i} className="flex gap-3 p-3 rounded-lg bg-card border border-border/60">
+                <div className="h-14 w-14 rounded-md bg-secondary flex-shrink-0" />
                 <div className="flex-1 min-w-0">
                   <div className="flex items-baseline justify-between gap-2 mb-1">
-                    <div className="h-3 bg-secondary rounded w-24" />
-                    <div className="h-3 bg-[hsl(var(--gold))]/30 rounded w-10" />
+                    <div className="h-3 bg-secondary rounded w-20" />
+                    <div className="h-3 rounded w-8" style={{ background: "hsl(var(--gold) / .3)" }} />
                   </div>
                   <div className="h-2 bg-secondary/60 rounded w-full mb-1" />
-                  <div className="h-2 bg-secondary/60 rounded w-2/3" />
+                  <div className="h-2 bg-secondary/60 rounded w-3/4" />
                 </div>
               </div>
             ))}
           </div>
 
           {(form.address || form.phone) && (
-            <div className="mt-6 pt-4 border-t border-border/60 text-xs text-muted-foreground space-y-1 text-center">
+            <div className="mt-5 pt-4 border-t border-border/60 text-xs text-muted-foreground space-y-1 text-center">
               {form.address && <div>{form.address}</div>}
               {form.phone && <div dir="ltr">{form.phone}</div>}
             </div>
@@ -792,4 +927,9 @@ function LivePreview({
       </div>
     </div>
   );
+}
+
+/* tiny helper — no need to import full slugify for preview URL display */
+function slugifySimple(s: string) {
+  return s.toLowerCase().replace(/\s+/g, "-").replace(/[^a-z0-9-]/g, "").slice(0, 24);
 }
