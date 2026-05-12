@@ -109,7 +109,14 @@ export default function LoginPage() {
 
         {/* Logo */}
         <div style={{ position: "relative", zIndex: 1 }}>
-          <LogoLockup width={160} />
+          <img
+            src="/brand/logo-lockup-light.svg"
+            width={160}
+            height={44}
+            alt="Plateform — Every dish, in 360°"
+            draggable={false}
+            style={{ display: "inline-block" }}
+          />
         </div>
 
         {/* Center quote / feature list */}

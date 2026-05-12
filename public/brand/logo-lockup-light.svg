@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 220" width="800" height="220">
+  <defs>
+    <linearGradient id="lk-bronze" x1="0" y1="0" x2="1" y2="0.5">
+      <stop offset="0" stop-color="hsl(28, 62%, 52%)"></stop>
+      <stop offset="1" stop-color="hsl(22, 70%, 62%)"></stop>
+    </linearGradient>
+    <radialGradient id="lk-plate" cx="0.4" cy="0.32" r="0.75">
+      <stop offset="0" stop-color="hsl(38, 32%, 99%)"></stop>
+      <stop offset="0.7" stop-color="hsl(38, 28%, 94%)"></stop>
+      <stop offset="1" stop-color="hsl(30, 20%, 84%)"></stop>
+    </radialGradient>
+  </defs>
+
+
+  <g transform="translate(20,20)">
+    <circle cx="90" cy="90" r="86" fill="none" stroke="url(#lk-bronze)" stroke-width="1" stroke-dasharray="1 5" opacity="0.55"></circle>
+    <circle cx="90" cy="96" r="72" fill="hsl(24,18%,16%)" opacity="0.12"></circle>
+    <circle cx="90" cy="90" r="72" fill="url(#lk-plate)" stroke="hsl(30,18%,82%)" stroke-width="1"></circle>
+    <circle cx="90" cy="90" r="56" fill="none" stroke="hsl(30,18%,80%)" stroke-width="1" opacity="0.6"></circle>
+    <text x="90" y="120" text-anchor="middle" font-family="Cormorant Garamond, Georgia, serif" font-style="italic" font-weight="500" font-size="92" fill="url(#lk-bronze)" letter-spacing="-0.04em">P</text>
+    <path d="M 158 80 L 168 88 L 162 96" fill="none" stroke="url(#lk-bronze)" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"></path>
+  </g>
+
+
+  <text x="220" y="128" font-family="Cormorant Garamond, Georgia, serif" font-weight="500" font-size="84" fill="hsl(36,30%,88%)" letter-spacing="-0.02em">Plate<tspan font-style="italic" fill="url(#lk-bronze)">form</tspan></text>
+
+
+  <text x="222" y="160" font-family="DM Mono, ui-monospace, monospace" font-size="13" letter-spacing="3.5" fill="hsl(36,20%,55%)">EVERY DISH · IN 360°</text>
+</svg>
