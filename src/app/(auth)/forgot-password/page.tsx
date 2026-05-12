@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
+import { AuthShell } from "@/components/auth/AuthShell";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -44,6 +45,7 @@ export default function ForgotPasswordPage() {
 
   if (sent) {
     return (
+      <AuthShell>
       <Card className="shadow-premium border-border/60 backdrop-blur-sm bg-card/95">
         <CardHeader className="text-center pb-6">
           <div className="flex justify-center mb-4">
@@ -76,10 +78,12 @@ export default function ForgotPasswordPage() {
           </Link>
         </CardContent>
       </Card>
+      </AuthShell>
     );
   }
 
   return (
+    <AuthShell>
     <Card className="shadow-premium border-border/60 backdrop-blur-sm bg-card/95">
       <CardHeader className="text-center pb-6">
         <div className="flex justify-center mb-4">
@@ -141,5 +145,6 @@ export default function ForgotPasswordPage() {
         </form>
       </CardContent>
     </Card>
+    </AuthShell>
   );
 }
