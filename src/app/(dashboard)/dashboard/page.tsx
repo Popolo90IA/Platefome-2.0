@@ -98,7 +98,7 @@ export default function DashboardPage() {
       {/* ── Page header ─────────────────────────────────── */}
       <div style={{ marginBottom: 4 }}>
         <div className="flex items-center gap-2.5" style={{ marginBottom: 10 }}>
-          <span className="font-mono uppercase" style={{ fontSize: "10px", letterSpacing: ".2em", color: "hsl(var(--accent-bright) / .6)" }}>
+          <span className="font-sans uppercase" style={{ fontSize: "11px", letterSpacing: ".08em", fontWeight: 600, color: "hsl(var(--accent-bright) / .6)" }}>
             Overview
           </span>
           <span style={{ color: "hsl(var(--accent-bright) / .4)", fontSize: 11 }}>·</span>
@@ -127,7 +127,7 @@ export default function DashboardPage() {
           className="py-10 px-8 border"
           style={{ background: "hsl(var(--deep))", borderColor: "hsl(var(--line))", borderRadius: "var(--radius-xl)" }}
         >
-          <p className="font-mono uppercase mb-3" style={{ fontSize: "12px", letterSpacing: ".1em", color: "hsl(var(--accent-bright))" }}>
+          <p className="font-sans uppercase mb-3" style={{ fontSize: "12px", letterSpacing: ".06em", fontWeight: 600, color: "hsl(var(--accent-bright))" }}>
             Getting started
           </p>
           <h2 className="font-display mb-4" style={{ fontSize: "1.5rem", fontWeight: 600, color: "hsl(var(--fog))", letterSpacing: "-.03em" }}>
@@ -204,7 +204,7 @@ export default function DashboardPage() {
                   />
                   {/* label row */}
                   <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
-                    <span className="font-mono uppercase" style={{ fontSize: "11px", letterSpacing: ".08em", color: "hsl(var(--subtle))" }}>
+                    <span className="font-sans uppercase" style={{ fontSize: "11px", letterSpacing: ".05em", fontWeight: 600, color: "hsl(var(--subtle))" }}>
                       {s.label}
                     </span>
                     <div style={STAT_ICON_STYLE}>{s.icon}</div>
@@ -237,7 +237,7 @@ export default function DashboardPage() {
                 <h3 className="font-display" style={{ fontSize: 20, fontWeight: 600, color: "hsl(var(--fog))", margin: 0, flex: 1 }}>
                   התפריט הציבורי שלך
                 </h3>
-                <span className="font-mono uppercase" style={{ fontSize: "9.5px", letterSpacing: ".18em", padding: "4px 10px", borderRadius: 99, background: "hsl(28 62% 42% / .08)", color: "hsl(var(--accent-bright))", border: "1px solid hsl(28 62% 42% / .18)" }}>
+                <span className="font-sans uppercase" style={{ fontSize: "10px", letterSpacing: ".06em", fontWeight: 600, padding: "4px 10px", borderRadius: 99, background: "hsl(28 62% 42% / .08)", color: "hsl(var(--accent-bright))", border: "1px solid hsl(28 62% 42% / .18)" }}>
                   פעיל
                 </span>
                 <Link href={`/menu/${restaurant.slug}`} target="_blank">
@@ -373,7 +373,7 @@ export default function DashboardPage() {
 
           {/* ── Quick actions ──────────────────────────── */}
           <div>
-            <p className="font-mono uppercase" style={{ fontSize: "11.5px", letterSpacing: ".1em", color: "hsl(var(--dim))", marginBottom: 16 }}>
+            <p className="font-sans uppercase" style={{ fontSize: "11.5px", letterSpacing: ".06em", fontWeight: 600, color: "hsl(var(--dim))", marginBottom: 16 }}>
               פעולות מהירות
             </p>
             <div

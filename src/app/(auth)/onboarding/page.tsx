@@ -40,7 +40,7 @@ function Step1({
         { key: "city",  label: "עיר / אזור",      placeholder: "תל אביב",         type: "text" },
       ].map(f => (
         <div key={f.key} style={{ marginBottom: 20 }}>
-          <label className="font-mono uppercase" style={{ display: "block", fontSize: 10, letterSpacing: ".15em", color: S.dim, marginBottom: 8 }}>
+          <label className="font-sans uppercase" style={{ display: "block", fontSize: 10, letterSpacing: ".06em", color: S.dim, marginBottom: 8 }}>
             {f.label}
           </label>
           <input
@@ -84,7 +84,7 @@ function Step2() {
           <p className="font-sans" style={{ fontSize: 14, color: S.subtle, maxWidth: 380, lineHeight: 1.55, margin: 0 }}>
             המרה אוטומטית של .glb / .usdz / .obj. או 12 תמונות JPG מזוויות שונות וה-AI שלנו יבנה את המודל.
           </p>
-          <span className="font-mono" style={{ fontSize: 10, letterSpacing: ".18em", textTransform: "uppercase", color: S.dim, marginTop: 6 }}>
+          <span className="font-mono" style={{ fontSize: 10, letterSpacing: ".06em", textTransform: "uppercase", color: S.dim, marginTop: 6 }}>
             .GLB · .USDZ · .OBJ · JPG · MAX 80MB
           </span>
 
@@ -124,7 +124,7 @@ function Step2() {
         position: "relative", overflow: "hidden", minHeight: 460,
       }}>
         <div aria-hidden style={{ position: "absolute", inset: 0, background: "radial-gradient(ellipse at 50% 100%, hsl(28,62%,55%,.15), transparent 60%)", pointerEvents: "none" }}/>
-        <div className="font-mono" style={{ fontSize: 10, letterSpacing: ".18em", textTransform: "uppercase", color: "hsl(28,62%,65%)", position: "relative" }}>
+        <div className="font-mono" style={{ fontSize: 10, letterSpacing: ".06em", textTransform: "uppercase", color: "hsl(28,62%,65%)", position: "relative" }}>
           איך זה יראה ללקוח
         </div>
 
@@ -184,7 +184,7 @@ function Step4({ email, onChange }: { email: string; onChange: (v: string) => vo
   return (
     <div style={{ maxWidth: 560, margin: "0 auto" }}>
       <div style={{ marginBottom: 20 }}>
-        <label className="font-mono uppercase" style={{ display: "block", fontSize: 10, letterSpacing: ".15em", color: S.dim, marginBottom: 8 }}>
+        <label className="font-sans uppercase" style={{ display: "block", fontSize: 10, letterSpacing: ".06em", color: S.dim, marginBottom: 8 }}>
           כתובת אימייל לצוות
         </label>
         <input
@@ -249,7 +249,7 @@ export default function OnboardingPage() {
 
       {/* ── Top nav ────────────────────────────────────── */}
       <nav style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "22px 36px", borderBottom: `1px solid ${S.line}` }}>
-        <div className="font-display" style={{ fontSize: 17, fontWeight: 600, letterSpacing: ".14em", color: S.fog, display: "flex", alignItems: "center", gap: 10 }} dir="ltr">
+        <div className="font-display" style={{ fontSize: 17, fontWeight: 600, letterSpacing: ".06em", color: S.fog, display: "flex", alignItems: "center", gap: 10 }} dir="ltr">
           <svg width="28" height="28" viewBox="0 0 80 80">
             <circle cx="40" cy="40" r="28" fill="#f6f4ef" stroke="hsl(28,15%,18%)" strokeWidth="1.5"/>
             <circle cx="40" cy="40" r="20" fill="none" stroke="hsl(28,15%,18%)" strokeWidth=".5" strokeDasharray="1.5 2"/>
@@ -257,7 +257,7 @@ export default function OnboardingPage() {
           </svg>
           PLATE<em style={{ fontStyle: "italic", color: S.accent, fontWeight: 500 }}>FORM</em>
         </div>
-        <div className="font-mono" style={{ display: "flex", alignItems: "center", gap: 18, fontSize: 11, letterSpacing: ".14em", textTransform: "uppercase", color: S.dim }}>
+        <div className="font-mono" style={{ display: "flex", alignItems: "center", gap: 18, fontSize: 11, letterSpacing: ".06em", textTransform: "uppercase", color: S.dim }}>
           {restaurantData.name && <span style={{ color: S.subtle }}>{restaurantData.name}</span>}
           {restaurantData.name && <span style={{ opacity: .4 }}>·</span>}
           <Link href="/dashboard" style={{ color: S.subtle, textDecoration: "none" }}>דלג בינתיים</Link>
@@ -306,7 +306,7 @@ export default function OnboardingPage() {
       {/* ── Stage content ─────────────────────────────── */}
       <main style={{ flex: 1, padding: "50px 36px 60px", maxWidth: 1200, margin: "0 auto", width: "100%", boxSizing: "border-box" }}>
         <div style={{ textAlign: "center", marginBottom: 48 }}>
-          <p className="font-mono uppercase" style={{ fontSize: 11, letterSpacing: ".18em", color: S.accent, marginBottom: 14 }}>
+          <p className="font-sans uppercase" style={{ fontSize: 11, letterSpacing: ".06em", color: S.accent, marginBottom: 14 }}>
             שלב {step} מתוך {STEPS.length}
           </p>
           <h1 className="font-display" style={{ fontSize: "clamp(2.2rem, 5vw, 3.5rem)", fontWeight: 600, lineHeight: 1, letterSpacing: "-.02em", color: S.fog, margin: "0 0 16px" }}>
@@ -338,7 +338,7 @@ export default function OnboardingPage() {
 
       {/* ── Sticky footer ─────────────────────────────── */}
       <footer style={{ position: "sticky", bottom: 0, background: "hsl(28,15%,4%)", borderTop: `1px solid ${S.line}`, padding: "18px 36px", display: "flex", justifyContent: "space-between", alignItems: "center", gap: 24 }}>
-        <div className="font-mono" style={{ fontSize: 11, letterSpacing: ".14em", textTransform: "uppercase", color: S.dim }}>
+        <div className="font-mono" style={{ fontSize: 11, letterSpacing: ".06em", textTransform: "uppercase", color: S.dim }}>
           שלב <strong style={{ color: S.accent, fontWeight: 500 }}>{String(step).padStart(2, "0")} / {String(STEPS.length).padStart(2, "0")}</strong>
         </div>
 

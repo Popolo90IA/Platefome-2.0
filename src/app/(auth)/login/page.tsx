@@ -122,8 +122,8 @@ export default function LoginPage() {
         {/* Center quote / feature list */}
         <div style={{ position: "relative", zIndex: 1 }}>
           <div
-            className="font-mono uppercase"
-            style={{ fontSize: 11, letterSpacing: ".2em", color: "hsl(28,62%,52%)", marginBottom: 20 }}
+            className="font-sans uppercase"
+            style={{ fontSize: 11, letterSpacing: ".08em", fontWeight: 600, color: "hsl(28,62%,52%)", marginBottom: 20 }}
           >
             כל מנה · בתלת מימד
           </div>
@@ -176,7 +176,7 @@ export default function LoginPage() {
             paddingTop: 24,
           }}
         >
-          <div className="font-mono" style={{ fontSize: 11, color: "hsl(36,20%,45%)", letterSpacing: ".06em" }}>
+          <div className="font-sans" style={{ fontSize: 12, color: "hsl(36,20%,45%)", letterSpacing: ".02em", fontWeight: 500 }}>
             מצטרפים למסעדות שכבר עברו לדיגיטל
           </div>
         </div>
@@ -209,8 +209,8 @@ export default function LoginPage() {
           {/* Heading */}
           <div style={{ marginBottom: 36, textAlign: "right" }}>
             <div
-              className="font-mono uppercase"
-              style={{ fontSize: 11, letterSpacing: ".2em", color: "hsl(var(--accent-bright))", marginBottom: 10 }}
+              className="font-sans uppercase"
+              style={{ fontSize: 11, letterSpacing: ".08em", fontWeight: 600, color: "hsl(var(--accent-bright))", marginBottom: 10 }}
             >
               כניסה לחשבון
             </div>
@@ -243,8 +243,8 @@ export default function LoginPage() {
             <div style={{ display: "flex", flexDirection: "column", gap: 7 }}>
               <label
                 htmlFor="email"
-                className="font-mono uppercase"
-                style={{ fontSize: 11, letterSpacing: ".1em", color: "hsl(var(--dim))" }}
+                className="font-sans uppercase"
+                style={{ fontSize: 12, letterSpacing: ".06em", fontWeight: 600, color: "hsl(var(--dim))" }}
               >
                 אימייל
               </label>
@@ -283,8 +283,8 @@ export default function LoginPage() {
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                 <label
                   htmlFor="password"
-                  className="font-mono uppercase"
-                  style={{ fontSize: 11, letterSpacing: ".1em", color: "hsl(var(--dim))" }}
+                  className="font-sans uppercase"
+                  style={{ fontSize: 12, letterSpacing: ".06em", fontWeight: 600, color: "hsl(var(--dim))" }}
                 >
                   סיסמה
                 </label>
@@ -392,7 +392,7 @@ export default function LoginPage() {
             }}
           >
             <div style={{ flex: 1, height: 1, background: "hsl(var(--line))" }} />
-            <span className="font-mono" style={{ fontSize: 10, letterSpacing: ".12em", color: "hsl(var(--dim))" }}>
+            <span className="font-sans" style={{ fontSize: 12, letterSpacing: ".04em", fontWeight: 500, color: "hsl(var(--dim))" }}>
               חדש?
             </span>
             <div style={{ flex: 1, height: 1, background: "hsl(var(--line))" }} />

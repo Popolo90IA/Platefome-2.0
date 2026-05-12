@@ -75,7 +75,7 @@ export default function AnalyticsPage() {
   if (!restaurant) {
     return (
       <div style={{ ...CARD_STYLE, maxWidth: 420, margin: "0 auto", textAlign: "center", padding: "40px 32px" }}>
-        <p className="font-mono uppercase" style={{ fontSize: "12px", letterSpacing: ".1em", color: "hsl(var(--accent-bright))", marginBottom: 12 }}>
+        <p className="font-sans uppercase" style={{ fontSize: "12px", letterSpacing: ".05em", color: "hsl(var(--accent-bright))", marginBottom: 12 }}>
           Getting started
         </p>
         <h2 className="font-display" style={{ fontSize: "1.5rem", fontWeight: 600, color: "hsl(var(--fog))", margin: "0 0 12px" }}>
@@ -172,7 +172,7 @@ export default function AnalyticsPage() {
     <div dir="rtl" style={{ color: "hsl(var(--fog))" }}>
       {/* ── Header ─────────────────────────────────────── */}
       <div style={{ marginBottom: 32 }}>
-        <p className="font-mono uppercase" style={{ fontSize: "12px", letterSpacing: ".1em", color: "hsl(var(--accent-bright))", marginBottom: 10 }}>
+        <p className="font-sans uppercase" style={{ fontSize: "12px", letterSpacing: ".05em", color: "hsl(var(--accent-bright))", marginBottom: 10 }}>
           Analytics · {range} ימים
         </p>
         <h1 className="font-display" style={{ fontSize: "clamp(2rem, 4vw, 2.75rem)", fontWeight: 600, lineHeight: 1.05, letterSpacing: "-.02em", color: "hsl(var(--fog))", margin: "0 0 8px" }}>
@@ -212,7 +212,7 @@ export default function AnalyticsPage() {
             <h3 className="font-display" style={{ fontSize: 20, fontWeight: 600, color: "hsl(var(--fog))", margin: 0, flex: 1 }}>
               סריקות לאורך זמן
             </h3>
-            <span className="font-mono uppercase" style={{ fontSize: "11px", letterSpacing: ".08em", padding: "3px 10px", borderRadius: 99, background: "hsl(28,62%,42%,.1)", color: "hsl(var(--accent-bright))", border: "1px solid hsl(28,62%,42%,.2)" }}>
+            <span className="font-sans uppercase" style={{ fontSize: "11px", letterSpacing: ".08em", padding: "3px 10px", borderRadius: 99, background: "hsl(28,62%,42%,.1)", color: "hsl(var(--accent-bright))", border: "1px solid hsl(28,62%,42%,.2)" }}>
               Live
             </span>
           </div>
@@ -267,7 +267,7 @@ export default function AnalyticsPage() {
             <h3 className="font-display" style={{ fontSize: 20, fontWeight: 600, color: "hsl(var(--fog))", margin: 0, flex: 1 }}>
               תצוגות לפי מצב
             </h3>
-            <span className="font-mono uppercase" style={{ fontSize: "11px", letterSpacing: ".08em", padding: "3px 10px", borderRadius: 99, background: "hsl(28,62%,42%,.1)", color: "hsl(var(--accent-bright))", border: "1px solid hsl(28,62%,42%,.2)" }}>
+            <span className="font-sans uppercase" style={{ fontSize: "11px", letterSpacing: ".08em", padding: "3px 10px", borderRadius: 99, background: "hsl(28,62%,42%,.1)", color: "hsl(var(--accent-bright))", border: "1px solid hsl(28,62%,42%,.2)" }}>
               3D · 360 · AR
             </span>
           </div>
@@ -320,7 +320,7 @@ export default function AnalyticsPage() {
           <h3 className="font-display" style={{ fontSize: 20, fontWeight: 600, color: "hsl(var(--fog))", margin: 0, flex: 1 }}>
             שעות שיא · השבוע
           </h3>
-          <span className="font-mono uppercase" style={{ fontSize: "9.5px", letterSpacing: ".18em", padding: "3px 10px", borderRadius: 99, background: "hsl(28,62%,42%,.1)", color: "hsl(var(--accent-bright))", border: "1px solid hsl(28,62%,42%,.2)" }}>
+          <span className="font-sans uppercase" style={{ fontSize: "9.5px", letterSpacing: ".06em", padding: "3px 10px", borderRadius: 99, background: "hsl(28,62%,42%,.1)", color: "hsl(var(--accent-bright))", border: "1px solid hsl(28,62%,42%,.2)" }}>
             Heatmap
           </span>
         </div>
@@ -335,7 +335,7 @@ export default function AnalyticsPage() {
           {/* Rows */}
           {DAYS_HE.map((day, d) => (
             <>
-              <div key={`lbl-${d}`} className="font-mono uppercase" style={{ fontSize: "9.5px", letterSpacing: ".14em", color: "hsl(var(--subtle))", alignSelf: "center", paddingLeft: 2 }}>
+              <div key={`lbl-${d}`} className="font-sans uppercase" style={{ fontSize: "9.5px", letterSpacing: ".06em", color: "hsl(var(--subtle))", alignSelf: "center", paddingLeft: 2 }}>
                 {day}
               </div>
               {Array.from({ length: 24 }, (_, h) => {

@@ -90,7 +90,7 @@ export default async function AdminPlansPage() {
               <CardContent className="relative p-6">
                 <div className="flex items-start justify-between mb-4">
                   <div>
-                    <div className="font-mono text-[10px] tracking-[0.18em] uppercase mb-1" style={{ color: "hsl(var(--dim))" }}>
+                    <div className="font-sans text-[10px] tracking-[0.05em] uppercase font-semibold mb-1" style={{ color: "hsl(var(--dim))" }}>
                       {plan.labelEn}
                     </div>
                     <div className="font-serif-display text-2xl font-bold">{plan.label}</div>

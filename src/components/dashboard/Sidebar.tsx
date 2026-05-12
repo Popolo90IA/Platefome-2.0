@@ -76,7 +76,7 @@ export function Sidebar() {
       <nav className="flex-1 px-2 py-4 overflow-y-auto scrollbar-none">
         {/* Section label */}
         <div
-          className="px-3 mb-2 font-mono text-[11px] tracking-[0.12em] uppercase"
+          className="px-3 mb-2 font-sans text-[11px] tracking-[0.05em] uppercase font-semibold"
           style={{ color: "hsl(var(--dim))", paddingTop: 4 }}
         >
           תפריט
@@ -142,7 +142,7 @@ export function Sidebar() {
         {isAdmin && (
           <>
             <div
-              className="px-3 mt-6 mb-3 font-mono text-[11px] tracking-[0.12em] uppercase"
+              className="px-3 mt-6 mb-3 font-sans text-[11px] tracking-[0.05em] uppercase font-semibold"
               style={{ color: "hsl(var(--dim))" }}
             >
               Admin

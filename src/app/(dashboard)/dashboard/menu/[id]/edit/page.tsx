@@ -127,8 +127,8 @@ function SectionCard({
         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
           {badge && (
             <span
-              className="font-mono uppercase"
-              style={{ fontSize: 10, letterSpacing: ".18em", color: "hsl(var(--dim))" }}
+              className="font-sans uppercase"
+              style={{ fontSize: 10, letterSpacing: ".06em", color: "hsl(var(--dim))" }}
             >
               {badge}
             </span>
@@ -151,7 +151,7 @@ function SectionCard({
 function FieldLabel({ children }: { children: React.ReactNode }) {
   return (
     <span
-      className="font-mono uppercase"
+      className="font-sans uppercase"
       style={{
         display: "block",
         fontSize: "10.5px",
@@ -490,8 +490,8 @@ export default function DishEditPage() {
 
       {/* ── Breadcrumb ────────────────────────────────────────────────── */}
       <nav
-        className="font-mono uppercase"
-        style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 11, letterSpacing: ".12em", color: "hsl(var(--dim))", marginBottom: 18 }}
+        className="font-sans uppercase"
+        style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 11, letterSpacing: ".05em", color: "hsl(var(--dim))", marginBottom: 18 }}
       >
         <Link href="/dashboard" style={{ color: "hsl(var(--subtle))", textDecoration: "none" }}>
           דשבורד
@@ -510,13 +510,13 @@ export default function DishEditPage() {
           {/* Status pill */}
           <div style={{ marginBottom: 10 }}>
             <span
-              className="font-mono uppercase"
+              className="font-sans uppercase"
               style={{
                 display: "inline-flex", alignItems: "center", gap: 6,
                 padding: "5px 12px", borderRadius: 99,
                 background: form.is_available ? "hsl(120,30%,40%,.1)" : "hsl(0,60%,50%,.08)",
                 border: `1px solid ${form.is_available ? "hsl(120,30%,40%,.2)" : "hsl(0,60%,50%,.2)"}`,
-                fontSize: 10.5, letterSpacing: ".14em",
+                fontSize: 10.5, letterSpacing: ".06em",
                 color: form.is_available ? "hsl(120,30%,30%)" : "hsl(0,55%,42%)",
               }}
             >
@@ -540,8 +540,8 @@ export default function DishEditPage() {
         <div style={{ display: "flex", gap: 10, alignItems: "center", flexShrink: 0 }}>
           {/* Auto-save indicator */}
           <span
-            className="font-mono uppercase"
-            style={{ fontSize: 11, letterSpacing: ".14em", color: saveState === "error" ? "hsl(0,60%,50%)" : "hsl(var(--dim))", display: "flex", alignItems: "center", gap: 6 }}
+            className="font-sans uppercase"
+            style={{ fontSize: 11, letterSpacing: ".06em", color: saveState === "error" ? "hsl(0,60%,50%)" : "hsl(var(--dim))", display: "flex", alignItems: "center", gap: 6 }}
           >
             {saveState === "saving" && (
               <><Loader2 style={{ width: 12, height: 12, animation: "spin 1s linear infinite" }} />שומר...</>
@@ -1074,12 +1074,12 @@ export default function DishEditPage() {
         <div style={{ position: "sticky", top: 24 }}>
           {/* Preview label */}
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "0 4px", marginBottom: 14 }}>
-            <span className="font-mono uppercase" style={{ fontSize: 11, letterSpacing: ".14em", color: "hsl(var(--subtle))" }}>
+            <span className="font-sans uppercase" style={{ fontSize: 11, letterSpacing: ".06em", color: "hsl(var(--subtle))" }}>
               תצוגה מקדימה · חי
             </span>
             <span
-              className="font-mono uppercase"
-              style={{ fontSize: 10, letterSpacing: ".14em", color: "hsl(var(--accent-bright))", display: "flex", alignItems: "center", gap: 5 }}
+              className="font-sans uppercase"
+              style={{ fontSize: 10, letterSpacing: ".06em", color: "hsl(var(--accent-bright))", display: "flex", alignItems: "center", gap: 5 }}
             >
               <span style={{ width: 6, height: 6, borderRadius: "50%", background: "hsl(var(--accent-bright))", display: "inline-block", opacity: .7 }} />
               מסנכרן
@@ -1129,7 +1129,7 @@ export default function DishEditPage() {
                     style={{
                       position: "absolute", top: 10, right: 10,
                       background: "rgba(255,255,255,.95)", borderRadius: 99,
-                      padding: "4px 9px", fontSize: 9, letterSpacing: ".12em",
+                      padding: "4px 9px", fontSize: 9, letterSpacing: ".05em",
                       color: "hsl(var(--accent-bright))",
                       display: "flex", alignItems: "center", gap: 4,
                     }}
@@ -1219,7 +1219,7 @@ export default function DishEditPage() {
               { k: "מודל 3D",      v: form.model_3d_url ? "✓ פעיל" : "—" },
             ].map(({ k, v }) => (
               <div key={k} style={{ display: "flex", justifyContent: "space-between", fontSize: 12.5 }}>
-                <span className="font-mono uppercase" style={{ fontSize: 10, letterSpacing: ".14em", color: "hsl(var(--dim))" }}>{k}</span>
+                <span className="font-sans uppercase" style={{ fontSize: 10, letterSpacing: ".06em", color: "hsl(var(--dim))" }}>{k}</span>
                 <span className="font-sans" style={{ color: "hsl(var(--fog))", fontWeight: 500 }}>{v}</span>
               </div>
             ))}

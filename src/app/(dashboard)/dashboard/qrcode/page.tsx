@@ -160,7 +160,7 @@ export default function QRCodePage() {
   if (!restaurant) {
     return (
       <div style={{ ...CARD, maxWidth: 420, margin: "0 auto", textAlign: "center", padding: "40px 32px" }}>
-        <p className="font-mono uppercase" style={{ fontSize: "12px", letterSpacing: ".1em", color: "hsl(var(--accent-bright))", marginBottom: 12 }}>
+        <p className="font-sans uppercase" style={{ fontSize: "12px", letterSpacing: ".05em", color: "hsl(var(--accent-bright))", marginBottom: 12 }}>
           Getting started
         </p>
         <h2 className="font-display" style={{ fontSize: "1.5rem", fontWeight: 600, color: "hsl(var(--fog))", margin: "0 0 12px" }}>
@@ -230,7 +230,7 @@ export default function QRCodePage() {
 
           {/* Format */}
           <div style={CARD}>
-            <div className="font-mono uppercase" style={{ fontSize: "11.5px", letterSpacing: ".1em", color: "hsl(var(--subtle))", marginBottom: 14 }}>
+            <div className="font-sans uppercase" style={{ fontSize: "11.5px", letterSpacing: ".05em", color: "hsl(var(--subtle))", marginBottom: 14 }}>
               פורמט
             </div>
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
@@ -282,7 +282,7 @@ export default function QRCodePage() {
                       </svg>
                     )}
                   </div>
-                  <div className="font-mono uppercase" style={{ fontSize: 11, letterSpacing: ".06em", color: i === formatIdx ? "hsl(var(--accent-bright))" : "hsl(var(--fog))" }}>
+                  <div className="font-sans uppercase" style={{ fontSize: 11, letterSpacing: ".06em", color: i === formatIdx ? "hsl(var(--accent-bright))" : "hsl(var(--fog))" }}>
                     {item.label}
                   </div>
                 </button>
@@ -292,11 +292,11 @@ export default function QRCodePage() {
 
           {/* Colors */}
           <div style={CARD}>
-            <div className="font-mono uppercase" style={{ fontSize: "11.5px", letterSpacing: ".1em", color: "hsl(var(--subtle))", marginBottom: 14 }}>
+            <div className="font-sans uppercase" style={{ fontSize: "11.5px", letterSpacing: ".05em", color: "hsl(var(--subtle))", marginBottom: 14 }}>
               צבעים
             </div>
             <div style={{ marginBottom: 14 }}>
-              <span className="font-mono uppercase" style={{ fontSize: 11, letterSpacing: ".08em", color: "hsl(var(--dim))", display: "block", marginBottom: 6 }}>תבנית</span>
+              <span className="font-sans uppercase" style={{ fontSize: 11, letterSpacing: ".08em", color: "hsl(var(--dim))", display: "block", marginBottom: 6 }}>תבנית</span>
               <div style={{ display: "flex", gap: 8 }}>
                 {BG_SWATCHES.map((sw, i) => (
                   <button
@@ -315,7 +315,7 @@ export default function QRCodePage() {
               </div>
             </div>
             <div>
-              <span className="font-mono uppercase" style={{ fontSize: 11, letterSpacing: ".08em", color: "hsl(var(--dim))", display: "block", marginBottom: 6 }}>סגנון QR</span>
+              <span className="font-sans uppercase" style={{ fontSize: 11, letterSpacing: ".08em", color: "hsl(var(--dim))", display: "block", marginBottom: 6 }}>סגנון QR</span>
               <div style={{ display: "flex", gap: 8 }}>
                 {QR_STYLES.map((qs, i) => (
                   <button
@@ -345,7 +345,7 @@ export default function QRCodePage() {
 
           {/* Content */}
           <div style={CARD}>
-            <div className="font-mono uppercase" style={{ fontSize: "11.5px", letterSpacing: ".1em", color: "hsl(var(--subtle))", marginBottom: 14 }}>
+            <div className="font-sans uppercase" style={{ fontSize: "11.5px", letterSpacing: ".05em", color: "hsl(var(--subtle))", marginBottom: 14 }}>
               תוכן
             </div>
             {[
@@ -353,7 +353,7 @@ export default function QRCodePage() {
               { label: "תיאור",         value: desc, setter: setDesc },
             ].map(f => (
               <div key={f.label} style={{ marginBottom: 14 }}>
-                <span className="font-mono uppercase" style={{ fontSize: 11, letterSpacing: ".08em", color: "hsl(var(--dim))", display: "block", marginBottom: 6 }}>
+                <span className="font-sans uppercase" style={{ fontSize: 11, letterSpacing: ".08em", color: "hsl(var(--dim))", display: "block", marginBottom: 6 }}>
                   {f.label}
                 </span>
                 <input
@@ -369,11 +369,11 @@ export default function QRCodePage() {
 
           {/* Per-table */}
           <div style={CARD}>
-            <div className="font-mono uppercase" style={{ fontSize: "11.5px", letterSpacing: ".1em", color: "hsl(var(--subtle))", marginBottom: 14 }}>
+            <div className="font-sans uppercase" style={{ fontSize: "11.5px", letterSpacing: ".05em", color: "hsl(var(--subtle))", marginBottom: 14 }}>
               QR ייחודי לכל שולחן
             </div>
             <div style={{ marginBottom: 14 }}>
-              <span className="font-mono uppercase" style={{ fontSize: 11, letterSpacing: ".08em", color: "hsl(var(--dim))", display: "block", marginBottom: 6 }}>מספר שולחנות</span>
+              <span className="font-sans uppercase" style={{ fontSize: 11, letterSpacing: ".08em", color: "hsl(var(--dim))", display: "block", marginBottom: 6 }}>מספר שולחנות</span>
               <input
                 type="number"
                 min="1"
@@ -396,7 +396,7 @@ export default function QRCodePage() {
 
           {/* Shipping card */}
           <div style={{ ...CARD, background: "linear-gradient(160deg, hsl(28,62%,42%,.08), transparent)", border: "1px solid hsl(28,62%,42%,.2)" }}>
-            <div className="font-mono uppercase" style={{ fontSize: "11.5px", letterSpacing: ".1em", color: "hsl(var(--accent-bright))", marginBottom: 14 }}>
+            <div className="font-sans uppercase" style={{ fontSize: "11.5px", letterSpacing: ".05em", color: "hsl(var(--accent-bright))", marginBottom: 14 }}>
               הדפסה ומשלוח
             </div>
             <div className="font-display" style={{ fontSize: 28, fontWeight: 500, color: "hsl(var(--fog))", marginBottom: 4 }}>
@@ -625,7 +625,7 @@ export default function QRCodePage() {
                           <QRCode value={`${menuUrl}?table=${n}`} size={62} fgColor={selectedQrStyle.fg} bgColor={selectedQrStyle.bg} errorCorrectionLevel="H" />
                         )}
                       </div>
-                      <div className="font-mono" style={{ fontSize: 8, letterSpacing: ".14em", color: subtitleColor }}>
+                      <div className="font-mono" style={{ fontSize: 8, letterSpacing: ".06em", color: subtitleColor }}>
                         שולחן {n}
                       </div>
                     </div>
@@ -641,7 +641,7 @@ export default function QRCodePage() {
           </div>
 
           {/* Meta row */}
-          <div className="font-mono" style={{ display: "flex", justifyContent: "space-between", padding: "0 8px", marginTop: 24, fontSize: 10, letterSpacing: ".15em", textTransform: "uppercase", color: "rgba(255,255,255,.4)" }}>
+          <div className="font-mono" style={{ display: "flex", justifyContent: "space-between", padding: "0 8px", marginTop: 24, fontSize: 10, letterSpacing: ".06em", textTransform: "uppercase", color: "rgba(255,255,255,.4)" }}>
             <span>{selectedFormat.label}</span>
             <span>חוצץ שולחן · דו-צדדי</span>
             <span>CMYK · 350gsm</span>
@@ -684,7 +684,7 @@ export default function QRCodePage() {
                     <rect x="20" y="20" width="2" height="2" fill={v.fg}/>
                   </svg>
                 </div>
-                <div className="font-mono" style={{ fontSize: 10, letterSpacing: ".14em", textTransform: "uppercase", color: "rgba(255,255,255,.7)" }}>
+                <div className="font-mono" style={{ fontSize: 10, letterSpacing: ".06em", textTransform: "uppercase", color: "rgba(255,255,255,.7)" }}>
                   {v.label}
                   <span style={{ display: "block", marginTop: 3, fontSize: 9, color: "rgba(255,255,255,.4)" }}>{v.size}</span>
                 </div>
@@ -694,7 +694,7 @@ export default function QRCodePage() {
                     handleDownloadVariant(v.fg, v.bg, i % 2 === 0 ? "png" : "svg");
                   }}
                   title="הורד"
-                  style={{ marginTop: 8, padding: "4px 10px", borderRadius: 6, border: "1px solid rgba(255,255,255,.15)", background: "rgba(255,255,255,.06)", color: "rgba(255,255,255,.6)", fontSize: 9, cursor: "pointer", letterSpacing: ".1em" }}
+                  style={{ marginTop: 8, padding: "4px 10px", borderRadius: 6, border: "1px solid rgba(255,255,255,.15)", background: "rgba(255,255,255,.06)", color: "rgba(255,255,255,.6)", fontSize: 9, cursor: "pointer", letterSpacing: ".05em" }}
                 >
                   הורד
                 </button>

@@ -53,7 +53,7 @@ export function AdminSidebar() {
           <LogoWordmark width={120} />
         </Link>
         <div
-          className="mt-3 inline-flex items-center gap-1.5 px-2 py-0.5 rounded font-mono text-[10px] tracking-[0.08em] uppercase"
+          className="mt-3 inline-flex items-center gap-1.5 px-2 py-0.5 rounded font-sans text-[11px] tracking-[0.05em] uppercase font-semibold"
           style={{
             background: "hsl(var(--accent-bright) / .12)",
             border: "1px solid hsl(var(--accent-bright) / .25)",
@@ -67,7 +67,7 @@ export function AdminSidebar() {
       {/* Navigation */}
       <nav className="flex-1 px-2 py-4 overflow-y-auto scrollbar-none">
         <div
-          className="px-3 mb-2 font-mono text-[11px] tracking-[0.12em] uppercase"
+          className="px-3 mb-2 font-sans text-[11px] tracking-[0.06em] uppercase font-semibold"
           style={{ color: "hsl(var(--dim))", paddingTop: 4 }}
         >
           ניהול
@@ -126,7 +126,7 @@ export function AdminSidebar() {
 
         {/* Back to dashboard */}
         <div
-          className="px-3 mt-6 mb-2 font-mono text-[11px] tracking-[0.12em] uppercase"
+          className="px-3 mt-6 mb-2 font-sans text-[11px] tracking-[0.06em] uppercase font-semibold"
           style={{ color: "hsl(var(--dim))" }}
         >
           ניווט

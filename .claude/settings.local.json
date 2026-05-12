@@ -39,7 +39,13 @@
       "mcp__Claude_in_Chrome__navigate",
       "Bash(pkill:*)",
       "Bash(npx vercel logs:*)",
-      "Bash(npx vercel:*)"
+      "Bash(npx vercel:*)",
+      "Bash(cat:*)",
+      "Bash(node -e:*)",
+      "mcp__Claude_in_Chrome__find",
+      "Bash(while read f)",
+      "Bash(do)",
+      "Bash(done)"
     ]
   }
 }
