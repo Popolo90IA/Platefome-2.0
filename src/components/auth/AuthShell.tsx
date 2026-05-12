@@ -34,7 +34,7 @@ export function AuthShell({ children }: { children: React.ReactNode }) {
 
       {/* Top bar */}
       <div className="relative container mx-auto px-4 py-6">
-        <Link href="/" className="inline-block transition-opacity hover:opacity-80">
+        <Link href="/" className="logo-hover inline-block">
           <LogoLockup width={160} />
         </Link>
       </div>

@@ -360,7 +360,7 @@ export default function HomePage() {
         }}>
 
           {/* ── Logo ── */}
-          <Link href="/" style={{ display: "flex", alignItems: "center", textDecoration: "none", flexShrink: 0 }}>
+          <Link href="/" className="logo-hover" style={{ display: "flex", alignItems: "center", textDecoration: "none", flexShrink: 0 }}>
             <LogoWordmark width={140} />
           </Link>
 
@@ -1025,7 +1025,9 @@ export default function HomePage() {
             {/* Brand col */}
             <div>
               <div style={{ marginBottom: 16 }}>
-                <LogoWordmark width={130} />
+                <Link href="/" className="logo-hover" style={{ display: "inline-block" }}>
+                  <LogoWordmark width={130} />
+                </Link>
               </div>
               <p style={{ fontFamily: "'DM Sans',sans-serif", fontSize: ".9rem", lineHeight: 1.75, color: "hsl(28,10%,55%)", marginBottom: 24 }}>
                 פלטפורמת תפריטים תלת-מימד/AR למסעדות.<br />תל אביב · פריז.

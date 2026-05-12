@@ -49,7 +49,7 @@ export function AdminSidebar() {
         className="px-5 pt-6 pb-5"
         style={{ borderBottom: "1px solid hsl(var(--line))" }}
       >
-        <Link href="/admin" className="block">
+        <Link href="/admin" className="logo-hover">
           <LogoWordmark width={120} />
         </Link>
         <div

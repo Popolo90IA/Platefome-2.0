@@ -67,7 +67,7 @@ export function Sidebar() {
         className="px-5 pt-6 pb-5"
         style={{ borderBottom: "1px solid hsl(var(--line))" }}
       >
-        <Link href="/dashboard" className="block group">
+        <Link href="/dashboard" className="logo-hover">
           <LogoWordmark width={120} />
         </Link>
       </div>
