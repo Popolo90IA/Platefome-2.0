@@ -1061,26 +1061,29 @@
 
   /* ── Auth skew panel transition — vient de droite ── */
   @keyframes authSkewSweep {
-    0%   { transform: skewX(5deg)  translateX(110%);  width: 35%; }
-    20%  { transform: skewX(-5deg) translateX(90%);   width: 35%; }
-    45%  { transform: skewX(0deg)  translateX(0);     width: 100%; box-shadow: -10px 0 40px rgba(0,0,0,.3); }
-    60%  { transform: skewX(-3deg) translateX(0);     width: 100%; box-shadow: -10px 0 40px rgba(0,0,0,.3); }
-    80%  { transform: skewX(-1deg) translateX(90%);   width: 60%;  box-shadow: -10px 0 40px rgba(0,0,0,.3); }
-    100% { transform: skewX(5deg)  translateX(110%);  width: 35%;  box-shadow: none; }
+    0%   { transform: skewX(3deg)  translateX(100%);  width: 40%; opacity: 0; }
+    10%  { opacity: 1; }
+    20%  { transform: skewX(-3deg) translateX(60%);   width: 40%; }
+    45%  { transform: skewX(0deg)  translateX(0);     width: 100%; box-shadow: -20px 0 60px rgba(0,0,0,.5); }
+    60%  { transform: skewX(-2deg) translateX(0);     width: 100%; box-shadow: -20px 0 60px rgba(0,0,0,.5); }
+    80%  { transform: skewX(-1deg) translateX(60%);   width: 50%;  box-shadow: -10px 0 30px rgba(0,0,0,.3); }
+    95%  { opacity: 1; }
+    100% { transform: skewX(3deg)  translateX(100%);  width: 40%;  box-shadow: none; opacity: 0; }
   }
 
   .auth-skew-panel {
     position: fixed;
-    top: 0;
+    top: -5vh;
     right: 0;
     left: auto;
-    height: 100vh;
-    width: 35%;
+    height: 110vh;
+    width: 40%;
     z-index: 9999;
     pointer-events: none;
     overflow: hidden;
     background: linear-gradient(160deg, hsl(28,25%,12%) 0%, hsl(28,18%,7%) 100%);
-    transform: skewX(5deg) translateX(110%);
+    transform: skewX(3deg) translateX(100%);
+    opacity: 0;
   }
 
   /* Grain noise */
