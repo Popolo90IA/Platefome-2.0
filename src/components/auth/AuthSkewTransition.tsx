@@ -40,12 +40,12 @@ export function AuthSkewLink({ href, children, style, className }: AuthSkewLinkP
     // Navigue au milieu de l'animation (quand le panel couvre tout)
     setTimeout(() => {
       router.push(href);
-    }, 380);
+    }, 675);
 
     // Reset après la fin
     setTimeout(() => {
       triggered.current = false;
-    }, 950);
+    }, 1550);
   };
 
   return (
