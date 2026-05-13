@@ -6,6 +6,7 @@ import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 import { Loader2, AlertCircle, Eye, EyeOff } from "lucide-react";
 import { LogoLockup, LogoMark } from "@/components/brand";
+import { AuthFlipLink } from "@/components/auth/AuthFlipLink";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -48,6 +49,7 @@ export default function LoginPage() {
 
   return (
     <div
+      data-auth-page
       dir="rtl"
       style={{
         minHeight: "100vh",
@@ -401,8 +403,9 @@ export default function LoginPage() {
           </div>
 
           {/* Sign up link */}
-          <Link
+          <AuthFlipLink
             href="/signup"
+            direction="forward"
             style={{
               display: "block", width: "100%", boxSizing: "border-box",
               padding: "12px 20px", borderRadius: 10,
@@ -411,19 +414,12 @@ export default function LoginPage() {
               color: "hsl(var(--fog))", fontSize: 14, fontWeight: 500,
               textAlign: "center", textDecoration: "none",
               transition: "border-color .15s, background .15s",
+              cursor: "pointer",
             }}
             className="font-sans"
-            onMouseEnter={(e) => {
-              (e.currentTarget as HTMLAnchorElement).style.borderColor = "hsl(28,62%,42%,.5)";
-              (e.currentTarget as HTMLAnchorElement).style.background = "hsl(28,62%,42%,.04)";
-            }}
-            onMouseLeave={(e) => {
-              (e.currentTarget as HTMLAnchorElement).style.borderColor = "hsl(var(--line))";
-              (e.currentTarget as HTMLAnchorElement).style.background = "transparent";
-            }}
           >
             צור חשבון חדש ←
-          </Link>
+          </AuthFlipLink>
         </div>
       </div>
     </div>
