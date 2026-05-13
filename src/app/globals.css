@@ -1059,9 +1059,29 @@
     }
   }
 
-  /* ── Auth slide animation (book page slide) ── */
-  @keyframes authSlideExit {
-    from { transform: translateX(0);                    opacity: 1; }
-    to   { transform: translateX(var(--slide-exit-x));  opacity: 0; }
+  /* ── Auth skew panel transition ── */
+  @keyframes authSkewSweep {
+    0%   { transform: skewX(-5deg) translateX(-110%); width: 30%; z-index: 9999; }
+    20%  { transform: skewX(5deg)  translateX(-100%); width: 30%; z-index: 9999; }
+    40%  { transform: skewX(0deg)  translateX(0);     width: 100%; z-index: 9999; box-shadow: 10px 10px 30px rgba(0,0,0,.25); }
+    60%  { transform: skewX(3deg)  translateX(0);     width: 100%; z-index: 9999; box-shadow: 10px 10px 30px rgba(0,0,0,.25); }
+    80%  { transform: skewX(1deg)  translateX(-100%); width: 60%;  z-index: 9999; box-shadow: 10px 10px 30px rgba(0,0,0,.25); }
+    100% { transform: skewX(-5deg) translateX(-110%); width: 30%;  z-index: 9999; box-shadow: none; }
+  }
+
+  .auth-skew-panel {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 30%;
+    z-index: 9999;
+    pointer-events: none;
+    background: linear-gradient(135deg, hsl(28,62%,38%) 0%, hsl(22,70%,50%) 100%);
+    transform: skewX(-5deg) translateX(-110%);
+  }
+
+  .auth-skew-panel--animating {
+    animation: authSkewSweep 0.9s cubic-bezier(0.4, 0, 0.2, 1) forwards;
   }
 }

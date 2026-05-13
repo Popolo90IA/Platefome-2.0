@@ -6,6 +6,7 @@ import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 import { Loader2, AlertCircle, Eye, EyeOff, Check } from "lucide-react";
 import { LogoMark } from "@/components/brand";
+import { AuthSkewLink } from "@/components/auth/AuthSkewTransition";
 
 export default function SignupPage() {
   const [email, setEmail] = useState("");
@@ -404,7 +405,7 @@ export default function SignupPage() {
           </div>
 
           {/* Login link */}
-          <Link
+          <AuthSkewLink
             href="/login"
             style={{
               display: "block", width: "100%", boxSizing: "border-box",
@@ -414,19 +415,12 @@ export default function SignupPage() {
               color: "hsl(var(--fog))", fontSize: 14, fontWeight: 500,
               textAlign: "center", textDecoration: "none",
               transition: "border-color .15s, background .15s",
+              cursor: "pointer",
             }}
             className="font-sans"
-            onMouseEnter={(e) => {
-              (e.currentTarget as HTMLAnchorElement).style.borderColor = "hsl(28,62%,42%,.5)";
-              (e.currentTarget as HTMLAnchorElement).style.background = "hsl(28,62%,42%,.04)";
-            }}
-            onMouseLeave={(e) => {
-              (e.currentTarget as HTMLAnchorElement).style.borderColor = "hsl(var(--line))";
-              (e.currentTarget as HTMLAnchorElement).style.background = "transparent";
-            }}
           >
             התחבר לחשבון קיים ←
-          </Link>
+          </AuthSkewLink>
         </div>
       </div>
     </div>
