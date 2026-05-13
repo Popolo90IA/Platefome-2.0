@@ -48,22 +48,14 @@ export default function LoginPage() {
   };
 
   return (
-    <div
-      dir="rtl"
-      style={{
-        minHeight: "100vh",
-        display: "grid",
-        gridTemplateColumns: "1fr 1fr",
-        background: "hsl(var(--void))",
-      }}
-    >
+    <div dir="rtl" className="auth-layout">
       {/* ── Left panel — brand visual ──────────────────────────────── */}
       <div
+        className="auth-brand-panel"
         style={{
           position: "relative",
           overflow: "hidden",
           background: "linear-gradient(160deg, hsl(28,25%,12%) 0%, hsl(28,18%,7%) 100%)",
-          display: "flex",
           flexDirection: "column",
           justifyContent: "space-between",
           padding: "48px 52px",
@@ -186,28 +178,16 @@ export default function LoginPage() {
       </div>
 
       {/* ── Right panel — form ─────────────────────────────────────── */}
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "center",
-          padding: "48px 52px",
-          background: "hsl(var(--sand))",
-          position: "relative",
-        }}
-      >
-        {/* Top-right logo mark for mobile (hidden on desktop) */}
-        <div
-          style={{
-            position: "absolute", top: 32, left: 32,
-            display: "none",
-          }}
-        >
-          <LogoMark size={32} />
+      <div className="auth-form-panel">
+
+        {/* Logo mobile uniquement */}
+        <div className="auth-mobile-header">
+          <Link href="/">
+            <img src="/brand/logo-lockup.svg" width={140} height={38} alt="Plateform" draggable={false} />
+          </Link>
         </div>
 
-        <div style={{ width: "100%", maxWidth: 380 }}>
+        <div className="auth-form-inner" style={{ width: "100%", maxWidth: 380 }}>
 
           {/* Heading */}
           <div style={{ marginBottom: 36, textAlign: "right" }}>
