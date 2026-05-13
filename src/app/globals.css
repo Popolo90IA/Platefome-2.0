@@ -1059,33 +1059,9 @@
     }
   }
 
-  /* ── Auth page flip animation ── */
-  @keyframes authFlipForward {
-    0%   { transform: perspective(1400px) rotateY(0deg);   opacity: 1; }
-    40%  { transform: perspective(1400px) rotateY(-8deg);  opacity: 1; }
-    50%  { transform: perspective(1400px) rotateY(-90deg); opacity: 0.6; }
-    60%  { transform: perspective(1400px) rotateY(-90deg); opacity: 0.6; }
-    100% { transform: perspective(1400px) rotateY(-180deg); opacity: 0; }
-  }
-
-  @keyframes authFlipBackward {
-    0%   { transform: perspective(1400px) rotateY(0deg);   opacity: 1; }
-    40%  { transform: perspective(1400px) rotateY(8deg);   opacity: 1; }
-    50%  { transform: perspective(1400px) rotateY(90deg);  opacity: 0.6; }
-    60%  { transform: perspective(1400px) rotateY(90deg);  opacity: 0.6; }
-    100% { transform: perspective(1400px) rotateY(180deg); opacity: 0; }
-  }
-
-  [data-auth-page] {
-    transform-style: preserve-3d;
-    transform-origin: center center;
-  }
-
-  [data-auth-page].auth-flip-forward {
-    animation: authFlipForward 0.55s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-  }
-
-  [data-auth-page].auth-flip-backward {
-    animation: authFlipBackward 0.55s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  /* ── Auth slide animation (book page slide) ── */
+  @keyframes authSlideExit {
+    from { transform: translateX(0);                    opacity: 1; }
+    to   { transform: translateX(var(--slide-exit-x));  opacity: 0; }
   }
 }
