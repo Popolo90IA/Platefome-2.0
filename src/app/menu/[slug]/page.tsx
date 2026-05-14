@@ -1,9 +1,53 @@
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { MenuView } from "@/components/menu/MenuView";
 
 interface MenuPageProps {
   params: Promise<{ slug: string }>;
+}
+
+export async function generateMetadata({
+  params,
+}: MenuPageProps): Promise<Metadata> {
+  const { slug } = await params;
+  const supabase = await createClient();
+
+  const { data: restaurant } = await supabase
+    .from("restaurants")
+    .select("name, description, logo_url")
+    .eq("slug", slug)
+    .maybeSingle();
+
+  if (!restaurant) {
+    return { title: "Menu | Plateform" };
+  }
+
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://plateform.app";
+  const title = `${restaurant.name} — Menu`;
+  const description =
+    restaurant.description ?? `Découvrez le menu de ${restaurant.name} en 360°`;
+
+  return {
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      url: `${siteUrl}/menu/${slug}`,
+      siteName: "Plateform",
+      images: restaurant.logo_url
+        ? [{ url: restaurant.logo_url, alt: restaurant.name }]
+        : [],
+      type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: restaurant.logo_url ? [restaurant.logo_url] : [],
+    },
+  };
 }
 
 export default async function MenuPage({ params }: MenuPageProps) {

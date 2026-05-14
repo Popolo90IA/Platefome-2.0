@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import { UtensilsCrossed, X, Share2 } from "lucide-react";
 import { DishModelViewer } from "./DishModelViewer";
 import { Photo360Viewer } from "./Photo360Viewer";
@@ -180,12 +181,14 @@ export function MenuView({ restaurant, categories, dishes, slug }: MenuViewProps
           }}
         >
           {restaurant.banner_url && (
-            <img
+            <Image
               src={restaurant.banner_url}
               alt=""
               aria-hidden
-              style={{ width: "100%", height: "100%", objectFit: "cover", filter: "brightness(.4) saturate(.7)", transform: "scale(1.08)" }}
-              loading="eager"
+              fill
+              priority
+              sizes="100vw"
+              style={{ objectFit: "cover", filter: "brightness(.4) saturate(.7)", transform: "scale(1.08)" }}
             />
           )}
         </div>
@@ -295,11 +298,13 @@ export function MenuView({ restaurant, categories, dishes, slug }: MenuViewProps
               flexShrink: 0,
             }}>
               {restaurant.logo_url ? (
-                <img
+                <Image
                   src={restaurant.logo_url}
                   alt={restaurantName}
-                  style={{ width: 48, height: 48, borderRadius: 12, objectFit: "cover" }}
-                  loading="eager"
+                  width={48}
+                  height={48}
+                  style={{ borderRadius: 12, objectFit: "cover" }}
+                  priority
                 />
               ) : (
                 <svg width="22" height="22" viewBox="0 0 32 32" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
@@ -582,11 +587,12 @@ function DishCard({
               onMouseLeave={(e) => { e.currentTarget.pause(); e.currentTarget.currentTime = 0; }}
             />
           ) : dish.image_url ? (
-            <img
+            <Image
               src={dish.image_url}
               alt={name}
-              style={{ width: "100%", height: "100%", objectFit: "cover", display: "block", transition: "transform .5s", transform: hovered ? "scale(1.08)" : "scale(1)" }}
-              loading="lazy"
+              fill
+              sizes="(max-width: 640px) 50vw, 33vw"
+              style={{ objectFit: "cover", display: "block", transition: "transform .5s", transform: hovered ? "scale(1.08)" : "scale(1)" }}
             />
           ) : null}
 
@@ -728,7 +734,7 @@ function DishModal({
         {/* Art / media area */}
         <div style={{ position: "relative", aspectRatio: "1.6", background: dish.image_url ? undefined : "linear-gradient(135deg, hsl(28,40%,32%), hsl(28,55%,45%))", overflow: "hidden" }}>
           {dish.image_url && (
-            <img src={dish.image_url} alt={name} style={{ width: "100%", height: "100%", objectFit: "cover" }} loading="lazy" />
+            <Image src={dish.image_url} alt={name} fill sizes="(max-width: 640px) 100vw, 560px" style={{ objectFit: "cover" }} />
           )}
           <div aria-hidden style={{ position: "absolute", inset: 0, background: "radial-gradient(circle at 30% 30%, rgba(255,220,170,.4), transparent 60%)" }}/>
 

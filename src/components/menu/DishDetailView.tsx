@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import type { Dish, Restaurant } from "@/types/database.types";
 
 interface DishDetailViewProps {
@@ -103,11 +104,12 @@ export function DishDetailView({ dish, restaurant, slug }: DishDetailViewProps) 
             {/* Main photo */}
             <div className="dish-fade-a" style={{ position: "relative", borderRadius: 16, overflow: "hidden", background: "hsl(var(--abyss))", border: "1px solid hsl(var(--line))", aspectRatio: "4/3" }}>
               {currentPhoto ? (
-                /* eslint-disable-next-line @next/next/no-img-element */
-                <img
+                <Image
                   src={currentPhoto}
                   alt={dish.name}
-                  style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                  fill
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                  style={{ objectFit: "cover" }}
                 />
               ) : (
                 <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center", minHeight: 320 }}>
@@ -153,8 +155,7 @@ export function DishDetailView({ dish, restaurant, slug }: DishDetailViewProps) 
                     cursor: "pointer", padding: 0, background: "hsl(var(--abyss))",
                     transition: "border-color .2s",
                   }}>
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={src} alt={`תמונה ${i + 1}`} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                    <Image src={src} alt={`תמונה ${i + 1}`} fill sizes="72px" style={{ objectFit: "cover" }} />
                   </button>
                 ))}
               </div>
