@@ -1244,3 +1244,26 @@
     padding-right: 16px !important;
   }
 }
+
+/* ── Home page — mobile fixes ── */
+@media (max-width: 900px) {
+  /* Pricing: remove scale transform on middle card so it doesn't overflow */
+  .pricing-grid > *:nth-child(2) {
+    transform: none !important;
+  }
+
+  /* Section containers: reduce horizontal padding */
+  .page-section-inner {
+    padding-left: 20px !important;
+    padding-right: 20px !important;
+  }
+
+  /* Nav: hide center links and login on small screens */
+  .home-nav-center {
+    display: none !important;
+  }
+
+  .home-nav-login {
+    display: none !important;
+  }
+}

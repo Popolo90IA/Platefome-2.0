@@ -365,7 +365,7 @@ export default function HomePage() {
           </Link>
 
           {/* ── Nav centre ── */}
-          <nav style={{ display: "flex", gap: 2, alignItems: "center" }}>
+          <nav className="home-nav-center" style={{ display: "flex", gap: 2, alignItems: "center" }}>
             {[["#features","תכונות"],["#gallery","גלריה"],["#pricing","מחירים"],["#","הדגמה"]].map(([href, label]) => (
               <a key={href} href={href} style={{
                 padding: "7px 14px",
@@ -385,7 +385,7 @@ export default function HomePage() {
 
           {/* ── Actions droite ── */}
           <div style={{ display: "flex", alignItems: "center", gap: 8, flexShrink: 0 }}>
-            <Link href="/login" style={{
+            <Link href="/login" className="home-nav-login" style={{
               padding: "7px 14px",
               textDecoration: "none",
               fontFamily: "'DM Sans',sans-serif",
@@ -440,7 +440,7 @@ export default function HomePage() {
           <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, height: 200, background: "linear-gradient(to bottom, transparent, hsl(38,28%,94%))" }} />
         </div>
 
-        <div style={{ maxWidth: 1320, margin: "0 auto", padding: "0 56px", width: "100%", position: "relative", zIndex: 3, direction: "rtl", textAlign: "center" }}>
+        <div className="page-section-inner" style={{ maxWidth: 1320, margin: "0 auto", padding: "0 56px", width: "100%", position: "relative", zIndex: 3, direction: "rtl", textAlign: "center" }}>
 
           {/* ══ HERO ÉDITORIAL ══ */}
 
@@ -619,7 +619,7 @@ export default function HomePage() {
       {/* ═══ STATS ═══ */}
       <section style={{ padding: "96px 0", background: "hsl(30,20%,87%)", borderTop: "1px solid hsl(30,18%,80%)", borderBottom: "1px solid hsl(30,18%,80%)", position: "relative" }}>
         <div aria-hidden style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%,-50%)", width: 900, height: 400, background: "radial-gradient(ellipse,hsl(28,62%,42%,.06) 0%,transparent 70%)", filter: "blur(60px)", pointerEvents: "none" }} />
-        <div style={{ maxWidth: 1320, margin: "0 auto", padding: "0 56px", direction: "rtl" }}>
+        <div className="page-section-inner" style={{ maxWidth: 1320, margin: "0 auto", padding: "0 56px", direction: "rtl" }}>
 
           {/* Eyebrow + Titre */}
           <div className="reveal" style={{ textAlign: "center", marginBottom: 64 }}>
@@ -636,7 +636,7 @@ export default function HomePage() {
           </div>
 
           {/* Grille stats */}
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: 1, background: "hsl(30,18%,88%)" }}>
+          <div className="stats-grid" style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: 1, background: "hsl(30,18%,88%)" }}>
             {[
               { num: "+200",   label: "מסעדות פעילות",  sub: "לקוחות ברחבי הארץ משתמשים בפלטפורמה בכל יום",    badge: "+40% השנה" },
               { num: "×3.2",   label: "יותר הזמנות",    sub: "בממוצע בהשוואה לתפריט נייר רגיל",                badge: "מוכח בנתונים" },
@@ -691,7 +691,7 @@ export default function HomePage() {
           </div>
 
           {/* 3 cards */}
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 20 }}>
+          <div className="features-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 20 }}>
 
             {/* Card 1 — QR Scan */}
             <div className="reveal" data-delay="0" style={{ background: "linear-gradient(135deg,hsl(38,30%,97%),hsl(36,22%,93%))", border: "1px solid hsl(30,18%,82%,.5)", borderRadius: 20, padding: "36px 32px", position: "relative", overflow: "hidden" }}>
@@ -822,7 +822,7 @@ export default function HomePage() {
                 </div>
 
                 {/* Cards grid */}
-                <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 20 }}>
+                <div className="gallery-grid" style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 20 }}>
                   {galleryDishes.map((d, i) => (
                     <div
                       key={i}
@@ -908,7 +908,7 @@ export default function HomePage() {
           </div>
 
           {/* 3 cards */}
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 16, alignItems: "center" }}>
+          <div className="pricing-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 16, alignItems: "center" }}>
 
             {/* Starter */}
             <div className="reveal" style={{ background: "hsl(38,30%,97%)", border: "1px solid hsl(30,18%,82%,.5)", borderRadius: 20, overflow: "hidden", position: "relative" }}>
@@ -1020,7 +1020,7 @@ export default function HomePage() {
 
         {/* Main footer content */}
         <div style={{ maxWidth: 1120, margin: "0 auto", padding: "64px 24px 0", direction: "rtl" }}>
-          <div style={{ display: "grid", gridTemplateColumns: "2fr 1fr 1fr 1fr", gap: 48, marginBottom: 56 }}>
+          <div className="footer-links" style={{ display: "grid", gridTemplateColumns: "2fr 1fr 1fr 1fr", gap: 48, marginBottom: 56 }}>
 
             {/* Brand col */}
             <div>
