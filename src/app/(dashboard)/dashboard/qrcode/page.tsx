@@ -53,6 +53,7 @@ export default function QRCodePage() {
   const [cta, setCta]               = useState("סרוק לתפריט בתלת מימד");
   const [desc, setDesc]             = useState("ראה כל מנה לפני שאתה מזמין");
   const [tableCount, setTableCount] = useState(24);
+  const [orderSent, setOrderSent] = useState(false);
 
   const selectedFormat   = FORMATS[formatIdx];
   const selectedBg       = BG_SWATCHES[bgIdx];
@@ -408,10 +409,16 @@ export default function QRCodePage() {
             <button
               className="btn-primary"
               style={{ width: "100%", justifyContent: "center", padding: "11px 20px", fontSize: 13 }}
-              onClick={() => alert(`הזמנה: ${tableCount} × ${selectedFormat.label} — ₪${totalPrice}\n\nנציג יצור קשר בקרוב`)}
+              onClick={() => setOrderSent(true)}
             >
               הזמן עכשיו · 3 ימי עסקים
             </button>
+            {orderSent && (
+              <p className="font-sans text-sm text-center mt-3" style={{ color: "hsl(158 45% 42%)" }}>
+                ההזמנה התקבלה — {tableCount} × {selectedFormat.label} · ₪{totalPrice}<br />
+                <span style={{ color: "hsl(var(--subtle))", fontSize: 12 }}>נציג יצור קשר בקרוב</span>
+              </p>
+            )}
           </div>
         </div>
 

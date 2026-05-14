@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -88,6 +88,8 @@ export default function SettingsPage() {
   /* danger zone */
   const [dangerConfirm, setDangerConfirm] = useState("");
   const [deactivating, setDeactivating] = useState(false);
+  const [deactivateSuccess, setDeactivateSuccess] = useState(false);
+  const deactivateTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   /* notifications */
   const [notifWeekly, setNotifWeekly] = useState(false);
@@ -230,7 +232,9 @@ export default function SettingsPage() {
     setIsActive(false);
     setDeactivating(false);
     setDangerConfirm("");
-    alert("התפריט הושבת. תוכל להפעיל אותו מחדש בכל עת.");
+    setDeactivateSuccess(true);
+    if (deactivateTimerRef.current) clearTimeout(deactivateTimerRef.current);
+    deactivateTimerRef.current = setTimeout(() => setDeactivateSuccess(false), 4000);
   };
 
   /* ─── loading ─── */
@@ -770,6 +774,11 @@ export default function SettingsPage() {
                   </>
                 )}
               </Button>
+              {deactivateSuccess && (
+                <p className="text-sm font-sans" style={{ color: "hsl(158 45% 42%)" }}>
+                  התפריט הושבת. תוכל להפעיל אותו מחדש בכל עת.
+                </p>
+              )}
             </CardContent>
           </Card>
 
