@@ -541,85 +541,35 @@ function DishCard({
         onClick={openModal}
         onKeyDown={(e) => e.key === "Enter" && openModal()}
         style={{
-          display: "grid",
-          gridTemplateColumns: "1fr 130px",
-          gap: 18,
-          background: D.card,
+          display: "flex",
+          flexDirection: "row",
+          gap: 16,
+          background: hovered ? "hsl(28,22%,14%)" : D.card,
           border: `1px solid ${hovered ? D.line2 : D.line}`,
-          borderRadius: 16,
-          padding: 16,
+          borderRadius: 14,
+          padding: 14,
           cursor: "pointer",
-          transition: "border-color .25s",
+          transition: "border-color .25s, background .25s",
           position: "relative",
           outline: "none",
           opacity: soldout ? 0.62 : 1,
+          alignItems: "center",
         }}
       >
-        {/* Info column */}
-        <div style={{ minWidth: 0 }}>
-          <div style={{ display: "flex", alignItems: "baseline", gap: 12, marginBottom: 6 }}>
-            <h3 style={{ fontFamily: "'Noto Serif Hebrew', 'Cormorant Garamond', serif", fontWeight: 600, fontSize: 21, lineHeight: 1.1, color: D.cream, margin: 0, flex: 1 }}>
-              {name}
-            </h3>
-            <span style={{ fontFamily: "'DM Mono', monospace", fontSize: 14, color: D.gold, letterSpacing: ".04em", flexShrink: 0 }}>
-              {formatCurrency(Number(dish.price), currency, lang)}
-            </span>
-          </div>
-
-          {desc && (
-            <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, lineHeight: 1.6, color: D.textDim, margin: "0 0 10px", display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}>
-              {desc}
-            </p>
-          )}
-
-          {/* Tags row */}
-          <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
-            {dish.is_signature && <DishTag color="gold">מנת השף</DishTag>}
-            {dish.is_new && <DishTag color="orange">חדש</DishTag>}
-            {dish.is_featured && <DishTag color="orange">מומלץ</DishTag>}
-            {soldout && <DishTag color="muted">{t(lang, "soldout")}</DishTag>}
-            {has360 && (
-              <button
-                type="button"
-                onClick={open360}
-                style={{ display: "inline-flex", alignItems: "center", gap: 4, fontFamily: "'DM Mono', monospace", fontSize: "9.5px", letterSpacing: ".18em", textTransform: "uppercase", padding: "3px 9px", borderRadius: 99, color: D.goldLt, background: `${D.goldLt}14`, border: `1px solid ${D.goldLt}2d`, cursor: "pointer" }}
-              >
-                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6"><circle cx="12" cy="12" r="3"/><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"/></svg>
-                360°
-              </button>
-            )}
-            {has3d && !has360 && (
-              <DishModelViewer
-                restaurantId={restaurantId}
-                dishId={dish.id}
-                dishName={name}
-                modelUrl={dish.model_3d_url!}
-                arEnabled={dish.ar_enabled}
-                language={lang}
-                trigger={
-                  <span style={{ display: "inline-flex", alignItems: "center", gap: 4, fontFamily: "'DM Mono', monospace", fontSize: "9.5px", letterSpacing: ".18em", textTransform: "uppercase", padding: "3px 9px", borderRadius: 99, color: D.goldLt, background: `${D.goldLt}14`, border: `1px solid ${D.goldLt}2d` }}>
-                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6"><circle cx="12" cy="12" r="9"/><ellipse cx="12" cy="12" rx="9" ry="3"/></svg>
-                    3D
-                  </span>
-                }
-              />
-            )}
-          </div>
-        </div>
-
-        {/* Media column (right in RTL, left in LTR) */}
+        {/* Media column — gauche, carré 80px */}
         <div
           style={{
             position: "relative",
-            borderRadius: 12,
+            borderRadius: 10,
             overflow: "hidden",
-            aspectRatio: "1",
-            background: dish.image_url ? undefined : placeholderGradient,
+            width: 80,
+            height: 80,
             flexShrink: 0,
+            background: dish.image_url ? undefined : placeholderGradient,
           }}
         >
           {/* Shimmer highlight */}
-          <div aria-hidden style={{ position: "absolute", inset: 0, background: "radial-gradient(circle at 30% 30%, rgba(255,220,170,.4), transparent 60%)", zIndex: 1, pointerEvents: "none" }} />
+          <div aria-hidden style={{ position: "absolute", inset: 0, background: "radial-gradient(circle at 30% 30%, rgba(255,220,170,.3), transparent 60%)", zIndex: 1, pointerEvents: "none" }} />
 
           {dish.video_url ? (
             <video
@@ -642,7 +592,7 @@ function DishCard({
           {/* Soldout overlay */}
           {soldout && (
             <div style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,.55)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 2 }}>
-              <span style={{ fontSize: 9, fontFamily: "'DM Mono', monospace", letterSpacing: ".12em", textTransform: "uppercase", color: "#fff", background: "rgba(0,0,0,.7)", padding: "4px 10px", borderRadius: 6 }}>
+              <span style={{ fontSize: 8, fontFamily: "'DM Mono', monospace", letterSpacing: ".1em", textTransform: "uppercase", color: "#fff" }}>
                 {t(lang, "soldout")}
               </span>
             </div>
@@ -650,17 +600,69 @@ function DishCard({
 
           {/* Media badge */}
           {badgeType && (
-            <span style={{ position: "absolute", top: 8, right: 8, zIndex: 3, fontFamily: "'DM Mono', monospace", fontSize: 9, letterSpacing: ".14em", textTransform: "uppercase", padding: "4px 8px", borderRadius: 99, background: "hsl(28,18%,6%,.75)", backdropFilter: "blur(8px)", color: D.goldLt, display: "flex", alignItems: "center", gap: 4 }}>
+            <span style={{ position: "absolute", bottom: 4, insetInlineStart: 4, zIndex: 3, fontFamily: "'DM Mono', monospace", fontSize: 8, letterSpacing: ".1em", textTransform: "uppercase", padding: "2px 6px", borderRadius: 99, background: "hsl(28,18%,6%,.8)", backdropFilter: "blur(8px)", color: D.goldLt, display: "flex", alignItems: "center", gap: 3 }}>
               {badgeType === "3D" || badgeType === "AR" ? (
-                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6"><circle cx="12" cy="12" r="9"/><ellipse cx="12" cy="12" rx="9" ry="3"/></svg>
+                <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6"><circle cx="12" cy="12" r="9"/><ellipse cx="12" cy="12" rx="9" ry="3"/></svg>
               ) : badgeType === "Video" ? (
-                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6"><polygon points="5 3 19 12 5 21 5 3"/></svg>
               ) : (
-                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6"><circle cx="12" cy="12" r="3"/><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"/></svg>
+                <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6"><circle cx="12" cy="12" r="3"/><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"/></svg>
               )}
               {badgeType}
             </span>
           )}
+        </div>
+
+        {/* Info column — droite, flex-1 */}
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <h3 style={{ fontFamily: "'Noto Serif Hebrew', 'Cormorant Garamond', serif", fontWeight: 600, fontSize: 19, lineHeight: 1.15, color: D.cream, margin: "0 0 4px" }}>
+            {name}
+          </h3>
+
+          {desc && (
+            <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, lineHeight: 1.55, color: D.textDim, margin: "0 0 8px", display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}>
+              {desc}
+            </p>
+          )}
+
+          {/* Tags row */}
+          <div style={{ display: "flex", gap: 5, flexWrap: "wrap" }}>
+            {dish.is_signature && <DishTag color="gold">מנת השף</DishTag>}
+            {dish.is_new && <DishTag color="orange">חדש</DishTag>}
+            {dish.is_featured && <DishTag color="orange">מומלץ</DishTag>}
+            {soldout && <DishTag color="muted">{t(lang, "soldout")}</DishTag>}
+            {has360 && (
+              <button
+                type="button"
+                onClick={open360}
+                style={{ display: "inline-flex", alignItems: "center", gap: 4, fontFamily: "'DM Mono', monospace", fontSize: "9px", letterSpacing: ".14em", textTransform: "uppercase", padding: "3px 8px", borderRadius: 99, color: D.goldLt, background: `${D.goldLt}14`, border: `1px solid ${D.goldLt}2d`, cursor: "pointer" }}
+              >
+                <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6"><circle cx="12" cy="12" r="3"/><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"/></svg>
+                360°
+              </button>
+            )}
+            {has3d && !has360 && (
+              <DishModelViewer
+                restaurantId={restaurantId}
+                dishId={dish.id}
+                dishName={name}
+                modelUrl={dish.model_3d_url!}
+                arEnabled={dish.ar_enabled}
+                language={lang}
+                trigger={
+                  <span style={{ display: "inline-flex", alignItems: "center", gap: 4, fontFamily: "'DM Mono', monospace", fontSize: "9px", letterSpacing: ".14em", textTransform: "uppercase", padding: "3px 8px", borderRadius: 99, color: D.goldLt, background: `${D.goldLt}14`, border: `1px solid ${D.goldLt}2d` }}>
+                    <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6"><circle cx="12" cy="12" r="9"/><ellipse cx="12" cy="12" rx="9" ry="3"/></svg>
+                    3D
+                  </span>
+                }
+              />
+            )}
+          </div>
+        </div>
+
+        {/* Prix — à droite, aligné centre */}
+        <div style={{ flexShrink: 0, fontFamily: "'DM Mono', monospace", fontSize: 14, color: D.gold, letterSpacing: ".04em", paddingInlineStart: 8, alignSelf: "center" }}>
+          {formatCurrency(Number(dish.price), currency, lang)}
         </div>
       </article>
 
