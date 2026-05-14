@@ -413,7 +413,7 @@ export function MenuView({ restaurant, categories, dishes, slug }: MenuViewProps
               <section key={category.id} id={`cat-${category.id}`} style={{ scrollMarginTop: 64 }}>
 
                 {/* ── Section rule ── */}
-                <div style={{ margin: "56px auto 24px", maxWidth: 720, padding: "0 24px", display: "flex", alignItems: "center", gap: 14 }}>
+                <div style={{ margin: "56px auto 24px", maxWidth: 860, padding: "0 24px", display: "flex", alignItems: "center", gap: 14 }}>
                   <h2 style={{ fontFamily: "'Noto Serif Hebrew', 'Cormorant Garamond', serif", fontWeight: 500, fontSize: 32, letterSpacing: "-.02em", color: D.cream, margin: 0, flexShrink: 0, lineHeight: 1 }}>
                     {catName}
                   </h2>
@@ -424,7 +424,7 @@ export function MenuView({ restaurant, categories, dishes, slug }: MenuViewProps
                 </div>
 
                 {/* ── Dish list ── */}
-                <div style={{ maxWidth: 720, margin: "0 auto", padding: "0 24px", display: "flex", flexDirection: "column", gap: 14 }}>
+                <div style={{ maxWidth: 860, margin: "0 auto", padding: "0 24px", display: "flex", flexDirection: "column", gap: 14 }}>
                   {catDishes.length === 0 ? (
                     <p style={{ color: D.textDim, fontSize: 13, paddingInlineStart: 4, fontFamily: "'DM Sans', sans-serif" }}>{t(lang, "no_dishes_in_cat")}</p>
                   ) : (
@@ -457,7 +457,7 @@ export function MenuView({ restaurant, categories, dishes, slug }: MenuViewProps
           FOOTER
           ══════════════════════════════════════════════ */}
       <footer>
-        <div style={{ maxWidth: 720, margin: "60px auto 0", padding: "36px 24px", borderTop: `1px solid ${D.line}`, display: "flex", alignItems: "center", justifyContent: "center", gap: 10 }}>
+        <div style={{ maxWidth: 860, margin: "60px auto 0", padding: "36px 24px", borderTop: `1px solid ${D.line}`, display: "flex", alignItems: "center", justifyContent: "center", gap: 10 }}>
           <span style={{ color: D.gold, display: "flex", alignItems: "center" }}>
             <svg width="14" height="14" viewBox="0 0 32 32" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
               <path d="M5 22 Q5 12 16 12 Q27 12 27 22 Z"/>
@@ -543,6 +543,7 @@ function DishCard({
         style={{
           display: "flex",
           flexDirection: "row",
+          direction: "ltr",
           gap: 16,
           background: hovered ? "hsl(28,22%,14%)" : D.card,
           border: `1px solid ${hovered ? D.line2 : D.line}`,
@@ -562,8 +563,8 @@ function DishCard({
             position: "relative",
             borderRadius: 10,
             overflow: "hidden",
-            width: 80,
-            height: 80,
+            width: 90,
+            height: 90,
             flexShrink: 0,
             background: dish.image_url ? undefined : placeholderGradient,
           }}
@@ -613,8 +614,8 @@ function DishCard({
           )}
         </div>
 
-        {/* Info column — droite, flex-1 */}
-        <div style={{ flex: 1, minWidth: 0 }}>
+        {/* Info column — milieu, flex-1 */}
+        <div style={{ flex: 1, minWidth: 0, direction: "rtl" }}>
           <h3 style={{ fontFamily: "'Noto Serif Hebrew', 'Cormorant Garamond', serif", fontWeight: 600, fontSize: 19, lineHeight: 1.15, color: D.cream, margin: "0 0 4px" }}>
             {name}
           </h3>
@@ -660,8 +661,13 @@ function DishCard({
           </div>
         </div>
 
-        {/* Prix — à droite, aligné centre */}
-        <div style={{ flexShrink: 0, fontFamily: "'DM Mono', monospace", fontSize: 14, color: D.gold, letterSpacing: ".04em", paddingInlineStart: 8, alignSelf: "center" }}>
+        {/* Prix — badge à droite */}
+        <div style={{
+          flexShrink: 0, alignSelf: "center",
+          fontFamily: "'DM Mono', monospace", fontSize: 13.5, color: D.cream,
+          background: D.surface, borderRadius: 8, padding: "6px 12px",
+          border: `1px solid ${D.line}`, letterSpacing: ".02em",
+        }}>
           {formatCurrency(Number(dish.price), currency, lang)}
         </div>
       </article>
