@@ -33,3 +33,8 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# tooling artifacts
+/src/ui-ux-pro-max/
+ruvector.db
+.claude-flow/

@@ -15,14 +15,14 @@ const STEPS = [
 
 /* ── Styles ───────────────────────────────────────────── */
 const S = {
-  void:  "hsl(38 28% 94%)",
-  deep:  "hsl(38 30% 97%)",
-  abyss: "hsl(36 22% 90%)",
-  fog:   "hsl(24 18% 16%)",
-  subtle: "hsl(24 12% 38%)",
-  dim:    "hsl(24 10% 55%)",
-  line:   "hsl(30 18% 85%)",
-  accent: "hsl(28 62% 42%)",
+  void:   "hsl(var(--void))",
+  deep:   "hsl(var(--card))",
+  abyss:  "hsl(var(--secondary))",
+  fog:    "hsl(var(--foreground))",
+  subtle: "hsl(var(--muted-foreground))",
+  dim:    "hsl(var(--dim))",
+  line:   "hsl(var(--line))",
+  accent: "hsl(var(--primary))",
 } as const;
 
 /* ── Step 1: Restaurant details ─────────────────────── */
