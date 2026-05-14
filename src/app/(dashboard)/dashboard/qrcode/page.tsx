@@ -202,7 +202,7 @@ export default function QRCodePage() {
             צור קודי QR ייחודיים לכל שולחן ישירות לחוויית 3D שלך. הזמן הדפסה בכמה לחיצות, או הורד PDF להדפסה מקומית.
           </p>
         </div>
-        <div style={{ display: "flex", gap: 10 }}>
+        <div className="qr-header-actions" style={{ display: "flex", gap: 10 }}>
           <button
             className="font-sans"
             style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "11px 22px", borderRadius: 10, background: "transparent", border: "1px solid hsl(var(--line))", color: "hsl(var(--fog))", fontSize: 13.5, fontWeight: 600, cursor: "pointer" }}
@@ -223,7 +223,7 @@ export default function QRCodePage() {
       </div>
 
       {/* ── Layout ──────────────────────────────────────────────────────── */}
-      <div style={{ display: "grid", gridTemplateColumns: "320px 1fr", gap: 28, alignItems: "start" }}>
+      <div className="qr-layout" style={{ display: "grid", gridTemplateColumns: "320px 1fr", gap: 28, alignItems: "start" }}>
 
         {/* ── Sidebar ─────────────────────────────────────────────────── */}
         <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
@@ -416,7 +416,7 @@ export default function QRCodePage() {
         </div>
 
         {/* ── Main canvas ─────────────────────────────────────────────── */}
-        <div style={{
+        <div className="qr-canvas-panel" style={{
           background: "linear-gradient(160deg, hsl(28,15%,15%), hsl(28,15%,9%))",
           borderRadius: 16, padding: 36, minHeight: 700, position: "relative", overflow: "hidden",
         }}>
@@ -429,7 +429,7 @@ export default function QRCodePage() {
 
           {/* Canvas tabs */}
           <div style={{ display: "flex", justifyContent: "center", marginBottom: 28, position: "relative", zIndex: 1 }}>
-          <div style={{ display: "inline-flex", gap: 3, padding: 4, background: "rgba(255,255,255,.10)", border: "1px solid rgba(255,255,255,.12)", borderRadius: 12 }}>
+          <div className="qr-tabs" style={{ display: "inline-flex", gap: 3, padding: 4, background: "rgba(255,255,255,.10)", border: "1px solid rgba(255,255,255,.12)", borderRadius: 12 }}>
             {TABS.map((tab, i) => (
               <button
                 key={tab}
@@ -451,7 +451,7 @@ export default function QRCodePage() {
           </div>
 
           {/* ── Stage ─────────────────────────────────────────────────── */}
-          <div style={{ display: "grid", placeItems: "center", minHeight: 480, position: "relative", zIndex: 1 }}>
+          <div className="qr-stage" style={{ display: "grid", placeItems: "center", minHeight: 480, position: "relative", zIndex: 1 }}>
 
             {activeTab === 0 && (
               /* 3D table tent */
@@ -648,7 +648,7 @@ export default function QRCodePage() {
           </div>
 
           {/* QR variants strip */}
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 14, marginTop: 28, position: "relative", zIndex: 1 }}>
+          <div className="qr-variants" style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 14, marginTop: 28, position: "relative", zIndex: 1 }}>
             {[
               { label: "סטנדרטי",    size: "PNG · 1024px", fg: "hsl(28,15%,18%)", bg: "white" },
               { label: "בצבע ברונזה", size: "SVG · vector", fg: "hsl(28,62%,42%)", bg: "white" },
