@@ -4,9 +4,13 @@ import Link from "next/link";
 import { useAuth } from "@/hooks/useAuth";
 import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
-import { Eye, ChevronDown } from "lucide-react";
+import { Eye, ChevronDown, Menu } from "lucide-react";
 
-export function Header() {
+interface HeaderProps {
+  onMenuToggle?: () => void;
+}
+
+export function Header({ onMenuToggle }: HeaderProps) {
   const { user } = useAuth();
   const [role, setRole] = useState<string | null>(null);
   const [slug, setSlug] = useState<string | null>(null);
@@ -40,7 +44,7 @@ export function Header() {
 
   return (
     <header
-      className="sticky top-0 z-40 px-8 flex items-center justify-between h-14 transition-all duration-200"
+      className="dash-header sticky top-0 z-40 px-8 flex items-center justify-between h-14 transition-all duration-200"
       style={{
         background: scrolled
           ? "hsl(var(--void) / 0.96)"
@@ -51,8 +55,17 @@ export function Header() {
           : "1px solid transparent",
       }}
     >
-      {/* Left — breadcrumb / page preview */}
-      <div className="flex items-center gap-4">
+      {/* Left — hamburger (mobile) + breadcrumb */}
+      <div className="flex items-center gap-3">
+        {/* Hamburger — mobile only */}
+        <button
+          className="dash-hamburger"
+          onClick={onMenuToggle}
+          aria-label="פתח תפריט"
+        >
+          <Menu style={{ width: 18, height: 18 }} strokeWidth={1.6} />
+        </button>
+
         {slug && (
           <Link
             href={`/menu/${slug}`}
@@ -64,7 +77,7 @@ export function Header() {
               className="h-3.5 w-3.5 group-hover:text-[hsl(var(--fog))] transition-colors"
               strokeWidth={1.5}
             />
-            <span className="group-hover:text-[hsl(var(--fog))] transition-colors">
+            <span className="hidden sm:block group-hover:text-[hsl(var(--fog))] transition-colors">
               תצוגת לקוח
             </span>
           </Link>

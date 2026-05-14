@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
+import { useEffect } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { cn } from "@/lib/utils";
 import {
@@ -16,6 +17,11 @@ import {
 } from "lucide-react";
 import { LogoWordmark } from "@/components/brand";
 
+interface AdminSidebarProps {
+  open?: boolean;
+  onClose?: () => void;
+}
+
 const navItems = [
   { href: "/admin", label: "סקירה", icon: Home, exact: true },
   { href: "/admin/restaurants", label: "מסעדות", icon: Building2, exact: false },
@@ -25,10 +31,15 @@ const navItems = [
   { href: "/admin/settings", label: "הגדרות", icon: Settings, exact: false },
 ];
 
-export function AdminSidebar() {
+export function AdminSidebar({ open, onClose }: AdminSidebarProps) {
   const pathname = usePathname();
   const router = useRouter();
   const supabase = createClient();
+
+  // Close on route change (mobile nav)
+  useEffect(() => {
+    onClose?.();
+  }, [pathname]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
@@ -37,8 +48,17 @@ export function AdminSidebar() {
   };
 
   return (
+    <>
+      {/* Mobile overlay backdrop */}
+      {open && (
+        <div
+          className="dash-sidebar-overlay open"
+          onClick={onClose}
+        />
+      )}
+
     <aside
-      className="w-56 h-screen sticky top-0 flex flex-col overflow-hidden scrollbar-none"
+      className={cn("dash-sidebar w-56 h-screen sticky top-0 flex flex-col overflow-hidden scrollbar-none", open && "open")}
       style={{
         background: "hsl(var(--deep))",
         borderLeft: "1px solid hsl(var(--line))",
@@ -174,5 +194,6 @@ export function AdminSidebar() {
         </button>
       </div>
     </aside>
+    </>
   );
 }

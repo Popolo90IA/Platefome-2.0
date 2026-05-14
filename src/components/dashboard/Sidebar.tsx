@@ -18,6 +18,11 @@ import {
 } from "lucide-react";
 import { LogoWordmark } from "@/components/brand";
 
+interface SidebarProps {
+  open?: boolean;
+  onClose?: () => void;
+}
+
 const navItems = [
   { href: "/dashboard", label: "בית", labelEn: "Home", icon: LayoutDashboard },
   { href: "/dashboard/dishes", label: "מנות", labelEn: "Dishes", icon: Utensils },
@@ -28,7 +33,7 @@ const navItems = [
   { href: "/dashboard/settings", label: "הגדרות", labelEn: "Settings", icon: Settings },
 ];
 
-export function Sidebar() {
+export function Sidebar({ open, onClose }: SidebarProps) {
   const pathname = usePathname();
   const router = useRouter();
   const supabase = createClient();
@@ -48,6 +53,11 @@ export function Sidebar() {
     checkRole();
   }, [supabase]);
 
+  // Close on route change (mobile nav)
+  useEffect(() => {
+    onClose?.();
+  }, [pathname]); // eslint-disable-line react-hooks/exhaustive-deps
+
   const handleLogout = async () => {
     await supabase.auth.signOut();
     router.push("/login");
@@ -55,8 +65,17 @@ export function Sidebar() {
   };
 
   return (
+    <>
+      {/* Mobile overlay backdrop */}
+      {open && (
+        <div
+          className="dash-sidebar-overlay open"
+          onClick={onClose}
+        />
+      )}
+
     <aside
-      className="w-56 h-screen sticky top-0 flex flex-col overflow-hidden scrollbar-none"
+      className={cn("dash-sidebar w-56 h-screen sticky top-0 flex flex-col overflow-hidden scrollbar-none", open && "open")}
       style={{
         background: "hsl(var(--deep))",
         borderLeft: "1px solid hsl(var(--line))",
@@ -190,5 +209,6 @@ export function Sidebar() {
         </button>
       </div>
     </aside>
+    </>
   );
 }

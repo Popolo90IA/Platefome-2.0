@@ -1059,6 +1059,86 @@
     }
   }
 
+  /* ── Dashboard sidebar — mobile drawer ── */
+  .dash-sidebar-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 49;
+    backdrop-filter: blur(2px);
+  }
+
+  .dash-sidebar-overlay.open {
+    display: block;
+  }
+
+  @media (max-width: 768px) {
+    /* Sidebar becomes a fixed drawer */
+    .dash-sidebar {
+      position: fixed !important;
+      top: 0;
+      right: 0;
+      height: 100vh !important;
+      z-index: 50;
+      transform: translateX(100%);
+      transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: -8px 0 32px rgba(0, 0, 0, 0.25);
+    }
+
+    .dash-sidebar.open {
+      transform: translateX(0);
+    }
+
+    /* Hamburger button — shown only on mobile */
+    .dash-hamburger {
+      display: flex !important;
+    }
+
+    /* Dashboard layout — no sidebar pushing content */
+    .dash-layout {
+      display: block !important;
+    }
+
+    .dash-main-area {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Main content padding reduced on mobile */
+    .dash-content {
+      padding: 20px 16px 40px !important;
+    }
+
+    /* Header left padding reduced */
+    .dash-header {
+      padding-left: 16px !important;
+      padding-right: 16px !important;
+    }
+  }
+
+  /* Hamburger — hidden on desktop */
+  .dash-hamburger {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border: 1px solid hsl(var(--line));
+    border-radius: 8px;
+    background: transparent;
+    cursor: pointer;
+    color: hsl(var(--subtle));
+    transition: background 0.15s, color 0.15s;
+    flex-shrink: 0;
+  }
+
+  .dash-hamburger:hover {
+    background: hsl(var(--surface));
+    color: hsl(var(--fog));
+  }
+
   /* ── Auth pages — mobile responsive ── */
   .auth-layout {
     min-height: 100vh;
