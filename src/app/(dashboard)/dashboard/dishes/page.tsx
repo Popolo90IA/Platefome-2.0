@@ -42,6 +42,8 @@ import {
   View,
   RotateCcw,
 } from "lucide-react";
+import { ConfirmDialog } from "@/components/ui/confirm-dialog";
+import { dishSchema } from "@/lib/validations/dish";
 import type { Dish, Category, Restaurant } from "@/types/database.types";
 
 type FormState = {
@@ -96,6 +98,8 @@ export default function DishesPage() {
   const [showI18n, setShowI18n] = useState(false);
   const [show360Capture, setShow360Capture] = useState(false);
   const [form, setForm] = useState<FormState>(EMPTY_FORM);
+  const [formErrors, setFormErrors] = useState<Record<string, string>>({});
+  const [deleteId, setDeleteId] = useState<string | null>(null);
   const supabase = createClient();
 
   const load = async () => {
@@ -170,6 +174,24 @@ export default function DishesPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!restaurant) return;
+
+    const parsed = dishSchema.safeParse({
+      name: form.name,
+      category_id: form.category_id,
+      description: form.description || undefined,
+      price: parseFloat(form.price) || 0,
+      image_url: form.image_url,
+    });
+
+    if (!parsed.success) {
+      const errors: Record<string, string> = {};
+      parsed.error.errors.forEach((err) => {
+        if (err.path[0]) errors[String(err.path[0])] = err.message;
+      });
+      setFormErrors(errors);
+      return;
+    }
+    setFormErrors({});
     setSaving(true);
 
     const payload = {
@@ -205,8 +227,13 @@ export default function DishesPage() {
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm("למחוק את המנה?")) return;
-    await supabase.from("dishes").delete().eq("id", id);
+    setDeleteId(id);
+  };
+
+  const confirmDelete = async () => {
+    if (!deleteId) return;
+    await supabase.from("dishes").delete().eq("id", deleteId);
+    setDeleteId(null);
     await load();
   };
 
@@ -276,6 +303,16 @@ export default function DishesPage() {
 
   return (
     <div className="max-w-6xl mx-auto space-y-6">
+      <ConfirmDialog
+        open={!!deleteId}
+        title="למחוק את המנה?"
+        description="פעולה זו אינה הפיכה."
+        confirmLabel="מחק"
+        cancelLabel="ביטול"
+        danger
+        onConfirm={confirmDelete}
+        onCancel={() => setDeleteId(null)}
+      />
       {/* ── Page header ── */}
       <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", gap: 24 }}>
         <div>
@@ -359,6 +396,9 @@ export default function DishesPage() {
                     required
                     autoFocus
                   />
+                  {formErrors.name && (
+                    <p className="text-xs" style={{ color: "hsl(0 72% 51%)" }}>{formErrors.name}</p>
+                  )}
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="category">קטגוריה *</Label>
@@ -408,6 +448,9 @@ export default function DishesPage() {
                   dir="ltr"
                   placeholder="0.00"
                 />
+                {formErrors.price && (
+                  <p className="text-xs" style={{ color: "hsl(0 72% 51%)" }}>{formErrors.price}</p>
+                )}
               </div>
 
               {/* Badges toggles */}

@@ -16,6 +16,8 @@ import {
   FolderTree,
   GripVertical,
 } from "lucide-react";
+import { ConfirmDialog } from "@/components/ui/confirm-dialog";
+import { categorySchema } from "@/lib/validations/category";
 import type { Category, Restaurant } from "@/types/database.types";
 
 export default function CategoriesPage() {
@@ -25,6 +27,8 @@ export default function CategoriesPage() {
   const [showForm, setShowForm] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [form, setForm] = useState({ name: "", display_order: 0 });
+  const [formErrors, setFormErrors] = useState<Record<string, string>>({});
+  const [deleteId, setDeleteId] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
   const supabase = createClient();
 
@@ -74,6 +78,21 @@ export default function CategoriesPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!restaurant) return;
+
+    const parsed = categorySchema.safeParse({
+      name: form.name,
+      display_order: Number(form.display_order),
+    });
+
+    if (!parsed.success) {
+      const errors: Record<string, string> = {};
+      parsed.error.errors.forEach((err) => {
+        if (err.path[0]) errors[String(err.path[0])] = err.message;
+      });
+      setFormErrors(errors);
+      return;
+    }
+    setFormErrors({});
     setSaving(true);
 
     const payload = {
@@ -93,9 +112,14 @@ export default function CategoriesPage() {
     setSaving(false);
   };
 
-  const handleDelete = async (id: string) => {
-    if (!confirm("האם אתה בטוח? כל המנות בקטגוריה יימחקו.")) return;
-    await supabase.from("categories").delete().eq("id", id);
+  const handleDelete = (id: string) => {
+    setDeleteId(id);
+  };
+
+  const confirmDelete = async () => {
+    if (!deleteId) return;
+    await supabase.from("categories").delete().eq("id", deleteId);
+    setDeleteId(null);
     await load();
   };
 
@@ -125,6 +149,16 @@ export default function CategoriesPage() {
 
   return (
     <div className="max-w-4xl mx-auto space-y-6 animate-fade-up">
+      <ConfirmDialog
+        open={!!deleteId}
+        title="למחוק את הקטגוריה?"
+        description="כל המנות בקטגוריה זו יימחקו. פעולה זו אינה הפיכה."
+        confirmLabel="מחק"
+        cancelLabel="ביטול"
+        danger
+        onConfirm={confirmDelete}
+        onCancel={() => setDeleteId(null)}
+      />
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
@@ -178,6 +212,9 @@ export default function CategoriesPage() {
                   required
                   autoFocus
                 />
+                {formErrors.name && (
+                  <p className="text-xs" style={{ color: "hsl(0 72% 51%)" }}>{formErrors.name}</p>
+                )}
               </div>
               <div className="space-y-2">
                 <Label htmlFor="display_order">סדר תצוגה</Label>
