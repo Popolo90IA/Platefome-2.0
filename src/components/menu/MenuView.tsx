@@ -7,24 +7,23 @@ import { DishModelViewer } from "./DishModelViewer";
 import { Photo360Viewer } from "./Photo360Viewer";
 import { trackEvent } from "@/lib/analytics";
 import { LANGUAGE_META, pickLocalized, t, formatCurrency } from "@/lib/i18n";
+import { buildMenuTheme } from "@/lib/theme";
 import type { Restaurant, Category, Dish, Language } from "@/types/database.types";
 
-/* ─────────────────────────────────────────────────────────
-   Dark menu palette — coherent with design system (28° hue)
-   ───────────────────────────────────────────────────────── */
+/* ─── CSS variable aliases ──────────────────────────────── */
 const D = {
-  page:    "hsl(28, 18%, 6%)",
-  section: "hsl(28, 20%, 9%)",
-  card:    "hsl(28, 22%, 12%)",
-  surface: "hsl(28, 20%, 18%)",
-  line:    "hsl(28, 40%, 42%, .18)",
-  line2:   "hsl(28, 40%, 42%, .35)",
-  textDim: "hsl(36, 18%, 56%)",
-  text:    "hsl(36, 30%, 80%)",
-  cream:   "hsl(36, 40%, 92%)",
-  gold:    "hsl(28, 62%, 52%)",
-  goldLt:  "hsl(36, 80%, 62%)",
-  grad:    "linear-gradient(135deg, hsl(28,62%,48%), hsl(22,70%,58%))",
+  page:    "var(--mt-page)",
+  section: "var(--mt-section)",
+  card:    "var(--mt-card)",
+  surface: "var(--mt-surface)",
+  line:    "var(--mt-line)",
+  line2:   "var(--mt-line2)",
+  textDim: "var(--mt-text-dim)",
+  text:    "var(--mt-text)",
+  cream:   "var(--mt-cream)",
+  gold:    "var(--mt-gold)",
+  goldLt:  "var(--mt-gold-lt)",
+  grad:    "var(--mt-grad)",
 } as const;
 
 /* SVG grain as inline data URI — fixed overlay, no external request */
@@ -113,6 +112,12 @@ export function MenuView({ restaurant, categories, dishes, slug }: MenuViewProps
   const currency = restaurant.currency || "ILS";
   const restaurantName = restaurant.name;
 
+  /* Theme tokens */
+  const themeVars = buildMenuTheme(
+    restaurant.theme_primary,
+    restaurant.theme_dark_mode
+  ) as React.CSSProperties;
+
   /* Search filter */
   const searchTrimmed = search.trim().toLowerCase();
   const isSearching = searchTrimmed.length > 0;
@@ -151,6 +156,7 @@ export function MenuView({ restaurant, categories, dishes, slug }: MenuViewProps
     <div
       dir={dir}
       style={{
+        ...themeVars,
         minHeight: "100vh",
         background: D.page,
         color: D.text,

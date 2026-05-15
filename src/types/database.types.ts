@@ -36,6 +36,8 @@ export interface Database {
           default_language: string;
           currency: string;
           is_active: boolean;
+          theme_primary: string | null;
+          theme_dark_mode: boolean | null;
           created_at: string;
           updated_at: string;
         };
@@ -56,6 +58,8 @@ export interface Database {
           default_language?: string;
           currency?: string;
           is_active?: boolean;
+          theme_primary?: string | null;
+          theme_dark_mode?: boolean | null;
           created_at?: string;
           updated_at?: string;
         };
@@ -76,6 +80,8 @@ export interface Database {
           default_language?: string;
           currency?: string;
           is_active?: boolean;
+          theme_primary?: string | null;
+          theme_dark_mode?: boolean | null;
           created_at?: string;
           updated_at?: string;
         };
