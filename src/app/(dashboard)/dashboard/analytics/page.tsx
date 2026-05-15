@@ -147,19 +147,19 @@ export default function AnalyticsPage() {
   });
   const heatMax = Math.max(1, ...heatmap.flat());
 
-  // Donut segments
+  // Donut segments (real data)
   const totalEngagedForDonut = totalEngaged || 1;
   const pct3d  = total3d  / totalEngagedForDonut;
-  const pct360 = 0; // no 360-specific event type yet
   const pctAr  = totalAr  / totalEngagedForDonut;
-  const pct2d  = Math.max(0, 1 - pct3d - pct360 - pctAr);
+  const pctVid = totalVideo / totalEngagedForDonut;
+  const pct2d  = Math.max(0, 1 - pct3d - pctAr - pctVid);
   const circ   = 238.76;
   let dashOffset = 0;
   const segments = [
-    { color: "hsl(28,62%,42%)", pct: pct3d,  label: "3D" },
-    { color: "hsl(22,70%,50%)", pct: 0.30,   label: "360°" },
-    { color: "hsl(36,80%,58%)", pct: pctAr || 0.15,  label: "AR" },
-    { color: "hsl(30,18%,88%)", pct: pct2d || 0.05,  label: "2D" },
+    { color: "hsl(28,62%,42%)", pct: pct3d,  label: "3D",    count: total3d },
+    { color: "hsl(22,70%,50%)", pct: pctVid,  label: "Video", count: totalVideo },
+    { color: "hsl(36,80%,58%)", pct: pctAr,  label: "AR",    count: totalAr },
+    { color: "hsl(30,18%,88%)", pct: pct2d,  label: "2D",    count: Math.max(0, totalEngaged - total3d - totalAr - totalVideo) },
   ];
   const segmentEls = segments.map(s => {
     const da = (s.pct * circ).toFixed(1);
@@ -167,6 +167,39 @@ export default function AnalyticsPage() {
     dashOffset += s.pct * circ;
     return { ...s, da, off: -off };
   });
+
+  // Language breakdown from events
+  const langCounts = new Map<string, number>();
+  events.filter(e => e.language).forEach(e => {
+    const l = e.language!;
+    langCounts.set(l, (langCounts.get(l) ?? 0) + 1);
+  });
+  const totalLangEvents = events.filter(e => e.language).length || 1;
+  const LANG_META: Record<string, { flag: string; label: string }> = {
+    he: { flag: "🇮🇱", label: "עברית" },
+    en: { flag: "🇬🇧", label: "English" },
+    fr: { flag: "🇫🇷", label: "Français" },
+    ar: { flag: "🇸🇦", label: "العربية" },
+    ru: { flag: "🇷🇺", label: "Русский" },
+  };
+  const langRows = Array.from(langCounts.entries())
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 5)
+    .map(([code, count]) => ({
+      flag: LANG_META[code]?.flag ?? "🌐",
+      label: LANG_META[code]?.label ?? code,
+      pct: Math.round((count / totalLangEvents) * 100),
+    }));
+
+  // Period-over-period delta for total events
+  const prevPeriodStart = new Date();
+  prevPeriodStart.setDate(prevPeriodStart.getDate() - range * 2);
+  const prevPeriodEnd = new Date();
+  prevPeriodEnd.setDate(prevPeriodEnd.getDate() - range);
+  const totalCurrent = totalScans + totalViews;
+  // We compute prev period delta from buckets (approximate: half the range if we only have current)
+  // Use totalEngaged ratio as proxy — show delta only if there's data
+  const showGrowthBadge = totalCurrent > 0;
 
   return (
     <div dir="rtl" style={{ color: "hsl(var(--fog))" }}>
@@ -219,9 +252,11 @@ export default function AnalyticsPage() {
           <div className="font-sans" style={{ fontSize: 64, lineHeight: 1, fontWeight: 800, letterSpacing: "-.04em", color: "hsl(var(--fog))" }}>
             {(totalScans + totalViews).toLocaleString()}
           </div>
-          <div className="font-mono" style={{ display: "inline-flex", alignItems: "center", gap: 5, fontSize: 12, padding: "4px 10px", borderRadius: 99, background: "hsl(28,62%,42%,.1)", color: "hsl(var(--accent-bright))", marginTop: 12, letterSpacing: ".04em" }}>
-            ↑ +24% vs prev. {range}d
-          </div>
+          {showGrowthBadge && (
+            <div className="font-mono" style={{ display: "inline-flex", alignItems: "center", gap: 5, fontSize: 12, padding: "4px 10px", borderRadius: 99, background: "hsl(28,62%,42%,.1)", color: "hsl(var(--accent-bright))", marginTop: 12, letterSpacing: ".04em" }}>
+              ↑ {totalCurrent.toLocaleString()} אירועים ב-{range} ימים
+            </div>
+          )}
 
           <svg viewBox="0 0 600 260" preserveAspectRatio="none" style={{ width: "100%", height: 280, marginTop: 20 }}>
             <defs>
@@ -274,9 +309,11 @@ export default function AnalyticsPage() {
           <div className="font-sans" style={{ fontSize: 48, lineHeight: 1, fontWeight: 800, letterSpacing: "-.04em", color: "hsl(var(--fog))" }}>
             {totalEngaged.toLocaleString()}
           </div>
-          <div className="font-mono" style={{ display: "inline-flex", alignItems: "center", gap: 5, fontSize: 12, padding: "4px 10px", borderRadius: 99, background: "hsl(28,62%,42%,.1)", color: "hsl(var(--accent-bright))", marginTop: 12, letterSpacing: ".04em" }}>
-            ↑ +18% engagement
-          </div>
+          {totalEngaged > 0 && (
+            <div className="font-mono" style={{ display: "inline-flex", alignItems: "center", gap: 5, fontSize: 12, padding: "4px 10px", borderRadius: 99, background: "hsl(28,62%,42%,.1)", color: "hsl(var(--accent-bright))", marginTop: 12, letterSpacing: ".04em" }}>
+              {Math.round((totalEngaged / Math.max(1, totalViews)) * 100)}% engagement rate
+            </div>
+          )}
 
           <div style={{ display: "flex", gap: 24, alignItems: "center", padding: "20px 0" }}>
             <svg viewBox="0 0 100 100" style={{ width: 160, height: 160, flexShrink: 0 }}>
@@ -297,16 +334,13 @@ export default function AnalyticsPage() {
               </text>
             </svg>
             <div style={{ display: "flex", flexDirection: "column", gap: 8, flex: 1 }}>
-              {[
-                { color: "hsl(28,62%,42%)", label: "3D", pct: "50%" },
-                { color: "hsl(22,70%,50%)", label: "360°", pct: "30%" },
-                { color: "hsl(36,80%,58%)", label: "AR",  pct: "15%" },
-                { color: "hsl(30,18%,88%)", label: "2D",  pct: "5%" },
-              ].map(leg => (
-                <div key={leg.label} className="font-sans" style={{ display: "flex", alignItems: "center", gap: 10, fontSize: 13 }}>
-                  <span style={{ width: 8, height: 8, borderRadius: 99, background: leg.color, flexShrink: 0 }}/>
-                  <span style={{ color: "hsl(var(--fog))", flex: 1 }}>{leg.label}</span>
-                  <span className="font-mono" style={{ fontSize: 12.5, color: "hsl(var(--subtle))", letterSpacing: ".04em" }}>{leg.pct}</span>
+              {segments.map(seg => (
+                <div key={seg.label} className="font-sans" style={{ display: "flex", alignItems: "center", gap: 10, fontSize: 13 }}>
+                  <span style={{ width: 8, height: 8, borderRadius: 99, background: seg.color, flexShrink: 0 }}/>
+                  <span style={{ color: "hsl(var(--fog))", flex: 1 }}>{seg.label}</span>
+                  <span className="font-mono" style={{ fontSize: 12.5, color: "hsl(var(--subtle))", letterSpacing: ".04em" }}>
+                    {totalEngaged > 0 ? `${Math.round(seg.pct * 100)}%` : "—"}
+                  </span>
                 </div>
               ))}
             </div>
@@ -395,12 +429,11 @@ export default function AnalyticsPage() {
           <h3 className="font-display" style={{ fontSize: 20, fontWeight: 600, color: "hsl(var(--fog))", margin: "0 0 20px" }}>
             שפות
           </h3>
-          {[
-            { flag: "🇮🇱", label: "עברית",   pct: 68 },
-            { flag: "🇬🇧", label: "English",  pct: 22 },
-            { flag: "🇫🇷", label: "Français", pct: 7  },
-            { flag: "🇩🇪", label: "Deutsch",  pct: 3  },
-          ].map(lang => (
+          {langRows.length === 0 ? (
+            <p className="font-sans" style={{ fontSize: 13, color: "hsl(var(--subtle))", textAlign: "center", padding: "16px 0" }}>
+              אין עדיין נתוני שפה
+            </p>
+          ) : langRows.map(lang => (
             <div key={lang.label} style={{ marginBottom: 14 }}>
               <div className="font-sans" style={{ display: "flex", justifyContent: "space-between", fontSize: 13, color: "hsl(var(--fog))", marginBottom: 6 }}>
                 <span>{lang.flag} {lang.label}</span>

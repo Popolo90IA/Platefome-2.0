@@ -31,6 +31,7 @@ const STAT_ICON_STYLE: React.CSSProperties = {
 export default function DashboardPage() {
   const [restaurant, setRestaurant] = useState<Restaurant | null>(null);
   const [stats, setStats] = useState({ dishes: 0, categories: 0, views: 0, scans: 0 });
+  const [deltas, setDeltas] = useState({ dishesThisWeek: 0, viewsDelta: null as number | null, scansDelta: null as number | null });
   const [loading, setLoading] = useState(true);
   const [copied, setCopied] = useState(false);
   const supabase = createClient();
@@ -45,17 +46,39 @@ export default function DashboardPage() {
       setRestaurant(restaurantData);
 
       if (restaurantData) {
-        const since = new Date();
-        since.setDate(since.getDate() - 30);
+        const now = new Date();
+        const since30 = new Date(now); since30.setDate(now.getDate() - 30);
+        const weekStart = new Date(now); weekStart.setDate(now.getDate() - 7);
+        const prevWeekStart = new Date(now); prevWeekStart.setDate(now.getDate() - 14);
+
         const [
-          { count: d }, { count: c }, { count: v }, { count: s }
+          { count: d }, { count: c },
+          { count: v }, { count: s },
+          { count: vPrev }, { count: sPrev },
+          { count: dishesThisWeek },
         ] = await Promise.all([
           supabase.from("dishes").select("*", { count: "exact", head: true }).eq("restaurant_id", restaurantData.id),
           supabase.from("categories").select("*", { count: "exact", head: true }).eq("restaurant_id", restaurantData.id),
-          supabase.from("menu_events").select("*", { count: "exact", head: true }).eq("restaurant_id", restaurantData.id).eq("event_type", "menu_view").gte("created_at", since.toISOString()),
-          supabase.from("menu_events").select("*", { count: "exact", head: true }).eq("restaurant_id", restaurantData.id).eq("event_type", "qr_scan").gte("created_at", since.toISOString()),
+          supabase.from("menu_events").select("*", { count: "exact", head: true }).eq("restaurant_id", restaurantData.id).eq("event_type", "menu_view").gte("created_at", weekStart.toISOString()),
+          supabase.from("menu_events").select("*", { count: "exact", head: true }).eq("restaurant_id", restaurantData.id).eq("event_type", "qr_scan").gte("created_at", weekStart.toISOString()),
+          supabase.from("menu_events").select("*", { count: "exact", head: true }).eq("restaurant_id", restaurantData.id).eq("event_type", "menu_view").gte("created_at", prevWeekStart.toISOString()).lt("created_at", weekStart.toISOString()),
+          supabase.from("menu_events").select("*", { count: "exact", head: true }).eq("restaurant_id", restaurantData.id).eq("event_type", "qr_scan").gte("created_at", prevWeekStart.toISOString()).lt("created_at", weekStart.toISOString()),
+          supabase.from("dishes").select("*", { count: "exact", head: true }).eq("restaurant_id", restaurantData.id).gte("created_at", weekStart.toISOString()),
         ]);
-        setStats({ dishes: d ?? 0, categories: c ?? 0, views: v ?? 0, scans: s ?? 0 });
+
+        // 30-day totals for display
+        const { count: v30 } = await supabase.from("menu_events").select("*", { count: "exact", head: true }).eq("restaurant_id", restaurantData.id).eq("event_type", "menu_view").gte("created_at", since30.toISOString());
+        const { count: s30 } = await supabase.from("menu_events").select("*", { count: "exact", head: true }).eq("restaurant_id", restaurantData.id).eq("event_type", "qr_scan").gte("created_at", since30.toISOString());
+
+        setStats({ dishes: d ?? 0, categories: c ?? 0, views: v30 ?? 0, scans: s30 ?? 0 });
+
+        const vCur = v ?? 0; const vPrevN = vPrev ?? 0;
+        const sCur = s ?? 0; const sPrevN = sPrev ?? 0;
+        setDeltas({
+          dishesThisWeek: dishesThisWeek ?? 0,
+          viewsDelta: vPrevN > 0 ? Math.round(((vCur - vPrevN) / vPrevN) * 100) : (vCur > 0 ? null : null),
+          scansDelta: sPrevN > 0 ? Math.round(((sCur - sPrevN) / sPrevN) * 100) : (sCur > 0 ? null : null),
+        });
       }
       setLoading(false);
     };
@@ -157,7 +180,7 @@ export default function DashboardPage() {
                 icon: <Scan style={{ width: 14, height: 14 }} strokeWidth={1.8} />,
                 label: "מנות",
                 value: stats.dishes,
-                delta: "+3 השבוע",
+                delta: deltas.dishesThisWeek > 0 ? `+${deltas.dishesThisWeek} השבוע` : null,
                 href: "/dashboard/dishes",
               },
               {
@@ -171,14 +194,14 @@ export default function DashboardPage() {
                 icon: <Eye style={{ width: 14, height: 14 }} strokeWidth={1.8} />,
                 label: "צפיות 30י׳",
                 value: stats.views,
-                delta: stats.views > 0 ? `+${stats.views} חודש` : null,
+                delta: deltas.viewsDelta !== null ? `${deltas.viewsDelta >= 0 ? "+" : ""}${deltas.viewsDelta}% vs שבוע קודם` : null,
                 href: "/dashboard/analytics",
               },
               {
                 icon: <QrCode style={{ width: 14, height: 14 }} strokeWidth={1.8} />,
                 label: "סריקות QR",
                 value: stats.scans,
-                delta: stats.scans > 0 ? `↑ +24% מהשבוע` : null,
+                delta: deltas.scansDelta !== null ? `${deltas.scansDelta >= 0 ? "+" : ""}${deltas.scansDelta}% vs שבוע קודם` : null,
                 href: "/dashboard/analytics",
               },
             ].map((s) => (
