@@ -30,6 +30,8 @@ export const T: Dict = {
     scan_menu: "סרוק לתפריט",
     view_3d_cta: "צפה בתלת מימד",
     add_to_order: "הוסף להזמנה",
+    search_placeholder: "חפש מנה...",
+    no_search_results: "לא נמצאו מנות",
   },
   en: {
     menu: "Menu",
@@ -47,6 +49,8 @@ export const T: Dict = {
     scan_menu: "Scan the menu",
     view_3d_cta: "View in 3D",
     add_to_order: "Add to order",
+    search_placeholder: "Search a dish...",
+    no_search_results: "No dishes found",
   },
   fr: {
     menu: "Menu",
@@ -64,6 +68,8 @@ export const T: Dict = {
     scan_menu: "Scannez le menu",
     view_3d_cta: "Voir en 3D",
     add_to_order: "Ajouter à la commande",
+    search_placeholder: "Rechercher un plat...",
+    no_search_results: "Aucun plat trouvé",
   },
 };
 

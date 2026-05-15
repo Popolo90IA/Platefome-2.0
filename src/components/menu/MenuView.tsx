@@ -72,6 +72,7 @@ export function MenuView({ restaurant, categories, dishes, slug }: MenuViewProps
     categories[0]?.id ?? null
   );
   const [modalDish, setModalDish] = useState<Dish | null>(null);
+  const [search, setSearch] = useState("");
   const dir = LANGUAGE_META[lang].dir;
 
   /* Persist language preference */
@@ -111,9 +112,23 @@ export function MenuView({ restaurant, categories, dishes, slug }: MenuViewProps
 
   const currency = restaurant.currency || "ILS";
   const restaurantName = restaurant.name;
+
+  /* Search filter */
+  const searchTrimmed = search.trim().toLowerCase();
+  const isSearching = searchTrimmed.length > 0;
+  const filteredDishes = isSearching
+    ? dishes.filter((d) => {
+        const name = (d.name || "").toLowerCase();
+        const nameEn = ((d as Record<string, unknown>).name_en as string || "").toLowerCase();
+        const nameFr = ((d as Record<string, unknown>).name_fr as string || "").toLowerCase();
+        const desc = (d.description || "").toLowerCase();
+        return name.includes(searchTrimmed) || nameEn.includes(searchTrimmed) || nameFr.includes(searchTrimmed) || desc.includes(searchTrimmed);
+      })
+    : dishes;
+
   const dishesByCategory = categories.map((cat) => ({
     category: cat,
-    dishes: dishes.filter((d) => d.category_id === cat.id),
+    dishes: filteredDishes.filter((d) => d.category_id === cat.id),
   }));
   /* Flatten dish index for placeholder cycling */
   let dishGlobalIdx = 0;
@@ -363,40 +378,91 @@ export function MenuView({ restaurant, categories, dishes, slug }: MenuViewProps
         <nav
           style={{
             position: "sticky", top: 0, zIndex: 20,
-            background: "hsl(28,18%,6%,.85)",
+            background: "hsl(28,18%,6%,.9)",
             backdropFilter: "blur(20px)",
             WebkitBackdropFilter: "blur(20px)",
             borderBottom: `1px solid ${D.line}`,
-            padding: "14px 24px",
-            overflowX: "auto",
-            whiteSpace: "nowrap",
-            scrollbarWidth: "none",
           }}
         >
-          <div style={{ maxWidth: 720, margin: "0 auto", display: "flex", gap: 6 }}>
-            {categories.map((cat) => {
-              const catName = pickLocalized(cat as unknown as Record<string, unknown>, "name", lang) || cat.name;
-              const isActive = activeCategory === cat.id;
-              return (
+          {/* Category pills */}
+          <div style={{ padding: "12px 24px 0", overflowX: "auto", whiteSpace: "nowrap", scrollbarWidth: "none" }}>
+            <div style={{ maxWidth: 720, margin: "0 auto", display: "flex", gap: 6 }}>
+              {categories.map((cat) => {
+                const catName = pickLocalized(cat as unknown as Record<string, unknown>, "name", lang) || cat.name;
+                const isActive = !isSearching && activeCategory === cat.id;
+                return (
+                  <button
+                    key={cat.id}
+                    type="button"
+                    onClick={() => { setSearch(""); scrollToCategory(cat.id); }}
+                    style={{
+                      padding: "7px 16px", borderRadius: 99,
+                      background: isActive ? D.grad : "transparent",
+                      border: `1px solid ${isActive ? "transparent" : D.line}`,
+                      color: isActive ? "#fff" : D.textDim,
+                      fontFamily: "'DM Sans', sans-serif", fontSize: 13, fontWeight: 500,
+                      cursor: "pointer", flexShrink: 0,
+                      boxShadow: isActive ? `0 0 20px ${D.gold}4d` : "none",
+                      transition: "all .15s",
+                    }}
+                  >
+                    {catName}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Search bar */}
+          <div style={{ padding: "10px 24px 12px" }}>
+            <div style={{ maxWidth: 720, margin: "0 auto", position: "relative" }}>
+              <svg
+                aria-hidden
+                width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
+                style={{ position: "absolute", top: "50%", insetInlineStart: 12, transform: "translateY(-50%)", color: D.textDim, pointerEvents: "none" }}
+              >
+                <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+              </svg>
+              <input
+                type="search"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                placeholder={t(lang, "search_placeholder")}
+                dir={dir}
+                style={{
+                  width: "100%",
+                  paddingInlineStart: 34,
+                  paddingInlineEnd: search ? 34 : 12,
+                  paddingTop: 8,
+                  paddingBottom: 8,
+                  borderRadius: 99,
+                  background: "hsl(28,22%,12%,.8)",
+                  border: `1px solid ${search ? D.line2 : D.line}`,
+                  color: D.cream,
+                  fontFamily: "'DM Sans', sans-serif",
+                  fontSize: 13,
+                  outline: "none",
+                  boxSizing: "border-box",
+                  transition: "border-color .2s",
+                }}
+              />
+              {search && (
                 <button
-                  key={cat.id}
                   type="button"
-                  onClick={() => scrollToCategory(cat.id)}
+                  onClick={() => setSearch("")}
+                  aria-label="נקה חיפוש"
                   style={{
-                    padding: "8px 16px", borderRadius: 99,
-                    background: isActive ? D.grad : "transparent",
-                    border: `1px solid ${isActive ? "transparent" : D.line}`,
-                    color: isActive ? "#fff" : D.textDim,
-                    fontFamily: "'DM Sans', sans-serif", fontSize: 13, fontWeight: 500,
-                    cursor: "pointer", flexShrink: 0,
-                    boxShadow: isActive ? `0 0 20px ${D.gold}4d` : "none",
-                    transition: "all .15s",
+                    position: "absolute", top: "50%", insetInlineEnd: 8, transform: "translateY(-50%)",
+                    background: "none", border: "none", cursor: "pointer", color: D.textDim,
+                    display: "flex", alignItems: "center", padding: 4,
                   }}
                 >
-                  {catName}
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                    <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+                  </svg>
                 </button>
-              );
-            })}
+              )}
+            </div>
           </div>
         </nav>
       )}
@@ -405,15 +471,29 @@ export function MenuView({ restaurant, categories, dishes, slug }: MenuViewProps
           MENU SECTIONS
           ══════════════════════════════════════════════ */}
       <main>
-        {dishesByCategory.length === 0 ? (
+        {isSearching && filteredDishes.length === 0 ? (
+          <div style={{ textAlign: "center", padding: "100px 24px" }}>
+            <UtensilsCrossed style={{ width: 44, height: 44, color: D.gold, opacity: 0.22, margin: "0 auto 16px" }} />
+            <p style={{ color: D.textDim, fontFamily: "'DM Sans', sans-serif", fontSize: 14 }}>{t(lang, "no_search_results")}</p>
+            <button
+              type="button"
+              onClick={() => setSearch("")}
+              style={{ marginTop: 16, fontFamily: "'DM Mono', monospace", fontSize: 11, letterSpacing: ".14em", textTransform: "uppercase", color: D.gold, background: "none", border: `1px solid ${D.line2}`, borderRadius: 99, padding: "8px 18px", cursor: "pointer" }}
+            >
+              ✕ {t(lang, "search_placeholder").replace("...", "")}
+            </button>
+          </div>
+        ) : dishesByCategory.length === 0 ? (
           <div style={{ textAlign: "center", padding: "120px 24px" }}>
             <UtensilsCrossed style={{ width: 52, height: 52, color: D.gold, opacity: 0.25, margin: "0 auto 16px" }} />
             <p style={{ color: D.textDim, fontFamily: "'DM Sans', sans-serif" }}>{t(lang, "empty_menu")}</p>
           </div>
         ) : (
-          dishesByCategory.map(({ category, dishes: catDishes }, catIdx) => {
+          dishesByCategory.map(({ category, dishes: catDishes }) => {
             const catName = pickLocalized(category as unknown as Record<string, unknown>, "name", lang) || category.name;
             const catTotal = catDishes.length;
+            /* Skip empty categories when searching */
+            if (isSearching && catTotal === 0) return null;
             return (
               <section key={category.id} id={`cat-${category.id}`} style={{ scrollMarginTop: 64 }}>
 

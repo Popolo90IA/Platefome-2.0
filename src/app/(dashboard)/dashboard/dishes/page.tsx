@@ -1,6 +1,21 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import {
+  DndContext,
+  closestCenter,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  type DragEndEvent,
+} from "@dnd-kit/core";
+import {
+  SortableContext,
+  useSortable,
+  arrayMove,
+  rectSortingStrategy,
+} from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -41,6 +56,7 @@ import {
   Camera,
   View,
   RotateCcw,
+  GripVertical,
 } from "lucide-react";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import { dishSchema } from "@/lib/validations/dish";
@@ -101,6 +117,30 @@ export default function DishesPage() {
   const [formErrors, setFormErrors] = useState<Record<string, string>>({});
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const supabase = createClient();
+
+  const sensors = useSensors(
+    useSensor(PointerSensor, { activationConstraint: { distance: 8 } })
+  );
+
+  const handleDragEnd = async (event: DragEndEvent) => {
+    const { active, over } = event;
+    if (!over || active.id === over.id) return;
+    const oldIndex = filteredDishes.findIndex((d) => d.id === active.id);
+    const newIndex = filteredDishes.findIndex((d) => d.id === over.id);
+    if (oldIndex === -1 || newIndex === -1) return;
+    const reordered = arrayMove(filteredDishes, oldIndex, newIndex);
+    // Optimistic update
+    setDishes((prev) => {
+      const others = prev.filter((d) => filterCat !== "all" && d.category_id !== filterCat);
+      return filterCat === "all" ? reordered : [...others, ...reordered];
+    });
+    // Persist display_order
+    await Promise.all(
+      reordered.map((d, i) =>
+        supabase.from("dishes").update({ display_order: i }).eq("id", d.id)
+      )
+    );
+  };
 
   const load = async () => {
     const {
@@ -780,10 +820,55 @@ export default function DishesPage() {
           </CardContent>
         </Card>
       ) : (
+        <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+          <SortableContext items={filteredDishes.map((d) => d.id)} strategy={rectSortingStrategy}>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
           {filteredDishes.map((dish, idx) => (
-            <Card
+            <SortableDishCard
               key={dish.id}
+              dish={dish}
+              idx={idx}
+              getCategoryName={getCategoryName}
+              toggleAvailability={toggleAvailability}
+              handleDelete={handleDelete}
+              formatPrice={formatPrice}
+            />
+          ))}
+        </div>
+          </SortableContext>
+        </DndContext>
+      )}
+    </div>
+  );
+}
+
+/* ── Sortable dish card ─────────────────────────────────── */
+function SortableDishCard({
+  dish,
+  idx,
+  getCategoryName,
+  toggleAvailability,
+  handleDelete,
+  formatPrice: fp,
+}: {
+  dish: Dish;
+  idx: number;
+  getCategoryName: (id: string) => string;
+  toggleAvailability: (dish: Dish) => void;
+  handleDelete: (id: string) => void;
+  formatPrice: (price: number) => string;
+}) {
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: dish.id });
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.5 : 1,
+    zIndex: isDragging ? 50 : "auto",
+  };
+
+  return (
+    <div ref={setNodeRef} style={style}>
+            <Card
               className={`group overflow-hidden shadow-sm hover:shadow-premium hover:border-[hsl(var(--gold))]/30 transition-all animate-fade-up ${
                 !dish.is_available ? "opacity-70" : ""
               }`}
@@ -828,11 +913,22 @@ export default function DishesPage() {
               </div>
               <CardContent className="p-5">
                 <div className="flex items-start justify-between gap-2 mb-2">
+                  {/* Drag handle */}
+                  <button
+                    type="button"
+                    {...attributes}
+                    {...listeners}
+                    className="cursor-grab active:cursor-grabbing p-1 rounded text-muted-foreground/40 hover:text-muted-foreground transition-colors touch-none"
+                    title="גרור לשינוי סדר"
+                    aria-label="גרור לשינוי סדר"
+                  >
+                    <GripVertical className="h-4 w-4" />
+                  </button>
                   <h3 className="font-serif-display font-bold text-lg leading-tight flex-1">
                     {dish.name}
                   </h3>
                   <span className="font-bold text-lg text-gold-gradient whitespace-nowrap">
-                    {formatPrice(dish.price)}
+                    {fp(dish.price)}
                   </span>
                 </div>
 
@@ -902,9 +998,6 @@ export default function DishesPage() {
                 </div>
               </CardContent>
             </Card>
-          ))}
-        </div>
-      )}
     </div>
   );
 }
