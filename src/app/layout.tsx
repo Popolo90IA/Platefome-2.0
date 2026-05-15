@@ -8,7 +8,6 @@ import {
 } from "next/font/google";
 import "./globals.css";
 import { EditModeProvider } from "@/components/editable/EditModeProvider";
-import { FloatingEditToggle } from "@/components/editable/FloatingEditToggle";
 
 const cormorant = Cormorant_Garamond({
   subsets: ["latin"],
@@ -76,7 +75,6 @@ export default function RootLayout({
       <body className="antialiased">
         <EditModeProvider>
           {children}
-          <FloatingEditToggle />
         </EditModeProvider>
       </body>
     </html>
