@@ -187,8 +187,6 @@ export default function SettingsPage() {
         : form.languages[0] ?? "he",
       currency: form.currency,
       is_active: isActive,
-      theme_primary: form.theme_primary,
-      theme_dark_mode: form.theme_dark_mode,
     };
 
     let result;
@@ -202,11 +200,20 @@ export default function SettingsPage() {
 
     if (result.error) {
       setError(result.error.message);
-    } else {
-      setRestaurant(result.data);
-      setSaved(true);
-      setTimeout(() => setSaved(false), 3000);
+      setSaving(false);
+      return;
     }
+
+    setRestaurant(result.data);
+
+    // Save theme separately — columns may not be in PostgREST cache yet
+    await supabase
+      .from("restaurants")
+      .update({ theme_primary: form.theme_primary, theme_dark_mode: form.theme_dark_mode })
+      .eq("id", result.data.id);
+
+    setSaved(true);
+    setTimeout(() => setSaved(false), 3000);
     setSaving(false);
   };
 
