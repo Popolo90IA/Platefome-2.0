@@ -19,6 +19,7 @@ const HeroCanvas = dynamic(
 /* ─── Scroll reveal — GSAP ScrollTrigger ───────────────── */
 function useReveal() {
   useGSAP(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     const els = gsap.utils.toArray<HTMLElement>(".reveal, .reveal-left, .reveal-scale, .reveal-blur");
     els.forEach((el) => {
       const delay = Number(el.dataset.delay || 0) / 1000;
@@ -45,6 +46,7 @@ function useReveal() {
 /* ─── Header scroll effect — GSAP ScrollTrigger ─────────── */
 function useHeaderScroll() {
   useGSAP(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     const header = document.getElementById("site-header");
     if (!header) return;
     const inner = header.firstElementChild as HTMLElement | null;
@@ -81,6 +83,10 @@ function StatNumber({ value, color }: { value: string; color: string }) {
   useGSAP(() => {
     const el = ref.current;
     if (!el || numVal === 0) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      el.textContent = value;
+      return;
+    }
     gsap.fromTo(
       proxy.current,
       { val: 0 },

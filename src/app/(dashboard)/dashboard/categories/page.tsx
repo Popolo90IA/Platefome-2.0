@@ -19,6 +19,21 @@ import {
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import { categorySchema } from "@/lib/validations/category";
 import type { Category, Restaurant } from "@/types/database.types";
+import {
+  DndContext,
+  closestCenter,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  type DragEndEvent,
+} from "@dnd-kit/core";
+import {
+  SortableContext,
+  useSortable,
+  arrayMove,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 
 export default function CategoriesPage() {
   const [restaurant, setRestaurant] = useState<Restaurant | null>(null);
@@ -31,6 +46,25 @@ export default function CategoriesPage() {
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
   const supabase = createClient();
+
+  const sensors = useSensors(
+    useSensor(PointerSensor, { activationConstraint: { distance: 8 } })
+  );
+
+  const handleDragEnd = async (event: DragEndEvent) => {
+    const { active, over } = event;
+    if (!over || active.id === over.id) return;
+    const oldIndex = categories.findIndex((c) => c.id === active.id);
+    const newIndex = categories.findIndex((c) => c.id === over.id);
+    if (oldIndex === -1 || newIndex === -1) return;
+    const reordered = arrayMove(categories, oldIndex, newIndex);
+    setCategories(reordered);
+    await Promise.all(
+      reordered.map((c, i) =>
+        supabase.from("categories").update({ display_order: i }).eq("id", c.id)
+      )
+    );
+  };
 
   const load = async () => {
     const {
@@ -282,63 +316,118 @@ export default function CategoriesPage() {
           </CardContent>
         </Card>
       ) : (
-        <div className="space-y-2">
-          {categories.map((cat, idx) => (
-            <Card
-              key={cat.id}
-              className="group shadow-sm hover:shadow-premium transition-all animate-fade-up"
-              style={{
-                animationDelay: `${idx * 40}ms`,
-                borderColor: "transparent",
-              }}
-              onMouseEnter={(e) => {
-                (e.currentTarget as HTMLDivElement).style.borderColor = "hsl(var(--gold) / .25)";
-              }}
-              onMouseLeave={(e) => {
-                (e.currentTarget as HTMLDivElement).style.borderColor = "transparent";
-              }}
-            >
-              <CardContent className="py-4 flex items-center gap-4">
-                {/* Drag handle */}
-                <GripVertical className="h-5 w-5 text-muted-foreground/30 flex-shrink-0 cursor-grab" />
-
-                {/* Order badge */}
-                <div
-                  className="h-9 w-9 rounded-lg flex items-center justify-center flex-shrink-0 font-mono text-sm font-bold text-white"
-                  style={{ background: "var(--grad-bronze)" }}
-                >
-                  {cat.display_order}
-                </div>
-
-                {/* Name */}
-                <div className="flex-1 min-w-0">
-                  <div className="font-semibold truncate">{cat.name}</div>
-                </div>
-
-                {/* Actions */}
-                <div className="flex gap-1 flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
-                  <Button
-                    size="icon"
-                    variant="ghost"
-                    onClick={() => handleEdit(cat)}
-                    className="h-8 w-8 hover:bg-[hsl(var(--gold))]/10"
-                  >
-                    <Edit className="h-4 w-4" style={{ color: "hsl(var(--gold-dark))" }} />
-                  </Button>
-                  <Button
-                    size="icon"
-                    variant="ghost"
-                    className="h-8 w-8 hover:bg-[hsl(var(--ember))]/10"
-                    onClick={() => handleDelete(cat.id)}
-                  >
-                    <Trash2 className="h-4 w-4" style={{ color: "hsl(var(--ember))" }} />
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
+        <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+          <SortableContext items={categories.map((c) => c.id)} strategy={verticalListSortingStrategy}>
+            <div className="space-y-2">
+              {categories.map((cat, idx) => (
+                <SortableCategoryRow
+                  key={cat.id}
+                  cat={cat}
+                  idx={idx}
+                  onEdit={handleEdit}
+                  onDelete={handleDelete}
+                />
+              ))}
+            </div>
+          </SortableContext>
+        </DndContext>
       )}
+    </div>
+  );
+}
+
+/* ── Sortable row ──────────────────────────────────────────── */
+function SortableCategoryRow({
+  cat,
+  idx,
+  onEdit,
+  onDelete,
+}: {
+  cat: Category;
+  idx: number;
+  onEdit: (cat: Category) => void;
+  onDelete: (id: string) => void;
+}) {
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } =
+    useSortable({ id: cat.id });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.5 : 1,
+    zIndex: isDragging ? 50 : ("auto" as const),
+  };
+
+  return (
+    <div ref={setNodeRef} style={style}>
+      <Card
+        className="group shadow-sm hover:shadow-premium transition-all animate-fade-up"
+        style={{
+          animationDelay: `${idx * 40}ms`,
+          borderColor: isDragging ? "hsl(var(--gold) / .4)" : "transparent",
+        }}
+        onMouseEnter={(e) => {
+          (e.currentTarget as HTMLDivElement).style.borderColor = "hsl(var(--gold) / .25)";
+        }}
+        onMouseLeave={(e) => {
+          if (!isDragging)
+            (e.currentTarget as HTMLDivElement).style.borderColor = "transparent";
+        }}
+      >
+        <CardContent className="py-4 flex items-center gap-4">
+          {/* Drag handle */}
+          <button
+            {...attributes}
+            {...listeners}
+            style={{
+              background: "none",
+              border: "none",
+              padding: 0,
+              cursor: "grab",
+              color: "hsl(var(--dim))",
+              display: "flex",
+              alignItems: "center",
+              flexShrink: 0,
+              touchAction: "none",
+            }}
+          >
+            <GripVertical className="h-5 w-5" />
+          </button>
+
+          {/* Order badge */}
+          <div
+            className="h-9 w-9 rounded-lg flex items-center justify-center flex-shrink-0 font-mono text-sm font-bold text-white"
+            style={{ background: "var(--grad-bronze)" }}
+          >
+            {cat.display_order}
+          </div>
+
+          {/* Name */}
+          <div className="flex-1 min-w-0">
+            <div className="font-semibold truncate">{cat.name}</div>
+          </div>
+
+          {/* Actions */}
+          <div className="flex gap-1 flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
+            <Button
+              size="icon"
+              variant="ghost"
+              onClick={() => onEdit(cat)}
+              className="h-8 w-8 hover:bg-[hsl(var(--gold))]/10"
+            >
+              <Edit className="h-4 w-4" style={{ color: "hsl(var(--gold-dark))" }} />
+            </Button>
+            <Button
+              size="icon"
+              variant="ghost"
+              className="h-8 w-8 hover:bg-[hsl(var(--ember))]/10"
+              onClick={() => onDelete(cat.id)}
+            >
+              <Trash2 className="h-4 w-4" style={{ color: "hsl(var(--ember))" }} />
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 }
