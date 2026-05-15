@@ -3,6 +3,8 @@ import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { MenuView } from "@/components/menu/MenuView";
 
+export const dynamic = "force-dynamic";
+
 interface MenuPageProps {
   params: Promise<{ slug: string }>;
 }
