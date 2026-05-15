@@ -38,6 +38,10 @@ export interface Database {
           is_active: boolean;
           theme_primary: string | null;
           theme_dark_mode: boolean | null;
+          theme_font_pack: string | null;
+          menu_layout: string | null;
+          menu_hero_style: string | null;
+          menu_category_style: string | null;
           created_at: string;
           updated_at: string;
         };
@@ -60,6 +64,10 @@ export interface Database {
           is_active?: boolean;
           theme_primary?: string | null;
           theme_dark_mode?: boolean | null;
+          theme_font_pack?: string | null;
+          menu_layout?: string | null;
+          menu_hero_style?: string | null;
+          menu_category_style?: string | null;
           created_at?: string;
           updated_at?: string;
         };
@@ -82,6 +90,10 @@ export interface Database {
           is_active?: boolean;
           theme_primary?: string | null;
           theme_dark_mode?: boolean | null;
+          theme_font_pack?: string | null;
+          menu_layout?: string | null;
+          menu_hero_style?: string | null;
+          menu_category_style?: string | null;
           created_at?: string;
           updated_at?: string;
         };

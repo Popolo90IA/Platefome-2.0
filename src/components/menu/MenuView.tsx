@@ -7,7 +7,8 @@ import { DishModelViewer } from "./DishModelViewer";
 import { Photo360Viewer } from "./Photo360Viewer";
 import { trackEvent } from "@/lib/analytics";
 import { LANGUAGE_META, pickLocalized, t, formatCurrency } from "@/lib/i18n";
-import { buildMenuTheme } from "@/lib/theme";
+import { buildMenuTheme, getFontPack } from "@/lib/theme";
+import type { MenuLayout, MenuHeroStyle, MenuCategoryStyle } from "@/lib/theme";
 import type { Restaurant, Category, Dish, Language } from "@/types/database.types";
 
 /* ─── CSS variable aliases ──────────────────────────────── */
@@ -118,6 +119,12 @@ export function MenuView({ restaurant, categories, dishes, slug }: MenuViewProps
     restaurant.theme_dark_mode
   ) as React.CSSProperties;
 
+  /* Layout options */
+  const fontPack = getFontPack(restaurant.theme_font_pack);
+  const menuLayout = (restaurant.menu_layout ?? "grid") as MenuLayout;
+  const heroStyle = (restaurant.menu_hero_style ?? "default") as MenuHeroStyle;
+  const catStyle = (restaurant.menu_category_style ?? "pills") as MenuCategoryStyle;
+
   /* Search filter */
   const searchTrimmed = search.trim().toLowerCase();
   const isSearching = searchTrimmed.length > 0;
@@ -160,7 +167,7 @@ export function MenuView({ restaurant, categories, dishes, slug }: MenuViewProps
         minHeight: "100vh",
         background: D.page,
         color: D.text,
-        fontFamily: "'DM Sans', 'Helvetica Neue', sans-serif",
+        fontFamily: fontPack.bodyFont,
         position: "relative",
         overflowX: "hidden",
       }}
@@ -184,40 +191,45 @@ export function MenuView({ restaurant, categories, dishes, slug }: MenuViewProps
       <header
         style={{
           position: "relative",
-          height: 360,
+          height: heroStyle === "minimal" ? 160 : 360,
           overflow: "hidden",
           borderBottom: `1px solid ${D.line}`,
+          background: heroStyle === "minimal" ? D.section : undefined,
         }}
       >
-        {/* Background */}
-        <div
-          aria-hidden
-          style={{
-            position: "absolute", inset: 0,
-            background: restaurant.banner_url
-              ? undefined
-              : `radial-gradient(ellipse at 30% 50%, hsl(28,62%,30%,.6), transparent 60%),
-                 radial-gradient(ellipse at 70% 30%, hsl(22,70%,40%,.5), transparent 60%),
-                 linear-gradient(135deg, hsl(28,30%,14%) 0%, hsl(28,18%,6%) 100%)`,
-          }}
-        >
-          {restaurant.banner_url && (
-            <Image
-              src={restaurant.banner_url}
-              alt=""
-              aria-hidden
-              fill
-              priority
-              sizes="100vw"
-              style={{ objectFit: "cover", filter: "brightness(.4) saturate(.7)", transform: "scale(1.08)" }}
-            />
-          )}
-        </div>
-        {/* Bottom fade */}
-        <div
-          aria-hidden
-          style={{ position: "absolute", inset: "auto 0 0", height: 180, background: `linear-gradient(180deg, transparent 0%, ${D.page} 100%)`, pointerEvents: "none" }}
-        />
+        {/* Background (not for minimal) */}
+        {heroStyle !== "minimal" && (
+          <div
+            aria-hidden
+            style={{
+              position: "absolute", inset: 0,
+              background: restaurant.banner_url
+                ? undefined
+                : `radial-gradient(ellipse at 30% 50%, hsl(28,62%,30%,.6), transparent 60%),
+                   radial-gradient(ellipse at 70% 30%, hsl(22,70%,40%,.5), transparent 60%),
+                   linear-gradient(135deg, hsl(28,30%,14%) 0%, hsl(28,18%,6%) 100%)`,
+            }}
+          >
+            {restaurant.banner_url && (
+              <Image
+                src={restaurant.banner_url}
+                alt=""
+                aria-hidden
+                fill
+                priority
+                sizes="100vw"
+                style={{ objectFit: "cover", filter: "brightness(.4) saturate(.7)", transform: "scale(1.08)" }}
+              />
+            )}
+          </div>
+        )}
+        {/* Bottom fade (not for minimal) */}
+        {heroStyle !== "minimal" && (
+          <div
+            aria-hidden
+            style={{ position: "absolute", inset: "auto 0 0", height: 180, background: `linear-gradient(180deg, transparent 0%, ${D.page} 100%)`, pointerEvents: "none" }}
+          />
+        )}
 
         {/* Utility bar (top) */}
         <div
@@ -236,7 +248,8 @@ export function MenuView({ restaurant, categories, dishes, slug }: MenuViewProps
               style={{
                 display: "inline-flex", alignItems: "center", gap: 8,
                 padding: "8px 14px", borderRadius: 99,
-                background: "hsl(28,18%,6%,.6)", backdropFilter: "blur(16px)",
+                background: heroStyle === "minimal" ? D.surface : "hsl(28,18%,6%,.6)",
+                backdropFilter: "blur(16px)",
                 border: `1px solid ${D.line}`,
                 fontFamily: "'DM Mono', monospace", fontSize: "10.5px", letterSpacing: ".14em",
                 textTransform: "uppercase", color: D.text, cursor: "pointer",
@@ -267,7 +280,7 @@ export function MenuView({ restaurant, categories, dishes, slug }: MenuViewProps
                       width: "100%", padding: "11px 16px",
                       background: l === lang ? `${D.gold}1a` : "transparent",
                       border: "none", cursor: "pointer",
-                      fontFamily: "'DM Sans', sans-serif", fontSize: 13.5,
+                      fontFamily: fontPack.bodyFont, fontSize: 13.5,
                       color: l === lang ? D.gold : D.text,
                       textAlign: "start",
                     }}
@@ -288,7 +301,8 @@ export function MenuView({ restaurant, categories, dishes, slug }: MenuViewProps
             style={{
               display: "inline-flex", alignItems: "center", gap: 8,
               padding: "8px 14px", borderRadius: 99,
-              background: "hsl(28,18%,6%,.6)", backdropFilter: "blur(16px)",
+              background: heroStyle === "minimal" ? D.surface : "hsl(28,18%,6%,.6)",
+              backdropFilter: "blur(16px)",
               border: `1px solid ${D.line}`,
               fontFamily: "'DM Mono', monospace", fontSize: "10.5px", letterSpacing: ".14em",
               textTransform: "uppercase", color: D.text, cursor: "pointer",
@@ -299,16 +313,19 @@ export function MenuView({ restaurant, categories, dishes, slug }: MenuViewProps
           </button>
         </div>
 
-        {/* Hero content (bottom-aligned) */}
+        {/* Hero content — alignment depends on heroStyle */}
         <div
           style={{
             position: "relative", zIndex: 2, height: "100%",
-            maxWidth: 720, margin: "0 auto", padding: "0 24px 36px",
-            display: "flex", flexDirection: "column", justifyContent: "flex-end",
+            maxWidth: 720, margin: "0 auto", padding: heroStyle === "minimal" ? "0 24px" : "0 24px 36px",
+            display: "flex", flexDirection: "column",
+            justifyContent: heroStyle === "centered" ? "center" : heroStyle === "minimal" ? "center" : "flex-end",
+            alignItems: heroStyle === "centered" ? "center" : undefined,
+            textAlign: heroStyle === "centered" ? "center" : undefined,
           }}
         >
           {/* Restaurant mark row */}
-          <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 20 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 20, justifyContent: heroStyle === "centered" ? "center" : undefined }}>
             <div style={{
               width: 48, height: 48,
               background: D.grad,
@@ -347,12 +364,12 @@ export function MenuView({ restaurant, categories, dishes, slug }: MenuViewProps
           {/* Restaurant name as h1 */}
           <h1
             style={{
-              fontFamily: "'Noto Serif Hebrew', 'Cormorant Garamond', serif",
+              fontFamily: fontPack.headingFont,
               fontWeight: 500,
-              fontSize: "clamp(48px, 8vw, 72px)",
+              fontSize: heroStyle === "minimal" ? "clamp(28px, 5vw, 42px)" : "clamp(48px, 8vw, 72px)",
               lineHeight: .95,
               letterSpacing: "-.02em",
-              color: D.cream,
+              color: heroStyle === "minimal" ? D.text : D.cream,
               margin: "0 0 12px",
             }}
           >
@@ -360,7 +377,7 @@ export function MenuView({ restaurant, categories, dishes, slug }: MenuViewProps
           </h1>
 
           {/* Meta row */}
-          <div style={{ display: "flex", gap: 18, flexWrap: "wrap", fontFamily: "'DM Mono', monospace", fontSize: "10.5px", letterSpacing: ".18em", textTransform: "uppercase", color: D.textDim }}>
+          <div style={{ display: "flex", gap: 18, flexWrap: "wrap", fontFamily: "'DM Mono', monospace", fontSize: "10.5px", letterSpacing: ".18em", textTransform: "uppercase", color: D.textDim, justifyContent: heroStyle === "centered" ? "center" : undefined }}>
             {restaurant.phone && (
               <span style={{ display: "flex", alignItems: "center", gap: 6 }}>
                 <span style={{ width: 4, height: 4, borderRadius: 99, background: D.gold, display: "inline-block" }}/>
@@ -384,19 +401,21 @@ export function MenuView({ restaurant, categories, dishes, slug }: MenuViewProps
         <nav
           style={{
             position: "sticky", top: 0, zIndex: 20,
-            background: "hsl(28,18%,6%,.9)",
+            background: `${D.page}ee`,
             backdropFilter: "blur(20px)",
             WebkitBackdropFilter: "blur(20px)",
             borderBottom: `1px solid ${D.line}`,
           }}
         >
-          {/* Category pills */}
+          {/* Category tabs — style depends on catStyle */}
           <div style={{ padding: "12px 24px 0", overflowX: "auto", whiteSpace: "nowrap", scrollbarWidth: "none" }}>
-            <div style={{ maxWidth: 720, margin: "0 auto", display: "flex", gap: 6 }}>
+            <div style={{ maxWidth: 720, margin: "0 auto", display: "flex", gap: catStyle === "pills" ? 6 : 0 }}>
               {categories.map((cat) => {
                 const catName = pickLocalized(cat as unknown as Record<string, unknown>, "name", lang) || cat.name;
                 const isActive = !isSearching && activeCategory === cat.id;
-                return (
+
+                /* Pills style */
+                if (catStyle === "pills") return (
                   <button
                     key={cat.id}
                     type="button"
@@ -406,9 +425,30 @@ export function MenuView({ restaurant, categories, dishes, slug }: MenuViewProps
                       background: isActive ? D.grad : "transparent",
                       border: `1px solid ${isActive ? "transparent" : D.line}`,
                       color: isActive ? "#fff" : D.textDim,
-                      fontFamily: "'DM Sans', sans-serif", fontSize: 13, fontWeight: 500,
+                      fontFamily: fontPack.bodyFont, fontSize: 13, fontWeight: 500,
                       cursor: "pointer", flexShrink: 0,
                       boxShadow: isActive ? `0 0 20px ${D.gold}4d` : "none",
+                      transition: "all .15s",
+                    }}
+                  >
+                    {catName}
+                  </button>
+                );
+
+                /* Underline style */
+                return (
+                  <button
+                    key={cat.id}
+                    type="button"
+                    onClick={() => { setSearch(""); scrollToCategory(cat.id); }}
+                    style={{
+                      padding: "7px 14px", borderRadius: 0,
+                      background: "transparent",
+                      border: "none",
+                      borderBottom: `2px solid ${isActive ? D.gold : "transparent"}`,
+                      color: isActive ? D.gold : D.textDim,
+                      fontFamily: fontPack.bodyFont, fontSize: 13, fontWeight: isActive ? 600 : 400,
+                      cursor: "pointer", flexShrink: 0,
                       transition: "all .15s",
                     }}
                   >
@@ -505,7 +545,7 @@ export function MenuView({ restaurant, categories, dishes, slug }: MenuViewProps
 
                 {/* ── Section rule ── */}
                 <div style={{ margin: "56px auto 24px", maxWidth: 860, padding: "0 24px", display: "flex", alignItems: "center", gap: 14 }}>
-                  <h2 style={{ fontFamily: "'Noto Serif Hebrew', 'Cormorant Garamond', serif", fontWeight: 500, fontSize: 32, letterSpacing: "-.02em", color: D.cream, margin: 0, flexShrink: 0, lineHeight: 1 }}>
+                  <h2 style={{ fontFamily: fontPack.headingFont, fontWeight: 500, fontSize: 32, letterSpacing: "-.02em", color: D.cream, margin: 0, flexShrink: 0, lineHeight: 1 }}>
                     {catName}
                   </h2>
                   <div style={{ flex: 1, height: 1, background: `linear-gradient(90deg, transparent, ${D.line2} 50%, transparent)` }}/>
@@ -517,7 +557,7 @@ export function MenuView({ restaurant, categories, dishes, slug }: MenuViewProps
                 {/* ── Dish list ── */}
                 <div style={{ maxWidth: 860, margin: "0 auto", padding: "0 24px", display: "flex", flexDirection: "column", gap: 14 }}>
                   {catDishes.length === 0 ? (
-                    <p style={{ color: D.textDim, fontSize: 13, paddingInlineStart: 4, fontFamily: "'DM Sans', sans-serif" }}>{t(lang, "no_dishes_in_cat")}</p>
+                    <p style={{ color: D.textDim, fontSize: 13, paddingInlineStart: 4, fontFamily: fontPack.bodyFont }}>{t(lang, "no_dishes_in_cat")}</p>
                   ) : (
                     catDishes.map((dish) => {
                       const idx = dishGlobalIdx++;
@@ -529,6 +569,9 @@ export function MenuView({ restaurant, categories, dishes, slug }: MenuViewProps
                           lang={lang}
                           currency={currency}
                           placeholderGradient={dishPlaceholder(idx)}
+                          menuLayout={menuLayout}
+                          headingFont={fontPack.headingFont}
+                          bodyFont={fontPack.bodyFont}
                           onOpen={() => setModalDish(dish)}
                         />
                       );
@@ -574,6 +617,8 @@ export function MenuView({ restaurant, categories, dishes, slug }: MenuViewProps
           restaurantId={restaurant.id}
           lang={lang}
           currency={currency}
+          headingFont={fontPack.headingFont}
+          bodyFont={fontPack.bodyFont}
           onClose={() => setModalDish(null)}
         />
       )}
@@ -585,13 +630,16 @@ export function MenuView({ restaurant, categories, dishes, slug }: MenuViewProps
    DISH CARD
    ════════════════════════════════════════════════════════ */
 function DishCard({
-  dish, restaurantId, lang, currency, placeholderGradient, onOpen,
+  dish, restaurantId, lang, currency, placeholderGradient, menuLayout, headingFont, bodyFont, onOpen,
 }: {
   dish: Dish;
   restaurantId: string;
   lang: Language;
   currency: string;
   placeholderGradient: string;
+  menuLayout: MenuLayout;
+  headingFont: string;
+  bodyFont: string;
   onOpen: () => void;
 }) {
   const [hovered, setHovered] = useState(false);
@@ -635,11 +683,11 @@ function DishCard({
           display: "flex",
           flexDirection: "row",
           direction: "ltr",
-          gap: 16,
-          background: hovered ? "hsl(28,22%,14%)" : D.card,
+          gap: menuLayout === "list" ? 12 : 16,
+          background: hovered ? D.surface : D.card,
           border: `1px solid ${hovered ? D.line2 : D.line}`,
           borderRadius: 14,
-          padding: 14,
+          padding: menuLayout === "list" ? "10px 14px" : 14,
           cursor: "pointer",
           transition: "border-color .25s, background .25s",
           position: "relative",
@@ -648,72 +696,74 @@ function DishCard({
           alignItems: "center",
         }}
       >
-        {/* Media column — gauche, carré 80px */}
-        <div
-          style={{
-            position: "relative",
-            borderRadius: 10,
-            overflow: "hidden",
-            width: 90,
-            height: 90,
-            flexShrink: 0,
-            background: dish.image_url ? undefined : placeholderGradient,
-          }}
-        >
-          {/* Shimmer highlight */}
-          <div aria-hidden style={{ position: "absolute", inset: 0, background: "radial-gradient(circle at 30% 30%, rgba(255,220,170,.3), transparent 60%)", zIndex: 1, pointerEvents: "none" }} />
+        {/* Media column — masqué en mode liste */}
+        {menuLayout !== "list" && (
+          <div
+            style={{
+              position: "relative",
+              borderRadius: 10,
+              overflow: "hidden",
+              width: 90,
+              height: 90,
+              flexShrink: 0,
+              background: dish.image_url ? undefined : placeholderGradient,
+            }}
+          >
+            {/* Shimmer highlight */}
+            <div aria-hidden style={{ position: "absolute", inset: 0, background: "radial-gradient(circle at 30% 30%, rgba(255,220,170,.3), transparent 60%)", zIndex: 1, pointerEvents: "none" }} />
 
-          {dish.video_url ? (
-            <video
-              src={dish.video_url}
-              poster={dish.image_url ?? undefined}
-              style={{ width: "100%", height: "100%", objectFit: "cover", display: "block", transition: "transform .5s", transform: hovered ? "scale(1.08)" : "scale(1)" }}
-              muted loop playsInline preload="metadata"
-              onMouseEnter={(e) => { e.currentTarget.play().catch(() => {}); trackEvent(restaurantId, "video_play", { dishId: dish.id }); }}
-              onMouseLeave={(e) => { e.currentTarget.pause(); e.currentTarget.currentTime = 0; }}
-            />
-          ) : dish.image_url ? (
-            <Image
-              src={dish.image_url}
-              alt={name}
-              fill
-              sizes="(max-width: 640px) 50vw, 33vw"
-              style={{ objectFit: "cover", display: "block", transition: "transform .5s", transform: hovered ? "scale(1.08)" : "scale(1)" }}
-            />
-          ) : null}
+            {dish.video_url ? (
+              <video
+                src={dish.video_url}
+                poster={dish.image_url ?? undefined}
+                style={{ width: "100%", height: "100%", objectFit: "cover", display: "block", transition: "transform .5s", transform: hovered ? "scale(1.08)" : "scale(1)" }}
+                muted loop playsInline preload="metadata"
+                onMouseEnter={(e) => { e.currentTarget.play().catch(() => {}); trackEvent(restaurantId, "video_play", { dishId: dish.id }); }}
+                onMouseLeave={(e) => { e.currentTarget.pause(); e.currentTarget.currentTime = 0; }}
+              />
+            ) : dish.image_url ? (
+              <Image
+                src={dish.image_url}
+                alt={name}
+                fill
+                sizes="(max-width: 640px) 50vw, 33vw"
+                style={{ objectFit: "cover", display: "block", transition: "transform .5s", transform: hovered ? "scale(1.08)" : "scale(1)" }}
+              />
+            ) : null}
 
-          {/* Soldout overlay */}
-          {soldout && (
-            <div style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,.55)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 2 }}>
-              <span style={{ fontSize: 8, fontFamily: "'DM Mono', monospace", letterSpacing: ".1em", textTransform: "uppercase", color: "#fff" }}>
-                {t(lang, "soldout")}
+            {/* Soldout overlay */}
+            {soldout && (
+              <div style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,.55)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 2 }}>
+                <span style={{ fontSize: 8, fontFamily: "'DM Mono', monospace", letterSpacing: ".1em", textTransform: "uppercase", color: "#fff" }}>
+                  {t(lang, "soldout")}
+                </span>
+              </div>
+            )}
+
+            {/* Media badge */}
+            {badgeType && (
+              <span style={{ position: "absolute", bottom: 4, insetInlineStart: 4, zIndex: 3, fontFamily: "'DM Mono', monospace", fontSize: 8, letterSpacing: ".1em", textTransform: "uppercase", padding: "2px 6px", borderRadius: 99, background: "hsl(28,18%,6%,.8)", backdropFilter: "blur(8px)", color: D.goldLt, display: "flex", alignItems: "center", gap: 3 }}>
+                {badgeType === "3D" || badgeType === "AR" ? (
+                  <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6"><circle cx="12" cy="12" r="9"/><ellipse cx="12" cy="12" rx="9" ry="3"/></svg>
+                ) : badgeType === "Video" ? (
+                  <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                ) : (
+                  <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6"><circle cx="12" cy="12" r="3"/><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"/></svg>
+                )}
+                {badgeType}
               </span>
-            </div>
-          )}
-
-          {/* Media badge */}
-          {badgeType && (
-            <span style={{ position: "absolute", bottom: 4, insetInlineStart: 4, zIndex: 3, fontFamily: "'DM Mono', monospace", fontSize: 8, letterSpacing: ".1em", textTransform: "uppercase", padding: "2px 6px", borderRadius: 99, background: "hsl(28,18%,6%,.8)", backdropFilter: "blur(8px)", color: D.goldLt, display: "flex", alignItems: "center", gap: 3 }}>
-              {badgeType === "3D" || badgeType === "AR" ? (
-                <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6"><circle cx="12" cy="12" r="9"/><ellipse cx="12" cy="12" rx="9" ry="3"/></svg>
-              ) : badgeType === "Video" ? (
-                <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-              ) : (
-                <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6"><circle cx="12" cy="12" r="3"/><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"/></svg>
-              )}
-              {badgeType}
-            </span>
-          )}
-        </div>
+            )}
+          </div>
+        )}
 
         {/* Info column — milieu, flex-1 */}
         <div style={{ flex: 1, minWidth: 0, direction: "rtl" }}>
-          <h3 style={{ fontFamily: "'Noto Serif Hebrew', 'Cormorant Garamond', serif", fontWeight: 600, fontSize: 19, lineHeight: 1.15, color: D.cream, margin: "0 0 4px" }}>
+          <h3 style={{ fontFamily: headingFont, fontWeight: 600, fontSize: menuLayout === "list" ? 16 : 19, lineHeight: 1.15, color: D.cream, margin: "0 0 4px" }}>
             {name}
           </h3>
 
-          {desc && (
-            <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, lineHeight: 1.55, color: D.textDim, margin: "0 0 8px", display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}>
+          {desc && menuLayout !== "list" && (
+            <p style={{ fontFamily: bodyFont, fontSize: 13, lineHeight: 1.55, color: D.textDim, margin: "0 0 8px", display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}>
               {desc}
             </p>
           )}
@@ -779,12 +829,14 @@ function DishCard({
    DISH DETAIL MODAL
    ════════════════════════════════════════════════════════ */
 function DishModal({
-  dish, restaurantId, lang, currency, onClose,
+  dish, restaurantId, lang, currency, headingFont, bodyFont, onClose,
 }: {
   dish: Dish;
   restaurantId: string;
   lang: Language;
   currency: string;
+  headingFont: string;
+  bodyFont: string;
   onClose: () => void;
 }) {
   const name = pickLocalized(dish as unknown as Record<string, unknown>, "name", lang) || dish.name;
@@ -853,14 +905,14 @@ function DishModal({
 
         {/* Body */}
         <div style={{ padding: "24px 28px 28px" }}>
-          <h2 style={{ fontFamily: "'Noto Serif Hebrew', 'Cormorant Garamond', serif", fontWeight: 600, fontSize: 32, letterSpacing: "-.02em", color: D.cream, margin: "0 0 8px", lineHeight: 1.05 }}>
+          <h2 style={{ fontFamily: headingFont, fontWeight: 600, fontSize: 32, letterSpacing: "-.02em", color: D.cream, margin: "0 0 8px", lineHeight: 1.05 }}>
             {name}
           </h2>
           <div style={{ fontFamily: "'DM Mono', monospace", fontSize: 16, color: D.gold, letterSpacing: ".04em", marginBottom: 16 }}>
             {formatCurrency(Number(dish.price), currency, lang)}
           </div>
           {desc && (
-            <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 14, lineHeight: 1.7, color: D.text, margin: "0 0 18px" }}>
+            <p style={{ fontFamily: bodyFont, fontSize: 14, lineHeight: 1.7, color: D.text, margin: "0 0 18px" }}>
               {desc}
             </p>
           )}

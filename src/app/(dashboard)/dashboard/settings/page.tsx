@@ -33,9 +33,16 @@ import {
   Palette,
   Sun,
   Moon,
+  Type,
+  LayoutGrid,
+  List,
+  ImageOff,
 } from "lucide-react";
 import type { Restaurant } from "@/types/database.types";
-import { buildMenuTheme, hexToHsl, hslToHex, THEME_PRESETS } from "@/lib/theme";
+import {
+  buildMenuTheme, hexToHsl, hslToHex, THEME_PRESETS,
+  FONT_PACKS, MENU_LAYOUTS, MENU_HERO_STYLES, MENU_CATEGORY_STYLES,
+} from "@/lib/theme";
 
 /* ─── tiny section-icon helper ─── */
 function SectionIcon({ children }: { children: React.ReactNode }) {
@@ -81,6 +88,10 @@ export default function SettingsPage() {
     currency: "ILS",
     theme_primary: "hsl(28,62%,42%)",
     theme_dark_mode: true,
+    theme_font_pack: "elegant",
+    menu_layout: "grid",
+    menu_hero_style: "default",
+    menu_category_style: "pills",
   });
   const supabase = createClient();
 
@@ -142,6 +153,10 @@ export default function SettingsPage() {
           currency: data.currency ?? "ILS",
           theme_primary: data.theme_primary ?? "hsl(28,62%,42%)",
           theme_dark_mode: data.theme_dark_mode ?? true,
+          theme_font_pack: data.theme_font_pack ?? "elegant",
+          menu_layout: data.menu_layout ?? "grid",
+          menu_hero_style: data.menu_hero_style ?? "default",
+          menu_category_style: data.menu_category_style ?? "pills",
         });
       }
       setLoading(false);
@@ -206,10 +221,17 @@ export default function SettingsPage() {
 
     setRestaurant(result.data);
 
-    // Save theme separately — columns may not be in PostgREST cache yet
+    // Save theme + layout separately — new columns
     await supabase
       .from("restaurants")
-      .update({ theme_primary: form.theme_primary, theme_dark_mode: form.theme_dark_mode })
+      .update({
+        theme_primary: form.theme_primary,
+        theme_dark_mode: form.theme_dark_mode,
+        theme_font_pack: form.theme_font_pack,
+        menu_layout: form.menu_layout,
+        menu_hero_style: form.menu_hero_style,
+        menu_category_style: form.menu_category_style,
+      })
       .eq("id", result.data.id);
 
     setSaved(true);
@@ -680,6 +702,132 @@ export default function SettingsPage() {
 
                 {/* Mini live preview */}
                 <ThemePreview primary={form.theme_primary} dark={form.theme_dark_mode} />
+
+                {/* ── Typographie ── */}
+                <div className="space-y-3 pt-4 border-t border-border/50">
+                  <div className="flex items-center gap-2">
+                    <Type className="h-3.5 w-3.5 text-muted-foreground flex-shrink-0" />
+                    <Label>גופן</Label>
+                  </div>
+                  <div className="grid grid-cols-3 gap-2">
+                    {FONT_PACKS.map((pack) => {
+                      const isActive = form.theme_font_pack === pack.key;
+                      return (
+                        <button
+                          key={pack.key}
+                          type="button"
+                          onClick={() => setForm((f) => ({ ...f, theme_font_pack: pack.key }))}
+                          className="flex flex-col items-center gap-1.5 py-3 px-2 rounded-lg border transition-all text-center"
+                          style={{
+                            borderColor: isActive ? "hsl(var(--gold))" : "hsl(var(--border))",
+                            background: isActive ? "hsl(var(--gold),.08)" : "transparent",
+                            boxShadow: isActive ? "0 0 0 1px hsl(var(--gold),.3)" : "none",
+                          }}
+                        >
+                          <span className="text-base leading-none" style={{ fontFamily: pack.headingFont, color: isActive ? "hsl(var(--gold))" : "hsl(var(--foreground))" }}>
+                            {pack.sample}
+                          </span>
+                          <span className="text-[10px] text-muted-foreground">{pack.label}</span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* ── Layout des cards ── */}
+                <div className="space-y-3 pt-4 border-t border-border/50">
+                  <div className="flex items-center gap-2">
+                    <LayoutGrid className="h-3.5 w-3.5 text-muted-foreground flex-shrink-0" />
+                    <Label>פריסת מנות</Label>
+                  </div>
+                  <div className="grid grid-cols-2 gap-2">
+                    {MENU_LAYOUTS.map((opt) => {
+                      const isActive = form.menu_layout === opt.key;
+                      return (
+                        <button
+                          key={opt.key}
+                          type="button"
+                          onClick={() => setForm((f) => ({ ...f, menu_layout: opt.key }))}
+                          className="flex items-center gap-2.5 py-3 px-3 rounded-lg border transition-all text-start"
+                          style={{
+                            borderColor: isActive ? "hsl(var(--gold))" : "hsl(var(--border))",
+                            background: isActive ? "hsl(var(--gold),.08)" : "transparent",
+                          }}
+                        >
+                          {opt.key === "grid" ? (
+                            <LayoutGrid className="h-4 w-4 flex-shrink-0" style={{ color: isActive ? "hsl(var(--gold))" : "hsl(var(--muted-foreground))" }} />
+                          ) : (
+                            <List className="h-4 w-4 flex-shrink-0" style={{ color: isActive ? "hsl(var(--gold))" : "hsl(var(--muted-foreground))" }} />
+                          )}
+                          <div>
+                            <div className="text-sm font-medium">{opt.label}</div>
+                            <div className="text-[10px] text-muted-foreground mt-0.5 leading-tight">{opt.desc}</div>
+                          </div>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* ── Hero style ── */}
+                <div className="space-y-3 pt-4 border-t border-border/50">
+                  <div className="flex items-center gap-2">
+                    <ImageOff className="h-3.5 w-3.5 text-muted-foreground flex-shrink-0" />
+                    <Label>סגנון כותרת</Label>
+                  </div>
+                  <div className="grid grid-cols-3 gap-2">
+                    {MENU_HERO_STYLES.map((opt) => {
+                      const isActive = form.menu_hero_style === opt.key;
+                      return (
+                        <button
+                          key={opt.key}
+                          type="button"
+                          onClick={() => setForm((f) => ({ ...f, menu_hero_style: opt.key }))}
+                          className="flex flex-col items-center gap-1.5 py-3 px-2 rounded-lg border transition-all text-center"
+                          style={{
+                            borderColor: isActive ? "hsl(var(--gold))" : "hsl(var(--border))",
+                            background: isActive ? "hsl(var(--gold),.08)" : "transparent",
+                          }}
+                        >
+                          <span className="text-sm font-medium" style={{ color: isActive ? "hsl(var(--gold))" : "hsl(var(--foreground))" }}>
+                            {opt.label}
+                          </span>
+                          <span className="text-[10px] text-muted-foreground leading-tight">{opt.desc}</span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* ── Category style ── */}
+                <div className="space-y-3 pt-4 border-t border-border/50">
+                  <div className="flex items-center gap-2">
+                    <Palette className="h-3.5 w-3.5 text-muted-foreground flex-shrink-0" />
+                    <Label>סגנון קטגוריות</Label>
+                  </div>
+                  <div className="grid grid-cols-3 gap-2">
+                    {MENU_CATEGORY_STYLES.map((opt) => {
+                      const isActive = form.menu_category_style === opt.key;
+                      return (
+                        <button
+                          key={opt.key}
+                          type="button"
+                          onClick={() => setForm((f) => ({ ...f, menu_category_style: opt.key }))}
+                          className="flex flex-col items-center gap-1.5 py-3 px-2 rounded-lg border transition-all text-center"
+                          style={{
+                            borderColor: isActive ? "hsl(var(--gold))" : "hsl(var(--border))",
+                            background: isActive ? "hsl(var(--gold),.08)" : "transparent",
+                          }}
+                        >
+                          <span className="text-sm font-medium" style={{ color: isActive ? "hsl(var(--gold))" : "hsl(var(--foreground))" }}>
+                            {opt.label}
+                          </span>
+                          <span className="text-[10px] text-muted-foreground leading-tight">{opt.desc}</span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
               </CardContent>
             </Card>
 
