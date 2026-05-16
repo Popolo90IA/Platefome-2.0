@@ -663,7 +663,7 @@ export function MenuView({ restaurant, categories, dishes, slug }: MenuViewProps
               <section key={category.id} id={`cat-${category.id}`} style={{ scrollMarginTop: 64 }}>
 
                 {/* ── Section rule ── */}
-                <div style={{ margin: "56px auto 24px", ...(catStyle !== "sidebar" ? { maxWidth: 860 } : {}), padding: "0 24px", display: "flex", alignItems: "center", gap: 14 }}>
+                <div style={{ margin: "56px auto 24px", maxWidth: 860, padding: "0 24px", display: "flex", alignItems: "center", gap: 14 }}>
                   <h2 style={{ fontFamily: fontPack.headingFont, fontWeight: 500, fontSize: 32, letterSpacing: "-.02em", color: D.cream, margin: 0, flexShrink: 0, lineHeight: 1 }}>
                     {catName}
                   </h2>
@@ -675,7 +675,7 @@ export function MenuView({ restaurant, categories, dishes, slug }: MenuViewProps
 
                 {/* ── Dish list ── */}
                 <div style={{
-                  ...(catStyle !== "sidebar" ? { maxWidth: 860, margin: "0 auto" } : {}),
+                  maxWidth: 860, margin: "0 auto",
                   padding: "0 24px",
                   ...(menuLayout === "grid"
                     ? { display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 14 }
