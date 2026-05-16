@@ -8,9 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ImageUpload } from "@/components/upload/ImageUpload";
 import { slugify } from "@/lib/utils";
-import { UPLOAD_FOLDERS } from "@/lib/constants";
 import {
   Loader2,
   Save,
@@ -18,12 +16,10 @@ import {
   Eye,
   EyeOff,
   ExternalLink,
-  Sparkles,
   Lock,
   AlertCircle,
   Store,
   Globe,
-  ImageIcon,
   Bell,
   AlertTriangle,
   User,
@@ -42,8 +38,6 @@ type FormState = {
   address: string;
   phone: string;
   email: string;
-  logo_url: string | null;
-  banner_url: string | null;
   languages: string[];
   default_language: string;
   currency: string;
@@ -69,7 +63,6 @@ export default function SettingsPage() {
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [showPreview, setShowPreview] = useState(true);
 
   /* account info */
   const [userEmail, setUserEmail] = useState<string>("");
@@ -88,8 +81,6 @@ export default function SettingsPage() {
     address: "",
     phone: "",
     email: "",
-    logo_url: null as string | null,
-    banner_url: null as string | null,
     languages: ["he"] as string[],
     default_language: "he",
     currency: "ILS",
@@ -149,8 +140,6 @@ export default function SettingsPage() {
           address: data.address ?? "",
           phone: data.phone ?? "",
           email: data.email ?? "",
-          logo_url: data.logo_url,
-          banner_url: data.banner_url,
           languages: data.languages ?? ["he"],
           default_language: data.default_language ?? "he",
           currency: data.currency ?? "ILS",
@@ -193,8 +182,6 @@ export default function SettingsPage() {
       address: form.address || null,
       phone: form.phone || null,
       email: form.email || null,
-      logo_url: form.logo_url,
-      banner_url: form.banner_url,
       languages: form.languages.length > 0 ? form.languages : ["he"],
       default_language: form.languages.includes(form.default_language)
         ? form.default_language
@@ -280,37 +267,20 @@ export default function SettingsPage() {
             <span className="text-gold-gradient">הגדרות המסעדה</span>
           </h1>
           <p className="text-muted-foreground mt-2">
-            נהל את פרטי המסעדה והתצוגה הציבורית
+            נהל את פרטי המסעדה
           </p>
         </div>
-        <div className="flex gap-2">
-          <Button
-            type="button"
-            variant="outline"
-            onClick={() => setShowPreview((v) => !v)}
-            className={showPreview ? "border-[hsl(var(--gold))]/40 text-[hsl(var(--gold-dark))]" : ""}
-          >
-            {showPreview ? (
-              <><EyeOff className="h-4 w-4" />הסתר תצוגה</>
-            ) : (
-              <><Eye className="h-4 w-4" />הצג תצוגה</>
-            )}
-          </Button>
-          {restaurant && (
-            <Link href={`/menu/${restaurant.slug}`} target="_blank">
-              <Button className="hover:opacity-90 text-white" style={{ background: "var(--grad-bronze)" }}>
-                <ExternalLink className="h-4 w-4" />
-                פתח תפריט
-              </Button>
-            </Link>
-          )}
-        </div>
+        {restaurant && (
+          <Link href={`/menu/${restaurant.slug}`} target="_blank">
+            <Button className="hover:opacity-90 text-white" style={{ background: "var(--grad-bronze)" }}>
+              <ExternalLink className="h-4 w-4" />
+              פתח תפריט
+            </Button>
+          </Link>
+        )}
       </div>
 
-      <div className={`grid gap-6 ${showPreview ? "lg:grid-cols-[1fr_380px]" : "grid-cols-1"}`}>
-
-        {/* ═══ LEFT COLUMN — all forms ═══ */}
-        <div className="space-y-6">
+      <div className="max-w-2xl space-y-6">
 
           {/* ── Account info ── */}
           <Card className="shadow-premium">
@@ -556,34 +526,6 @@ export default function SettingsPage() {
               </CardContent>
             </Card>
 
-            {/* ── Images ── */}
-            <Card className="shadow-premium">
-              <CardHeader>
-                <CardTitle className="font-serif-display text-xl flex items-center gap-2.5">
-                  <SectionIcon><ImageIcon className="h-3.5 w-3.5" /></SectionIcon>
-                  תמונות
-                </CardTitle>
-                <p className="text-sm text-muted-foreground pt-1">
-                  הלוגו מופיע עגול · הבאנר מופיע בראש הדף בגודל מלא
-                </p>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                <ImageUpload
-                  label="לוגו"
-                  folder={UPLOAD_FOLDERS.LOGOS}
-                  currentImage={form.logo_url}
-                  onUploadComplete={(url) => setForm((f) => ({ ...f, logo_url: url }))}
-                />
-                <ImageUpload
-                  label="באנר"
-                  folder={UPLOAD_FOLDERS.BANNERS}
-                  currentImage={form.banner_url}
-                  onUploadComplete={(url) => setForm((f) => ({ ...f, banner_url: url }))}
-                  previewMeta={{ logoUrl: form.logo_url, restaurantName: form.name }}
-                />
-              </CardContent>
-            </Card>
-
             {/* ── Menu visibility ── */}
             <Card className="shadow-premium">
               <CardHeader>
@@ -806,158 +748,6 @@ export default function SettingsPage() {
             </CardContent>
           </Card>
 
-        </div>
-
-        {/* ═══ RIGHT COLUMN — live preview ═══ */}
-        {showPreview && (
-          <div className="lg:sticky lg:top-24 lg:self-start space-y-3 h-fit">
-            <div className="flex items-center gap-2 text-sm text-muted-foreground">
-              <Sparkles className="h-4 w-4" style={{ color: "hsl(var(--gold))" }} />
-              <span className="font-medium">תצוגת לקוח בזמן אמת</span>
-            </div>
-            <LivePreview form={form} isActive={isActive} />
-          </div>
-        )}
-
-      </div>
-    </div>
-  );
-}
-
-function LivePreview({
-  form,
-  isActive,
-}: {
-  form: {
-    name: string;
-    description: string;
-    logo_url: string | null;
-    banner_url: string | null;
-    address: string;
-    phone: string;
-  };
-  isActive: boolean;
-}) {
-  return (
-    <div className="rounded-2xl overflow-hidden bg-background border border-border shadow-premium">
-      {/* Mock browser chrome */}
-      <div
-        className="px-4 py-2 flex items-center gap-1.5"
-        style={{ background: "hsl(var(--deep))" }}
-      >
-        <div className="h-2.5 w-2.5 rounded-full bg-red-400/80" />
-        <div className="h-2.5 w-2.5 rounded-full bg-yellow-400/80" />
-        <div className="h-2.5 w-2.5 rounded-full bg-green-400/80" />
-        <div className="flex-1 mx-3">
-          <div
-            className="text-xs text-white/40 rounded px-2 py-0.5 text-center truncate"
-            style={{ background: "hsl(var(--abyss) / .5)" }}
-            dir="ltr"
-          >
-            /menu/{form.name ? slugifySimple(form.name) : "..."}
-          </div>
-        </div>
-        {/* visibility badge */}
-        <span
-          className="text-xs px-2 py-0.5 rounded-full font-medium flex-shrink-0"
-          style={
-            isActive
-              ? { background: "hsl(142 72% 29% / .2)", color: "hsl(142 72% 45%)" }
-              : { background: "hsl(var(--ember) / .15)", color: "hsl(var(--ember))" }
-          }
-        >
-          {isActive ? "פעיל" : "מוסתר"}
-        </span>
-      </div>
-
-      <div className="max-h-[580px] overflow-y-auto scrollbar-thin">
-        {/* Banner */}
-        {form.banner_url ? (
-          <div className="relative w-full overflow-hidden" style={{ background: "hsl(var(--deep))" }}>
-            <div
-              className="absolute inset-0 bg-cover bg-center scale-110 blur-2xl opacity-50"
-              style={{ backgroundImage: `url(${form.banner_url})` }}
-            />
-            <div className="relative flex items-center justify-center max-h-[240px]">
-              <img
-                src={form.banner_url}
-                alt="banner"
-                className="w-full h-auto max-h-[240px] object-contain"
-              />
-            </div>
-            <div className="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent pointer-events-none" />
-          </div>
-        ) : (
-          <div className="h-28 relative overflow-hidden" style={{ background: "hsl(var(--deep))" }}>
-            <div className="absolute inset-0 flex items-center justify-center text-white/30 text-xs">
-              אין באנר
-            </div>
-          </div>
-        )}
-
-        {/* Info card */}
-        <div className="px-4 -mt-10 relative z-10">
-          <div className="bg-card rounded-xl shadow-premium p-4 flex flex-col items-center gap-3 text-center">
-            {form.logo_url ? (
-              <img
-                src={form.logo_url}
-                alt="logo"
-                className="h-18 w-18 rounded-full object-cover ring-4 ring-[hsl(var(--gold))]/30 shadow-premium bg-card"
-                style={{ height: 72, width: 72 }}
-              />
-            ) : (
-              <div
-                className="h-[72px] w-[72px] rounded-full ring-4 ring-[hsl(var(--gold))]/20 flex items-center justify-center"
-                style={{ background: "var(--grad-bronze)" }}
-              >
-                <span className="text-xl font-bold text-white font-serif-display">
-                  {form.name.charAt(0) || "?"}
-                </span>
-              </div>
-            )}
-            <div className="min-w-0 w-full">
-              <h1 className="font-serif-display text-xl font-bold truncate">
-                {form.name || "שם המסעדה"}
-              </h1>
-              <div className="divider-gold w-16 my-2 mx-auto" />
-              {form.description && (
-                <p className="text-xs text-muted-foreground leading-relaxed line-clamp-3">
-                  {form.description}
-                </p>
-              )}
-            </div>
-          </div>
-        </div>
-
-        {/* Mock menu */}
-        <div className="p-4 pt-5">
-          <div className="text-center mb-4">
-            <h2 className="font-serif-display text-lg font-bold">תפריט</h2>
-            <div className="divider-gold w-10 mx-auto mt-1.5" />
-          </div>
-          <div className="space-y-2">
-            {[1, 2].map((i) => (
-              <div key={i} className="flex gap-3 p-3 rounded-lg bg-card border border-border/60">
-                <div className="h-14 w-14 rounded-md bg-secondary flex-shrink-0" />
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-baseline justify-between gap-2 mb-1">
-                    <div className="h-3 bg-secondary rounded w-20" />
-                    <div className="h-3 rounded w-8" style={{ background: "hsl(var(--gold) / .3)" }} />
-                  </div>
-                  <div className="h-2 bg-secondary/60 rounded w-full mb-1" />
-                  <div className="h-2 bg-secondary/60 rounded w-3/4" />
-                </div>
-              </div>
-            ))}
-          </div>
-
-          {(form.address || form.phone) && (
-            <div className="mt-5 pt-4 border-t border-border/60 text-xs text-muted-foreground space-y-1 text-center">
-              {form.address && <div>{form.address}</div>}
-              {form.phone && <div dir="ltr">{form.phone}</div>}
-            </div>
-          )}
-        </div>
       </div>
     </div>
   );
