@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import Image from "next/image";
 import { UtensilsCrossed, X, Share2 } from "lucide-react";
 import { DishModelViewer } from "./DishModelViewer";
@@ -10,6 +10,16 @@ import { LANGUAGE_META, pickLocalized, t, formatCurrency } from "@/lib/i18n";
 import { buildMenuTheme, getFontPack } from "@/lib/theme";
 import type { MenuLayout, MenuHeroStyle, MenuCategoryStyle } from "@/lib/theme";
 import type { Restaurant, Category, Dish, Language } from "@/types/database.types";
+
+/* ─── Preview override message type ────────────────────── */
+export interface PreviewOverride {
+  theme_primary?: string;
+  theme_dark_mode?: boolean;
+  theme_font_pack?: string;
+  menu_layout?: string;
+  menu_hero_style?: string;
+  menu_category_style?: string;
+}
 
 /* ─── CSS variable aliases ──────────────────────────────── */
 const D = {
@@ -75,6 +85,25 @@ export function MenuView({ restaurant, categories, dishes, slug }: MenuViewProps
   const [search, setSearch] = useState("");
   const dir = LANGUAGE_META[lang].dir;
 
+  /* ── Preview mode: listen for postMessage overrides ── */
+  const [previewOverride, setPreviewOverride] = useState<PreviewOverride>({});
+  const isPreview = useRef(false);
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const params = new URLSearchParams(window.location.search);
+    isPreview.current = params.get("preview") === "1";
+    if (!isPreview.current) return;
+    const handler = (e: MessageEvent) => {
+      if (e.data && e.data.__plateform_preview) {
+        setPreviewOverride(e.data.__plateform_preview as PreviewOverride);
+      }
+    };
+    window.addEventListener("message", handler);
+    /* Signal readiness to parent */
+    window.parent.postMessage({ __plateform_ready: true }, "*");
+    return () => window.removeEventListener("message", handler);
+  }, []);
+
   /* Persist language preference */
   useEffect(() => {
     try {
@@ -113,17 +142,17 @@ export function MenuView({ restaurant, categories, dishes, slug }: MenuViewProps
   const currency = restaurant.currency || "ILS";
   const restaurantName = restaurant.name;
 
-  /* Theme tokens */
+  /* Theme tokens — preview overrides win over DB values */
   const themeVars = buildMenuTheme(
-    restaurant.theme_primary,
-    restaurant.theme_dark_mode
+    previewOverride.theme_primary ?? restaurant.theme_primary,
+    previewOverride.theme_dark_mode ?? restaurant.theme_dark_mode
   ) as React.CSSProperties;
 
-  /* Layout options */
-  const fontPack = getFontPack(restaurant.theme_font_pack);
-  const menuLayout = (restaurant.menu_layout ?? "grid") as MenuLayout;
-  const heroStyle = (restaurant.menu_hero_style ?? "default") as MenuHeroStyle;
-  const catStyle = (restaurant.menu_category_style ?? "pills") as MenuCategoryStyle;
+  /* Layout options — preview overrides win */
+  const fontPack = getFontPack(previewOverride.theme_font_pack ?? restaurant.theme_font_pack);
+  const menuLayout = ((previewOverride.menu_layout ?? restaurant.menu_layout) ?? "grid") as MenuLayout;
+  const heroStyle = ((previewOverride.menu_hero_style ?? restaurant.menu_hero_style) ?? "default") as MenuHeroStyle;
+  const catStyle = ((previewOverride.menu_category_style ?? restaurant.menu_category_style) ?? "pills") as MenuCategoryStyle;
 
   /* Search filter */
   const searchTrimmed = search.trim().toLowerCase();
