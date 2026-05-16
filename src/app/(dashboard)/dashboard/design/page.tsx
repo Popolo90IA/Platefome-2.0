@@ -22,6 +22,7 @@ import {
   ToggleLeft,
   ToggleRight,
   Smartphone,
+  Tablet,
   Monitor,
 } from "lucide-react";
 import {
@@ -58,7 +59,7 @@ export default function DesignPage() {
   const [saved, setSaved] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [tab, setTab] = useState<DesignTab>("color");
-  const [previewMode, setPreviewMode] = useState<"mobile" | "desktop">("mobile");
+  const [previewMode, setPreviewMode] = useState<"mobile" | "tablet" | "desktop">("mobile");
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const iframeReady = useRef(false);
 
@@ -466,24 +467,18 @@ export default function DesignPage() {
             <span className="font-medium text-xs">תצוגה חיה — השינויים מופיעים מיד</span>
           </div>
           <div className="flex gap-1 p-1 rounded-lg" style={{ background: "hsl(var(--secondary))" }}>
-            <button
-              type="button"
-              onClick={() => setPreviewMode("mobile")}
-              className="p-1.5 rounded-md transition-colors"
-              style={previewMode === "mobile" ? { background: "var(--grad-bronze)", color: "white" } : { color: "hsl(var(--muted-foreground))" }}
-              title="מובייל"
-            >
-              <Smartphone className="h-3.5 w-3.5" />
-            </button>
-            <button
-              type="button"
-              onClick={() => setPreviewMode("desktop")}
-              className="p-1.5 rounded-md transition-colors"
-              style={previewMode === "desktop" ? { background: "var(--grad-bronze)", color: "white" } : { color: "hsl(var(--muted-foreground))" }}
-              title="דסקטופ"
-            >
-              <Monitor className="h-3.5 w-3.5" />
-            </button>
+            {(["mobile", "tablet", "desktop"] as const).map((mode) => (
+              <button
+                key={mode}
+                type="button"
+                onClick={() => setPreviewMode(mode)}
+                className="p-1.5 rounded-md transition-colors"
+                style={previewMode === mode ? { background: "var(--grad-bronze)", color: "white" } : { color: "hsl(var(--muted-foreground))" }}
+                title={mode === "mobile" ? "טלפון (390px)" : mode === "tablet" ? "טאבלט (768px)" : "דסקטופ"}
+              >
+                {mode === "mobile" ? <Smartphone className="h-3.5 w-3.5" /> : mode === "tablet" ? <Tablet className="h-3.5 w-3.5" /> : <Monitor className="h-3.5 w-3.5" />}
+              </button>
+            ))}
           </div>
         </div>
 
@@ -493,43 +488,72 @@ export default function DesignPage() {
             <div className="flex items-center justify-center h-full text-muted-foreground text-sm">
               <Loader2 className="h-5 w-5 animate-spin" />
             </div>
-          ) : (
+          ) : previewMode === "desktop" ? (
+            /* Desktop — full width, no scale */
             <div
-              className="relative overflow-hidden shadow-premium transition-all duration-300"
-              style={{
-                width: previewMode === "mobile" ? 375 : "100%",
-                height: previewMode === "mobile" ? 720 : "100%",
-                borderRadius: previewMode === "mobile" ? 32 : 12,
-                border: previewMode === "mobile"
-                  ? "8px solid hsl(var(--line))"
-                  : "1px solid hsl(var(--line))",
-                flexShrink: 0,
-              }}
+              className="relative overflow-hidden shadow-premium w-full h-full"
+              style={{ borderRadius: 12, border: "1px solid hsl(var(--line))" }}
             >
-              {previewMode === "mobile" && (
-                <div
-                  className="absolute top-2 left-1/2 -translate-x-1/2 z-10 rounded-full"
-                  style={{ width: 80, height: 5, background: "hsl(var(--line))" }}
-                />
-              )}
               <iframe
                 ref={iframeRef}
                 src={menuUrl}
                 className="w-full h-full border-0"
-                style={{ borderRadius: previewMode === "mobile" ? 26 : 10 }}
+                style={{ borderRadius: 10 }}
                 title="תצוגה מקדימה חיה"
                 onLoad={() => {
-                  /* If iframe loaded but ready signal hasn't arrived yet, send after short delay */
                   setTimeout(() => {
-                    if (!iframeReady.current) {
-                      iframeReady.current = true;
-                      sendPreview(form);
-                    }
+                    if (!iframeReady.current) { iframeReady.current = true; sendPreview(form); }
                   }, 500);
                 }}
               />
             </div>
-          )}
+          ) : (() => {
+            /* Mobile (390×844) or Tablet (768×1024) — render at real size, scale down to fit */
+            const iW = previewMode === "mobile" ? 390 : 768;
+            const iH = previewMode === "mobile" ? 844 : 1024;
+            const borderW = previewMode === "mobile" ? 10 : 6;
+            const radius = previewMode === "mobile" ? 44 : 20;
+            /* Available height in the panel ≈ viewport - 80px header - 44px toolbar - 16px gap */
+            const availH = typeof window !== "undefined" ? window.innerHeight - 80 - 44 - 16 : 600;
+            /* Scale to fit height, but also cap by available width (right panel ≈ viewport - 400px - 20px gap - 32px margin) */
+            const availW = typeof window !== "undefined" ? window.innerWidth - 452 : 600;
+            const scale = Math.min((availH - borderW * 2) / iH, (availW - borderW * 2) / iW, 1);
+            const frameW = iW + borderW * 2;
+            const frameH = iH + borderW * 2;
+            return (
+              <div
+                className="relative shadow-premium transition-all duration-300 flex-shrink-0"
+                style={{
+                  width: frameW * scale,
+                  height: frameH * scale,
+                  borderRadius: radius * scale,
+                  border: `${borderW * scale}px solid hsl(var(--line))`,
+                  overflow: "hidden",
+                }}
+              >
+                {previewMode === "mobile" && (
+                  <div
+                    className="absolute z-10 rounded-full"
+                    style={{ width: 90 * scale, height: 6 * scale, top: 10 * scale, left: "50%", transform: "translateX(-50%)", background: "hsl(var(--line))" }}
+                  />
+                )}
+                {/* Inner wrapper: render at real device size, then scale */}
+                <div style={{ width: iW, height: iH, transform: `scale(${scale})`, transformOrigin: "top left", position: "absolute", top: 0, left: 0 }}>
+                  <iframe
+                    ref={iframeRef}
+                    src={menuUrl}
+                    style={{ width: iW, height: iH, border: "none", borderRadius: (radius - borderW) }}
+                    title="תצוגה מקדימה חיה"
+                    onLoad={() => {
+                      setTimeout(() => {
+                        if (!iframeReady.current) { iframeReady.current = true; sendPreview(form); }
+                      }, 500);
+                    }}
+                  />
+                </div>
+              </div>
+            );
+          })()}
         </div>
       </div>
 
