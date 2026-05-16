@@ -317,9 +317,9 @@ export function MenuView({ restaurant, categories, dishes, slug }: MenuViewProps
         <div
           style={{
             position: "relative", zIndex: 2, height: "100%",
-            maxWidth: 720, margin: "0 auto", padding: heroStyle === "minimal" ? "0 24px" : "0 24px 36px",
+            maxWidth: 720, margin: "0 auto", padding: heroStyle === "minimal" ? "72px 24px 0" : "0 24px 36px",
             display: "flex", flexDirection: "column",
-            justifyContent: heroStyle === "centered" ? "center" : heroStyle === "minimal" ? "center" : "flex-end",
+            justifyContent: heroStyle === "centered" ? "center" : heroStyle === "minimal" ? "flex-start" : "flex-end",
             alignItems: heroStyle === "centered" ? "center" : undefined,
             textAlign: heroStyle === "centered" ? "center" : undefined,
           }}
