@@ -191,7 +191,7 @@ export function MenuView({ restaurant, categories, dishes, slug }: MenuViewProps
       <header
         style={{
           position: "relative",
-          height: heroStyle === "minimal" ? 160 : 360,
+          height: heroStyle === "minimal" ? 200 : 360,
           overflow: "hidden",
           borderBottom: `1px solid ${D.line}`,
           background: heroStyle === "minimal" ? D.section : undefined,
@@ -526,9 +526,9 @@ export function MenuView({ restaurant, categories, dishes, slug }: MenuViewProps
               width: 160,
               flexShrink: 0,
               position: "sticky",
-              top: 0,
+              top: heroStyle === "minimal" ? 200 : 360,
               alignSelf: "flex-start",
-              height: "100vh",
+              height: `calc(100vh - ${heroStyle === "minimal" ? 200 : 360}px)`,
               overflowY: "auto",
               borderInlineEnd: `1px solid ${D.line}`,
               padding: "24px 0",
@@ -634,7 +634,7 @@ export function MenuView({ restaurant, categories, dishes, slug }: MenuViewProps
               <section key={category.id} id={`cat-${category.id}`} style={{ scrollMarginTop: 64 }}>
 
                 {/* ── Section rule ── */}
-                <div style={{ margin: "56px auto 24px", maxWidth: 860, padding: "0 24px", display: "flex", alignItems: "center", gap: 14 }}>
+                <div style={{ margin: "56px auto 24px", ...(catStyle !== "sidebar" ? { maxWidth: 860 } : {}), padding: "0 24px", display: "flex", alignItems: "center", gap: 14 }}>
                   <h2 style={{ fontFamily: fontPack.headingFont, fontWeight: 500, fontSize: 32, letterSpacing: "-.02em", color: D.cream, margin: 0, flexShrink: 0, lineHeight: 1 }}>
                     {catName}
                   </h2>
@@ -646,7 +646,8 @@ export function MenuView({ restaurant, categories, dishes, slug }: MenuViewProps
 
                 {/* ── Dish list ── */}
                 <div style={{
-                  maxWidth: 860, margin: "0 auto", padding: "0 24px",
+                  ...(catStyle !== "sidebar" ? { maxWidth: 860, margin: "0 auto" } : {}),
+                  padding: "0 24px",
                   ...(menuLayout === "grid"
                     ? { display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 14 }
                     : { display: "flex", flexDirection: "column", gap: 14 }),
@@ -904,10 +905,10 @@ function DishCard({
           </div>
         </div>
 
-        {/* Prix — badge à droite (row) ou en bas à droite (grid) */}
+        {/* Prix — badge à droite (row) ou en bas à gauche (grid RTL = fin de ligne) */}
         <div style={{
           flexShrink: 0, alignSelf: isGrid ? undefined : "center",
-          ...(isGrid ? { padding: "0 12px 12px", display: "flex", justifyContent: "flex-end" } : {}),
+          ...(isGrid ? { padding: "0 12px 12px", display: "flex", justifyContent: "flex-start", direction: "ltr" } : {}),
         }}>
           <span style={{
             display: "inline-block",
