@@ -24,6 +24,7 @@ import {
   Smartphone,
   Tablet,
   Monitor,
+  RotateCcw,
 } from "lucide-react";
 import {
   hexToHsl,
@@ -60,8 +61,24 @@ export default function DesignPage() {
   const [error, setError] = useState<string | null>(null);
   const [tab, setTab] = useState<DesignTab>("color");
   const [previewMode, setPreviewMode] = useState<"mobile" | "tablet" | "desktop">("mobile");
+  const [tabletLandscape, setTabletLandscape] = useState(false);
+  const [panelSize, setPanelSize] = useState({ w: 700, h: 580 });
+  const rightPanelRef = useRef<HTMLDivElement>(null);
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const iframeReady = useRef(false);
+
+  /* Measure the right panel's real pixel size after mount */
+  useEffect(() => {
+    const measure = () => {
+      if (rightPanelRef.current) {
+        const rect = rightPanelRef.current.getBoundingClientRect();
+        setPanelSize({ w: rect.width, h: rect.height });
+      }
+    };
+    measure();
+    window.addEventListener("resize", measure);
+    return () => window.removeEventListener("resize", measure);
+  }, []);
 
   const [form, setForm] = useState<DesignForm>({
     theme_primary: "hsl(28,62%,42%)",
@@ -456,14 +473,11 @@ export default function DesignPage() {
       </div>
 
       {/* Right — live iframe preview */}
-      <div className="flex flex-col gap-3" style={{ height: "calc(100vh - 80px)", position: "sticky", top: 0 }}>
+      <div ref={rightPanelRef} className="flex flex-col gap-3" style={{ height: "calc(100vh - 80px)", position: "sticky", top: 0 }}>
         {/* Preview toolbar */}
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between flex-shrink-0">
           <div className="flex items-center gap-2 text-sm text-muted-foreground">
-            <span
-              className="inline-block h-2 w-2 rounded-full animate-pulse"
-              style={{ background: "hsl(var(--gold))" }}
-            />
+            <span className="inline-block h-2 w-2 rounded-full animate-pulse" style={{ background: "hsl(var(--gold))" }} />
             <span className="font-medium text-xs">תצוגה חיה — השינויים מופיעים מיד</span>
           </div>
           <div className="flex gap-1 p-1 rounded-lg" style={{ background: "hsl(var(--secondary))" }}>
@@ -474,81 +488,82 @@ export default function DesignPage() {
                 onClick={() => setPreviewMode(mode)}
                 className="p-1.5 rounded-md transition-colors"
                 style={previewMode === mode ? { background: "var(--grad-bronze)", color: "white" } : { color: "hsl(var(--muted-foreground))" }}
-                title={mode === "mobile" ? "טלפון (390px)" : mode === "tablet" ? "טאבלט (768px)" : "דסקטופ"}
+                title={mode === "mobile" ? "טלפון (390×844)" : mode === "tablet" ? "טאבלט (768×1024)" : "דסקטופ"}
               >
                 {mode === "mobile" ? <Smartphone className="h-3.5 w-3.5" /> : mode === "tablet" ? <Tablet className="h-3.5 w-3.5" /> : <Monitor className="h-3.5 w-3.5" />}
               </button>
             ))}
+            {/* Rotation button — only for tablet */}
+            {previewMode === "tablet" && (
+              <button
+                type="button"
+                onClick={() => setTabletLandscape((v) => !v)}
+                className="p-1.5 rounded-md transition-colors"
+                style={{ color: "hsl(var(--muted-foreground))" }}
+                title={tabletLandscape ? "עבור לפורטרט" : "עבור לנוף"}
+              >
+                <RotateCcw className="h-3.5 w-3.5" style={{ transform: tabletLandscape ? "rotate(90deg)" : "none", transition: "transform .3s" }} />
+              </button>
+            )}
           </div>
         </div>
 
         {/* Frame container */}
-        <div className="flex-1 flex items-start justify-center overflow-hidden">
+        <div className="flex-1 flex items-center justify-center overflow-hidden">
           {!menuUrl ? (
             <div className="flex items-center justify-center h-full text-muted-foreground text-sm">
               <Loader2 className="h-5 w-5 animate-spin" />
             </div>
           ) : previewMode === "desktop" ? (
             /* Desktop — full width, no scale */
-            <div
-              className="relative overflow-hidden shadow-premium w-full h-full"
-              style={{ borderRadius: 12, border: "1px solid hsl(var(--line))" }}
-            >
+            <div className="relative overflow-hidden shadow-premium w-full h-full" style={{ borderRadius: 12, border: "1px solid hsl(var(--line))" }}>
               <iframe
                 ref={iframeRef}
                 src={menuUrl}
                 className="w-full h-full border-0"
                 style={{ borderRadius: 10 }}
                 title="תצוגה מקדימה חיה"
-                onLoad={() => {
-                  setTimeout(() => {
-                    if (!iframeReady.current) { iframeReady.current = true; sendPreview(form); }
-                  }, 500);
-                }}
+                onLoad={() => { setTimeout(() => { if (!iframeReady.current) { iframeReady.current = true; sendPreview(form); } }, 500); }}
               />
             </div>
           ) : (() => {
-            /* Mobile (390×844) or Tablet (768×1024) — render at real size, scale down to fit */
-            const iW = previewMode === "mobile" ? 390 : 768;
-            const iH = previewMode === "mobile" ? 844 : 1024;
-            const borderW = previewMode === "mobile" ? 10 : 6;
-            const radius = previewMode === "mobile" ? 44 : 20;
-            /* Available height in the panel ≈ viewport - 80px header - 44px toolbar - 16px gap */
-            const availH = typeof window !== "undefined" ? window.innerHeight - 80 - 44 - 16 : 600;
-            /* Scale to fit height, but also cap by available width (right panel ≈ viewport - 400px - 20px gap - 32px margin) */
-            const availW = typeof window !== "undefined" ? window.innerWidth - 452 : 600;
+            /* Real device dimensions */
+            const portrait = previewMode === "mobile"
+              ? { w: 390, h: 844 }
+              : tabletLandscape ? { w: 1024, h: 768 } : { w: 768, h: 1024 };
+            const iW = portrait.w;
+            const iH = portrait.h;
+            const borderW = previewMode === "mobile" ? 10 : 8;
+            const radius = previewMode === "mobile" ? 44 : 16;
+            /* Available space from measured panel — subtract toolbar (~44px) and gap (12px) */
+            const availW = Math.max(panelSize.w - 4, 100);
+            const availH = Math.max(panelSize.h - 56, 100);
             const scale = Math.min((availH - borderW * 2) / iH, (availW - borderW * 2) / iW, 1);
-            const frameW = iW + borderW * 2;
-            const frameH = iH + borderW * 2;
+            const frameW = (iW + borderW * 2) * scale;
+            const frameH = (iH + borderW * 2) * scale;
             return (
               <div
-                className="relative shadow-premium transition-all duration-300 flex-shrink-0"
+                className="relative shadow-premium flex-shrink-0"
                 style={{
-                  width: frameW * scale,
-                  height: frameH * scale,
+                  width: frameW,
+                  height: frameH,
                   borderRadius: radius * scale,
                   border: `${borderW * scale}px solid hsl(var(--line))`,
                   overflow: "hidden",
+                  transition: "width .3s, height .3s, border-radius .3s",
                 }}
               >
                 {previewMode === "mobile" && (
-                  <div
-                    className="absolute z-10 rounded-full"
-                    style={{ width: 90 * scale, height: 6 * scale, top: 10 * scale, left: "50%", transform: "translateX(-50%)", background: "hsl(var(--line))" }}
-                  />
+                  <div className="absolute z-10 rounded-full" style={{ width: 90 * scale, height: 6 * scale, top: 10 * scale, left: "50%", transform: "translateX(-50%)", background: "hsl(var(--line))" }} />
                 )}
-                {/* Inner wrapper: render at real device size, then scale */}
+                {/* Render at real device size, then scale down */}
                 <div style={{ width: iW, height: iH, transform: `scale(${scale})`, transformOrigin: "top left", position: "absolute", top: 0, left: 0 }}>
                   <iframe
                     ref={iframeRef}
                     src={menuUrl}
-                    style={{ width: iW, height: iH, border: "none", borderRadius: (radius - borderW) }}
+                    style={{ width: iW, height: iH, border: "none", borderRadius: Math.max(radius - borderW, 0) }}
                     title="תצוגה מקדימה חיה"
-                    onLoad={() => {
-                      setTimeout(() => {
-                        if (!iframeReady.current) { iframeReady.current = true; sendPreview(form); }
-                      }, 500);
-                    }}
+                    onLoad={() => { setTimeout(() => { if (!iframeReady.current) { iframeReady.current = true; sendPreview(form); } }, 500); }}
                   />
                 </div>
               </div>
