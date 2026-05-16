@@ -395,9 +395,10 @@ export function MenuView({ restaurant, categories, dishes, slug }: MenuViewProps
       </header>
 
       {/* ══════════════════════════════════════════════
-          STICKY CATEGORY NAV
+          STICKY CATEGORY NAV  (pills / underline)
+          Hidden when catStyle === "sidebar" — sidebar renders inline
           ══════════════════════════════════════════════ */}
-      {categories.length > 0 && (
+      {categories.length > 0 && catStyle !== "sidebar" && (
         <nav
           style={{
             position: "sticky", top: 0, zIndex: 20,
@@ -516,7 +517,96 @@ export function MenuView({ restaurant, categories, dishes, slug }: MenuViewProps
       {/* ══════════════════════════════════════════════
           MENU SECTIONS
           ══════════════════════════════════════════════ */}
-      <main>
+      <main style={catStyle === "sidebar" ? { display: "flex", maxWidth: 860, margin: "0 auto" } : undefined}>
+
+        {/* ── Sidebar category nav ── */}
+        {catStyle === "sidebar" && categories.length > 0 && (
+          <nav
+            style={{
+              width: 160,
+              flexShrink: 0,
+              position: "sticky",
+              top: 0,
+              alignSelf: "flex-start",
+              height: "100vh",
+              overflowY: "auto",
+              borderInlineEnd: `1px solid ${D.line}`,
+              padding: "24px 0",
+              scrollbarWidth: "none",
+            }}
+          >
+            {/* Search inside sidebar */}
+            <div style={{ padding: "0 12px 16px", position: "relative" }}>
+              <svg
+                aria-hidden
+                width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
+                style={{ position: "absolute", top: "50%", insetInlineStart: 22, transform: "translateY(-50%)", color: D.textDim, pointerEvents: "none" }}
+              >
+                <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+              </svg>
+              <input
+                type="search"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                placeholder="חיפוש"
+                dir={dir}
+                style={{
+                  width: "100%",
+                  paddingInlineStart: 28,
+                  paddingInlineEnd: 8,
+                  paddingTop: 7,
+                  paddingBottom: 7,
+                  borderRadius: 8,
+                  background: D.surface,
+                  border: `1px solid ${D.line}`,
+                  color: D.cream,
+                  fontFamily: "'DM Sans', sans-serif",
+                  fontSize: 12,
+                  outline: "none",
+                  boxSizing: "border-box",
+                }}
+              />
+            </div>
+            {categories.map((cat) => {
+              const catName = pickLocalized(cat as unknown as Record<string, unknown>, "name", lang) || cat.name;
+              const isActive = !isSearching && activeCategory === cat.id;
+              return (
+                <button
+                  key={cat.id}
+                  type="button"
+                  onClick={() => { setSearch(""); scrollToCategory(cat.id); }}
+                  style={{
+                    display: "block",
+                    width: "100%",
+                    textAlign: "start",
+                    padding: "9px 16px",
+                    paddingInlineStart: 13,
+                    background: isActive ? `${D.gold}18` : "transparent",
+                    borderTop: "none",
+                    borderBottom: "none",
+                    borderInlineEnd: "none",
+                    borderInlineStart: `3px solid ${isActive ? D.gold : "transparent"}`,
+                    color: isActive ? D.gold : D.textDim,
+                    fontFamily: fontPack.bodyFont,
+                    fontSize: 13,
+                    fontWeight: isActive ? 600 : 400,
+                    cursor: "pointer",
+                    transition: "all .15s",
+                    whiteSpace: "nowrap",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                  }}
+                >
+                  {catName}
+                </button>
+              );
+            })}
+          </nav>
+        )}
+
+        {/* ── Main content area ── */}
+        <div style={catStyle === "sidebar" ? { flex: 1, minWidth: 0 } : undefined}>
+
         {isSearching && filteredDishes.length === 0 ? (
           <div style={{ textAlign: "center", padding: "100px 24px" }}>
             <UtensilsCrossed style={{ width: 44, height: 44, color: D.gold, opacity: 0.22, margin: "0 auto 16px" }} />
@@ -555,7 +645,12 @@ export function MenuView({ restaurant, categories, dishes, slug }: MenuViewProps
                 </div>
 
                 {/* ── Dish list ── */}
-                <div style={{ maxWidth: 860, margin: "0 auto", padding: "0 24px", display: "flex", flexDirection: "column", gap: 14 }}>
+                <div style={{
+                  maxWidth: 860, margin: "0 auto", padding: "0 24px",
+                  ...(menuLayout === "grid"
+                    ? { display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 14 }
+                    : { display: "flex", flexDirection: "column", gap: 14 }),
+                }}>
                   {catDishes.length === 0 ? (
                     <p style={{ color: D.textDim, fontSize: 13, paddingInlineStart: 4, fontFamily: fontPack.bodyFont }}>{t(lang, "no_dishes_in_cat")}</p>
                   ) : (
@@ -585,6 +680,8 @@ export function MenuView({ restaurant, categories, dishes, slug }: MenuViewProps
 
         {/* Bottom padding */}
         <div style={{ height: 80 }} />
+
+        </div>{/* end main content area */}
       </main>
 
       {/* ══════════════════════════════════════════════
@@ -669,6 +766,9 @@ function DishCard({
     setShow360(true);
   };
 
+  const isGrid = menuLayout === "grid";
+  const isList = menuLayout === "list";
+
   return (
     <>
       <article
@@ -681,30 +781,31 @@ function DishCard({
         onKeyDown={(e) => e.key === "Enter" && openModal()}
         style={{
           display: "flex",
-          flexDirection: "row",
-          direction: "ltr",
-          gap: menuLayout === "list" ? 12 : 16,
+          flexDirection: isGrid ? "column" : "row",
+          direction: isGrid ? undefined : "ltr",
+          gap: isList ? 12 : 16,
           background: hovered ? D.surface : D.card,
           border: `1px solid ${hovered ? D.line2 : D.line}`,
           borderRadius: 14,
-          padding: menuLayout === "list" ? "10px 14px" : 14,
+          padding: isList ? "10px 14px" : isGrid ? 0 : 14,
           cursor: "pointer",
           transition: "border-color .25s, background .25s",
           position: "relative",
           outline: "none",
           opacity: soldout ? 0.62 : 1,
-          alignItems: "center",
+          alignItems: isGrid ? undefined : "center",
+          overflow: isGrid ? "hidden" : undefined,
         }}
       >
-        {/* Media column — masqué en mode liste */}
-        {menuLayout !== "list" && (
+        {/* Media — top full-width in grid, left column in row, hidden in list */}
+        {!isList && (
           <div
             style={{
               position: "relative",
-              borderRadius: 10,
+              borderRadius: isGrid ? 0 : 10,
               overflow: "hidden",
-              width: 90,
-              height: 90,
+              width: isGrid ? "100%" : 90,
+              height: isGrid ? 140 : 90,
               flexShrink: 0,
               background: dish.image_url ? undefined : placeholderGradient,
             }}
@@ -756,14 +857,14 @@ function DishCard({
           </div>
         )}
 
-        {/* Info column — milieu, flex-1 */}
-        <div style={{ flex: 1, minWidth: 0, direction: "rtl" }}>
-          <h3 style={{ fontFamily: headingFont, fontWeight: 600, fontSize: menuLayout === "list" ? 16 : 19, lineHeight: 1.15, color: D.cream, margin: "0 0 4px" }}>
+        {/* Info column — flex-1 in row mode, padded in grid mode */}
+        <div style={{ flex: 1, minWidth: 0, direction: "rtl", padding: isGrid ? "12px 12px 0" : undefined }}>
+          <h3 style={{ fontFamily: headingFont, fontWeight: 600, fontSize: isList ? 16 : isGrid ? 16 : 19, lineHeight: 1.15, color: D.cream, margin: "0 0 4px" }}>
             {name}
           </h3>
 
-          {desc && menuLayout !== "list" && (
-            <p style={{ fontFamily: bodyFont, fontSize: 13, lineHeight: 1.55, color: D.textDim, margin: "0 0 8px", display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}>
+          {desc && !isList && (
+            <p style={{ fontFamily: bodyFont, fontSize: 13, lineHeight: 1.55, color: D.textDim, margin: "0 0 8px", display: "-webkit-box", WebkitLineClamp: isGrid ? 2 : 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}>
               {desc}
             </p>
           )}
@@ -803,14 +904,19 @@ function DishCard({
           </div>
         </div>
 
-        {/* Prix — badge à droite */}
+        {/* Prix — badge à droite (row) ou en bas à droite (grid) */}
         <div style={{
-          flexShrink: 0, alignSelf: "center",
-          fontFamily: "'DM Mono', monospace", fontSize: 13.5, color: D.cream,
-          background: D.surface, borderRadius: 8, padding: "6px 12px",
-          border: `1px solid ${D.line}`, letterSpacing: ".02em",
+          flexShrink: 0, alignSelf: isGrid ? undefined : "center",
+          ...(isGrid ? { padding: "0 12px 12px", display: "flex", justifyContent: "flex-end" } : {}),
         }}>
-          {formatCurrency(Number(dish.price), currency, lang)}
+          <span style={{
+            display: "inline-block",
+            fontFamily: "'DM Mono', monospace", fontSize: isGrid ? 13 : 13.5, color: D.cream,
+            background: D.surface, borderRadius: 8, padding: "5px 10px",
+            border: `1px solid ${D.line}`, letterSpacing: ".02em",
+          }}>
+            {formatCurrency(Number(dish.price), currency, lang)}
+          </span>
         </div>
       </article>
 
