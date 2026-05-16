@@ -15,6 +15,7 @@ import {
   BarChart3,
   Shield,
   Eye,
+  Palette,
 } from "lucide-react";
 import { LogoWordmark } from "@/components/brand";
 
@@ -30,6 +31,7 @@ const navItems = [
   { href: "/dashboard/analytics", label: "סטטיסטיקות", labelEn: "Analytics", icon: BarChart3 },
   { href: "/dashboard/qrcode", label: "QR קוד", labelEn: "QR Code", icon: QrCode },
   { href: "/dashboard/preview", label: "תצוגה מקדימה", labelEn: "Preview", icon: Eye },
+  { href: "/dashboard/design", label: "עיצוב", labelEn: "Design", icon: Palette },
   { href: "/dashboard/settings", label: "הגדרות", labelEn: "Settings", icon: Settings },
 ];
 
