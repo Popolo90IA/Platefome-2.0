@@ -11,6 +11,14 @@ const securityHeaders = [
   },
 ];
 
+/* Headers pour les pages menu — autorise l'iframe depuis la même origine */
+const menuHeaders = [
+  { key: "X-Content-Type-Options", value: "nosniff" },
+  { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+  { key: "X-DNS-Prefetch-Control", value: "on" },
+  { key: "Content-Security-Policy", value: "frame-ancestors 'self'" },
+];
+
 const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
@@ -24,7 +32,11 @@ const nextConfig: NextConfig = {
   async headers() {
     return [
       {
-        source: "/(.*)",
+        source: "/menu/(.*)",
+        headers: menuHeaders,
+      },
+      {
+        source: "/((?!menu).*)",
         headers: securityHeaders,
       },
       {
