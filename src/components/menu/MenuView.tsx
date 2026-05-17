@@ -399,20 +399,22 @@ export function MenuView({ restaurant, categories, dishes, slug }: MenuViewProps
             </div>
           </div>
 
-          {/* Restaurant name as h1 */}
-          <h1
-            style={{
-              fontFamily: fontPack.headingFont,
-              fontWeight: 500,
-              fontSize: heroStyle === "minimal" ? "clamp(28px, 5vw, 42px)" : "clamp(48px, 8vw, 72px)",
-              lineHeight: .95,
-              letterSpacing: "-.02em",
-              color: heroStyle === "minimal" ? D.text : D.cream,
-              margin: "0 0 12px",
-            }}
-          >
-            {restaurantName}
-          </h1>
+          {/* Restaurant name as h1 — only inside hero for minimal/centered */}
+          {(heroStyle === "minimal" || heroStyle === "centered") && (
+            <h1
+              style={{
+                fontFamily: fontPack.headingFont,
+                fontWeight: 500,
+                fontSize: heroStyle === "minimal" ? "clamp(28px, 5vw, 42px)" : "clamp(48px, 8vw, 72px)",
+                lineHeight: .95,
+                letterSpacing: "-.02em",
+                color: D.text,
+                margin: "0 0 12px",
+              }}
+            >
+              {restaurantName}
+            </h1>
+          )}
 
           {/* Meta row */}
           <div style={{ display: "flex", gap: 18, flexWrap: "wrap", fontFamily: "'DM Mono', monospace", fontSize: "10.5px", letterSpacing: ".18em", textTransform: "uppercase", color: D.textDim, justifyContent: heroStyle === "centered" ? "center" : undefined }}>
@@ -431,6 +433,25 @@ export function MenuView({ restaurant, categories, dishes, slug }: MenuViewProps
           </div>
         </div>
       </header>
+
+      {/* Nom du restaurant sous la bannière — mode default uniquement */}
+      {heroStyle === "default" && (
+        <div style={{ maxWidth: 860, margin: "0 auto", padding: "28px 24px 0" }}>
+          <h1
+            style={{
+              fontFamily: fontPack.headingFont,
+              fontWeight: 500,
+              fontSize: "clamp(32px, 6vw, 52px)",
+              lineHeight: 1,
+              letterSpacing: "-.02em",
+              color: D.text,
+              margin: 0,
+            }}
+          >
+            {restaurantName}
+          </h1>
+        </div>
+      )}
 
       {/* ══════════════════════════════════════════════
           STICKY CATEGORY NAV  (pills / underline)
