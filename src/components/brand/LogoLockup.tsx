@@ -1,29 +1,40 @@
+import { LogoWordmark } from "./LogoWordmark";
+
 interface LogoLockupProps {
   width?: number;
   className?: string;
+  /** Affiche la tagline "Every dish · in 360°" sous le wordmark */
+  showTagline?: boolean;
 }
 
 /**
- * Horizontal lockup — mark + "Plateform" wordmark + tagline.
- * Use for: marketing hero, auth pages (180px), email headers (200px),
- * public page footers (140px).
- *
- * The SVG renders correctly on both light (beige) backgrounds.
- * For dark backgrounds use the `wordmark.svg` asset directly with
- * colour-adjusted text (TODO: produce logo-lockup-dark.svg variant).
+ * Horizontal lockup — réutilise LogoWordmark (cloche + Plateform) + tagline.
+ * Source de vérité unique pour le logo avec texte sur toute l'app.
+ * Use for: marketing hero, auth pages (180px), email headers, footers.
  */
-export function LogoLockup({ width = 180, className }: LogoLockupProps) {
-  // Native aspect ratio of logo-lockup.svg is 800 × 220
-  const height = Math.round(width * (220 / 800));
+export function LogoLockup({ width = 180, className, showTagline = true }: LogoLockupProps) {
   return (
-    <img
-      src="/brand/logo-lockup.svg"
-      width={width}
-      height={height}
-      alt="Plateform — Every dish, in 360°"
+    <div
       className={className}
-      draggable={false}
-      style={{ display: "inline-block", flexShrink: 0 }}
-    />
+      style={{ display: "inline-flex", flexDirection: "column", alignItems: "flex-start", lineHeight: 1 }}
+    >
+      <LogoWordmark width={width} />
+      {showTagline && (
+        <span
+          style={{
+            fontFamily: "DM Mono, ui-monospace, monospace",
+            fontSize: Math.max(9, Math.round(width * 0.065)),
+            letterSpacing: "0.22em",
+            color: "hsl(24,12%,38%)",
+            marginTop: Math.round(width * 0.04),
+            marginLeft: Math.round(width * (28 / 180)),
+            textTransform: "uppercase",
+            whiteSpace: "nowrap",
+          }}
+        >
+          Every dish · in 360°
+        </span>
+      )}
+    </div>
   );
 }
