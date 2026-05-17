@@ -210,7 +210,7 @@ export default function DesignPage() {
   const menuUrl = restaurant?.slug ? `/menu/${restaurant.slug}?preview=1` : null;
 
   return (
-    <div className="animate-fade-up" style={{ display: "grid", gridTemplateColumns: "380px 1fr", gap: 20, height: "calc(100vh - 80px)", alignItems: "start", direction: "ltr", margin: "0 -32px" }}>
+    <div className="animate-fade-up" style={{ display: "grid", gridTemplateColumns: "380px 1fr", gap: 20, height: "calc(100vh - 80px)", alignItems: "stretch", direction: "ltr", margin: "0 -32px" }}>
 
       {/* Left — controls */}
       <div className="space-y-4 overflow-y-auto" style={{ maxHeight: "calc(100vh - 80px)", paddingLeft: 32, paddingRight: 4, direction: "rtl" }}>
