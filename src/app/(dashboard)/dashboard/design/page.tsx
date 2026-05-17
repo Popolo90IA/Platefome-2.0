@@ -535,10 +535,10 @@ export default function DesignPage() {
             const iH = portrait.h;
             const borderW = previewMode === "mobile" ? 10 : 8;
             const radius = previewMode === "mobile" ? 44 : 16;
-            /* Available space from measured panel — subtract toolbar (~44px) and gap (12px) */
-            const availW = Math.max(panelSize.w - 4, 100);
-            const availH = Math.max(panelSize.h - 56, 100);
-            const scale = Math.min((availH - borderW * 2) / iH, (availW - borderW * 2) / iW, 1);
+            /* Available space from measured panel — subtract toolbar (~44px) and small gap */
+            const availW = Math.max(panelSize.w - 16, 100);
+            const availH = Math.max(panelSize.h - 60, 100);
+            const scale = Math.min((availH - borderW * 2) / iH, (availW - borderW * 2) / iW);
             const frameW = (iW + borderW * 2) * scale;
             const frameH = (iH + borderW * 2) * scale;
             return (
