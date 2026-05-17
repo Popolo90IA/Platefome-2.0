@@ -72,7 +72,8 @@ export default function DesignPage() {
     const measure = () => {
       if (rightPanelRef.current) {
         const rect = rightPanelRef.current.getBoundingClientRect();
-        setPanelSize({ w: rect.width, h: rect.height });
+        // Use window height minus top offset for accurate available height
+        setPanelSize({ w: rect.width, h: window.innerHeight - rect.top });
       }
     };
     measure();
