@@ -383,12 +383,7 @@ export function MenuView({ restaurant, categories, dishes, slug }: MenuViewProps
                   priority
                 />
               ) : (
-                <svg width="22" height="22" viewBox="0 0 32 32" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M5 22 Q5 12 16 12 Q27 12 27 22 Z"/>
-                  <line x1="3" y1="22" x2="29" y2="22"/>
-                  <circle cx="16" cy="9" r="1.5" fill="currentColor"/>
-                  <line x1="16" y1="10.5" x2="16" y2="12"/>
-                </svg>
+                <img src="/brand/logo-mark.svg" width={48} height={48} alt="Plateform" style={{ borderRadius: 12, objectFit: "cover" }} draggable={false} />
               )}
             </div>
             <div>
