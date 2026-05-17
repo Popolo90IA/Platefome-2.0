@@ -50,9 +50,7 @@ export function LogoWordmark({ width = 140, className }: LogoWordmarkProps) {
       </g>
 
       {/* Wordmark text */}
-      <text x="92" y="82" fontFamily="Cormorant Garamond, Georgia, serif" fontWeight={500} fontSize={62} fill="hsl(24,18%,16%)" letterSpacing="-0.02em">
-        Plate<tspan fontStyle="italic" fill="url(#wm-bronze)">form</tspan>
-      </text>
+      <text x="92" y="86" fontFamily="Cormorant Garamond, Georgia, serif" fontWeight={500} fontSize={58} fill="hsl(24,18%,16%)" letterSpacing="-0.02em">{"Plate"}<tspan fontStyle="italic" fill="url(#wm-bronze)">{"form"}</tspan></text>
     </svg>
   );
 }
