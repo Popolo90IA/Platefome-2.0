@@ -4,14 +4,13 @@ interface LogoWordmarkProps {
 }
 
 /**
- * Wordmark — cloche dorée + "Plateform" text.
- * SVG inline, viewBox ajusté au contenu réel pour éviter le vide à droite.
- * direction: ltr forcé sur le <svg> pour rendu identique en RTL (hébreu).
+ * Wordmark — cloche dorée (vagues entrelacées) + "Plateform" text.
+ * SVG inline, viewBox calé sur le contenu, direction:ltr pour rendu en RTL.
  */
 export function LogoWordmark({ width = 140, className }: LogoWordmarkProps) {
-  // viewBox calé sur contenu réel : 350 × 120 (cloche 80 + gap 12 + texte ~258)
-  const VIEWBOX_W = 350;
-  const VIEWBOX_H = 120;
+  // viewBox : cloche (120 large × 100 haute) + gap 16 + texte (~250) = 386 large
+  const VIEWBOX_W = 386;
+  const VIEWBOX_H = 110;
   const height = Math.round(width * (VIEWBOX_H / VIEWBOX_W));
   return (
     <svg
@@ -26,7 +25,8 @@ export function LogoWordmark({ width = 140, className }: LogoWordmarkProps) {
     >
       <defs>
         <linearGradient id="wm-gold" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0" stopColor="hsl(38,65%,58%)" />
+          <stop offset="0" stopColor="hsl(38,65%,62%)" />
+          <stop offset="0.5" stopColor="hsl(32,68%,52%)" />
           <stop offset="1" stopColor="hsl(28,62%,42%)" />
         </linearGradient>
         <linearGradient id="wm-bronze" x1="0" y1="0" x2="1" y2="0.5">
@@ -35,30 +35,35 @@ export function LogoWordmark({ width = 140, className }: LogoWordmarkProps) {
         </linearGradient>
       </defs>
 
-      {/* Cloche icon (80×80 box, dans la moitié haute du viewBox 120) */}
-      <g transform="translate(4, 16)">
-        {/* Tray */}
-        <line x1="0" y1="78" x2="76" y2="78" stroke="url(#wm-gold)" strokeWidth="4" strokeLinecap="round" />
-        <rect x="0" y="78" width="76" height="5" rx="2.5" fill="none" stroke="url(#wm-gold)" strokeWidth="4" strokeLinecap="round" />
-        {/* Dome */}
-        <path d="M 3 78 Q 3 14 38 14 Q 73 14 73 78 Z" fill="none" stroke="url(#wm-gold)" strokeWidth="4" strokeLinejoin="round" />
-        {/* Handle */}
-        <circle cx="38" cy="8" r="7" fill="none" stroke="url(#wm-gold)" strokeWidth="4" />
-        {/* Waves */}
-        <path d="M 10 54 C 20 40, 30 40, 38 54 C 46 68, 56 68, 66 54" fill="none" stroke="url(#wm-gold)" strokeWidth="4" strokeLinecap="round" />
-        <path d="M 10 68 C 20 54, 30 54, 38 68 C 46 82, 56 82, 66 68" fill="none" stroke="url(#wm-gold)" strokeWidth="4" strokeLinecap="round" />
-        {/* Sparkles */}
-        <circle cx="16" cy="24" r="3" fill="url(#wm-gold)" />
-        <circle cx="4" cy="42" r="2.5" fill="url(#wm-gold)" />
-        <circle cx="64" cy="32" r="2.5" fill="url(#wm-gold)" />
+      {/* Cloche (120×100, posée à gauche, alignée verticalement) */}
+      <g
+        transform="translate(0, 5)"
+        fill="none"
+        stroke="url(#wm-gold)"
+        strokeWidth="2.6"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        {/* Poignée */}
+        <circle cx="60" cy="20" r="3.6" />
+        {/* Dôme */}
+        <path d="M 22 76 Q 22 28 60 28 Q 98 28 98 76" />
+        {/* Vagues entrelacées (effet infini/ADN) */}
+        <path d="M 28 56 C 38 44, 50 70, 60 56 C 70 42, 82 70, 92 56" />
+        <path d="M 28 56 C 38 70, 50 44, 60 56 C 70 70, 82 44, 92 56" />
+        {/* Plateau */}
+        <line x1="14" y1="80" x2="106" y2="80" />
+        <path d="M 14 80 Q 60 90 106 80" />
       </g>
+      {/* Étincelles */}
+      <circle cx="26" cy="55" r="1.8" fill="url(#wm-gold)" />
+      <circle cx="38" cy="49" r="1.2" fill="url(#wm-gold)" />
+      <circle cx="94" cy="51" r="1.5" fill="url(#wm-gold)" />
 
-      {/* Wordmark text — direction:ltr garantit l'ordre Plate→form même en RTL.
-          font-family utilise la variable Next.js (--font-cormorant) pour
-          être sûr que la police est trouvée même quand Next.js renomme l'identifiant. */}
+      {/* Wordmark text — direction:ltr garantit l'ordre Plate→form en RTL */}
       <text
-        x="92"
-        y="82"
+        x="130"
+        y="78"
         fontWeight={500}
         fontSize={58}
         fill="hsl(24,18%,16%)"

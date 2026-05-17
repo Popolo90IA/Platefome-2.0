@@ -4,21 +4,21 @@ interface LogoMonogramProps {
 }
 
 /**
- * Tuile bronze — cloche dorée sur fond bronze.
- * SVG inline (pas d'<img>) pour cohérence sur toute l'app.
- * Use for: restaurant card placeholder, admin avatar fallback,
- * push notification icon, light backgrounds requiring a solid block.
+ * Tuile bronze — cloche dorée (vagues entrelacées) sur fond bronze.
+ * SVG inline, vectoriel, fond transparent autour de la tuile.
+ * Use for: card placeholder, admin avatar, push icon, app icon.
  */
 export function LogoMonogram({ size = 64, className }: LogoMonogramProps) {
   const id = `mono-${size}`;
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 80 80"
+      viewBox="0 0 120 120"
       width={size}
       height={size}
       className={className}
       aria-label="Plateform"
+      role="img"
       style={{ display: "inline-block", flexShrink: 0 }}
     >
       <defs>
@@ -27,18 +27,30 @@ export function LogoMonogram({ size = 64, className }: LogoMonogramProps) {
           <stop offset="1" stopColor="hsl(22,70%,50%)" />
         </linearGradient>
       </defs>
-      <rect width="80" height="80" rx="16" fill={`url(#${id}-bg)`} />
-      <g transform="translate(8, 8)" stroke="hsl(38,40%,94%)" fill="none" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-        {/* Tray */}
-        <line x1="2" y1="50" x2="62" y2="50" />
-        <rect x="2" y="50" width="60" height="4" rx="2" />
-        {/* Dome */}
-        <path d="M 5 50 Q 5 10 32 10 Q 59 10 59 50 Z" />
-        {/* Handle */}
-        <circle cx="32" cy="6" r="4.5" />
-        {/* Waves */}
-        <path d="M 10 36 C 16 28, 26 28, 32 36 C 38 44, 48 44, 54 36" />
+      <rect width="120" height="120" rx="24" fill={`url(#${id}-bg)`} />
+
+      <g
+        transform="translate(0, 10)"
+        fill="none"
+        stroke="hsl(38,50%,94%)"
+        strokeWidth="2.6"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        {/* Poignée */}
+        <circle cx="60" cy="20" r="3.6" />
+        {/* Dôme */}
+        <path d="M 22 76 Q 22 28 60 28 Q 98 28 98 76" />
+        {/* Vagues entrelacées */}
+        <path d="M 28 56 C 38 44, 50 70, 60 56 C 70 42, 82 70, 92 56" />
+        <path d="M 28 56 C 38 70, 50 44, 60 56 C 70 70, 82 44, 92 56" />
+        {/* Plateau */}
+        <line x1="14" y1="80" x2="106" y2="80" />
+        <path d="M 14 80 Q 60 90 106 80" />
       </g>
+      <circle cx="26" cy="60" r="1.8" fill="hsl(38,50%,94%)" />
+      <circle cx="38" cy="54" r="1.2" fill="hsl(38,50%,94%)" />
+      <circle cx="94" cy="56" r="1.5" fill="hsl(38,50%,94%)" />
     </svg>
   );
 }
