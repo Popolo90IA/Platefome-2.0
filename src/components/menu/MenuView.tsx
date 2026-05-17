@@ -83,7 +83,16 @@ export function MenuView({ restaurant, categories, dishes, slug }: MenuViewProps
   );
   const [modalDish, setModalDish] = useState<Dish | null>(null);
   const [search, setSearch] = useState("");
+  const [isMobile, setIsMobile] = useState(false);
   const dir = LANGUAGE_META[lang].dir;
+
+  /* ── Responsive: track viewport width ── */
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 600);
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
+  }, []);
 
   /* ── Preview mode: listen for postMessage overrides ── */
   const [previewOverride, setPreviewOverride] = useState<PreviewOverride>({});
@@ -546,10 +555,58 @@ export function MenuView({ restaurant, categories, dishes, slug }: MenuViewProps
       {/* ══════════════════════════════════════════════
           MENU SECTIONS
           ══════════════════════════════════════════════ */}
-      <main style={catStyle === "sidebar" ? { display: "flex", maxWidth: 860, margin: "0 auto" } : undefined}>
+      {/* ── Sidebar mobile : nav horizontale scrollable ── */}
+      {catStyle === "sidebar" && isMobile && categories.length > 0 && (
+        <nav
+          style={{
+            position: "sticky",
+            top: 0,
+            zIndex: 20,
+            display: "flex",
+            alignItems: "center",
+            gap: 6,
+            overflowX: "auto",
+            overflowY: "hidden",
+            scrollbarWidth: "none",
+            background: D.card,
+            borderBottom: `1px solid ${D.line}`,
+            padding: "10px 14px",
+          }}
+        >
+          {categories.map((cat) => {
+            const catName = pickLocalized(cat as unknown as Record<string, unknown>, "name", lang) || cat.name;
+            const isActive = !isSearching && activeCategory === cat.id;
+            return (
+              <button
+                key={cat.id}
+                type="button"
+                onClick={() => { setSearch(""); scrollToCategory(cat.id); }}
+                style={{
+                  flexShrink: 0,
+                  padding: "6px 14px",
+                  borderRadius: 99,
+                  border: `1px solid ${isActive ? D.gold : D.line}`,
+                  background: isActive ? D.gold : "transparent",
+                  color: isActive ? D.page : D.textDim,
+                  fontFamily: fontPack.bodyFont,
+                  fontSize: 12,
+                  fontWeight: isActive ? 600 : 400,
+                  cursor: "pointer",
+                  whiteSpace: "nowrap",
+                  transition: "all .15s",
+                }}
+              >
+                {catName}
+              </button>
+            );
+          })}
+        </nav>
+      )}
 
-        {/* ── Sidebar category nav ── */}
-        {catStyle === "sidebar" && categories.length > 0 && (
+      <main style={catStyle === "sidebar" && !isMobile ? { display: "flex", maxWidth: 860, margin: "0 auto" } : undefined}>
+
+        {/* ── Sidebar category nav (desktop only) ── */}
+        {catStyle === "sidebar" && !isMobile && categories.length > 0 && (
           <nav
             style={{
               width: 160,
