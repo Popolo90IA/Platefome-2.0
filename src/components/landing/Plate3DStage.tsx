@@ -29,8 +29,7 @@ export function Plate3DStage({
     }
     const script = document.createElement("script");
     script.type = "module";
-    script.src =
-      "https://unpkg.com/@google/model-viewer@3.5.0/dist/model-viewer.min.js";
+    script.src = "/vendor/model-viewer.min.js";
     script.dataset.mvLoaded = "true";
     script.onload = () => setScriptReady(true);
     document.head.appendChild(script);

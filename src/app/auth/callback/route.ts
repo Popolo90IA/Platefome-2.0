@@ -5,7 +5,12 @@ export async function GET(request: Request) {
   const { searchParams, origin } = new URL(request.url);
   const code = searchParams.get("code");
   const rawNext = searchParams.get("next") ?? "/dashboard";
-  const next = rawNext.startsWith("/") ? rawNext : "/dashboard";
+  // Sécurité: rejeter les URLs protocol-relative (//evil.com) et toute URL non-relative
+  const isSafeRelative =
+    rawNext.startsWith("/") &&
+    !rawNext.startsWith("//") &&
+    !rawNext.startsWith("/\\");
+  const next = isSafeRelative ? rawNext : "/dashboard";
 
   if (code) {
     const supabase = await createClient();

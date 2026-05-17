@@ -45,8 +45,7 @@ export function DishCard3D({
     }
     const s = document.createElement("script");
     s.type = "module";
-    s.src =
-      "https://unpkg.com/@google/model-viewer@3.5.0/dist/model-viewer.min.js";
+    s.src = "/vendor/model-viewer.min.js";
     s.dataset.mv = "appetite";
     s.addEventListener("load", () => setMvLoaded(true));
     document.head.appendChild(s);

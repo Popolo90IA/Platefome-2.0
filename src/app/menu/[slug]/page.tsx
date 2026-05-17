@@ -3,7 +3,9 @@ import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { MenuView } from "@/components/menu/MenuView";
 
-export const dynamic = "force-dynamic";
+// ISR : régénère au plus toutes les 60s (les menus changent rarement)
+// Réduit drastiquement le coût Supabase sur les scans QR massifs
+export const revalidate = 60;
 
 interface MenuPageProps {
   params: Promise<{ slug: string }>;
@@ -56,6 +58,7 @@ export default async function MenuPage({ params }: MenuPageProps) {
   const { slug } = await params;
   const supabase = await createClient();
 
+  // select * sur restaurants : MenuView utilise theme_*, design_*, address, phone, hours…
   const { data: restaurant } = await supabase
     .from("restaurants")
     .select("*")
@@ -82,6 +85,8 @@ export default async function MenuPage({ params }: MenuPageProps) {
     );
   }
 
+  // Filtre is_available côté SQL : ne renvoie plus les plats indisponibles
+  // (gain réseau + DB) — gros gain perf principal pour le menu public
   const [{ data: categories }, { data: dishes }] = await Promise.all([
     supabase
       .from("categories")
@@ -92,6 +97,7 @@ export default async function MenuPage({ params }: MenuPageProps) {
       .from("dishes")
       .select("*")
       .eq("restaurant_id", restaurant.id)
+      .eq("is_available", true)
       .order("created_at"),
   ]);
 
