@@ -8,13 +8,12 @@ interface LogoWordmarkProps {
  * direction:ltr garantit le bon ordre Plate→form même en RTL (hébreu).
  */
 export function LogoWordmark({ width = 140, className }: LogoWordmarkProps) {
-  // Largeur cloche calculée pour qu'elle prenne ~40% du wordmark total.
-  // Cloche natif 600×378 → ratio 1.587. On vise une hauteur de cloche
-  // proportionnelle à la cap-height du texte.
-  const bellHeight = Math.round(width * 0.34);
+  // Proportions classe : la cloche est petite à côté du texte.
+  // Cloche natif 600×378 → ratio 1.587.
+  const bellHeight = Math.round(width * 0.2);
   const bellWidth = Math.round(bellHeight * 1.587);
-  const fontSize = Math.round(width * 0.32);
-  const gap = Math.round(width * 0.04);
+  const fontSize = Math.round(width * 0.26);
+  const gap = Math.round(width * 0.05);
 
   return (
     <span
