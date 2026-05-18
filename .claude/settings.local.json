@@ -45,7 +45,15 @@
       "mcp__Claude_in_Chrome__find",
       "Bash(while read f)",
       "Bash(do)",
-      "Bash(done)"
+      "Bash(done)",
+      "mcp__Claude_in_Chrome__gif_creator",
+      "mcp__Claude_in_Chrome__resize_window",
+      "Bash(grep:*)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "Bash(claude mcp add ruflo -- npx ruflo@latest mcp start)",
+      "mcp__ruflo__guidance_recommend",
+      "mcp__ruflo__github_repo_analyze",
+      "mcp__ruflo__swarm_init"
     ]
   }
 }
