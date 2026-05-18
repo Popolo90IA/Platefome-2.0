@@ -42,3 +42,4 @@ ruvector.db
 # 3D assets backups (kept locally only)
 /public/models/_originals/
 public/brand/cloche-source.jpeg
+public/brand/cloche-source.png
