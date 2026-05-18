@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
+import { DRACOLoader } from "three/examples/jsm/loaders/DRACOLoader.js";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import gsap from "gsap";
 
@@ -120,7 +121,13 @@ export function HeroCanvas({ modelUrl }: HeroCanvasProps) {
       sphere.castShadow=true; scene.add(sphere); model=sphere; setLoaded(true);
     }
 
-    new GLTFLoader().load(modelUrl, (gltf) => {
+    const dracoLoader = new DRACOLoader();
+    dracoLoader.setDecoderPath("https://www.gstatic.com/draco/versioned/decoders/1.5.7/");
+    dracoLoader.setDecoderConfig({ type: "js" });
+    const gltfLoader = new GLTFLoader();
+    gltfLoader.setDRACOLoader(dracoLoader);
+
+    gltfLoader.load(modelUrl, (gltf) => {
       model = gltf.scene;
       const box=new THREE.Box3().setFromObject(model);
       const center=box.getCenter(new THREE.Vector3());
@@ -172,6 +179,7 @@ export function HeroCanvas({ modelUrl }: HeroCanvasProps) {
       ro.disconnect();
       canvas.removeEventListener("pointerdown",onDown);
       canvas.removeEventListener("pointerup",onUp);
+      dracoLoader.dispose();
       renderer.dispose();
     };
   }, [modelUrl]);
