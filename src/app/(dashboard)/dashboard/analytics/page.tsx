@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
-import { Settings } from "lucide-react";
+import { Settings, Download } from "lucide-react";
 import type {
   Restaurant,
   Dish,
@@ -31,37 +31,51 @@ export default function AnalyticsPage() {
   const [loading, setLoading] = useState(true);
   const [restaurant, setRestaurant] = useState<Restaurant | null>(null);
   const [events, setEvents] = useState<MenuEvent[]>([]);
+  const [prevEvents, setPrevEvents] = useState<MenuEvent[]>([]);
   const [dishes, setDishes] = useState<Dish[]>([]);
   const [range, setRange] = useState<14 | 30 | 90>(14);
-  const supabase = createClient();
+  const supabase = useMemo(() => createClient(), []);
 
   useEffect(() => {
+    let cancelled = false;
     const load = async () => {
+      setLoading(true);
       const { data: { user } } = await supabase.auth.getUser();
-      if (!user) { setLoading(false); return; }
+      if (!user) { if (!cancelled) setLoading(false); return; }
 
       const { data: r } = await supabase
         .from("restaurants").select("*").eq("user_id", user.id).maybeSingle();
-      if (!r) { setLoading(false); return; }
+      if (!r) { if (!cancelled) setLoading(false); return; }
+      if (cancelled) return;
       setRestaurant(r);
 
-      const since = new Date();
-      since.setDate(since.getDate() - range);
+      const now = Date.now();
+      const since = new Date(now - range * 86400000).toISOString();
+      const prevSince = new Date(now - range * 2 * 86400000).toISOString();
+      const prevUntil = since;
 
-      const [{ data: ev }, { data: dsh }] = await Promise.all([
+      const [{ data: ev }, { data: prev }, { data: dsh }] = await Promise.all([
         supabase.from("menu_events").select("*")
           .eq("restaurant_id", r.id)
-          .gte("created_at", since.toISOString())
+          .gte("created_at", since)
           .order("created_at", { ascending: false })
+          .limit(5000),
+        supabase.from("menu_events").select("event_type")
+          .eq("restaurant_id", r.id)
+          .gte("created_at", prevSince)
+          .lt("created_at", prevUntil)
           .limit(5000),
         supabase.from("dishes").select("*").eq("restaurant_id", r.id),
       ]);
 
+      if (cancelled) return;
       setEvents(ev ?? []);
+      setPrevEvents((prev ?? []) as MenuEvent[]);
       setDishes(dsh ?? []);
       setLoading(false);
     };
     load();
+    return () => { cancelled = true; };
   }, [supabase, range]);
 
   if (loading) {
@@ -191,15 +205,39 @@ export default function AnalyticsPage() {
       pct: Math.round((count / totalLangEvents) * 100),
     }));
 
-  // Period-over-period delta for total events
-  const prevPeriodStart = new Date();
-  prevPeriodStart.setDate(prevPeriodStart.getDate() - range * 2);
-  const prevPeriodEnd = new Date();
-  prevPeriodEnd.setDate(prevPeriodEnd.getDate() - range);
+  // Period-over-period delta (current range vs previous range of equal length)
   const totalCurrent = totalScans + totalViews;
-  // We compute prev period delta from buckets (approximate: half the range if we only have current)
-  // Use totalEngaged ratio as proxy — show delta only if there's data
+  const totalPrev = prevEvents.filter(e =>
+    e.event_type === "menu_view" || e.event_type === "qr_scan"
+  ).length;
+  const deltaPct = totalPrev > 0
+    ? Math.round(((totalCurrent - totalPrev) / totalPrev) * 100)
+    : null;
   const showGrowthBadge = totalCurrent > 0;
+
+  // CSV export of the current period
+  const exportCsv = () => {
+    const rows = [
+      ["created_at", "event_type", "dish_id", "language"],
+      ...events.map(e => [
+        e.created_at,
+        e.event_type,
+        e.dish_id ?? "",
+        e.language ?? "",
+      ]),
+    ];
+    const csv = rows
+      .map(r => r.map(v => `"${String(v).replace(/"/g, '""')}"`).join(","))
+      .join("\n");
+    const blob = new Blob(["\uFEFF" + csv], { type: "text/csv;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    const stamp = new Date().toISOString().slice(0, 10);
+    a.download = `plateform-analytics-${range}d-${stamp}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
 
   return (
     <div dir="rtl" style={{ color: "hsl(var(--fog))" }}>
@@ -215,13 +253,14 @@ export default function AnalyticsPage() {
           איפה הלקוחות מבלים. מה הם פותחים. מה גורם להם להזמין.
         </p>
 
-        {/* Filter pills */}
-        <div style={{ display: "flex", gap: 8 }}>
+        {/* Filter pills + export */}
+        <div style={{ display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap" }}>
           {([14, 30, 90] as const).map(v => (
             <button
               key={v}
               onClick={() => setRange(v)}
               className="font-sans"
+              aria-pressed={range === v}
               style={{
                 padding: "7px 16px", borderRadius: 99,
                 background: range === v ? "hsl(var(--fog))" : "hsl(var(--abyss))",
@@ -233,6 +272,26 @@ export default function AnalyticsPage() {
               {v === 14 ? "14 ימים" : v === 30 ? "חודש" : "רבעון"}
             </button>
           ))}
+          <button
+            onClick={exportCsv}
+            disabled={events.length === 0}
+            className="font-sans"
+            aria-label="Export analytics as CSV"
+            style={{
+              marginInlineStart: "auto",
+              display: "inline-flex", alignItems: "center", gap: 6,
+              padding: "7px 14px", borderRadius: 99,
+              background: "transparent",
+              border: "1px solid hsl(var(--line))",
+              color: events.length === 0 ? "hsl(var(--dim))" : "hsl(var(--subtle))",
+              fontSize: 12.5, fontWeight: 500,
+              cursor: events.length === 0 ? "not-allowed" : "pointer",
+              transition: "all .15s",
+            }}
+          >
+            <Download style={{ width: 13, height: 13 }} strokeWidth={1.5} />
+            CSV
+          </button>
         </div>
       </div>
 
@@ -252,11 +311,25 @@ export default function AnalyticsPage() {
           <div className="font-sans" style={{ fontSize: 64, lineHeight: 1, fontWeight: 800, letterSpacing: "-.04em", color: "hsl(var(--fog))" }}>
             {(totalScans + totalViews).toLocaleString()}
           </div>
-          {showGrowthBadge && (
-            <div className="font-mono" style={{ display: "inline-flex", alignItems: "center", gap: 5, fontSize: 12, padding: "4px 10px", borderRadius: 99, background: "hsl(28,62%,42%,.1)", color: "hsl(var(--accent-bright))", marginTop: 12, letterSpacing: ".04em" }}>
-              ↑ {totalCurrent.toLocaleString()} אירועים ב-{range} ימים
-            </div>
-          )}
+          {showGrowthBadge && (() => {
+            const positive = deltaPct === null ? true : deltaPct >= 0;
+            const color = positive ? "hsl(var(--accent-bright))" : "hsl(0, 60%, 55%)";
+            const bg = positive ? "hsl(28,62%,42%,.1)" : "hsl(0, 60%, 55%, .1)";
+            return (
+              <div
+                className="font-mono"
+                style={{
+                  display: "inline-flex", alignItems: "center", gap: 6, fontSize: 12,
+                  padding: "4px 10px", borderRadius: 99,
+                  background: bg, color, marginTop: 12, letterSpacing: ".04em",
+                }}
+              >
+                {deltaPct === null
+                  ? <>↑ {totalCurrent.toLocaleString()} אירועים ב-{range} ימים</>
+                  : <>{positive ? "↑" : "↓"} {Math.abs(deltaPct)}% vs. ה-{range} ימים הקודמים</>}
+              </div>
+            );
+          })()}
 
           <svg viewBox="0 0 600 260" preserveAspectRatio="none" style={{ width: "100%", height: 280, marginTop: 20 }}>
             <defs>
@@ -367,24 +440,30 @@ export default function AnalyticsPage() {
             </div>
           ))}
           {/* Rows */}
-          {DAYS_HE.map((day, d) => (
-            <>
-              <div key={`lbl-${d}`} className="font-sans uppercase" style={{ fontSize: "9.5px", letterSpacing: ".06em", color: "hsl(var(--subtle))", alignSelf: "center", paddingLeft: 2 }}>
-                {day}
-              </div>
-              {Array.from({ length: 24 }, (_, h) => {
-                const intensity = heatmap[d][h] / heatMax;
-                const lightness = Math.round(92 - intensity * 50);
-                return (
-                  <div key={`cell-${d}-${h}`} style={{
+          {DAYS_HE.flatMap((day, d) => [
+            <div
+              key={`lbl-${d}`}
+              className="font-sans uppercase"
+              style={{ fontSize: "9.5px", letterSpacing: ".06em", color: "hsl(var(--subtle))", alignSelf: "center", paddingLeft: 2 }}
+            >
+              {day}
+            </div>,
+            ...Array.from({ length: 24 }, (_, h) => {
+              const intensity = heatmap[d][h] / heatMax;
+              const lightness = Math.round(92 - intensity * 50);
+              return (
+                <div
+                  key={`cell-${d}-${h}`}
+                  title={`${day} ${h}:00 · ${heatmap[d][h]} צפיות`}
+                  style={{
                     aspectRatio: "1/1", borderRadius: 2,
                     background: `hsl(28, 62%, ${lightness}%)`,
                     opacity: intensity > 0 ? 0.6 + intensity * 0.4 : 0.15,
-                  }}/>
-                );
-              })}
-            </>
-          ))}
+                  }}
+                />
+              );
+            }),
+          ])}
         </div>
       </div>
 
