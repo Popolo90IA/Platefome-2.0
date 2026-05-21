@@ -10,6 +10,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 import { CinematicCurtain } from "@/components/landing/CinematicCurtain";
 import { HeroShowcase } from "@/components/landing/HeroShowcase";
+import { DirectionalTransition } from "@/components/transitions/DirectionalTransition";
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
 
@@ -298,6 +299,7 @@ export default function HomePage() {
   }, { scope: stepsRef });
 
   return (
+    <DirectionalTransition>
     <div style={{ background: "hsl(var(--void))", color: "hsl(var(--cream))", overflowX: "hidden", minHeight: "100vh" }}>
       <style>{KEYFRAMES}</style>
 
@@ -393,7 +395,7 @@ export default function HomePage() {
 
           {/* ── Actions droite ── */}
           <div style={{ display: "flex", alignItems: "center", gap: 8, flexShrink: 0 }}>
-            <Link href="/login" className="home-nav-login" style={{
+            <Link href="/login" transitionTypes={['nav-forward']} className="home-nav-login" style={{
               padding: "7px 14px",
               textDecoration: "none",
               fontFamily: "'DM Sans',sans-serif",
@@ -406,7 +408,7 @@ export default function HomePage() {
               onMouseOut={e => (e.currentTarget.style.color = "hsl(24,12%,38%)")}
             >כניסה</Link>
 
-            <Link href="/signup" style={{
+            <Link href="/signup" transitionTypes={['nav-forward']} style={{
               display: "inline-flex", alignItems: "center", gap: 7,
               padding: "9px 20px",
               background: "linear-gradient(135deg, hsl(28,62%,38%) 0%, hsl(22,70%,50%) 100%)",
@@ -518,7 +520,7 @@ export default function HomePage() {
 
           {/* CTA sous le modèle */}
             <div style={{ display: "flex", gap: 12, flexWrap: "wrap", justifyContent: "center", marginTop: 32 }}>
-              <Link href="/signup" style={{
+              <Link href="/signup" transitionTypes={["nav-forward"]} style={{
                 display: "inline-flex", alignItems: "center", gap: 8,
                 padding: "14px 32px",
                 background: "linear-gradient(135deg, hsl(28,62%,38%), hsl(22,70%,50%))",
@@ -911,7 +913,7 @@ export default function HomePage() {
                 ))}
               </div>
               <div style={{ padding: "0 28px 28px" }}>
-                <Link href="/signup" style={{ display: "flex", alignItems: "center", justifyContent: "center", padding: "13px 24px", background: "transparent", border: "1px solid hsl(30,18%,78%)", borderRadius: 10, fontFamily: "'DM Sans',sans-serif", fontSize: ".9rem", fontWeight: 600, color: "hsl(24,12%,38%)", textDecoration: "none", transition: "border-color .2s,color .2s,background .2s" }}
+                <Link href="/signup" transitionTypes={["nav-forward"]} style={{ display: "flex", alignItems: "center", justifyContent: "center", padding: "13px 24px", background: "transparent", border: "1px solid hsl(30,18%,78%)", borderRadius: 10, fontFamily: "'DM Sans',sans-serif", fontSize: ".9rem", fontWeight: 600, color: "hsl(24,12%,38%)", textDecoration: "none", transition: "border-color .2s,color .2s,background .2s" }}
                   onMouseOver={e => { const el = e.currentTarget as HTMLAnchorElement; el.style.borderColor = "hsl(28,62%,42%,.5)"; el.style.color = "hsl(28,62%,42%)"; }}
                   onMouseOut={e => { const el = e.currentTarget as HTMLAnchorElement; el.style.borderColor = "hsl(30,18%,78%)"; el.style.color = "hsl(24,12%,38%)"; }}
                 >בחר תוכנית</Link>
@@ -938,7 +940,7 @@ export default function HomePage() {
                 ))}
               </div>
               <div style={{ padding: "0 28px 28px" }}>
-                <Link href="/signup" style={{ display: "flex", alignItems: "center", justifyContent: "center", padding: "13px 24px", background: "linear-gradient(135deg, hsl(28,62%,38%), hsl(22,70%,50%))", borderRadius: 10, fontFamily: "'DM Sans',sans-serif", fontSize: ".9rem", fontWeight: 600, color: "#fff", textDecoration: "none", boxShadow: "0 4px 20px hsl(28,62%,42%,.3)", transition: "transform .2s,box-shadow .2s" }}
+                <Link href="/signup" transitionTypes={["nav-forward"]} style={{ display: "flex", alignItems: "center", justifyContent: "center", padding: "13px 24px", background: "linear-gradient(135deg, hsl(28,62%,38%), hsl(22,70%,50%))", borderRadius: 10, fontFamily: "'DM Sans',sans-serif", fontSize: ".9rem", fontWeight: 600, color: "#fff", textDecoration: "none", boxShadow: "0 4px 20px hsl(28,62%,42%,.3)", transition: "transform .2s,box-shadow .2s" }}
                   onMouseOver={e => { const el = e.currentTarget as HTMLAnchorElement; el.style.transform = "translateY(-2px)"; el.style.boxShadow = "0 8px 32px hsl(28,62%,42%,.4)"; }}
                   onMouseOut={e => { const el = e.currentTarget as HTMLAnchorElement; el.style.transform = ""; el.style.boxShadow = "0 4px 20px hsl(28,62%,42%,.3)"; }}
                 >בחר תוכנית</Link>
@@ -964,7 +966,7 @@ export default function HomePage() {
                 ))}
               </div>
               <div style={{ padding: "0 28px 28px" }}>
-                <Link href="/signup" style={{ display: "flex", alignItems: "center", justifyContent: "center", padding: "13px 24px", background: "transparent", border: "1px solid hsl(30,18%,78%)", borderRadius: 10, fontFamily: "'DM Sans',sans-serif", fontSize: ".9rem", fontWeight: 600, color: "hsl(24,12%,38%)", textDecoration: "none", transition: "border-color .2s,color .2s,background .2s" }}
+                <Link href="/signup" transitionTypes={["nav-forward"]} style={{ display: "flex", alignItems: "center", justifyContent: "center", padding: "13px 24px", background: "transparent", border: "1px solid hsl(30,18%,78%)", borderRadius: 10, fontFamily: "'DM Sans',sans-serif", fontSize: ".9rem", fontWeight: 600, color: "hsl(24,12%,38%)", textDecoration: "none", transition: "border-color .2s,color .2s,background .2s" }}
                   onMouseOver={e => { const el = e.currentTarget as HTMLAnchorElement; el.style.borderColor = "hsl(28,62%,42%,.5)"; el.style.color = "hsl(28,62%,42%)"; }}
                   onMouseOut={e => { const el = e.currentTarget as HTMLAnchorElement; el.style.borderColor = "hsl(30,18%,78%)"; el.style.color = "hsl(24,12%,38%)"; }}
                 >בחר תוכנית</Link>
@@ -989,7 +991,7 @@ export default function HomePage() {
             </h2>
             <p style={{ fontFamily: "'DM Sans',sans-serif", fontSize: "1rem", color: "hsl(28,12%,62%)", lineHeight: 1.7, marginBottom: 36 }}>הצטרף ל-200+ מסעדות שכבר מגדילות את ההכנסות עם PLATFORME.</p>
             <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" as const }}>
-              <Link href="/signup" style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "14px 28px", background: "linear-gradient(135deg, hsl(28,62%,38%), hsl(22,70%,50%))", borderRadius: 10, fontFamily: "'DM Sans',sans-serif", fontSize: ".9375rem", fontWeight: 600, color: "#fff", textDecoration: "none", boxShadow: "0 4px 24px hsl(28,62%,42%,.3)" }}>
+              <Link href="/signup" transitionTypes={["nav-forward"]} style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "14px 28px", background: "linear-gradient(135deg, hsl(28,62%,38%), hsl(22,70%,50%))", borderRadius: 10, fontFamily: "'DM Sans',sans-serif", fontSize: ".9375rem", fontWeight: 600, color: "#fff", textDecoration: "none", boxShadow: "0 4px 24px hsl(28,62%,42%,.3)" }}>
                 התחל בחינם
               </Link>
               <a href="mailto:hello@platforme.app" style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "14px 28px", background: "hsl(28,18%,22%)", border: "1px solid hsl(28,18%,32%)", borderRadius: 10, fontFamily: "'DM Sans',sans-serif", fontSize: ".9375rem", fontWeight: 500, color: "hsl(32,28%,88%)", textDecoration: "none" }}>
@@ -1056,5 +1058,6 @@ export default function HomePage() {
         </div>
       </footer>
     </div>
+    </DirectionalTransition>
   );
 }
