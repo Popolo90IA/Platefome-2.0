@@ -7,6 +7,7 @@ import { createClient } from "@/lib/supabase/client";
 import { Loader2, AlertCircle, Eye, EyeOff, Check } from "lucide-react";
 import { LogoMark } from "@/components/brand";
 import { AuthSkewLink } from "@/components/auth/AuthSkewTransition";
+import { DirectionalTransition } from "@/components/transitions/DirectionalTransition";
 
 export default function SignupPage() {
   const [email, setEmail] = useState("");
@@ -47,6 +48,7 @@ export default function SignupPage() {
   };
 
   return (
+    <DirectionalTransition>
     <div dir="rtl" className="auth-layout">
       {/* ── Left panel — brand visual ──────────────────────────────── */}
       <div
@@ -409,5 +411,6 @@ export default function SignupPage() {
         </div>
       </div>
     </div>
+    </DirectionalTransition>
   );
 }

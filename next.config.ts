@@ -33,6 +33,10 @@ const nextConfig: NextConfig = {
   turbopack: {
     root: path.resolve(__dirname),
   },
+  // Active le composant <ViewTransition> de React + transitions sur <Link>
+  experimental: {
+    viewTransition: true,
+  },
   images: {
     remotePatterns: [
       {
