@@ -5,6 +5,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useEffect, useMemo, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { Eye, ChevronDown, Menu } from "lucide-react";
+import { ThemeToggle } from "@/components/theme/ThemeToggle";
 
 interface HeaderProps {
   onMenuToggle?: () => void;
@@ -86,6 +87,9 @@ export function Header({ onMenuToggle }: HeaderProps) {
 
       {/* Right — user */}
       <div className="flex items-center gap-5">
+        {/* Theme toggle */}
+        <ThemeToggle />
+
         {/* Role pill */}
         {role && (
           <span

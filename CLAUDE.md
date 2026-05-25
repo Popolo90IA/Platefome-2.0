@@ -66,7 +66,7 @@ Ouvre ces fichiers HTML dans ton navigateur pour voir les mockups finaux. Ce son
 
 ## 3. Localisation — RTL hébreu
 
-- L'app a un sélecteur de langue : 14 langues. **Hébreu = défaut** pour les restos israéliens.
+- L'app a un sélecteur de langue : 3 langues (`he`, `en`, `fr`). **Hébreu = défaut** pour les restos israéliens.
 - Wrappe les pages avec `dir="rtl"` quand `lang === "he"`.
 - Heebo + Noto Serif Hebrew sont chargés. Pas besoin de fallback Arial.
 - Tous les mockups sont **déjà en hébreu RTL** — copie les chaînes telles quelles dans `src/lib/i18n.ts`.

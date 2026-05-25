@@ -38,6 +38,7 @@ next-env.d.ts
 /src/ui-ux-pro-max/
 ruvector.db
 .claude-flow/
+.swarm/
 
 # 3D assets backups (kept locally only)
 /public/models/_originals/
