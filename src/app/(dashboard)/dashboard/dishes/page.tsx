@@ -41,8 +41,6 @@ import {
   Loader2,
   X,
   ImageIcon,
-  Utensils,
-  FolderTree,
   Award,
   Sparkles,
   Flame,
@@ -52,7 +50,6 @@ import {
   Film,
   Globe,
   ChevronDown,
-  ChevronUp,
   Camera,
   View,
   RotateCcw,
@@ -61,46 +58,18 @@ import {
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import { dishSchema } from "@/lib/validations/dish";
 import type { Dish, Category, Restaurant } from "@/types/database.types";
-
-type FormState = {
-  name: string;
-  name_en: string;
-  name_fr: string;
-  category_id: string;
-  description: string;
-  description_en: string;
-  description_fr: string;
-  price: string;
-  image_url: string | null;
-  video_url: string | null;
-  model_3d_url: string | null;
-  photos_360: string[] | null;
-  ar_enabled: boolean;
-  is_available: boolean;
-  is_featured: boolean;
-  is_new: boolean;
-  is_signature: boolean;
-};
-
-const EMPTY_FORM: FormState = {
-  name: "",
-  name_en: "",
-  name_fr: "",
-  category_id: "",
-  description: "",
-  description_en: "",
-  description_fr: "",
-  price: "",
-  image_url: null,
-  video_url: null,
-  model_3d_url: null,
-  photos_360: null,
-  ar_enabled: true,
-  is_available: true,
-  is_featured: false,
-  is_new: false,
-  is_signature: false,
-};
+import type { FormState } from "./_lib/types";
+import { EMPTY_FORM } from "./_lib/constants";
+import { filterDishesByCategory, getCategoryName } from "./_lib/helpers";
+import { FilterChip } from "./_components/_ui/FilterChip";
+import { ToggleChip } from "./_components/_ui/ToggleChip";
+import { TinyBadge } from "./_components/_ui/TinyBadge";
+import { MiniBadge } from "./_components/_ui/MiniBadge";
+import { CollapsibleSection } from "./_components/_ui/CollapsibleSection";
+import { LoadingState } from "./_components/_states/LoadingState";
+import { NoRestaurantState } from "./_components/_states/NoRestaurantState";
+import { NoCategoriesState } from "./_components/_states/NoCategoriesState";
+import { EmptyDishesState } from "./_components/_states/EmptyDishesState";
 
 export default function DishesPage() {
   const [restaurant, setRestaurant] = useState<Restaurant | null>(null);
@@ -289,52 +258,21 @@ export default function DishesPage() {
     );
   };
 
-  const getCategoryName = (categoryId: string) =>
-    categories.find((c) => c.id === categoryId)?.name ?? "—";
+  const getCategoryNameLocal = (categoryId: string) =>
+    getCategoryName(categories, categoryId);
 
-  const filteredDishes =
-    filterCat === "all" ? dishes : dishes.filter((d) => d.category_id === filterCat);
+  const filteredDishes = filterDishesByCategory(dishes, filterCat);
 
   if (loading) {
-    return (
-      <div className="flex items-center justify-center py-24">
-        <div className="h-8 w-8 rounded-full border-2 border-[hsl(var(--gold))] border-t-transparent animate-spin" />
-      </div>
-    );
+    return <LoadingState />;
   }
 
   if (!restaurant) {
-    return (
-      <Card className="max-w-md mx-auto shadow-premium">
-        <CardContent className="pt-8 pb-8 text-center">
-          <Utensils className="h-12 w-12 mx-auto text-[hsl(var(--gold))] mb-4" />
-          <p className="mb-5 text-muted-foreground">צור תחילה פרופיל מסעדה</p>
-          <Link href="/dashboard/settings">
-            <Button className="bg-gold-gradient hover:opacity-90">
-              צור פרופיל
-            </Button>
-          </Link>
-        </CardContent>
-      </Card>
-    );
+    return <NoRestaurantState />;
   }
 
   if (categories.length === 0) {
-    return (
-      <Card className="max-w-md mx-auto shadow-premium">
-        <CardContent className="pt-8 pb-8 text-center">
-          <FolderTree className="h-12 w-12 mx-auto text-[hsl(var(--gold))] mb-4" />
-          <p className="mb-5 text-muted-foreground">
-            עליך ליצור קטגוריה לפני הוספת מנות
-          </p>
-          <Link href="/dashboard/categories">
-            <Button className="bg-gold-gradient hover:opacity-90">
-              צור קטגוריה
-            </Button>
-          </Link>
-        </CardContent>
-      </Card>
-    );
+    return <NoCategoriesState />;
   }
 
   const availableLangs = restaurant.languages ?? ["he"];
@@ -804,21 +742,7 @@ export default function DishesPage() {
       )}
 
       {dishes.length === 0 ? (
-        <Card className="shadow-premium">
-          <CardContent className="pt-10 pb-10 text-center">
-            <Utensils className="h-12 w-12 mx-auto text-[hsl(var(--gold))] opacity-50 mb-4" />
-            <p className="text-muted-foreground mb-5">אין מנות עדיין</p>
-            {!showForm && (
-              <Button
-                onClick={() => setShowForm(true)}
-                className="bg-gold-gradient hover:opacity-90"
-              >
-                <Plus className="h-4 w-4" />
-                הוסף מנה ראשונה
-              </Button>
-            )}
-          </CardContent>
-        </Card>
+        <EmptyDishesState showForm={showForm} onCreate={() => setShowForm(true)} />
       ) : (
         <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
           <SortableContext items={filteredDishes.map((d) => d.id)} strategy={rectSortingStrategy}>
@@ -828,7 +752,7 @@ export default function DishesPage() {
               key={dish.id}
               dish={dish}
               idx={idx}
-              getCategoryName={getCategoryName}
+              getCategoryName={getCategoryNameLocal}
               toggleAvailability={toggleAvailability}
               handleDelete={handleDelete}
               formatPrice={formatPrice}
@@ -1002,160 +926,3 @@ function SortableDishCard({
   );
 }
 
-function FilterChip({
-  active,
-  onClick,
-  children,
-  count,
-}: {
-  active: boolean;
-  onClick: () => void;
-  children: React.ReactNode;
-  count: number;
-}) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      style={{
-        display: "inline-flex", alignItems: "center", gap: 6,
-        padding: "7px 14px", borderRadius: 99,
-        fontFamily: "var(--font-sans)", fontSize: "12.5px", fontWeight: 500,
-        cursor: "pointer", transition: "all .15s",
-        background: active ? "hsl(var(--accent-bright))" : "transparent",
-        color: active ? "#fff" : "hsl(var(--subtle))",
-        border: active ? "1px solid transparent" : "1px solid hsl(var(--line))",
-      }}
-    >
-      {children}
-      <span style={{
-        padding: "1px 6px", borderRadius: 99,
-        fontFamily: "var(--font-mono)", fontSize: 10,
-        background: active ? "rgba(255,255,255,.18)" : "hsl(var(--abyss))",
-        color: active ? "#fff" : "hsl(var(--dim))",
-      }}>
-        {count}
-      </span>
-    </button>
-  );
-}
-
-function ToggleChip({
-  active,
-  onChange,
-  children,
-  icon,
-  color,
-}: {
-  active: boolean;
-  onChange: (v: boolean) => void;
-  children: React.ReactNode;
-  icon: React.ReactNode;
-  color: "gold" | "emerald" | "rose" | "muted";
-}) {
-  const styles: Record<typeof color, string> = {
-    gold: "bg-[hsl(var(--gold))]/20 text-[hsl(var(--gold-dark))] border-[hsl(var(--gold))]/50",
-    emerald: "bg-[hsl(var(--accent-bright))]/15 text-[hsl(var(--gold-dark))] border-[hsl(var(--accent-bright))]/40",
-    rose: "bg-[hsl(var(--ember))]/15 text-[hsl(var(--ember))] border-[hsl(var(--ember))]/40",
-    muted: "bg-muted text-muted-foreground border-border",
-  };
-  return (
-    <button
-      type="button"
-      onClick={() => onChange(!active)}
-      className={`inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg text-xs font-medium transition-all border ${
-        active
-          ? styles[color] + " shadow-sm"
-          : "bg-card text-muted-foreground border-border hover:border-[hsl(var(--gold))]/30"
-      }`}
-    >
-      {icon}
-      {children}
-    </button>
-  );
-}
-
-function TinyBadge({
-  color,
-  children,
-}: {
-  color: "gold" | "emerald" | "rose";
-  children: React.ReactNode;
-}) {
-  const styles: Record<typeof color, string> = {
-    gold: "bg-[hsl(var(--gold))]/15 text-[hsl(var(--gold-dark))] border-[hsl(var(--gold))]/30",
-    emerald: "bg-[hsl(var(--accent-bright))]/12 text-[hsl(var(--gold-dark))] border-[hsl(var(--accent-bright))]/28",
-    rose: "bg-[hsl(var(--ember))]/12 text-[hsl(var(--ember))] border-[hsl(var(--ember))]/28",
-  };
-  return (
-    <span
-      className={`inline-flex items-center gap-1 text-[10px] font-semibold uppercase tracking-wider px-1.5 py-0.5 rounded border ${styles[color]}`}
-    >
-      {children}
-    </span>
-  );
-}
-
-function MiniBadge({
-  color,
-  children,
-}: {
-  color: "gold" | "dark";
-  children: React.ReactNode;
-}) {
-  const styles = {
-    gold: "bg-gold-gradient text-white",
-    dark: "bg-black/70 text-white",
-  };
-  return (
-    <span
-      className={`inline-flex items-center justify-center h-6 w-6 rounded-full shadow ${styles[color]}`}
-    >
-      {children}
-    </span>
-  );
-}
-
-function CollapsibleSection({
-  open,
-  onToggle,
-  title,
-  subtitle,
-  icon,
-  children,
-}: {
-  open: boolean;
-  onToggle: () => void;
-  title: string;
-  subtitle?: string;
-  icon: React.ReactNode;
-  children: React.ReactNode;
-}) {
-  return (
-    <div className="border border-border rounded-xl overflow-hidden">
-      <button
-        type="button"
-        onClick={onToggle}
-        className="w-full flex items-center gap-3 px-4 py-3 bg-secondary/30 hover:bg-secondary/60 transition-colors text-start"
-      >
-        <span className="h-8 w-8 rounded-lg bg-[hsl(var(--gold))]/15 text-[hsl(var(--gold-dark))] flex items-center justify-center flex-shrink-0">
-          {icon}
-        </span>
-        <span className="flex-1 min-w-0">
-          <div className="font-medium text-sm">{title}</div>
-          {subtitle && (
-            <div className="text-xs text-muted-foreground truncate">
-              {subtitle}
-            </div>
-          )}
-        </span>
-        {open ? (
-          <ChevronUp className="h-4 w-4 text-muted-foreground" />
-        ) : (
-          <ChevronDown className="h-4 w-4 text-muted-foreground" />
-        )}
-      </button>
-      {open && <div className="p-4 bg-card">{children}</div>}
-    </div>
-  );
-}
