@@ -1,66 +1,23 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
-import Image from "next/image";
-import { UtensilsCrossed, X, Share2 } from "lucide-react";
-import { DishModelViewer } from "./DishModelViewer";
-import { Photo360Viewer } from "./Photo360Viewer";
-import { trackEvent } from "@/lib/analytics";
-import { LANGUAGE_META, pickLocalized, t, formatCurrency } from "@/lib/i18n";
-import { buildMenuTheme, getFontPack } from "@/lib/theme";
-import type { MenuLayout, MenuHeroStyle, MenuCategoryStyle } from "@/lib/theme";
-import type { Restaurant, Category, Dish, Language } from "@/types/database.types";
+import type {
+  Restaurant,
+  Category,
+  Dish,
+} from "@/types/database.types";
+import { D, GRAIN_SVG } from "./_lib/constants";
+import { useMenuView } from "./_lib/hooks/useMenuView";
+import { Hero } from "./_components/Hero";
+import { SubHeader } from "./_components/SubHeader";
+import { MobileCategoryNav } from "./_components/MobileCategoryNav";
+import { DesktopSidebarNav } from "./_components/DesktopSidebarNav";
+import { MenuSection } from "./_components/MenuSection";
+import { SearchEmpty, MenuEmpty } from "./_components/EmptyStates";
+import { MenuFooter } from "./_components/MenuFooter";
+import { DishModal } from "./_components/DishModal";
 
-/* ─── Preview override message type ────────────────────── */
-export interface PreviewOverride {
-  theme_primary?: string;
-  theme_dark_mode?: boolean;
-  theme_font_pack?: string;
-  menu_layout?: string;
-  menu_hero_style?: string;
-  menu_category_style?: string;
-}
+export type { PreviewOverride } from "./_lib/types";
 
-/* ─── CSS variable aliases ──────────────────────────────── */
-const D = {
-  page:    "var(--mt-page)",
-  section: "var(--mt-section)",
-  card:    "var(--mt-card)",
-  surface: "var(--mt-surface)",
-  line:    "var(--mt-line)",
-  line2:   "var(--mt-line2)",
-  textDim: "var(--mt-text-dim)",
-  text:    "var(--mt-text)",
-  cream:   "var(--mt-cream)",
-  gold:    "var(--mt-gold)",
-  goldLt:  "var(--mt-gold-lt)",
-  grad:    "var(--mt-grad)",
-} as const;
-
-/* SVG grain as inline data URI — fixed overlay, no external request */
-const GRAIN_SVG = `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)' opacity='.12'/%3E%3C/svg%3E")`;
-
-/* Deterministic placeholder gradient per dish index */
-const PLACEHOLDER_GRADIENTS = [
-  // 0 — hummus cream
-  "radial-gradient(ellipse 14% 8% at 38% 44%, hsl(20,75%,38%) 0%, transparent 70%), radial-gradient(ellipse 18% 10% at 62% 56%, hsl(20,75%,38%) 0%, transparent 70%), radial-gradient(circle at 50% 50%, hsl(36,55%,72%) 0%, hsl(36,45%,62%) 35%, hsl(28,40%,40%) 60%, hsl(24,35%,28%) 100%)",
-  // 1 — red stew
-  "radial-gradient(circle at 30% 35%, hsl(15,50%,28%) 6%, transparent 9%), radial-gradient(circle at 65% 30%, hsl(15,50%,28%) 7%, transparent 10%), radial-gradient(circle at 50% 50%, hsl(8,65%,42%) 0%, hsl(5,55%,32%) 70%, hsl(5,40%,22%) 100%)",
-  // 2 — greens with tomato
-  "radial-gradient(circle at 25% 30%, hsl(0,75%,52%) 5%, transparent 7%), radial-gradient(circle at 70% 28%, hsl(0,75%,52%) 4%, transparent 6%), radial-gradient(circle at 50% 60%, hsl(0,75%,52%) 6%, transparent 8%), linear-gradient(135deg, hsl(95,45%,32%), hsl(110,40%,38%))",
-  // 3 — golden flatbread
-  "radial-gradient(ellipse 18% 18% at 50% 48%, hsl(48,90%,72%) 0%, hsl(40,80%,58%) 60%, transparent 75%), radial-gradient(circle at 50% 50%, hsl(36,75%,55%) 0%, hsl(32,65%,42%) 55%, hsl(28,55%,32%) 100%)",
-  // 4 — falafel on parsley
-  "radial-gradient(circle at 28% 35%, hsl(28,55%,32%) 7%, transparent 9%), radial-gradient(circle at 60% 30%, hsl(28,55%,32%) 8%, transparent 10%), radial-gradient(circle at 35% 65%, hsl(28,55%,32%) 8%, transparent 10%), linear-gradient(135deg, hsl(85,40%,35%), hsl(95,35%,42%))",
-  // 5 — orange shredded pastry
-  "repeating-linear-gradient(135deg, transparent 0 6px, hsl(28,80%,48%,.25) 6px 7px), radial-gradient(ellipse 30% 18% at 50% 50%, hsl(45,90%,68%) 0%, hsl(38,75%,55%) 65%, transparent 75%), radial-gradient(circle at 50% 50%, hsl(28,55%,42%) 0%, hsl(24,45%,28%) 100%)",
-];
-
-function dishPlaceholder(idx: number): string {
-  return PLACEHOLDER_GRADIENTS[idx % PLACEHOLDER_GRADIENTS.length];
-}
-
-/* ─── Types ─────────────────────────────────────────────── */
 interface MenuViewProps {
   restaurant: Restaurant;
   categories: Category[];
@@ -68,134 +25,46 @@ interface MenuViewProps {
   slug?: string;
 }
 
-/* ═══════════════════════════════════════════════════════
-   MAIN COMPONENT
-   ═══════════════════════════════════════════════════════ */
-export function MenuView({ restaurant, categories, dishes, slug }: MenuViewProps) {
-  const available: Language[] = (restaurant.languages ?? ["he"]).filter((l) =>
-    ["he", "en", "fr"].includes(l)
-  ) as Language[];
-  const defaultLang = (restaurant.default_language ?? "he") as Language;
-  const [lang, setLang] = useState<Language>(defaultLang);
-  const [langOpen, setLangOpen] = useState(false);
-  const [activeCategory, setActiveCategory] = useState<string | null>(
-    categories[0]?.id ?? null
-  );
-  const [modalDish, setModalDish] = useState<Dish | null>(null);
-  const [search, setSearch] = useState("");
-  const [isMobile, setIsMobile] = useState(false);
-  const dir = LANGUAGE_META[lang].dir;
-
-  /* ── Responsive: track viewport width ── */
-  useEffect(() => {
-    const check = () => setIsMobile(window.innerWidth < 600);
-    check();
-    window.addEventListener("resize", check);
-    return () => window.removeEventListener("resize", check);
-  }, []);
-
-  /* ── Preview mode: listen for postMessage overrides ── */
-  const [previewOverride, setPreviewOverride] = useState<PreviewOverride>({});
-  const isPreview = useRef(false);
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    const params = new URLSearchParams(window.location.search);
-    isPreview.current = params.get("preview") === "1";
-    if (!isPreview.current) return;
-    const handler = (e: MessageEvent) => {
-      if (e.data && e.data.__plateform_preview) {
-        setPreviewOverride(e.data.__plateform_preview as PreviewOverride);
-      }
-    };
-    window.addEventListener("message", handler);
-    /* Signal readiness to parent */
-    window.parent.postMessage({ __plateform_ready: true }, "*");
-    return () => window.removeEventListener("message", handler);
-  }, []);
-
-  /* Persist language preference */
-  useEffect(() => {
-    try {
-      const saved = localStorage.getItem(`menu:${restaurant.slug}:lang`);
-      if (saved && (available as string[]).includes(saved)) setLang(saved as Language);
-    } catch {}
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  useEffect(() => {
-    try { localStorage.setItem(`menu:${restaurant.slug}:lang`, lang); } catch {}
-    document.documentElement.lang = lang;
-    document.documentElement.dir = dir;
-  }, [lang, dir, restaurant.slug]);
-
-  /* Track menu view once per session */
-  useEffect(() => {
-    try {
-      const key = `menu:${restaurant.slug}:tracked`;
-      if (!sessionStorage.getItem(key)) {
-        trackEvent(restaurant.id, "menu_view", { language: lang });
-        if (typeof document !== "undefined" && (!document.referrer || document.referrer === ""))
-          trackEvent(restaurant.id, "qr_scan", { language: lang });
-        sessionStorage.setItem(key, "1");
-      }
-    } catch {}
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  /* Lock body scroll when modal open */
-  useEffect(() => {
-    document.body.style.overflow = modalDish ? "hidden" : "";
-    return () => { document.body.style.overflow = ""; };
-  }, [modalDish]);
+/**
+ * Public menu page : hero + sticky category nav (or sidebar) + sections of
+ * dish cards + footer + detail modal. State and side-effects live in
+ * `useMenuView`; presentation is split across `_components/`.
+ */
+export function MenuView({
+  restaurant,
+  categories,
+  dishes,
+}: MenuViewProps) {
+  const {
+    lang,
+    available,
+    langOpen,
+    dir,
+    toggleLangOpen,
+    blurLangOpen,
+    selectLang,
+    activeCategory,
+    modalDish,
+    setModalDish,
+    search,
+    setSearch,
+    isMobile,
+    isSearching,
+    themeVars,
+    fontPack,
+    menuLayout,
+    heroStyle,
+    catStyle,
+    filteredDishes,
+    dishesByCategory,
+    selectCategory,
+    handleShare,
+  } = useMenuView({ restaurant, categories, dishes });
 
   const currency = restaurant.currency || "ILS";
-  const restaurantName = restaurant.name;
 
-  /* Theme tokens — preview overrides win over DB values */
-  const themeVars = buildMenuTheme(
-    previewOverride.theme_primary ?? restaurant.theme_primary,
-    previewOverride.theme_dark_mode ?? restaurant.theme_dark_mode
-  ) as React.CSSProperties;
-
-  /* Layout options — preview overrides win */
-  const fontPack = getFontPack(previewOverride.theme_font_pack ?? restaurant.theme_font_pack);
-  const menuLayout = ((previewOverride.menu_layout ?? restaurant.menu_layout) ?? "grid") as MenuLayout;
-  const heroStyle = ((previewOverride.menu_hero_style ?? restaurant.menu_hero_style) ?? "default") as MenuHeroStyle;
-  const catStyle = ((previewOverride.menu_category_style ?? restaurant.menu_category_style) ?? "pills") as MenuCategoryStyle;
-
-  /* Search filter */
-  const searchTrimmed = search.trim().toLowerCase();
-  const isSearching = searchTrimmed.length > 0;
-  const filteredDishes = isSearching
-    ? dishes.filter((d) => {
-        const name = (d.name || "").toLowerCase();
-        const nameEn = ((d as Record<string, unknown>).name_en as string || "").toLowerCase();
-        const nameFr = ((d as Record<string, unknown>).name_fr as string || "").toLowerCase();
-        const desc = (d.description || "").toLowerCase();
-        return name.includes(searchTrimmed) || nameEn.includes(searchTrimmed) || nameFr.includes(searchTrimmed) || desc.includes(searchTrimmed);
-      })
-    : dishes;
-
-  const dishesByCategory = categories.map((cat) => ({
-    category: cat,
-    dishes: filteredDishes.filter((d) => d.category_id === cat.id),
-  }));
-  /* Flatten dish index for placeholder cycling */
+  // Compute start index per category for deterministic placeholder cycling
   let dishGlobalIdx = 0;
-
-  const scrollToCategory = (catId: string) => {
-    setActiveCategory(catId);
-    const el = document.getElementById(`cat-${catId}`);
-    if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
-  };
-
-  const handleShare = async () => {
-    try {
-      await navigator.share({ url: window.location.href, title: restaurantName });
-    } catch {
-      navigator.clipboard.writeText(window.location.href).catch(() => {});
-    }
-  };
 
   return (
     <div
@@ -210,11 +79,13 @@ export function MenuView({ restaurant, categories, dishes, slug }: MenuViewProps
         overflowX: "hidden",
       }}
     >
-      {/* ── Grain texture overlay (fixed, full-page) ── */}
+      {/* Grain texture overlay */}
       <div
         aria-hidden
         style={{
-          position: "fixed", inset: 0, zIndex: 1,
+          position: "fixed",
+          inset: 0,
+          zIndex: 1,
           pointerEvents: "none",
           backgroundImage: GRAIN_SVG,
           backgroundSize: "240px",
@@ -223,594 +94,99 @@ export function MenuView({ restaurant, categories, dishes, slug }: MenuViewProps
         }}
       />
 
-      {/* ══════════════════════════════════════════════
-          HERO
-          ══════════════════════════════════════════════ */}
-      <header
-        style={{
-          position: "relative",
-          height: heroStyle === "minimal" ? 200 : 360,
-          overflow: "hidden",
-          borderBottom: `1px solid ${D.line}`,
-          background: heroStyle === "minimal" ? D.section : undefined,
-        }}
+      <Hero
+        restaurant={restaurant}
+        heroStyle={heroStyle}
+        fontPack={fontPack}
+        lang={lang}
+        available={available}
+        langOpen={langOpen}
+        onToggleLangOpen={toggleLangOpen}
+        onBlurLangOpen={blurLangOpen}
+        onSelectLang={selectLang}
+        onShare={handleShare}
+      />
+
+      <SubHeader
+        categories={categories}
+        catStyle={catStyle}
+        activeCategory={activeCategory}
+        isSearching={isSearching}
+        onSelectCategory={selectCategory}
+        search={search}
+        onSearchChange={setSearch}
+        lang={lang}
+        dir={dir}
+        fontPack={fontPack}
+      />
+
+      {catStyle === "sidebar" && isMobile && (
+        <MobileCategoryNav
+          categories={categories}
+          activeCategory={activeCategory}
+          isSearching={isSearching}
+          onSelectCategory={selectCategory}
+          lang={lang}
+          fontPack={fontPack}
+        />
+      )}
+
+      <main
+        style={
+          catStyle === "sidebar" && !isMobile
+            ? { display: "flex", maxWidth: 860, margin: "0 auto" }
+            : undefined
+        }
       >
-        {/* Background (not for minimal) */}
-        {heroStyle !== "minimal" && (
-          <div
-            aria-hidden
-            style={{
-              position: "absolute", inset: 0,
-              background: restaurant.banner_url
-                ? undefined
-                : `radial-gradient(ellipse at 30% 50%, hsl(28,62%,30%,.6), transparent 60%),
-                   radial-gradient(ellipse at 70% 30%, hsl(22,70%,40%,.5), transparent 60%),
-                   linear-gradient(135deg, hsl(28,30%,14%) 0%, hsl(28,18%,6%) 100%)`,
-            }}
-          >
-            {restaurant.banner_url && (
-              <Image
-                src={restaurant.banner_url}
-                alt=""
-                aria-hidden
-                fill
-                priority
-                sizes="100vw"
-                style={{ objectFit: "cover", filter: "brightness(.4) saturate(.7)", transform: "scale(1.08)" }}
-              />
-            )}
-          </div>
-        )}
-        {/* Bottom fade (not for minimal) */}
-        {heroStyle !== "minimal" && (
-          <div
-            aria-hidden
-            style={{ position: "absolute", inset: "auto 0 0", height: 180, background: `linear-gradient(180deg, transparent 0%, ${D.page} 100%)`, pointerEvents: "none" }}
+        {catStyle === "sidebar" && !isMobile && (
+          <DesktopSidebarNav
+            categories={categories}
+            activeCategory={activeCategory}
+            isSearching={isSearching}
+            onSelectCategory={selectCategory}
+            search={search}
+            onSearchChange={setSearch}
+            heroStyle={heroStyle}
+            lang={lang}
+            dir={dir}
+            fontPack={fontPack}
           />
         )}
 
-        {/* Utility bar (top) */}
-        <div
-          style={{
-            position: "absolute", top: 20, left: "50%", transform: "translateX(-50%)",
-            zIndex: 10, maxWidth: 720, width: "calc(100% - 48px)",
-            display: "flex", justifyContent: "space-between", alignItems: "center",
-          }}
-        >
-          {/* Language pill */}
-          <div style={{ position: "relative" }}>
-            <button
-              type="button"
-              onClick={() => setLangOpen(v => !v)}
-              onBlur={() => setTimeout(() => setLangOpen(false), 120)}
-              style={{
-                display: "inline-flex", alignItems: "center", gap: 8,
-                padding: "8px 14px", borderRadius: 99,
-                background: heroStyle === "minimal" ? D.surface : "hsl(28,18%,6%,.6)",
-                backdropFilter: "blur(16px)",
-                border: `1px solid ${D.line}`,
-                fontFamily: "'DM Mono', monospace", fontSize: "10.5px", letterSpacing: ".14em",
-                textTransform: "uppercase", color: D.text, cursor: "pointer",
-              }}
-            >
-              <span style={{ fontSize: 14 }}>{LANGUAGE_META[lang].flag}</span>
-              {lang.toUpperCase()}
-              {available.length > 1 && (
-                <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" style={{ opacity: .6 }}>
-                  <polyline points="6 9 12 15 18 9"/>
-                </svg>
-              )}
-            </button>
-            {langOpen && available.length > 1 && (
-              <div style={{
-                position: "absolute", top: "calc(100% + 8px)", insetInlineStart: 0, minWidth: 160,
-                background: D.card, border: `1px solid ${D.line2}`, borderRadius: 12,
-                overflow: "hidden", zIndex: 50,
-                boxShadow: "0 16px 40px rgba(0,0,0,.5)",
-              }}>
-                {available.map(l => (
-                  <button
-                    key={l}
-                    type="button"
-                    onMouseDown={(e) => { e.preventDefault(); setLang(l); setLangOpen(false); }}
-                    style={{
-                      display: "flex", alignItems: "center", gap: 10,
-                      width: "100%", padding: "11px 16px",
-                      background: l === lang ? `${D.gold}1a` : "transparent",
-                      border: "none", cursor: "pointer",
-                      fontFamily: fontPack.bodyFont, fontSize: 13.5,
-                      color: l === lang ? D.gold : D.text,
-                      textAlign: "start",
-                    }}
-                    dir={LANGUAGE_META[l].dir}
-                  >
-                    <span style={{ fontSize: 16 }}>{LANGUAGE_META[l].flag}</span>
-                    {LANGUAGE_META[l].label}
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>
-
-          {/* Share pill */}
-          <button
-            type="button"
-            onClick={handleShare}
-            style={{
-              display: "inline-flex", alignItems: "center", gap: 8,
-              padding: "8px 14px", borderRadius: 99,
-              background: heroStyle === "minimal" ? D.surface : "hsl(28,18%,6%,.6)",
-              backdropFilter: "blur(16px)",
-              border: `1px solid ${D.line}`,
-              fontFamily: "'DM Mono', monospace", fontSize: "10.5px", letterSpacing: ".14em",
-              textTransform: "uppercase", color: D.text, cursor: "pointer",
-            }}
-          >
-            <Share2 style={{ width: 11, height: 11 }} strokeWidth={1.6} />
-            Share
-          </button>
-        </div>
-
-        {/* Hero content — alignment depends on heroStyle */}
-        <div
-          style={{
-            position: "relative", zIndex: 2, height: "100%",
-            maxWidth: 720, margin: "0 auto", padding: heroStyle === "minimal" ? "72px 24px 0" : "0 24px 36px",
-            display: "flex", flexDirection: "column",
-            justifyContent: heroStyle === "centered" ? "center" : heroStyle === "minimal" ? "flex-start" : "flex-end",
-            alignItems: heroStyle === "centered" ? "center" : undefined,
-            textAlign: heroStyle === "centered" ? "center" : undefined,
-          }}
-        >
-          {/* Restaurant mark row */}
-          <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 20, justifyContent: heroStyle === "centered" ? "center" : undefined }}>
-            <div style={{
-              width: 48, height: 48,
-              background: D.grad,
-              borderRadius: 12,
-              display: "flex", alignItems: "center", justifyContent: "center",
-              color: "#fff",
-              boxShadow: `0 0 32px ${D.gold}59`,
-              flexShrink: 0,
-            }}>
-              {restaurant.logo_url ? (
-                <Image
-                  src={restaurant.logo_url}
-                  alt={restaurantName}
-                  width={48}
-                  height={48}
-                  style={{ borderRadius: 12, objectFit: "cover" }}
-                  priority
+        <div style={catStyle === "sidebar" ? { flex: 1, minWidth: 0 } : undefined}>
+          {isSearching && filteredDishes.length === 0 ? (
+            <SearchEmpty lang={lang} onClear={() => setSearch("")} />
+          ) : dishesByCategory.length === 0 ? (
+            <MenuEmpty lang={lang} />
+          ) : (
+            dishesByCategory.map(({ category, dishes: catDishes }) => {
+              if (isSearching && catDishes.length === 0) return null;
+              const startIdx = dishGlobalIdx;
+              dishGlobalIdx += catDishes.length;
+              return (
+                <MenuSection
+                  key={category.id}
+                  category={category}
+                  dishes={catDishes}
+                  startIdx={startIdx}
+                  restaurantId={restaurant.id}
+                  currency={currency}
+                  menuLayout={menuLayout}
+                  fontPack={fontPack}
+                  lang={lang}
+                  onOpenDish={(d) => setModalDish(d)}
                 />
-              ) : (
-                <img src="/brand/logo-mark.svg" width={48} height={48} alt="Plateform" style={{ borderRadius: 12, objectFit: "cover" }} draggable={false} />
-              )}
-            </div>
-            <div>
-              <div style={{ fontFamily: "'DM Mono', monospace", fontSize: 11, letterSpacing: ".14em", textTransform: "uppercase", color: D.textDim }}>
-                {restaurantName}
-                {restaurant.address && ` · ${restaurant.address}`}
-              </div>
-            </div>
-          </div>
-
-          {/* Restaurant name as h1 — only inside hero for minimal/centered */}
-          {(heroStyle === "minimal" || heroStyle === "centered") && (
-            <h1
-              style={{
-                fontFamily: fontPack.headingFont,
-                fontWeight: 500,
-                fontSize: heroStyle === "minimal" ? "clamp(28px, 5vw, 42px)" : "clamp(48px, 8vw, 72px)",
-                lineHeight: .95,
-                letterSpacing: "-.02em",
-                color: D.text,
-                margin: "0 0 12px",
-              }}
-            >
-              {restaurantName}
-            </h1>
+              );
+            })
           )}
 
-          {/* Meta row */}
-          <div style={{ display: "flex", gap: 18, flexWrap: "wrap", fontFamily: "'DM Mono', monospace", fontSize: "10.5px", letterSpacing: ".18em", textTransform: "uppercase", color: D.textDim, justifyContent: heroStyle === "centered" ? "center" : undefined }}>
-            {restaurant.phone && (
-              <span style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                <span style={{ width: 4, height: 4, borderRadius: 99, background: D.gold, display: "inline-block" }}/>
-                <a href={`tel:${restaurant.phone}`} style={{ color: "inherit", textDecoration: "none" }} dir="ltr">{restaurant.phone}</a>
-              </span>
-            )}
-            {restaurant.address && (
-              <span style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                <span style={{ width: 4, height: 4, borderRadius: 99, background: D.gold, display: "inline-block" }}/>
-                {restaurant.address}
-              </span>
-            )}
-          </div>
+          {/* Bottom padding */}
+          <div style={{ height: 80 }} />
         </div>
-      </header>
-
-      {/* Nom du restaurant sous la bannière — mode default uniquement */}
-      {heroStyle === "default" && (
-        <div style={{ maxWidth: 860, margin: "0 auto", padding: "28px 24px 0" }}>
-          <h1
-            style={{
-              fontFamily: fontPack.headingFont,
-              fontWeight: 500,
-              fontSize: "clamp(32px, 6vw, 52px)",
-              lineHeight: 1,
-              letterSpacing: "-.02em",
-              color: D.text,
-              margin: 0,
-            }}
-          >
-            {restaurantName}
-          </h1>
-        </div>
-      )}
-
-      {/* ══════════════════════════════════════════════
-          STICKY CATEGORY NAV  (pills / underline)
-          Hidden when catStyle === "sidebar" — sidebar renders inline
-          ══════════════════════════════════════════════ */}
-      {categories.length > 0 && catStyle !== "sidebar" && (
-        <nav
-          style={{
-            position: "sticky", top: 0, zIndex: 20,
-            background: `${D.page}ee`,
-            backdropFilter: "blur(20px)",
-            WebkitBackdropFilter: "blur(20px)",
-            borderBottom: `1px solid ${D.line}`,
-          }}
-        >
-          {/* Category tabs — style depends on catStyle */}
-          <div style={{ padding: "12px 24px 0", overflowX: "auto", whiteSpace: "nowrap", scrollbarWidth: "none" }}>
-            <div style={{ maxWidth: 720, margin: "0 auto", display: "flex", gap: catStyle === "pills" ? 6 : 0 }}>
-              {categories.map((cat) => {
-                const catName = pickLocalized(cat as unknown as Record<string, unknown>, "name", lang) || cat.name;
-                const isActive = !isSearching && activeCategory === cat.id;
-
-                /* Pills style */
-                if (catStyle === "pills") return (
-                  <button
-                    key={cat.id}
-                    type="button"
-                    onClick={() => { setSearch(""); scrollToCategory(cat.id); }}
-                    style={{
-                      padding: "7px 16px", borderRadius: 99,
-                      background: isActive ? D.grad : "transparent",
-                      border: `1px solid ${isActive ? "transparent" : D.line}`,
-                      color: isActive ? "#fff" : D.textDim,
-                      fontFamily: fontPack.bodyFont, fontSize: 13, fontWeight: 500,
-                      cursor: "pointer", flexShrink: 0,
-                      boxShadow: isActive ? `0 0 20px ${D.gold}4d` : "none",
-                      transition: "all .15s",
-                    }}
-                  >
-                    {catName}
-                  </button>
-                );
-
-                /* Underline style */
-                return (
-                  <button
-                    key={cat.id}
-                    type="button"
-                    onClick={() => { setSearch(""); scrollToCategory(cat.id); }}
-                    style={{
-                      padding: "7px 14px", borderRadius: 0,
-                      background: "transparent",
-                      border: "none",
-                      borderBottom: `2px solid ${isActive ? D.gold : "transparent"}`,
-                      color: isActive ? D.gold : D.textDim,
-                      fontFamily: fontPack.bodyFont, fontSize: 13, fontWeight: isActive ? 600 : 400,
-                      cursor: "pointer", flexShrink: 0,
-                      transition: "all .15s",
-                    }}
-                  >
-                    {catName}
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-
-          {/* Search bar */}
-          <div style={{ padding: "10px 24px 12px" }}>
-            <div style={{ maxWidth: 720, margin: "0 auto", position: "relative" }}>
-              <svg
-                aria-hidden
-                width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
-                style={{ position: "absolute", top: "50%", insetInlineStart: 12, transform: "translateY(-50%)", color: D.textDim, pointerEvents: "none" }}
-              >
-                <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
-              </svg>
-              <input
-                type="search"
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                placeholder={t(lang, "search_placeholder")}
-                dir={dir}
-                style={{
-                  width: "100%",
-                  paddingInlineStart: 34,
-                  paddingInlineEnd: search ? 34 : 12,
-                  paddingTop: 8,
-                  paddingBottom: 8,
-                  borderRadius: 99,
-                  background: "hsl(28,22%,12%,.8)",
-                  border: `1px solid ${search ? D.line2 : D.line}`,
-                  color: D.cream,
-                  fontFamily: "'DM Sans', sans-serif",
-                  fontSize: 13,
-                  outline: "none",
-                  boxSizing: "border-box",
-                  transition: "border-color .2s",
-                }}
-              />
-              {search && (
-                <button
-                  type="button"
-                  onClick={() => setSearch("")}
-                  aria-label="נקה חיפוש"
-                  style={{
-                    position: "absolute", top: "50%", insetInlineEnd: 8, transform: "translateY(-50%)",
-                    background: "none", border: "none", cursor: "pointer", color: D.textDim,
-                    display: "flex", alignItems: "center", padding: 4,
-                  }}
-                >
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                    <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
-                  </svg>
-                </button>
-              )}
-            </div>
-          </div>
-        </nav>
-      )}
-
-      {/* ══════════════════════════════════════════════
-          MENU SECTIONS
-          ══════════════════════════════════════════════ */}
-      {/* ── Sidebar mobile : nav horizontale scrollable ── */}
-      {catStyle === "sidebar" && isMobile && categories.length > 0 && (
-        <nav
-          style={{
-            position: "sticky",
-            top: 0,
-            zIndex: 20,
-            display: "flex",
-            alignItems: "center",
-            gap: 6,
-            overflowX: "auto",
-            overflowY: "hidden",
-            scrollbarWidth: "none",
-            background: D.card,
-            borderBottom: `1px solid ${D.line}`,
-            padding: "10px 14px",
-          }}
-        >
-          {categories.map((cat) => {
-            const catName = pickLocalized(cat as unknown as Record<string, unknown>, "name", lang) || cat.name;
-            const isActive = !isSearching && activeCategory === cat.id;
-            return (
-              <button
-                key={cat.id}
-                type="button"
-                onClick={() => { setSearch(""); scrollToCategory(cat.id); }}
-                style={{
-                  flexShrink: 0,
-                  padding: "6px 14px",
-                  borderRadius: 99,
-                  border: `1px solid ${isActive ? D.gold : D.line}`,
-                  background: isActive ? D.gold : "transparent",
-                  color: isActive ? D.page : D.textDim,
-                  fontFamily: fontPack.bodyFont,
-                  fontSize: 12,
-                  fontWeight: isActive ? 600 : 400,
-                  cursor: "pointer",
-                  whiteSpace: "nowrap",
-                  transition: "all .15s",
-                }}
-              >
-                {catName}
-              </button>
-            );
-          })}
-        </nav>
-      )}
-
-      <main style={catStyle === "sidebar" && !isMobile ? { display: "flex", maxWidth: 860, margin: "0 auto" } : undefined}>
-
-        {/* ── Sidebar category nav (desktop only) ── */}
-        {catStyle === "sidebar" && !isMobile && categories.length > 0 && (
-          <nav
-            style={{
-              width: 160,
-              flexShrink: 0,
-              position: "sticky",
-              top: heroStyle === "minimal" ? 200 : 360,
-              alignSelf: "flex-start",
-              height: `calc(100vh - ${heroStyle === "minimal" ? 200 : 360}px)`,
-              overflowY: "auto",
-              borderInlineEnd: `1px solid ${D.line}`,
-              padding: "24px 0",
-              scrollbarWidth: "none",
-            }}
-          >
-            {/* Search inside sidebar */}
-            <div style={{ padding: "0 12px 16px", position: "relative" }}>
-              <svg
-                aria-hidden
-                width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
-                style={{ position: "absolute", top: "50%", insetInlineStart: 22, transform: "translateY(-50%)", color: D.textDim, pointerEvents: "none" }}
-              >
-                <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
-              </svg>
-              <input
-                type="search"
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                placeholder="חיפוש"
-                dir={dir}
-                style={{
-                  width: "100%",
-                  paddingInlineStart: 28,
-                  paddingInlineEnd: 8,
-                  paddingTop: 7,
-                  paddingBottom: 7,
-                  borderRadius: 8,
-                  background: D.surface,
-                  border: `1px solid ${D.line}`,
-                  color: D.cream,
-                  fontFamily: "'DM Sans', sans-serif",
-                  fontSize: 12,
-                  outline: "none",
-                  boxSizing: "border-box",
-                }}
-              />
-            </div>
-            {categories.map((cat) => {
-              const catName = pickLocalized(cat as unknown as Record<string, unknown>, "name", lang) || cat.name;
-              const isActive = !isSearching && activeCategory === cat.id;
-              return (
-                <button
-                  key={cat.id}
-                  type="button"
-                  onClick={() => { setSearch(""); scrollToCategory(cat.id); }}
-                  style={{
-                    display: "block",
-                    width: "100%",
-                    textAlign: "start",
-                    padding: "9px 16px",
-                    paddingInlineStart: 13,
-                    background: isActive ? `${D.gold}18` : "transparent",
-                    borderTop: "none",
-                    borderBottom: "none",
-                    borderInlineEnd: "none",
-                    borderInlineStart: `3px solid ${isActive ? D.gold : "transparent"}`,
-                    color: isActive ? D.gold : D.textDim,
-                    fontFamily: fontPack.bodyFont,
-                    fontSize: 13,
-                    fontWeight: isActive ? 600 : 400,
-                    cursor: "pointer",
-                    transition: "all .15s",
-                    whiteSpace: "nowrap",
-                    overflow: "hidden",
-                    textOverflow: "ellipsis",
-                  }}
-                >
-                  {catName}
-                </button>
-              );
-            })}
-          </nav>
-        )}
-
-        {/* ── Main content area ── */}
-        <div style={catStyle === "sidebar" ? { flex: 1, minWidth: 0 } : undefined}>
-
-        {isSearching && filteredDishes.length === 0 ? (
-          <div style={{ textAlign: "center", padding: "100px 24px" }}>
-            <UtensilsCrossed style={{ width: 44, height: 44, color: D.gold, opacity: 0.22, margin: "0 auto 16px" }} />
-            <p style={{ color: D.textDim, fontFamily: "'DM Sans', sans-serif", fontSize: 14 }}>{t(lang, "no_search_results")}</p>
-            <button
-              type="button"
-              onClick={() => setSearch("")}
-              style={{ marginTop: 16, fontFamily: "'DM Mono', monospace", fontSize: 11, letterSpacing: ".14em", textTransform: "uppercase", color: D.gold, background: "none", border: `1px solid ${D.line2}`, borderRadius: 99, padding: "8px 18px", cursor: "pointer" }}
-            >
-              ✕ {t(lang, "search_placeholder").replace("...", "")}
-            </button>
-          </div>
-        ) : dishesByCategory.length === 0 ? (
-          <div style={{ textAlign: "center", padding: "120px 24px" }}>
-            <UtensilsCrossed style={{ width: 52, height: 52, color: D.gold, opacity: 0.25, margin: "0 auto 16px" }} />
-            <p style={{ color: D.textDim, fontFamily: "'DM Sans', sans-serif" }}>{t(lang, "empty_menu")}</p>
-          </div>
-        ) : (
-          dishesByCategory.map(({ category, dishes: catDishes }) => {
-            const catName = pickLocalized(category as unknown as Record<string, unknown>, "name", lang) || category.name;
-            const catTotal = catDishes.length;
-            /* Skip empty categories when searching */
-            if (isSearching && catTotal === 0) return null;
-            return (
-              <section key={category.id} id={`cat-${category.id}`} style={{ scrollMarginTop: 64 }}>
-
-                {/* ── Section rule ── */}
-                <div style={{ margin: "56px auto 24px", maxWidth: 860, padding: "0 24px", display: "flex", alignItems: "center", gap: 14 }}>
-                  <h2 style={{ fontFamily: fontPack.headingFont, fontWeight: 500, fontSize: 32, letterSpacing: "-.02em", color: D.cream, margin: 0, flexShrink: 0, lineHeight: 1 }}>
-                    {catName}
-                  </h2>
-                  <div style={{ flex: 1, height: 1, background: `linear-gradient(90deg, transparent, ${D.line2} 50%, transparent)` }}/>
-                  <span style={{ fontFamily: "'DM Mono', monospace", fontSize: 10, letterSpacing: ".22em", textTransform: "uppercase", color: D.textDim }}>
-                    {String(catTotal).padStart(2, "0")}
-                  </span>
-                </div>
-
-                {/* ── Dish list ── */}
-                <div style={{
-                  maxWidth: 860, margin: "0 auto",
-                  padding: "0 24px",
-                  ...(menuLayout === "grid"
-                    ? { display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 14 }
-                    : { display: "flex", flexDirection: "column", gap: 14 }),
-                }}>
-                  {catDishes.length === 0 ? (
-                    <p style={{ color: D.textDim, fontSize: 13, paddingInlineStart: 4, fontFamily: fontPack.bodyFont }}>{t(lang, "no_dishes_in_cat")}</p>
-                  ) : (
-                    catDishes.map((dish) => {
-                      const idx = dishGlobalIdx++;
-                      return (
-                        <DishCard
-                          key={dish.id}
-                          dish={dish}
-                          restaurantId={restaurant.id}
-                          lang={lang}
-                          currency={currency}
-                          placeholderGradient={dishPlaceholder(idx)}
-                          menuLayout={menuLayout}
-                          headingFont={fontPack.headingFont}
-                          bodyFont={fontPack.bodyFont}
-                          onOpen={() => setModalDish(dish)}
-                        />
-                      );
-                    })
-                  )}
-                </div>
-              </section>
-            );
-          })
-        )}
-
-        {/* Bottom padding */}
-        <div style={{ height: 80 }} />
-
-        </div>{/* end main content area */}
       </main>
 
-      {/* ══════════════════════════════════════════════
-          FOOTER
-          ══════════════════════════════════════════════ */}
-      <footer>
-        <div style={{ maxWidth: 860, margin: "60px auto 0", padding: "36px 24px", borderTop: `1px solid ${D.line}`, display: "flex", alignItems: "center", justifyContent: "center", gap: 10 }}>
-          <span style={{ color: D.gold, display: "flex", alignItems: "center" }}>
-            <svg width="14" height="14" viewBox="0 0 32 32" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M5 22 Q5 12 16 12 Q27 12 27 22 Z"/>
-              <line x1="3" y1="22" x2="29" y2="22"/>
-              <circle cx="16" cy="9" r="1.5" fill="currentColor"/>
-            </svg>
-          </span>
-          <span style={{ fontFamily: "'DM Mono', monospace", fontSize: 10, letterSpacing: ".22em", textTransform: "uppercase", color: D.textDim }}>
-            {t(lang, "powered")}
-          </span>
-          <span style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 700, fontSize: 13, letterSpacing: ".18em", color: D.text }}>
-            PLATE<em style={{ fontStyle: "italic", color: D.gold }}>FORM</em>
-          </span>
-        </div>
-      </footer>
+      <MenuFooter lang={lang} />
 
-      {/* ══════════════════════════════════════════════
-          DISH DETAIL MODAL
-          ══════════════════════════════════════════════ */}
       {modalDish && (
         <DishModal
           dish={modalDish}
@@ -823,400 +199,5 @@ export function MenuView({ restaurant, categories, dishes, slug }: MenuViewProps
         />
       )}
     </div>
-  );
-}
-
-/* ════════════════════════════════════════════════════════
-   DISH CARD
-   ════════════════════════════════════════════════════════ */
-function DishCard({
-  dish, restaurantId, lang, currency, placeholderGradient, menuLayout, headingFont, bodyFont, onOpen,
-}: {
-  dish: Dish;
-  restaurantId: string;
-  lang: Language;
-  currency: string;
-  placeholderGradient: string;
-  menuLayout: MenuLayout;
-  headingFont: string;
-  bodyFont: string;
-  onOpen: () => void;
-}) {
-  const [hovered, setHovered] = useState(false);
-  const [show360, setShow360] = useState(false);
-  const name = pickLocalized(dish as unknown as Record<string, unknown>, "name", lang) || dish.name;
-  const desc = pickLocalized(dish as unknown as Record<string, unknown>, "description", lang);
-  const soldout = !dish.is_available;
-  const has3d = !!dish.model_3d_url;
-  const has360 = Array.isArray(dish.photos_360) && dish.photos_360.length > 0;
-  const hasVideo = !!dish.video_url;
-
-  /* Badge type — highest capability first */
-  const badgeType: "3D" | "Video" | "AR" | "360" | null =
-    has3d ? (dish.ar_enabled ? "AR" : "3D") :
-    hasVideo ? "Video" :
-    has360 ? "360" :
-    null;
-
-  const openModal = () => {
-    trackEvent(restaurantId, "dish_view", { dishId: dish.id, language: lang });
-    onOpen();
-  };
-
-  const open360 = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    trackEvent(restaurantId, "ar_view", { dishId: dish.id, language: lang });
-    setShow360(true);
-  };
-
-  const isGrid = menuLayout === "grid";
-  const isList = menuLayout === "list";
-
-  return (
-    <>
-      <article
-        tabIndex={0}
-        role="button"
-        aria-label={name}
-        onMouseEnter={() => setHovered(true)}
-        onMouseLeave={() => setHovered(false)}
-        onClick={openModal}
-        onKeyDown={(e) => e.key === "Enter" && openModal()}
-        style={{
-          display: "flex",
-          flexDirection: isGrid ? "column" : "row",
-          direction: isGrid ? undefined : "ltr",
-          gap: isList ? 12 : 16,
-          background: hovered ? D.surface : D.card,
-          border: `1px solid ${hovered ? D.line2 : D.line}`,
-          borderRadius: 14,
-          padding: isList ? "10px 14px" : isGrid ? 0 : 14,
-          cursor: "pointer",
-          transition: "border-color .25s, background .25s",
-          position: "relative",
-          outline: "none",
-          opacity: soldout ? 0.62 : 1,
-          alignItems: isGrid ? undefined : "center",
-          overflow: isGrid ? "hidden" : undefined,
-        }}
-      >
-        {/* Media — top full-width in grid, left column in row, hidden in list */}
-        {!isList && (
-          <div
-            style={{
-              position: "relative",
-              borderRadius: isGrid ? 0 : 10,
-              overflow: "hidden",
-              width: isGrid ? "100%" : 90,
-              height: isGrid ? 140 : 90,
-              flexShrink: 0,
-              background: dish.image_url ? undefined : placeholderGradient,
-            }}
-          >
-            {/* Shimmer highlight */}
-            <div aria-hidden style={{ position: "absolute", inset: 0, background: "radial-gradient(circle at 30% 30%, rgba(255,220,170,.3), transparent 60%)", zIndex: 1, pointerEvents: "none" }} />
-
-            {dish.video_url ? (
-              <video
-                src={dish.video_url}
-                poster={dish.image_url ?? undefined}
-                style={{ width: "100%", height: "100%", objectFit: "cover", display: "block", transition: "transform .5s", transform: hovered ? "scale(1.08)" : "scale(1)" }}
-                muted loop playsInline preload="metadata"
-                onMouseEnter={(e) => { e.currentTarget.play().catch(() => {}); trackEvent(restaurantId, "video_play", { dishId: dish.id }); }}
-                onMouseLeave={(e) => { e.currentTarget.pause(); e.currentTarget.currentTime = 0; }}
-              />
-            ) : dish.image_url ? (
-              <Image
-                src={dish.image_url}
-                alt={name}
-                fill
-                sizes="(max-width: 640px) 50vw, 33vw"
-                style={{ objectFit: "cover", display: "block", transition: "transform .5s", transform: hovered ? "scale(1.08)" : "scale(1)" }}
-              />
-            ) : null}
-
-            {/* Soldout overlay */}
-            {soldout && (
-              <div style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,.55)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 2 }}>
-                <span style={{ fontSize: 8, fontFamily: "'DM Mono', monospace", letterSpacing: ".1em", textTransform: "uppercase", color: "#fff" }}>
-                  {t(lang, "soldout")}
-                </span>
-              </div>
-            )}
-
-            {/* Media badge */}
-            {badgeType && (
-              <span style={{ position: "absolute", bottom: 4, insetInlineStart: 4, zIndex: 3, fontFamily: "'DM Mono', monospace", fontSize: 8, letterSpacing: ".1em", textTransform: "uppercase", padding: "2px 6px", borderRadius: 99, background: "hsl(28,18%,6%,.8)", backdropFilter: "blur(8px)", color: D.goldLt, display: "flex", alignItems: "center", gap: 3 }}>
-                {badgeType === "3D" || badgeType === "AR" ? (
-                  <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6"><circle cx="12" cy="12" r="9"/><ellipse cx="12" cy="12" rx="9" ry="3"/></svg>
-                ) : badgeType === "Video" ? (
-                  <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-                ) : (
-                  <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6"><circle cx="12" cy="12" r="3"/><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"/></svg>
-                )}
-                {badgeType}
-              </span>
-            )}
-          </div>
-        )}
-
-        {/* Info column — flex-1 in row mode, padded in grid mode */}
-        <div style={{ flex: 1, minWidth: 0, direction: "rtl", padding: isGrid ? "12px 12px 0" : undefined }}>
-          <h3 style={{ fontFamily: headingFont, fontWeight: 600, fontSize: isList ? 16 : isGrid ? 16 : 19, lineHeight: 1.15, color: D.cream, margin: "0 0 4px" }}>
-            {name}
-          </h3>
-
-          {desc && !isList && (
-            <p style={{ fontFamily: bodyFont, fontSize: 13, lineHeight: 1.55, color: D.textDim, margin: "0 0 8px", display: "-webkit-box", WebkitLineClamp: isGrid ? 2 : 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}>
-              {desc}
-            </p>
-          )}
-
-          {/* Tags row */}
-          <div style={{ display: "flex", gap: 5, flexWrap: "wrap" }}>
-            {dish.is_signature && <DishTag color="gold">מנת השף</DishTag>}
-            {dish.is_new && <DishTag color="orange">חדש</DishTag>}
-            {dish.is_featured && <DishTag color="orange">מומלץ</DishTag>}
-            {soldout && <DishTag color="muted">{t(lang, "soldout")}</DishTag>}
-            {has360 && (
-              <button
-                type="button"
-                onClick={open360}
-                style={{ display: "inline-flex", alignItems: "center", gap: 4, fontFamily: "'DM Mono', monospace", fontSize: "9px", letterSpacing: ".14em", textTransform: "uppercase", padding: "3px 8px", borderRadius: 99, color: D.goldLt, background: `${D.goldLt}14`, border: `1px solid ${D.goldLt}2d`, cursor: "pointer" }}
-              >
-                <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6"><circle cx="12" cy="12" r="3"/><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"/></svg>
-                360°
-              </button>
-            )}
-            {has3d && !has360 && (
-              <DishModelViewer
-                restaurantId={restaurantId}
-                dishId={dish.id}
-                dishName={name}
-                modelUrl={dish.model_3d_url!}
-                arEnabled={dish.ar_enabled}
-                language={lang}
-                trigger={
-                  <span style={{ display: "inline-flex", alignItems: "center", gap: 4, fontFamily: "'DM Mono', monospace", fontSize: "9px", letterSpacing: ".14em", textTransform: "uppercase", padding: "3px 8px", borderRadius: 99, color: D.goldLt, background: `${D.goldLt}14`, border: `1px solid ${D.goldLt}2d` }}>
-                    <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6"><circle cx="12" cy="12" r="9"/><ellipse cx="12" cy="12" rx="9" ry="3"/></svg>
-                    3D
-                  </span>
-                }
-              />
-            )}
-          </div>
-        </div>
-
-        {/* Prix — badge à droite (row) ou en bas à gauche (grid RTL = fin de ligne) */}
-        <div style={{
-          flexShrink: 0, alignSelf: isGrid ? undefined : "center",
-          ...(isGrid ? { padding: "0 12px 12px", display: "flex", justifyContent: "flex-start", direction: "ltr" } : {}),
-        }}>
-          <span style={{
-            display: "inline-block",
-            fontFamily: "'DM Mono', monospace", fontSize: isGrid ? 13 : 13.5, color: D.cream,
-            background: D.surface, borderRadius: 8, padding: "5px 10px",
-            border: `1px solid ${D.line}`, letterSpacing: ".02em",
-          }}>
-            {formatCurrency(Number(dish.price), currency, lang)}
-          </span>
-        </div>
-      </article>
-
-      {show360 && has360 && (
-        <Photo360Viewer
-          photos={dish.photos_360 as string[]}
-          dishName={name}
-          onClose={() => setShow360(false)}
-        />
-      )}
-    </>
-  );
-}
-
-/* ════════════════════════════════════════════════════════
-   DISH DETAIL MODAL
-   ════════════════════════════════════════════════════════ */
-function DishModal({
-  dish, restaurantId, lang, currency, headingFont, bodyFont, onClose,
-}: {
-  dish: Dish;
-  restaurantId: string;
-  lang: Language;
-  currency: string;
-  headingFont: string;
-  bodyFont: string;
-  onClose: () => void;
-}) {
-  const name = pickLocalized(dish as unknown as Record<string, unknown>, "name", lang) || dish.name;
-  const desc = pickLocalized(dish as unknown as Record<string, unknown>, "description", lang);
-  const has3d = !!dish.model_3d_url;
-  const has360 = Array.isArray(dish.photos_360) && dish.photos_360.length > 0;
-  const hasVideo = !!dish.video_url;
-  const [arTab, setArTab] = useState<"2D" | "3D" | "360" | "AR">("2D");
-  const [show360, setShow360] = useState(false);
-
-  const dir = LANGUAGE_META[lang].dir;
-
-  /* Keyboard close */
-  useEffect(() => {
-    const handler = (e: KeyboardEvent) => { if (e.key === "Escape") onClose(); };
-    document.addEventListener("keydown", handler);
-    return () => document.removeEventListener("keydown", handler);
-  }, [onClose]);
-
-  return (
-    <div
-      role="dialog"
-      aria-modal="true"
-      aria-label={name}
-      dir={dir}
-      style={{ position: "fixed", inset: 0, zIndex: 100, background: "hsl(28,18%,6%,.7)", backdropFilter: "blur(12px)", display: "flex", alignItems: "center", justifyContent: "center", padding: 24 }}
-      onClick={onClose}
-    >
-      <div
-        style={{ background: D.card, border: `1px solid ${D.line2}`, borderRadius: 22, maxWidth: 560, width: "100%", maxHeight: "90vh", overflow: "auto", boxShadow: "0 40px 100px rgba(0,0,0,.5)" }}
-        onClick={e => e.stopPropagation()}
-      >
-        {/* Art / media area */}
-        <div style={{ position: "relative", aspectRatio: "1.6", background: dish.image_url ? undefined : "linear-gradient(135deg, hsl(28,40%,32%), hsl(28,55%,45%))", overflow: "hidden" }}>
-          {dish.image_url && (
-            <Image src={dish.image_url} alt={name} fill sizes="(max-width: 640px) 100vw, 560px" style={{ objectFit: "cover" }} />
-          )}
-          <div aria-hidden style={{ position: "absolute", inset: 0, background: "radial-gradient(circle at 30% 30%, rgba(255,220,170,.4), transparent 60%)" }}/>
-
-          {/* Close button */}
-          <button
-            type="button"
-            onClick={onClose}
-            aria-label="סגור"
-            style={{ position: "absolute", top: 16, insetInlineStart: 16, zIndex: 10, width: 36, height: 36, borderRadius: 99, background: "hsl(28,18%,6%,.7)", backdropFilter: "blur(8px)", border: `1px solid ${D.line}`, color: D.cream, display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer" }}
-          >
-            <X style={{ width: 14, height: 14 }} strokeWidth={2}/>
-          </button>
-
-          {/* AR/view toggle tabs */}
-          {(has3d || has360 || hasVideo) && (
-            <div style={{ position: "absolute", bottom: 16, left: "50%", transform: "translateX(-50%)", display: "flex", gap: 4, background: "hsl(28,18%,6%,.7)", backdropFilter: "blur(16px)", border: `1px solid ${D.line}`, borderRadius: 99, padding: 4 }}>
-              {(["2D", ...(hasVideo ? [] : []), ...(has3d ? ["3D"] : []), ...(has360 ? ["360"] : []), ...(dish.ar_enabled && has3d ? ["AR"] : [])] as ("2D"|"3D"|"360"|"AR")[]).map(tab => (
-                <button
-                  key={tab}
-                  type="button"
-                  onClick={() => setArTab(tab)}
-                  style={{ padding: "7px 14px", borderRadius: 99, fontFamily: "'DM Mono', monospace", fontSize: "9.5px", letterSpacing: ".18em", textTransform: "uppercase", color: arTab === tab ? "#fff" : D.textDim, border: "none", background: arTab === tab ? D.grad : "transparent", cursor: "pointer", transition: "all .15s" }}
-                >
-                  {tab}
-                </button>
-              ))}
-            </div>
-          )}
-        </div>
-
-        {/* Body */}
-        <div style={{ padding: "24px 28px 28px" }}>
-          <h2 style={{ fontFamily: headingFont, fontWeight: 600, fontSize: 32, letterSpacing: "-.02em", color: D.cream, margin: "0 0 8px", lineHeight: 1.05 }}>
-            {name}
-          </h2>
-          <div style={{ fontFamily: "'DM Mono', monospace", fontSize: 16, color: D.gold, letterSpacing: ".04em", marginBottom: 16 }}>
-            {formatCurrency(Number(dish.price), currency, lang)}
-          </div>
-          {desc && (
-            <p style={{ fontFamily: bodyFont, fontSize: 14, lineHeight: 1.7, color: D.text, margin: "0 0 18px" }}>
-              {desc}
-            </p>
-          )}
-
-          {/* Info rows */}
-          {dish.allergens && dish.allergens.length > 0 && (
-            <div style={{ display: "flex", flexDirection: "column", gap: 10, paddingTop: 14, borderTop: `1px solid ${D.line}` }}>
-              <InfoRow label="אלרגנים" value={dish.allergens.join(", ")} />
-            </div>
-          )}
-
-          {/* 3D viewer inline — lazy */}
-          {arTab === "3D" && has3d && (
-            <div style={{ marginTop: 20 }}>
-              <DishModelViewer
-                restaurantId={restaurantId}
-                dishId={dish.id}
-                dishName={name}
-                modelUrl={dish.model_3d_url!}
-                arEnabled={false}
-                language={lang}
-                trigger={
-                  <span style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "11px 22px", borderRadius: 10, background: D.grad, color: "#fff", fontFamily: "'DM Sans', sans-serif", fontSize: 13.5, fontWeight: 600, cursor: "pointer" }}>
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6"><circle cx="12" cy="12" r="9"/><ellipse cx="12" cy="12" rx="9" ry="3"/></svg>
-                    {t(lang, "view_3d_cta")}
-                  </span>
-                }
-              />
-            </div>
-          )}
-
-          {arTab === "AR" && has3d && dish.ar_enabled && (
-            <div style={{ marginTop: 20 }}>
-              <DishModelViewer
-                restaurantId={restaurantId}
-                dishId={dish.id}
-                dishName={name}
-                modelUrl={dish.model_3d_url!}
-                arEnabled
-                language={lang}
-                trigger={
-                  <span style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "11px 22px", borderRadius: 10, background: D.grad, color: "#fff", fontFamily: "'DM Sans', sans-serif", fontSize: 13.5, fontWeight: 600, cursor: "pointer" }}>
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
-                    {t(lang, "view_ar")}
-                  </span>
-                }
-              />
-            </div>
-          )}
-
-          {arTab === "360" && has360 && (
-            <button
-              type="button"
-              onClick={() => setShow360(true)}
-              style={{ marginTop: 20, display: "inline-flex", alignItems: "center", gap: 8, padding: "11px 22px", borderRadius: 10, background: D.grad, color: "#fff", fontFamily: "'DM Sans', sans-serif", fontSize: 13.5, fontWeight: 600, cursor: "pointer", border: "none" }}
-            >
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6"><circle cx="12" cy="12" r="3"/><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"/></svg>
-              360°
-            </button>
-          )}
-        </div>
-      </div>
-
-      {show360 && has360 && (
-        <Photo360Viewer
-          photos={dish.photos_360 as string[]}
-          dishName={name}
-          onClose={() => setShow360(false)}
-        />
-      )}
-    </div>
-  );
-}
-
-/* ── Info row (modal) ─────────────────────────────────── */
-function InfoRow({ label, value }: { label: string; value: string }) {
-  return (
-    <div style={{ display: "flex", justifyContent: "space-between" }}>
-      <span style={{ fontFamily: "'DM Mono', monospace", fontSize: 10, letterSpacing: ".18em", textTransform: "uppercase", color: D.textDim }}>{label}</span>
-      <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: D.cream }}>{value}</span>
-    </div>
-  );
-}
-
-/* ── Dish tag badge ────────────────────────────────────── */
-function DishTag({ color, children }: { color: "gold" | "orange" | "muted"; children: React.ReactNode }) {
-  const styles: Record<string, { bg: string; border: string; text: string }> = {
-    gold:   { bg: `hsl(36,80%,62%,.08)`, border: `hsl(36,80%,62%,.18)`, text: D.goldLt },
-    orange: { bg: `hsl(28,62%,52%,.1)`,  border: `hsl(28,62%,52%,.25)`, text: D.gold },
-    muted:  { bg: `rgba(255,255,255,.04)`, border: `rgba(255,255,255,.1)`, text: D.textDim },
-  };
-  const s = styles[color];
-  return (
-    <span style={{ fontFamily: "'DM Mono', monospace", fontSize: "9.5px", letterSpacing: ".18em", textTransform: "uppercase", padding: "3px 9px", borderRadius: 99, color: s.text, background: s.bg, border: `1px solid ${s.border}` }}>
-      {children}
-    </span>
   );
 }
