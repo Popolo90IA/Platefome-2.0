@@ -183,7 +183,7 @@ export default function AdminRestaurantsPage() {
       ) : filtered.length === 0 ? (
         <Card className="shadow-premium">
           <CardContent className="py-16 text-center">
-            <Building2 className="h-12 w-12 text-muted-foreground/40 mx-auto mb-3" />
+            <Building2 className="h-12 w-12 text-muted-foreground/70 mx-auto mb-3" />
             <p className="text-muted-foreground">
               {search ? "לא נמצאו תוצאות" : "אין מסעדות במערכת"}
             </p>
