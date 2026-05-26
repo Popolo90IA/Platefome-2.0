@@ -4,6 +4,11 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 
+// Register plugins once at module load (idempotent côté GSAP).
+if (typeof window !== "undefined") {
+  gsap.registerPlugin(ScrollTrigger, useGSAP);
+}
+
 /**
  * Scroll-reveal animation for any element with class `.reveal`,
  * `.reveal-left`, `.reveal-scale`, or `.reveal-blur`. Respects
