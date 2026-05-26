@@ -5,6 +5,7 @@ export type GalleryDish = {
   price: string;
   badge: string;
   badgeColor: string;
+  cat: string;
 };
 
 export type HeroModel = {
