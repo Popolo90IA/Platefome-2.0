@@ -58,6 +58,67 @@
     --obsidian: 38 28% 94%;
     --charcoal: 24 15% 28%;
     --mist:    24  12% 38%;
+
+    /* ── Radius scale ── */
+    --radius:      4px;
+    --radius-sm:   2px;
+    --radius-md:   6px;
+    --radius-lg:   10px;
+    --radius-xl:   14px;
+    --radius-2xl:  20px;
+    --radius-pill: 99px;
+
+    /* ── Spacing scale (8pt) ── */
+    --s-1:  4px;
+    --s-2:  8px;
+    --s-3:  12px;
+    --s-4:  16px;
+    --s-5:  20px;
+    --s-6:  24px;
+    --s-8:  32px;
+    --s-10: 40px;
+    --s-12: 48px;
+    --s-16: 64px;
+    --s-20: 80px;
+    --s-24: 96px;
+
+    /* ── Motion tokens ── */
+    --ease-out:  cubic-bezier(0.16, 1, 0.3, 1);
+    --ease-clip: cubic-bezier(0.76, 0, 0.24, 1);
+    --dur-fast:  150ms;
+    --dur-base:  250ms;
+    --dur-slow:  900ms;
+
+    /* ── Shadow tokens (light) ── */
+    --shadow-card:      0 0 0 1px hsl(var(--line)), 0 16px 48px -16px rgba(0,0,0,.6);
+    --shadow-cta:       0 2px 16px hsl(28 62% 38% / .4), inset 0 1px 0 rgba(255,255,255,.18);
+    --shadow-cta-hov:   0 6px 28px hsl(28 62% 38% / .5), inset 0 1px 0 rgba(255,255,255,.18);
+    --shadow-deep:      0 24px 64px -24px rgba(0,0,0,.4);
+    --shadow-pill:      0 8px 32px rgba(0,0,0,.4), inset 0 1px 0 hsl(var(--line) / .3);
+    --shadow-glow-gold: 0 0 0 1px hsl(var(--gold) / .3), 0 0 32px hsl(var(--gold) / .2);
+
+    /* ── Gradient tokens ── */
+    --grad-bronze:      linear-gradient(135deg, hsl(28 62% 38%) 0%, hsl(22 70% 50%) 100%);
+    --grad-bronze-warm: linear-gradient(135deg, hsl(36 80% 55%), hsl(28 62% 42%));
+    --grad-gold-shimmer: linear-gradient(135deg, hsl(28 62% 42%), hsl(22 70% 56%), hsl(28 58% 42%));
+
+    /* ── Type scale tokens ── */
+    --t-h1-size:    clamp(48px, 7vw, 108px);
+    --t-h1-line:    0.92;
+    --t-h1-track:   -0.03em;
+    --t-h1-weight:  700;
+    --t-h2-size:    clamp(2rem, 4.5vw, 3.5rem);
+    --t-h2-line:    1.05;
+    --t-h2-track:   -0.025em;
+    --t-h2-weight:  700;
+    --t-h3-size:    clamp(1.5rem, 3vw, 2rem);
+    --t-h3-line:    1.1;
+    --t-h3-track:   -0.02em;
+    --t-h3-weight:  600;
+    --t-eyebrow-size:  0.6875rem;
+    --t-eyebrow-track: 0.18em;
+    --t-mono-size:     0.6875rem;
+    --t-mono-track:    0.14em;
   }
 
   /* ============================================================
@@ -117,71 +178,11 @@
     --charcoal: 32 10% 78%;
     --mist:    28  8% 62%;
 
-    /* Shadows ajustées pour le dark (plus subtiles) */
+    /* Shadows ajustées pour le dark (plus subtiles) — overrides */
     --shadow-card:      0 0 0 1px hsl(var(--line)), 0 16px 48px -16px rgba(0,0,0,.8);
     --shadow-cta:       0 2px 16px hsl(28 62% 38% / .5), inset 0 1px 0 rgba(255,255,255,.08);
     --shadow-cta-hov:   0 6px 28px hsl(28 62% 38% / .6), inset 0 1px 0 rgba(255,255,255,.08);
     --shadow-deep:      0 24px 64px -24px rgba(0,0,0,.7);
-
-    --radius:      4px;
-    --radius-sm:   2px;
-    --radius-md:   6px;
-    --radius-lg:   10px;
-    --radius-xl:   14px;
-    --radius-2xl:  20px;
-    --radius-pill: 99px;
-
-    /* ── Spacing scale (8pt) ── */
-    --s-1:  4px;
-    --s-2:  8px;
-    --s-3:  12px;
-    --s-4:  16px;
-    --s-5:  20px;
-    --s-6:  24px;
-    --s-8:  32px;
-    --s-10: 40px;
-    --s-12: 48px;
-    --s-16: 64px;
-    --s-20: 80px;
-    --s-24: 96px;
-
-    /* ── Motion tokens ── */
-    --ease-out:  cubic-bezier(0.16, 1, 0.3, 1);
-    --ease-clip: cubic-bezier(0.76, 0, 0.24, 1);
-    --dur-fast:  150ms;
-    --dur-base:  250ms;
-    --dur-slow:  900ms;
-
-    /* ── Shadow tokens ── */
-    --shadow-card:      0 0 0 1px hsl(var(--line)), 0 16px 48px -16px rgba(0,0,0,.6);
-    --shadow-cta:       0 2px 16px hsl(28 62% 38% / .4), inset 0 1px 0 rgba(255,255,255,.18);
-    --shadow-cta-hov:   0 6px 28px hsl(28 62% 38% / .5), inset 0 1px 0 rgba(255,255,255,.18);
-    --shadow-deep:      0 24px 64px -24px rgba(0,0,0,.4);
-    --shadow-pill:      0 8px 32px rgba(0,0,0,.4), inset 0 1px 0 hsl(var(--line) / .3);
-    --shadow-glow-gold: 0 0 0 1px hsl(var(--gold) / .3), 0 0 32px hsl(var(--gold) / .2);
-
-    /* ── Gradient tokens ── */
-    --grad-bronze:      linear-gradient(135deg, hsl(28 62% 38%) 0%, hsl(22 70% 50%) 100%);
-    --grad-bronze-warm: linear-gradient(135deg, hsl(36 80% 55%), hsl(28 62% 42%));
-    --grad-gold-shimmer: linear-gradient(135deg, hsl(28 62% 42%), hsl(22 70% 56%), hsl(28 58% 42%));
-
-    /* ── Type scale tokens ── */
-    --t-h1-size:    clamp(48px, 7vw, 108px);
-    --t-h1-line:    0.92;
-    --t-h1-track:   -0.03em;
-    --t-h1-weight:  700;
-    --t-h2-size:    clamp(2rem, 4.5vw, 3.5rem);
-    --t-h2-line:    1.05;
-    --t-h2-track:   -0.025em;
-    --t-h2-weight:  700;
-    --t-h3-size:    clamp(1.5rem, 3vw, 2rem);
-    --t-h3-line:    1.1;
-    --t-h3-track:   -0.02em;
-    --t-h3-weight:  600;
-    --t-eyebrow-size:  0.6875rem;
-    --t-eyebrow-track: 0.18em;
-    --t-mono-size:     0.6875rem;
-    --t-mono-track:    0.14em;
   }
 }
 
