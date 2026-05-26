@@ -1,4 +1,4 @@
-import type { GalleryDish, HeroModel } from "./types";
+import type { GalleryDish, HeroModel, PricingPlan, StatItem } from "./types";
 
 export const MODELS: HeroModel[] = [
   { url: "/models/hero-dish.glb", label: "פסטה שף" },
@@ -69,5 +69,82 @@ export const GALLERY_DISHES: readonly GalleryDish[] = [
     badge: "חי",
     badgeColor: "hsl(140,60%,55%)",
     cat: "שתייה",
+  },
+];
+
+export const HOME_STATS: readonly StatItem[] = [
+  {
+    num: "+200",
+    label: "מסעדות פעילות",
+    sub: "לקוחות ברחבי הארץ משתמשים בפלטפורמה בכל יום",
+    badge: "+40% השנה",
+  },
+  {
+    num: "×3.2",
+    label: "יותר הזמנות",
+    sub: "בממוצע בהשוואה לתפריט נייר רגיל",
+    badge: "מוכח בנתונים",
+  },
+  {
+    num: "<0.8s",
+    label: "זמן טעינה",
+    sub: "התפריט נפתח מיידית — ללא אפליקציה, ללא המתנה",
+    badge: "ביצועים גבוהים",
+  },
+  {
+    num: "98%",
+    label: "שביעות רצון",
+    sub: "מהלקוחות ממשיכים לאחר תקופת הניסיון",
+    badge: "retention rate",
+  },
+];
+
+export const PRICING_PLANS: readonly PricingPlan[] = [
+  {
+    tier: "I · טעימה",
+    title: "Starter",
+    price: "₪0",
+    tagline: "כניסה לעולם",
+    features: ["תפריט דיגיטלי מלא", "קוד QR אישי", "עד 30 מנות", "2 שפות"],
+    highlighted: false,
+    badge: {
+      label: "חינם",
+      bg: "hsl(142,52%,44%,.12)",
+      border: "hsl(142,52%,44%,.3)",
+      color: "hsl(142,52%,36%)",
+    },
+  },
+  {
+    tier: "II · המנה העיקרית",
+    title: "Popular",
+    price: "₪149",
+    tagline: "הבחירה הפופולרית",
+    features: [
+      "מנות ללא הגבלה",
+      "וידאו לכל מנה",
+      "3 שפות + תרגום",
+      "אנליטיקה מתקדמת",
+      "תמיכה מועדפת",
+    ],
+    highlighted: true,
+    badge: {
+      label: "✦ מומלץ",
+      bg: "hsl(28,62%,42%,.1)",
+      border: "hsl(28,62%,42%,.3)",
+      color: "hsl(28,62%,42%)",
+    },
+  },
+  {
+    tier: "III · דגוסטציון",
+    title: "Enterprise",
+    price: "₪349",
+    tagline: "חוויה מלאה",
+    features: [
+      "תלת-מימד לכל המנות",
+      "מציאות רבודה (AR)",
+      "מיתוג מותאם אישית",
+      "ייעוץ אישי חודשי",
+    ],
+    highlighted: false,
   },
 ];
