@@ -94,7 +94,7 @@ export function Header({ onMenuToggle }: HeaderProps) {
         {role && (
           <span
             className="hidden sm:block font-sans text-[11px] tracking-[0.06em] uppercase font-semibold"
-            style={{ color: "hsl(var(--dim))" }}
+            style={{ color: "hsl(var(--subtle))" }}
           >
             {role === "super_admin" ? "Admin" : "Owner"}
           </span>
@@ -133,7 +133,7 @@ export function Header({ onMenuToggle }: HeaderProps) {
 
           <ChevronDown
             className="h-3 w-3 hidden md:block"
-            style={{ color: "hsl(var(--dim))" }}
+            style={{ color: "hsl(var(--subtle))" }}
             strokeWidth={1.5}
           />
         </button>

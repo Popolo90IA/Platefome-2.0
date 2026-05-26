@@ -88,7 +88,7 @@ export function AdminSidebar({ open, onClose }: AdminSidebarProps) {
       <nav className="flex-1 px-2 py-4 overflow-y-auto scrollbar-none">
         <div
           className="px-3 mb-2 font-sans text-[11px] tracking-[0.06em] uppercase font-semibold"
-          style={{ color: "hsl(var(--dim))", paddingTop: 4 }}
+          style={{ color: "hsl(var(--subtle))", paddingTop: 4 }}
         >
           ניהול
         </div>
@@ -123,7 +123,7 @@ export function AdminSidebar({ open, onClose }: AdminSidebarProps) {
                 <Icon
                   style={{
                     width: 16, height: 16, flexShrink: 0,
-                    color: isActive ? "hsl(var(--accent-bright))" : "hsl(var(--dim))",
+                    color: isActive ? "hsl(var(--accent-bright))" : "hsl(var(--subtle))",
                     transition: "color .15s",
                   }}
                   strokeWidth={1.6}
@@ -147,7 +147,7 @@ export function AdminSidebar({ open, onClose }: AdminSidebarProps) {
         {/* Back to dashboard */}
         <div
           className="px-3 mt-6 mb-2 font-sans text-[11px] tracking-[0.06em] uppercase font-semibold"
-          style={{ color: "hsl(var(--dim))" }}
+          style={{ color: "hsl(var(--subtle))" }}
         >
           ניווט
         </div>
@@ -157,7 +157,7 @@ export function AdminSidebar({ open, onClose }: AdminSidebarProps) {
           style={{ color: "hsl(var(--subtle))" }}
         >
           <ArrowRight
-            style={{ width: 16, height: 16, flexShrink: 0, color: "hsl(var(--dim))", transition: "color .15s" }}
+            style={{ width: 16, height: 16, flexShrink: 0, color: "hsl(var(--subtle))", transition: "color .15s" }}
             strokeWidth={1.6}
           />
           <span className="font-sans text-[13.5px] font-medium flex-1">
@@ -178,7 +178,7 @@ export function AdminSidebar({ open, onClose }: AdminSidebarProps) {
         <button
           onClick={handleLogout}
           className="group w-full flex items-center gap-3 px-3 py-2 rounded-sm text-sm transition-all duration-150 relative"
-          style={{ color: "hsl(var(--dim))" }}
+          style={{ color: "hsl(var(--subtle))" }}
         >
           <LogOut
             className="h-[15px] w-[15px] flex-shrink-0 group-hover:text-[hsl(var(--ember))] transition-colors"
