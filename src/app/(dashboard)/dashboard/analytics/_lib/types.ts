@@ -1,4 +1,9 @@
-import type { Dish, MenuEvent, MenuEventType } from "@/types/database.types";
+import type {
+  Dish,
+  MenuEvent,
+  MenuEventType,
+  Restaurant,
+} from "@/types/database.types";
 
 export type RangeDays = 14 | 30 | 90;
 
@@ -46,4 +51,4 @@ export interface AnalyticsTotals {
   engaged: number;
 }
 
-export type { Dish, MenuEvent, MenuEventType };
+export type { Dish, MenuEvent, MenuEventType, Restaurant };
