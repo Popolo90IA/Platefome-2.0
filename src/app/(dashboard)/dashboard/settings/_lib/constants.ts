@@ -62,6 +62,11 @@ export const DEFAULT_PW_VISIBILITY = {
 export const MIN_PASSWORD_LENGTH = 8;
 
 /**
- * DEACTIVATE_TIMEOUT_MS — délai avant logout après désactivation compte.
+ * DEACTIVATE_TIMEOUT_MS — délai avant masquage toast succès désactivation.
  */
-export const DEACTIVATE_TIMEOUT_MS = 2000;
+export const DEACTIVATE_TIMEOUT_MS = 4000;
+
+/**
+ * SAVED_TOAST_MS — délai avant masquage toast "נשמר".
+ */
+export const SAVED_TOAST_MS = 3000;
