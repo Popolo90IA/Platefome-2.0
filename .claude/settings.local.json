@@ -67,7 +67,17 @@
       "Bash(tail:*)",
       "Bash(git -C /Users/avidanmarciano/platforme log --oneline)",
       "Bash(xargs:*)",
-      "Bash(npm run test:run:*)"
+      "Bash(npm run test:run:*)",
+      "Bash(find:*)",
+      "Bash(npm test:*)",
+      "WebFetch(domain:platefome-2-0-psi.vercel.app)",
+      "mcp__Claude_in_Chrome__read_page",
+      "Bash(node --version:*)",
+      "Bash(sh:*)",
+      "Bash(export PATH=\"$HOME/.local/bin:$PATH\")",
+      "Bash(uv sync:*)",
+      "Bash(export PATH=\"$HOME/.local/bin:/opt/homebrew/bin:/usr/bin:/bin:/usr/sbin:/sbin:$PATH\")",
+      "Bash(git reset:*)"
     ]
   }
 }
