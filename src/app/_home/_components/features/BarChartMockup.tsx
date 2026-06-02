@@ -1,0 +1,49 @@
+"use client";
+
+import { MOCKUP } from "./styles";
+
+const BARS = [30, 50, 40, 65, 55, 80, 100];
+
+/**
+ * BarChartMockup — graphe en barres "+30% הזמנות".
+ */
+export function BarChartMockup() {
+  return (
+    <div style={MOCKUP}>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "flex-end",
+          gap: 5,
+          height: 48,
+          marginBottom: 8,
+        }}
+      >
+        {BARS.map((h, i) => (
+          <div
+            key={i}
+            style={{
+              flex: 1,
+              height: `${h}%`,
+              background:
+                i === 6
+                  ? "hsl(28,62%,42%)"
+                  : `hsl(28,62%,42%,${0.15 + i * 0.11})`,
+              borderRadius: "3px 3px 0 0",
+            }}
+          />
+        ))}
+      </div>
+      <div
+        style={{
+          fontFamily: "'DM Sans',sans-serif",
+          fontSize: ".72rem",
+          color: "hsl(28,8%,45%)",
+          textAlign: "center",
+        }}
+      >
+        הזמנות — 7 ימים אחרונים ↑
+      </div>
+    </div>
+  );
+}
