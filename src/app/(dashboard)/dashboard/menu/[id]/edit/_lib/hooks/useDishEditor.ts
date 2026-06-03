@@ -7,6 +7,13 @@ import type { Category, Dish, Restaurant } from "@/types/database.types";
 import { AUTO_SAVE_DEBOUNCE_MS, EMPTY_FORM } from "../constants";
 import { pickInitialMediaTab, toggleListItem } from "../helpers";
 import type { FormState, MediaTab, SaveState } from "../types";
+import {
+  loadEditorData,
+  dishToForm,
+  formToPayload,
+  saveDish,
+  deleteDish,
+} from "./dishEditorActions";
 
 type UseDishEditorOptions = {
   dishId: string;
@@ -34,68 +41,19 @@ export function useDishEditor({ dishId }: UseDishEditorOptions) {
 
   // ── Load ────────────────────────────────────────────────────────────────
   useEffect(() => {
-    const load = async () => {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-      if (!user) {
-        router.push("/login");
+    (async () => {
+      const res = await loadEditorData(supabase, dishId);
+      if (res.kind === "redirect") {
+        router.push(res.to);
         return;
       }
-
-      const { data: r } = await supabase
-        .from("restaurants")
-        .select("*")
-        .eq("user_id", user.id)
-        .maybeSingle();
-      if (!r) {
-        router.push("/dashboard/settings");
-        return;
-      }
-      setRestaurant(r);
-
-      const [{ data: d }, { data: cats }] = await Promise.all([
-        supabase.from("dishes").select("*").eq("id", dishId).maybeSingle(),
-        supabase
-          .from("categories")
-          .select("*")
-          .eq("restaurant_id", r.id)
-          .order("display_order"),
-      ]);
-
-      if (!d) {
-        router.push("/dashboard/dishes");
-        return;
-      }
-      setDish(d);
-      setCategories(cats ?? []);
-
-      setForm({
-        name: d.name,
-        name_en: d.name_en ?? "",
-        name_fr: d.name_fr ?? "",
-        category_id: d.category_id,
-        description: d.description ?? "",
-        description_en: d.description_en ?? "",
-        description_fr: d.description_fr ?? "",
-        price: String(d.price),
-        image_url: d.image_url,
-        video_url: d.video_url,
-        model_3d_url: d.model_3d_url,
-        photos_360: d.photos_360 ?? null,
-        ar_enabled: d.ar_enabled,
-        is_available: d.is_available,
-        is_featured: d.is_featured,
-        is_new: d.is_new,
-        is_signature: d.is_signature,
-        allergens: (d.allergens as string[]) ?? [],
-        tags: (d.tags as string[]) ?? [],
-      });
-
-      setActiveMediaTab(pickInitialMediaTab(d));
+      setRestaurant(res.restaurant);
+      setDish(res.dish);
+      setCategories(res.categories);
+      setForm(dishToForm(res.dish));
+      setActiveMediaTab(pickInitialMediaTab(res.dish));
       setLoading(false);
-    };
-    load();
+    })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dishId]);
 
@@ -103,34 +61,9 @@ export function useDishEditor({ dishId }: UseDishEditorOptions) {
   const doSave = useCallback(async () => {
     if (!restaurant) return;
     setSaving(true);
-    const payload = {
-      restaurant_id: restaurant.id,
-      category_id: form.category_id,
-      name: form.name,
-      name_en: form.name_en || null,
-      name_fr: form.name_fr || null,
-      description: form.description || null,
-      description_en: form.description_en || null,
-      description_fr: form.description_fr || null,
-      price: parseFloat(form.price) || 0,
-      image_url: form.image_url,
-      video_url: form.video_url,
-      model_3d_url: form.model_3d_url,
-      photos_360: form.photos_360,
-      ar_enabled: form.ar_enabled,
-      is_available: form.is_available,
-      is_featured: form.is_featured,
-      is_new: form.is_new,
-      is_signature: form.is_signature,
-      allergens: form.allergens.length ? form.allergens : null,
-      tags: form.tags.length ? form.tags : null,
-    };
-    const { error } = await supabase
-      .from("dishes")
-      .update(payload)
-      .eq("id", dishId);
+    const ok = await saveDish(supabase, dishId, formToPayload(form, restaurant.id));
     setSaving(false);
-    setSaveState(error ? "error" : "saved");
+    setSaveState(ok ? "saved" : "error");
     setTimeout(() => setSaveState("idle"), 3000);
   }, [form, restaurant, dishId, supabase]);
 
@@ -160,7 +93,7 @@ export function useDishEditor({ dishId }: UseDishEditorOptions) {
   }, [doSave]);
 
   const handleDelete = useCallback(async () => {
-    await supabase.from("dishes").delete().eq("id", dishId);
+    await deleteDish(supabase, dishId);
     router.push("/dashboard/dishes");
   }, [dishId, supabase, router]);
 
