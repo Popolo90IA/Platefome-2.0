@@ -1,8 +1,7 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useState } from "react";
 import { LANGUAGE_META } from "@/lib/i18n";
-import { trackEvent } from "@/lib/analytics";
 import { buildMenuTheme, getFontPack } from "@/lib/theme";
 import type {
   MenuLayout,
@@ -20,6 +19,13 @@ import {
   filterDishesBySearch,
   groupDishesByCategory,
 } from "../helpers";
+import {
+  useResponsive,
+  usePreviewMode,
+  useLangPersistence,
+  useMenuTracking,
+  useScrollLock,
+} from "./useMenuViewEffects";
 
 type UseMenuViewOptions = {
   restaurant: Restaurant;
@@ -53,75 +59,14 @@ export function useMenuView({
   const [modalDish, setModalDish] = useState<Dish | null>(null);
   const [search, setSearch] = useState("");
   const [isMobile, setIsMobile] = useState(false);
-
-  // ── Responsive ──────────────────────────────────────────────────────────
-  useEffect(() => {
-    const check = () => setIsMobile(window.innerWidth < 600);
-    check();
-    window.addEventListener("resize", check);
-    return () => window.removeEventListener("resize", check);
-  }, []);
-
-  // ── Preview mode ────────────────────────────────────────────────────────
   const [previewOverride, setPreviewOverride] = useState<PreviewOverride>({});
-  const isPreview = useRef(false);
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    const params = new URLSearchParams(window.location.search);
-    isPreview.current = params.get("preview") === "1";
-    if (!isPreview.current) return;
-    const handler = (e: MessageEvent) => {
-      if (e.data && e.data.__plateform_preview) {
-        setPreviewOverride(e.data.__plateform_preview as PreviewOverride);
-      }
-    };
-    window.addEventListener("message", handler);
-    window.parent.postMessage({ __plateform_ready: true }, "*");
-    return () => window.removeEventListener("message", handler);
-  }, []);
 
-  // ── Persist language ────────────────────────────────────────────────────
-  useEffect(() => {
-    try {
-      const saved = localStorage.getItem(`menu:${restaurant.slug}:lang`);
-      if (saved && (available as string[]).includes(saved))
-        setLang(saved as Language);
-    } catch {}
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  useEffect(() => {
-    try {
-      localStorage.setItem(`menu:${restaurant.slug}:lang`, lang);
-    } catch {}
-    document.documentElement.lang = lang;
-    document.documentElement.dir = dir;
-  }, [lang, dir, restaurant.slug]);
-
-  // ── Track menu view once per session ────────────────────────────────────
-  useEffect(() => {
-    try {
-      const key = `menu:${restaurant.slug}:tracked`;
-      if (!sessionStorage.getItem(key)) {
-        trackEvent(restaurant.id, "menu_view", { language: lang });
-        if (
-          typeof document !== "undefined" &&
-          (!document.referrer || document.referrer === "")
-        )
-          trackEvent(restaurant.id, "qr_scan", { language: lang });
-        sessionStorage.setItem(key, "1");
-      }
-    } catch {}
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  // ── Lock body scroll when modal open ────────────────────────────────────
-  useEffect(() => {
-    document.body.style.overflow = modalDish ? "hidden" : "";
-    return () => {
-      document.body.style.overflow = "";
-    };
-  }, [modalDish]);
+  // ── Effects (responsive, preview, persistence, tracking, scroll lock) ───
+  useResponsive(setIsMobile);
+  usePreviewMode(setPreviewOverride);
+  useLangPersistence(restaurant, lang, dir, available, setLang);
+  useMenuTracking(restaurant, lang);
+  useScrollLock(!!modalDish);
 
   // ── Theme + layout (preview overrides win) ──────────────────────────────
   const themeVars = buildMenuTheme(
