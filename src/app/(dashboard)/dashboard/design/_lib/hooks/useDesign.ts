@@ -16,6 +16,12 @@ import {
   SAVED_TOAST_MS,
 } from "../constants";
 import { buildPreviewUrl } from "../helpers";
+import {
+  restaurantToForm,
+  buildPreviewPatch,
+  loadRestaurant,
+  saveDesign,
+} from "./designActions";
 
 /**
  * useDesign — hook orchestrant état + handlers de la page design.
@@ -37,8 +43,7 @@ export function useDesign() {
   const [tab, setTab] = useState<DesignTab>("color");
   const [previewMode, setPreviewMode] = useState<PreviewMode>("mobile");
   const [tabletLandscape, setTabletLandscape] = useState(false);
-  const [panelSize, setPanelSize] =
-    useState<PanelSize>(DEFAULT_PANEL_SIZE);
+  const [panelSize, setPanelSize] = useState<PanelSize>(DEFAULT_PANEL_SIZE);
   const [windowH, setWindowH] = useState<number>(
     typeof window !== "undefined" ? window.innerHeight : 900,
   );
@@ -54,10 +59,7 @@ export function useDesign() {
     const measure = () => {
       if (rightPanelRef.current) {
         const rect = rightPanelRef.current.getBoundingClientRect();
-        setPanelSize({
-          w: rect.width,
-          h: window.innerHeight - rect.top,
-        });
+        setPanelSize({ w: rect.width, h: window.innerHeight - rect.top });
       }
       setWindowH(window.innerHeight);
     };
@@ -68,54 +70,21 @@ export function useDesign() {
 
   // initial load
   useEffect(() => {
-    const load = async () => {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-      if (!user) {
-        setLoading(false);
-        return;
-      }
-      const { data } = await supabase
-        .from("restaurants")
-        .select("*")
-        .eq("user_id", user.id)
-        .maybeSingle();
+    (async () => {
+      const data = await loadRestaurant(supabase);
       if (data) {
         setRestaurant(data);
-        setForm({
-          theme_primary: data.theme_primary ?? DEFAULT_FORM.theme_primary,
-          theme_dark_mode: data.theme_dark_mode ?? DEFAULT_FORM.theme_dark_mode,
-          theme_font_pack: data.theme_font_pack ?? DEFAULT_FORM.theme_font_pack,
-          menu_layout: data.menu_layout ?? DEFAULT_FORM.menu_layout,
-          menu_hero_style: data.menu_hero_style ?? DEFAULT_FORM.menu_hero_style,
-          menu_category_style:
-            data.menu_category_style ?? DEFAULT_FORM.menu_category_style,
-          logo_url: data.logo_url,
-          banner_url: data.banner_url,
-          name: data.name ?? "",
-          description: data.description ?? "",
-        });
+        setForm(restaurantToForm(data));
       }
       setLoading(false);
-    };
-    load();
+    })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // post preview to iframe
   const sendPreview = useCallback((f: DesignForm) => {
     iframeRef.current?.contentWindow?.postMessage(
-      {
-        __plateform_preview: {
-          theme_primary: f.theme_primary,
-          theme_dark_mode: f.theme_dark_mode,
-          theme_font_pack: f.theme_font_pack,
-          menu_layout: f.menu_layout,
-          menu_hero_style: f.menu_hero_style,
-          menu_category_style: f.menu_category_style,
-        },
-      },
+      { __plateform_preview: buildPreviewPatch(f) },
       "*",
     );
   }, []);
@@ -159,22 +128,10 @@ export function useDesign() {
     if (!restaurant) return;
     setSaving(true);
     setError(null);
-    const { error: err } = await supabase
-      .from("restaurants")
-      .update({
-        theme_primary: form.theme_primary,
-        theme_dark_mode: form.theme_dark_mode,
-        theme_font_pack: form.theme_font_pack,
-        menu_layout: form.menu_layout,
-        menu_hero_style: form.menu_hero_style,
-        menu_category_style: form.menu_category_style,
-        logo_url: form.logo_url,
-        banner_url: form.banner_url,
-      })
-      .eq("id", restaurant.id);
+    const { error: err } = await saveDesign(supabase, restaurant.id, form);
     setSaving(false);
     if (err) {
-      setError(err.message);
+      setError(err);
       return;
     }
     setSaved(true);
