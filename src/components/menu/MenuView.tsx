@@ -1,18 +1,12 @@
 "use client";
 
-import type {
-  Restaurant,
-  Category,
-  Dish,
-} from "@/types/database.types";
+import type { Restaurant, Category, Dish } from "@/types/database.types";
 import { D, GRAIN_SVG } from "./_lib/constants";
 import { useMenuView } from "./_lib/hooks/useMenuView";
 import { Hero } from "./_components/Hero";
 import { SubHeader } from "./_components/SubHeader";
 import { MobileCategoryNav } from "./_components/MobileCategoryNav";
-import { DesktopSidebarNav } from "./_components/DesktopSidebarNav";
-import { MenuSection } from "./_components/MenuSection";
-import { SearchEmpty, MenuEmpty } from "./_components/EmptyStates";
+import { MenuBody } from "./_components/MenuBody";
 import { MenuFooter } from "./_components/MenuFooter";
 import { DishModal } from "./_components/DishModal";
 
@@ -30,11 +24,7 @@ interface MenuViewProps {
  * dish cards + footer + detail modal. State and side-effects live in
  * `useMenuView`; presentation is split across `_components/`.
  */
-export function MenuView({
-  restaurant,
-  categories,
-  dishes,
-}: MenuViewProps) {
+export function MenuView({ restaurant, categories, dishes }: MenuViewProps) {
   const {
     lang,
     available,
@@ -62,9 +52,6 @@ export function MenuView({
   } = useMenuView({ restaurant, categories, dishes });
 
   const currency = restaurant.currency || "ILS";
-
-  // Compute start index per category for deterministic placeholder cycling
-  let dishGlobalIdx = 0;
 
   return (
     <div
@@ -131,59 +118,26 @@ export function MenuView({
         />
       )}
 
-      <main
-        style={
-          catStyle === "sidebar" && !isMobile
-            ? { display: "flex", maxWidth: 860, margin: "0 auto" }
-            : undefined
-        }
-      >
-        {catStyle === "sidebar" && !isMobile && (
-          <DesktopSidebarNav
-            categories={categories}
-            activeCategory={activeCategory}
-            isSearching={isSearching}
-            onSelectCategory={selectCategory}
-            search={search}
-            onSearchChange={setSearch}
-            heroStyle={heroStyle}
-            lang={lang}
-            dir={dir}
-            fontPack={fontPack}
-          />
-        )}
-
-        <div style={catStyle === "sidebar" ? { flex: 1, minWidth: 0 } : undefined}>
-          {isSearching && filteredDishes.length === 0 ? (
-            <SearchEmpty lang={lang} onClear={() => setSearch("")} />
-          ) : dishesByCategory.length === 0 ? (
-            <MenuEmpty lang={lang} />
-          ) : (
-            dishesByCategory.map(({ category, dishes: catDishes }) => {
-              if (isSearching && catDishes.length === 0) return null;
-              const startIdx = dishGlobalIdx;
-              dishGlobalIdx += catDishes.length;
-              return (
-                <MenuSection
-                  key={category.id}
-                  category={category}
-                  dishes={catDishes}
-                  startIdx={startIdx}
-                  restaurantId={restaurant.id}
-                  currency={currency}
-                  menuLayout={menuLayout}
-                  fontPack={fontPack}
-                  lang={lang}
-                  onOpenDish={(d) => setModalDish(d)}
-                />
-              );
-            })
-          )}
-
-          {/* Bottom padding */}
-          <div style={{ height: 80 }} />
-        </div>
-      </main>
+      <MenuBody
+        restaurant={restaurant}
+        categories={categories}
+        currency={currency}
+        catStyle={catStyle}
+        isMobile={isMobile}
+        isSearching={isSearching}
+        search={search}
+        onSearchChange={setSearch}
+        activeCategory={activeCategory}
+        onSelectCategory={selectCategory}
+        heroStyle={heroStyle}
+        lang={lang}
+        dir={dir}
+        fontPack={fontPack}
+        menuLayout={menuLayout}
+        filteredDishes={filteredDishes}
+        dishesByCategory={dishesByCategory}
+        onOpenDish={(d) => setModalDish(d)}
+      />
 
       <MenuFooter lang={lang} />
 
