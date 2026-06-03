@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 import { Eye, EyeOff } from "lucide-react";
 
 interface Props {
@@ -10,6 +10,7 @@ interface Props {
   onChange: (v: string) => void;
   placeholder?: string;
   showStrength?: boolean;
+  labelExtra?: ReactNode;
 }
 
 export function PasswordField({
@@ -19,23 +20,41 @@ export function PasswordField({
   onChange,
   placeholder,
   showStrength = false,
+  labelExtra,
 }: Props) {
   const [show, setShow] = useState(false);
 
+  const labelEl = (
+    <label
+      htmlFor={id}
+      className="font-sans uppercase"
+      style={{
+        fontSize: 12,
+        letterSpacing: ".06em",
+        fontWeight: 600,
+        color: "hsl(var(--dim))",
+      }}
+    >
+      {label}
+    </label>
+  );
+
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 7 }}>
-      <label
-        htmlFor={id}
-        className="font-sans uppercase"
-        style={{
-          fontSize: 12,
-          letterSpacing: ".06em",
-          fontWeight: 600,
-          color: "hsl(var(--dim))",
-        }}
-      >
-        {label}
-      </label>
+      {labelExtra ? (
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
+          {labelEl}
+          {labelExtra}
+        </div>
+      ) : (
+        labelEl
+      )}
       <div style={{ position: "relative" }}>
         <input
           id={id}
