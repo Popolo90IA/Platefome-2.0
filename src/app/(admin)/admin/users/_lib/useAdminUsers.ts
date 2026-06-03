@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
+import { useToast } from "@/components/ui/toast";
 import type { AdminUser } from "@/types/database.types";
 
 type Role = "super_admin" | "restaurant_owner";
@@ -12,6 +13,7 @@ type Role = "super_admin" | "restaurant_owner";
  */
 export function useAdminUsers() {
   const supabase = createClient();
+  const { toast } = useToast();
   const [users, setUsers] = useState<AdminUser[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
@@ -56,7 +58,7 @@ export function useAdminUsers() {
     });
     setBusy(null);
     if (error) {
-      alert("שגיאה: " + error.message);
+      toast("שגיאה: " + error.message, "error");
       return;
     }
     setUsers((prev) =>

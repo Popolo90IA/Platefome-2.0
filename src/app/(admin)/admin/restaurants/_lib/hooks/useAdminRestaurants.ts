@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
+import { useToast } from "@/components/ui/toast";
 import { filterRestaurants } from "../helpers";
 import {
   DEFAULT_THEME_DARK,
@@ -22,6 +23,7 @@ export function useAdminRestaurants() {
   });
   const [themeSaving, setThemeSaving] = useState(false);
   const supabase = createClient();
+  const { toast } = useToast();
 
   const loadData = async () => {
     setLoading(true);
@@ -79,7 +81,7 @@ export function useAdminRestaurants() {
     });
     setBusy(null);
     if (error) {
-      alert("שגיאה: " + error.message);
+      toast("שגיאה: " + error.message, "error");
       return;
     }
     setRestaurants((prev) =>
@@ -95,7 +97,7 @@ export function useAdminRestaurants() {
     setBusy(null);
     setConfirmDelete(null);
     if (error) {
-      alert("שגיאה: " + error.message);
+      toast("שגיאה: " + error.message, "error");
       return;
     }
     setRestaurants((prev) => prev.filter((r) => r.id !== id));
@@ -121,7 +123,7 @@ export function useAdminRestaurants() {
       .eq("id", themeEdit);
     setThemeSaving(false);
     if (error) {
-      alert("שגיאה: " + error.message);
+      toast("שגיאה: " + error.message, "error");
       return;
     }
     setRestaurants((prev) =>

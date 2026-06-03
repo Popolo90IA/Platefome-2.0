@@ -8,6 +8,7 @@ import {
 } from "next/font/google";
 import "./globals.css";
 import { EditModeProvider } from "@/components/editable/EditModeProvider";
+import { ToastProvider } from "@/components/ui/toast";
 
 const cormorant = Cormorant_Garamond({
   subsets: ["latin"],
@@ -112,9 +113,11 @@ export default function RootLayout({
       className={`${cormorant.variable} ${dmSans.variable} ${dmMono.variable} ${notoSerifHebrew.variable} ${heebo.variable}`}
     >
       <body className="antialiased">
-        <EditModeProvider>
-          {children}
-        </EditModeProvider>
+        <ToastProvider>
+          <EditModeProvider>
+            {children}
+          </EditModeProvider>
+        </ToastProvider>
       </body>
     </html>
   );
