@@ -1,10 +1,14 @@
 "use client";
 
 import { Ref } from "react";
-import { LogoMark } from "@/components/brand";
-import { QRCode } from "@/components/ui/qr-code";
 import type { BgSwatch, QrStyle } from "../../_lib/types";
 import type { StageStyling } from "./_styling";
+import {
+  CoasterContent,
+  WordmarkHeader,
+  QrPanel,
+  CtaBlock,
+} from "./_tent/parts";
 
 interface Props {
   styling: StageStyling;
@@ -30,26 +34,10 @@ export function TentView({
   isDarkBg,
   svgRef,
 }: Props) {
-  const {
-    cardW,
-    cardH,
-    isLandscape,
-    isCoaster,
-    qrSize,
-    textColor,
-    subtitleColor,
-    accentColor,
-  } = styling;
+  const { cardW, cardH, isLandscape, isCoaster, qrSize } = styling;
 
   return (
-    <div
-      style={{
-        perspective: 1400,
-        width: cardW,
-        height: cardH,
-        position: "relative",
-      }}
-    >
+    <div style={{ perspective: 1400, width: cardW, height: cardH, position: "relative" }}>
       <div
         style={{
           position: "absolute",
@@ -57,8 +45,7 @@ export function TentView({
           left: "8%",
           right: "8%",
           height: 16,
-          background:
-            "radial-gradient(ellipse, rgba(0,0,0,.4), transparent 70%)",
+          background: "radial-gradient(ellipse, rgba(0,0,0,.4), transparent 70%)",
           filter: "blur(6px)",
           zIndex: -1,
         }}
@@ -85,146 +72,34 @@ export function TentView({
         }}
       >
         {isCoaster && (
-          <>
-            <LogoMark size={28} variant={isDarkBg ? "dark" : "light"} />
-            <div
-              style={{
-                width: qrSize,
-                height: qrSize,
-                background: qrStyle.bg,
-                borderRadius: 10,
-                padding: 10,
-                boxSizing: "border-box",
-                flexShrink: 0,
-              }}
-            >
-              {menuUrl && (
-                <QRCode
-                  ref={svgRef}
-                  value={menuUrl}
-                  size={qrSize - 20}
-                  fgColor={qrStyle.fg}
-                  bgColor={qrStyle.bg}
-                  errorCorrectionLevel="H"
-                />
-              )}
-            </div>
-            <div
-              className="font-mono"
-              style={{
-                fontSize: 8,
-                letterSpacing: ".16em",
-                color: subtitleColor,
-                textTransform: "uppercase",
-              }}
-            >
-              {cta}
-            </div>
-          </>
+          <CoasterContent
+            styling={styling}
+            qrStyle={qrStyle}
+            menuUrl={menuUrl}
+            cta={cta}
+            isDarkBg={isDarkBg}
+            svgRef={svgRef}
+          />
         )}
 
         {!isCoaster && !isLandscape && (
-          <div style={{ marginBottom: 10 }}>
-            <LogoMark size={32} variant={isDarkBg ? "dark" : "light"} />
-          </div>
-        )}
-        {!isCoaster && !isLandscape && (
-          <div style={{ marginBottom: 14 }}>
-            <div
-              className="font-display"
-              style={{
-                fontSize: 12,
-                fontWeight: 600,
-                letterSpacing: ".26em",
-                color: textColor,
-                marginBottom: 3,
-              }}
-            >
-              PLATE
-              <em
-                style={{
-                  fontStyle: "italic",
-                  color: accentColor,
-                  fontWeight: 400,
-                }}
-              >
-                FORM
-              </em>
-            </div>
-            <div
-              className="font-mono"
-              style={{
-                fontSize: 8,
-                letterSpacing: ".2em",
-                color: subtitleColor,
-              }}
-            >
-              EVERY DISH · IN 360°
-            </div>
-          </div>
+          <WordmarkHeader styling={styling} isDarkBg={isDarkBg} />
         )}
 
         {!isCoaster && (
-          <div
-            style={{
-              width: qrSize,
-              height: qrSize,
-              background: qrStyle.bg,
-              borderRadius: 12,
-              padding: 12,
-              boxSizing: "border-box",
-              boxShadow: "0 6px 20px -8px rgba(0,0,0,.2)",
-              marginBottom: isLandscape ? 0 : 14,
-              flexShrink: 0,
-            }}
-          >
-            {menuUrl && (
-              <QRCode
-                ref={svgRef}
-                value={menuUrl}
-                size={qrSize - 24}
-                fgColor={qrStyle.fg}
-                bgColor={qrStyle.bg}
-                errorCorrectionLevel="H"
-              />
-            )}
-          </div>
+          <QrPanel
+            qrStyle={qrStyle}
+            menuUrl={menuUrl}
+            svgRef={svgRef}
+            size={qrSize}
+            pad={12}
+            radius={12}
+            shadow="0 6px 20px -8px rgba(0,0,0,.2)"
+            marginBottom={isLandscape ? 0 : 14}
+          />
         )}
 
-        {!isCoaster && (
-          <div style={{ flex: isLandscape ? 1 : "unset" }}>
-            <div
-              className="font-display"
-              style={{
-                fontStyle: "italic",
-                fontSize: isLandscape ? 16 : 18,
-                color: textColor,
-                lineHeight: 1.1,
-                marginBottom: 5,
-              }}
-            >
-              {cta.split(" ").map((word, wi, arr) =>
-                wi === arr.length - 1 ? (
-                  <em key={wi} style={{ color: accentColor }}>
-                    {word}
-                  </em>
-                ) : (
-                  <span key={wi}>{word} </span>
-                )
-              )}
-            </div>
-            <div
-              className="font-sans"
-              style={{
-                fontSize: 10.5,
-                color: subtitleColor,
-                lineHeight: 1.4,
-              }}
-            >
-              {desc}
-            </div>
-          </div>
-        )}
+        {!isCoaster && <CtaBlock styling={styling} cta={cta} desc={desc} />}
       </div>
     </div>
   );
