@@ -1,6 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useModelViewerScript } from "./_lib/useModelViewerScript";
+import { PlateFoodFallback } from "./_plate-3d/PlateFoodFallback";
+import { SteamEffect } from "./_plate-3d/SteamEffect";
 
 interface Plate3DStageProps {
   active: boolean;
@@ -17,23 +19,7 @@ export function Plate3DStage({
   modelUrl,
   posterUrl,
 }: Plate3DStageProps) {
-  const [scriptReady, setScriptReady] = useState(false);
-
-  useEffect(() => {
-    if (!active) return;
-    if (typeof window === "undefined") return;
-
-    if (document.querySelector('script[data-mv-loaded="true"]')) {
-      setScriptReady(true);
-      return;
-    }
-    const script = document.createElement("script");
-    script.type = "module";
-    script.src = "/vendor/model-viewer.min.js";
-    script.dataset.mvLoaded = "true";
-    script.onload = () => setScriptReady(true);
-    document.head.appendChild(script);
-  }, [active]);
+  const scriptReady = useModelViewerScript(active);
 
   return (
     <div
@@ -124,117 +110,6 @@ export function Plate3DStage({
           50% {
             opacity: 1;
             transform: scale(1.08);
-          }
-        }
-      `}</style>
-    </div>
-  );
-}
-
-/** Beau plat stylisé en CSS quand aucun modèle GLB fourni */
-function PlateFoodFallback() {
-  return (
-    <div
-      className="relative w-[200px] h-[200px]"
-      style={{
-        animation: "plateSpin 12s linear infinite",
-      }}
-    >
-      {/* Main dish dome */}
-      <div
-        className="absolute inset-0 rounded-full"
-        style={{
-          background:
-            "radial-gradient(circle at 35% 25%, #e8a968 0%, #c17838 40%, #8a4e1f 100%)",
-          boxShadow:
-            "inset -10px -15px 30px rgba(60,30,10,0.5), inset 10px 10px 20px rgba(255,200,120,0.4), 0 20px 30px -8px rgba(60,30,10,0.4)",
-        }}
-      />
-
-      {/* Garnish elements */}
-      <div
-        className="absolute top-6 left-10 h-6 w-6 rounded-full"
-        style={{
-          background: "radial-gradient(circle, #3d7a2a, #1f4515)",
-          boxShadow: "inset -2px -2px 4px rgba(0,0,0,0.3)",
-        }}
-      />
-      <div
-        className="absolute top-12 right-8 h-5 w-5 rounded-full"
-        style={{
-          background: "radial-gradient(circle, #c43030, #7a1515)",
-          boxShadow: "inset -2px -2px 4px rgba(0,0,0,0.3)",
-        }}
-      />
-      <div
-        className="absolute bottom-8 left-16 h-4 w-4 rounded-full"
-        style={{
-          background: "radial-gradient(circle, #3d7a2a, #1f4515)",
-        }}
-      />
-      <div
-        className="absolute bottom-12 right-12 h-7 w-7 rounded-full"
-        style={{
-          background: "radial-gradient(circle, #f4d06f, #b88e2a)",
-          boxShadow: "inset -2px -2px 6px rgba(60,40,10,0.5)",
-        }}
-      />
-
-      {/* Gold glaze shine */}
-      <div
-        className="absolute inset-0 rounded-full pointer-events-none"
-        style={{
-          background:
-            "radial-gradient(ellipse at 30% 20%, rgba(255,255,255,0.4) 0%, transparent 40%)",
-        }}
-      />
-
-      <style jsx>{`
-        @keyframes plateSpin {
-          from {
-            transform: rotate(0deg);
-          }
-          to {
-            transform: rotate(360deg);
-          }
-        }
-      `}</style>
-    </div>
-  );
-}
-
-/** Vapeur animée SVG */
-function SteamEffect() {
-  return (
-    <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-[160px] pointer-events-none">
-      {[0, 1, 2].map((i) => (
-        <div
-          key={i}
-          className="absolute left-1/2 -translate-x-1/2"
-          style={{
-            width: "30px",
-            height: "80px",
-            background:
-              "radial-gradient(ellipse, rgba(255,255,255,0.5) 0%, transparent 70%)",
-            filter: "blur(4px)",
-            animation: `steamRise ${3 + i * 0.5}s ease-out ${i * 0.7}s infinite`,
-            opacity: 0,
-          }}
-        />
-      ))}
-
-      <style jsx>{`
-        @keyframes steamRise {
-          0% {
-            opacity: 0;
-            transform: translate(-50%, 0) scale(0.6);
-          }
-          30% {
-            opacity: 0.7;
-          }
-          100% {
-            opacity: 0;
-            transform: translate(-50%, -120px) scale(1.5);
           }
         }
       `}</style>
