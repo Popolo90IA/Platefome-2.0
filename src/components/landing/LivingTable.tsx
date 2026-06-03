@@ -1,20 +1,14 @@
 "use client";
 
-import { useRef, useState } from "react";
-import { ArrowLeft, Sparkles } from "lucide-react";
-import { EditableText } from "@/components/editable/EditableText";
-import { TableTextureBg } from "./TableTextureBg";
+import { ExperiencePath } from "./ExperiencePath";
+import { FloatingBadges } from "./FloatingBadges";
 import { PhoneToPlatterTransition } from "./PhoneToPlatterTransition";
 import { Plate3DStage } from "./Plate3DStage";
-import { FloatingBadges } from "./FloatingBadges";
-import { ExperiencePath } from "./ExperiencePath";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { useGSAP } from "@gsap/react";
-
-gsap.registerPlugin(ScrollTrigger, useGSAP);
+import { TableTextureBg } from "./TableTextureBg";
+import { ActTitle } from "./_living-table/ActTitle";
+import { CornerOrnament } from "./_living-table/CornerOrnament";
+import { CtaReveal } from "./_living-table/CtaReveal";
+import { useScrollStory } from "./_living-table/useScrollStory";
 
 /**
  * LivingTable — the signature scroll-driven showcase.
@@ -26,50 +20,15 @@ gsap.registerPlugin(ScrollTrigger, useGSAP);
  *   Act 4 (0.85 - 1.00): Stable plate, CTA reveals.
  */
 export function LivingTable() {
-  const sectionRef = useRef<HTMLElement>(null);
-  const [progress, setProgress] = useState(0);
-  const proxy = useRef({ p: 0 });
-
-  useGSAP(() => {
-    const el = sectionRef.current;
-    if (!el) return;
-
-    ScrollTrigger.create({
-      trigger: el,
-      start: "top top",
-      end: "bottom bottom",
-      scrub: 0.6,
-      onUpdate(self) {
-        proxy.current.p = self.progress;
-        setProgress(self.progress);
-      },
-    });
-  }, { scope: sectionRef });
-
-  // Chapter detection
-  const act =
-    progress < 0.25
-      ? 1
-      : progress < 0.55
-      ? 2
-      : progress < 0.85
-      ? 3
-      : 4;
-
-  // Transition progress for the phone→plate (0 to 1 mapped from 0.1 → 0.7 of global)
-  const transitionProgress = Math.max(
-    0,
-    Math.min(1, (progress - 0.1) / 0.55)
-  );
-
-  // Plate3D active from 0.55+
-  const plateActive = progress > 0.55;
-
-  // Badges start appearing at 0.7
-  const badgesActive = progress > 0.7;
-
-  // CTA reveal at 0.9
-  const ctaReveal = Math.max(0, Math.min(1, (progress - 0.85) / 0.12));
+  const {
+    sectionRef,
+    progress,
+    act,
+    transitionProgress,
+    plateActive,
+    badgesActive,
+    ctaReveal,
+  } = useScrollStory();
 
   return (
     <section
@@ -80,7 +39,6 @@ export function LivingTable() {
     >
       {/* Sticky stage */}
       <div className="sticky top-0 h-screen w-full overflow-hidden">
-        {/* Warm table background */}
         <TableTextureBg />
 
         {/* Decorative divider top */}
@@ -99,9 +57,7 @@ export function LivingTable() {
                 style={{
                   width: act === n ? "28px" : "10px",
                   background:
-                    act >= n
-                      ? "hsl(var(--gold))"
-                      : "hsl(var(--gold) / 0.25)",
+                    act >= n ? "hsl(var(--gold))" : "hsl(var(--gold) / 0.25)",
                 }}
               />
             ))}
@@ -118,7 +74,6 @@ export function LivingTable() {
 
         {/* Main stage — the table surface */}
         <div className="relative h-full w-full flex items-center justify-center px-4">
-          {/* Central scene container */}
           <div className="relative w-full max-w-4xl h-[75vh] flex items-center justify-center">
             {/* Phone → Plate transition layer */}
             <div
@@ -134,9 +89,7 @@ export function LivingTable() {
             {/* 3D plate stage layer */}
             <div
               className="absolute inset-0 flex items-center justify-center z-10"
-              style={{
-                opacity: plateActive ? 1 : 0,
-              }}
+              style={{ opacity: plateActive ? 1 : 0 }}
             >
               <Plate3DStage active={plateActive} />
             </div>
@@ -147,32 +100,7 @@ export function LivingTable() {
             </div>
 
             {/* CTA reveal at end */}
-            {ctaReveal > 0.05 && (
-              <div
-                className="absolute bottom-8 left-1/2 -translate-x-1/2 z-30 flex flex-col items-center gap-3"
-                style={{
-                  opacity: ctaReveal,
-                  transform: `translate(-50%, ${(1 - ctaReveal) * 20}px)`,
-                  transition: "opacity 400ms ease, transform 400ms ease",
-                }}
-              >
-                <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[hsl(var(--gold))]/15 border border-[hsl(var(--gold))]/30 backdrop-blur-sm">
-                  <Sparkles className="h-3.5 w-3.5 text-[hsl(var(--gold))]" />
-                  <span className="text-sm font-medium text-[hsl(var(--gold-dark))]">
-                    המנה מוכנה להזמנה
-                  </span>
-                </div>
-                <Link href="/signup">
-                  <Button
-                    size="lg"
-                    className="bg-gold-gradient hover:opacity-90 shadow-gold-glow px-8 h-14 text-base font-semibold"
-                  >
-                    תן ללקוחות שלך לטעום לפני
-                    <ArrowLeft className="h-4 w-4 mr-1" />
-                  </Button>
-                </Link>
-              </div>
-            )}
+            {ctaReveal > 0.05 && <CtaReveal ctaReveal={ctaReveal} />}
           </div>
         </div>
 
@@ -201,94 +129,5 @@ export function LivingTable() {
         <CornerOrnament position="bottom-end" />
       </div>
     </section>
-  );
-}
-
-/** Titre de l'acte courant — Playfair Display, change au scroll */
-function ActTitle({ act }: { act: number }) {
-  const titles: Record<number, { title: string; subtitle: string; key: string }> =
-    {
-      1: {
-        key: "livingtable.act1",
-        title: "הצלחת מחכה",
-        subtitle: "הלקוח מתיישב. הוא פותח את הטלפון.",
-      },
-      2: {
-        key: "livingtable.act2",
-        title: "הטלפון נעלם",
-        subtitle: "ובמקומו — חוויה שלא שכחת",
-      },
-      3: {
-        key: "livingtable.act3",
-        title: "המנה קמה לחיים",
-        subtitle: "תלת־מימד על השולחן שלו. לפני ההזמנה.",
-      },
-      4: {
-        key: "livingtable.act4",
-        title: "הוא מזמין",
-        subtitle: "כי הוא כבר ראה. כבר הרגיש. כבר החליט.",
-      },
-    };
-  const current = titles[act];
-
-  return (
-    <div
-      key={act}
-      className="animate-fade-up"
-      style={{ animationDuration: "800ms" }}
-    >
-      <h2 className="font-serif-display text-3xl md:text-5xl font-bold leading-tight text-foreground mb-2">
-        <EditableText
-          contentKey={`${current.key}.title`}
-          defaultValue={current.title}
-          as="span"
-        />
-      </h2>
-      <p className="text-sm md:text-base text-foreground/70 font-medium">
-        <EditableText
-          contentKey={`${current.key}.subtitle`}
-          defaultValue={current.subtitle}
-          as="span"
-        />
-      </p>
-    </div>
-  );
-}
-
-/** Ornement doré d'angle — rappel d'un menu de restaurant classique */
-function CornerOrnament({
-  position,
-}: {
-  position: "top-start" | "top-end" | "bottom-start" | "bottom-end";
-}) {
-  const classes: Record<typeof position, string> = {
-    "top-start": "top-4 start-4",
-    "top-end": "top-4 end-4",
-    "bottom-start": "bottom-4 start-4",
-    "bottom-end": "bottom-4 end-4",
-  };
-  const rotations: Record<typeof position, string> = {
-    "top-start": "rotate(0deg)",
-    "top-end": "rotate(90deg)",
-    "bottom-start": "rotate(270deg)",
-    "bottom-end": "rotate(180deg)",
-  };
-
-  return (
-    <svg
-      className={`absolute ${classes[position]} w-10 h-10 text-[hsl(var(--gold))]/50 pointer-events-none`}
-      style={{ transform: rotations[position] }}
-      viewBox="0 0 40 40"
-      fill="none"
-      aria-hidden
-    >
-      <path
-        d="M2 2 L14 2 M2 2 L2 14 M2 2 Q8 8 14 14"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-      />
-      <circle cx="2" cy="2" r="2" fill="currentColor" />
-    </svg>
   );
 }
