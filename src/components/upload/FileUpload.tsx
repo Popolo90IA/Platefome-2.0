@@ -115,6 +115,7 @@ export function FileUpload({
           <button
             type="button"
             onClick={handleRemove}
+            aria-label="הסר קובץ"
             className="absolute -top-2 -right-2 bg-destructive text-destructive-foreground rounded-full p-1 hover:bg-destructive/90"
           >
             <X className="h-4 w-4" />

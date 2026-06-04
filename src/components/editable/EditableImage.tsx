@@ -74,6 +74,7 @@ export function EditableImage({
         type="button"
         onClick={() => fileRef.current?.click()}
         disabled={uploading}
+        aria-label="החלף תמונה"
         className="absolute inset-0 flex items-center justify-center bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer rounded"
       >
         {uploading ? (

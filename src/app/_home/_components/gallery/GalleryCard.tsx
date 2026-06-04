@@ -16,7 +16,16 @@ export function GalleryCard({
     <div
       className="reveal"
       data-delay={String(delay)}
+      role="button"
+      tabIndex={0}
+      aria-label={`${dish.name} — ${dish.price}`}
       onClick={onSelect}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          onSelect();
+        }
+      }}
       style={{
         background: "hsl(var(--deep))",
         border: "1px solid hsl(var(--line) / .5)",

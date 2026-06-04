@@ -1,5 +1,7 @@
 "use client";
 
+import { useEffect, useRef } from "react";
+
 interface ConfirmDialogProps {
   open: boolean;
   title: string;
@@ -21,6 +23,18 @@ export function ConfirmDialog({
   onCancel,
   danger = false,
 }: ConfirmDialogProps) {
+  const confirmRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onCancel();
+    };
+    document.addEventListener("keydown", onKey);
+    confirmRef.current?.focus();
+    return () => document.removeEventListener("keydown", onKey);
+  }, [open, onCancel]);
+
   if (!open) return null;
 
   return (
@@ -39,6 +53,10 @@ export function ConfirmDialog({
       onClick={onCancel}
     >
       <div
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="confirm-dialog-title"
+        aria-describedby={description ? "confirm-dialog-desc" : undefined}
         style={{
           background: "hsl(var(--card))",
           border: "1px solid hsl(var(--line))",
@@ -51,6 +69,7 @@ export function ConfirmDialog({
         onClick={(e) => e.stopPropagation()}
       >
         <h3
+          id="confirm-dialog-title"
           className="font-display text-xl font-semibold mb-2"
           style={{ color: "hsl(var(--fog))" }}
         >
@@ -58,6 +77,7 @@ export function ConfirmDialog({
         </h3>
         {description && (
           <p
+            id="confirm-dialog-desc"
             className="font-sans text-sm mb-6"
             style={{ color: "hsl(var(--subtle))" }}
           >
@@ -78,6 +98,7 @@ export function ConfirmDialog({
             {cancelLabel}
           </button>
           <button
+            ref={confirmRef}
             onClick={onConfirm}
             className="font-sans text-sm px-4 py-2 rounded-lg transition-opacity"
             style={{

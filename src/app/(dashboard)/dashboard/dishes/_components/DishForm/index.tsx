@@ -52,6 +52,7 @@ export function DishForm({
         </CardTitle>
         <button
           onClick={onCancel}
+          aria-label="סגור"
           className="p-1 rounded-md hover:bg-secondary transition-colors"
         >
           <X className="h-5 w-5 text-muted-foreground" />
