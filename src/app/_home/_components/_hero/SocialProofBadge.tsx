@@ -27,7 +27,7 @@ export function SocialProofBadge() {
       />
       <span
         style={{
-          fontFamily: "'DM Sans',sans-serif",
+          fontFamily: "var(--font-body)",
           fontSize: ".8125rem",
           color: "hsl(28,62%,58%)",
           fontWeight: 500,

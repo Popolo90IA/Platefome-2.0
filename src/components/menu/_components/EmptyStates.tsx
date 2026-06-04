@@ -26,7 +26,7 @@ export function SearchEmpty({ lang, onClear }: SearchEmptyProps) {
       <p
         style={{
           color: D.textDim,
-          fontFamily: "'DM Sans', sans-serif",
+          fontFamily: "var(--font-body)",
           fontSize: 14,
         }}
       >
@@ -37,7 +37,7 @@ export function SearchEmpty({ lang, onClear }: SearchEmptyProps) {
         onClick={onClear}
         style={{
           marginTop: 16,
-          fontFamily: "'DM Mono', monospace",
+          fontFamily: "var(--font-mono)",
           fontSize: 11,
           letterSpacing: ".14em",
           textTransform: "uppercase",
@@ -74,7 +74,7 @@ export function MenuEmpty({ lang }: MenuEmptyProps) {
           margin: "0 auto 16px",
         }}
       />
-      <p style={{ color: D.textDim, fontFamily: "'DM Sans', sans-serif" }}>
+      <p style={{ color: D.textDim, fontFamily: "var(--font-body)" }}>
         {t(lang, "empty_menu")}
       </p>
     </div>

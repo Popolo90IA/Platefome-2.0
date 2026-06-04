@@ -35,7 +35,7 @@ export function DishHeader({
           display: "inline-flex",
           alignItems: "center",
           gap: 8,
-          fontFamily: "'DM Mono',monospace",
+          fontFamily: "var(--font-mono)",
           fontSize: ".625rem",
           letterSpacing: ".14em",
           textTransform: "uppercase",
@@ -53,7 +53,7 @@ export function DishHeader({
       </Link>
       <span
         style={{
-          fontFamily: "'Noto Serif Hebrew',serif",
+          fontFamily: "var(--font-hebrew)",
           fontSize: ".95rem",
           fontWeight: 300,
           color: "hsl(var(--fog))",
@@ -63,7 +63,7 @@ export function DishHeader({
       </span>
       <div
         style={{
-          fontFamily: "'DM Mono',monospace",
+          fontFamily: "var(--font-mono)",
           fontSize: ".9375rem",
           color: "hsl(36,28%,92%)",
           fontWeight: 500,

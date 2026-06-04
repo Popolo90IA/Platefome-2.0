@@ -32,7 +32,7 @@ export function ArMockup() {
         </svg>
         <span
           style={{
-            fontFamily: "'DM Sans',sans-serif",
+            fontFamily: "var(--font-body)",
             fontSize: ".8rem",
             color: "hsl(var(--accent-bright))",
             fontWeight: 600,
@@ -44,7 +44,7 @@ export function ArMockup() {
       <div style={{ display: "flex", justifyContent: "center", gap: 16 }}>
         <span
           style={{
-            fontFamily: "'DM Sans',sans-serif",
+            fontFamily: "var(--font-body)",
             fontSize: ".75rem",
             color: "hsl(var(--dim))",
           }}
@@ -53,7 +53,7 @@ export function ArMockup() {
         </span>
         <span
           style={{
-            fontFamily: "'DM Sans',sans-serif",
+            fontFamily: "var(--font-body)",
             fontSize: ".75rem",
             color: "hsl(var(--dim))",
           }}

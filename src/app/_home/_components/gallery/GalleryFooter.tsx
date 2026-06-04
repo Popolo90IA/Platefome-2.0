@@ -9,7 +9,7 @@ export function GalleryFooter() {
           display: "inline-flex",
           alignItems: "center",
           gap: 12,
-          fontFamily: "'DM Sans',sans-serif",
+          fontFamily: "var(--font-body)",
           fontSize: ".82rem",
           color: "hsl(var(--subtle))",
         }}

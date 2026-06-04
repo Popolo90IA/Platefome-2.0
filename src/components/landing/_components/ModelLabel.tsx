@@ -31,7 +31,7 @@ export function ModelLabel({ label }: Props) {
       >
         <span
           style={{
-            fontFamily: "var(--font-cormorant), 'Cormorant Garamond', serif",
+            fontFamily: "var(--font-display)",
             fontSize: ".95rem",
             color: "hsl(24,18%,16%)",
             fontStyle: "italic",
@@ -58,7 +58,7 @@ export function ModelLabel({ label }: Props) {
         />
         <span
           style={{
-            fontFamily: "'DM Mono',monospace",
+            fontFamily: "var(--font-mono)",
             fontSize: 10,
             letterSpacing: ".18em",
             color: "hsl(24,12%,38%)",

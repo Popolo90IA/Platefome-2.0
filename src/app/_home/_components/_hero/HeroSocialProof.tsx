@@ -66,7 +66,7 @@ export function HeroSocialProof() {
         </div>
         <span
           style={{
-            fontFamily: "'DM Sans',sans-serif",
+            fontFamily: "var(--font-body)",
             fontSize: ".75rem",
             color: "hsl(var(--subtle))",
           }}

@@ -18,7 +18,7 @@ export function Badge({
         background: bg,
         border: `1px solid ${color}`,
         borderRadius: 99,
-        fontFamily: "'DM Mono',monospace",
+        fontFamily: "var(--font-mono)",
         fontSize: ".5875rem",
         letterSpacing: ".14em",
         textTransform: "uppercase",

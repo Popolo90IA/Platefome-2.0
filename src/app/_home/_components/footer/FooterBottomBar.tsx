@@ -16,7 +16,7 @@ export function FooterBottomBar() {
     >
       <span
         style={{
-          fontFamily: "'DM Sans',sans-serif",
+          fontFamily: "var(--font-body)",
           fontSize: ".8rem",
           color: "hsl(28,10%,48%)",
         }}
@@ -25,7 +25,7 @@ export function FooterBottomBar() {
       </span>
       <span
         style={{
-          fontFamily: "'DM Sans',sans-serif",
+          fontFamily: "var(--font-body)",
           fontSize: ".8rem",
           color: "hsl(28,10%,48%)",
         }}

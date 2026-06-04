@@ -7,7 +7,7 @@ export function HeroTitle() {
         <h1
           className="hero-fade-b"
           style={{
-            fontFamily: "'Cormorant Garamond', serif",
+            fontFamily: "var(--font-display)",
             fontWeight: 700,
             fontSize: "clamp(48px, 7vw, 108px)",
             lineHeight: 0.92,
@@ -26,7 +26,7 @@ export function HeroTitle() {
         <h1
           className="hero-fade-c"
           style={{
-            fontFamily: "'Cormorant Garamond', serif",
+            fontFamily: "var(--font-display)",
             fontStyle: "italic",
             fontWeight: 700,
             fontSize: "clamp(40px, 6vw, 92px)",

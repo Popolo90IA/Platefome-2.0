@@ -72,7 +72,7 @@ export function GalleryCard({
             backdropFilter: "blur(8px)",
             border: `1px solid ${dish.badgeColor.replace(")", ", .3)")}`,
             borderRadius: 99,
-            fontFamily: "'DM Sans',sans-serif",
+            fontFamily: "var(--font-body)",
             fontSize: 11,
             fontWeight: 600,
             color: dish.badgeColor,
@@ -93,7 +93,7 @@ export function GalleryCard({
         >
           <span
             style={{
-              fontFamily: "'Cormorant Garamond',serif",
+              fontFamily: "var(--font-display)",
               fontSize: "1.25rem",
               fontWeight: 700,
               color: "hsl(var(--fog))",
@@ -103,7 +103,7 @@ export function GalleryCard({
           </span>
           <span
             style={{
-              fontFamily: "'DM Sans',sans-serif",
+              fontFamily: "var(--font-body)",
               fontSize: "1rem",
               fontWeight: 700,
               color: "hsl(var(--accent-bright))",
@@ -119,7 +119,7 @@ export function GalleryCard({
             border: "1px solid hsl(var(--line))",
             borderRadius: 99,
             padding: "2px 10px",
-            fontFamily: "'DM Sans',sans-serif",
+            fontFamily: "var(--font-body)",
             fontSize: 11,
             color: "hsl(var(--dim))",
           }}

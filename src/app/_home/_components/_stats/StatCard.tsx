@@ -38,7 +38,7 @@ export function StatCard({ s, delay }: { s: StatItem; delay: number }) {
       />
       <div
         style={{
-          fontFamily: "'DM Sans',sans-serif",
+          fontFamily: "var(--font-body)",
           fontSize: "3.75rem",
           fontWeight: 800,
           color: "hsl(var(--fog))",
@@ -50,7 +50,7 @@ export function StatCard({ s, delay }: { s: StatItem; delay: number }) {
       </div>
       <div
         style={{
-          fontFamily: "'DM Sans',sans-serif",
+          fontFamily: "var(--font-body)",
           fontSize: "1rem",
           fontWeight: 500,
           color: "hsl(var(--fog))",
@@ -60,7 +60,7 @@ export function StatCard({ s, delay }: { s: StatItem; delay: number }) {
       </div>
       <div
         style={{
-          fontFamily: "'DM Sans',sans-serif",
+          fontFamily: "var(--font-body)",
           fontSize: ".8125rem",
           color: "hsl(var(--subtle))",
           lineHeight: 1.55,
@@ -94,7 +94,7 @@ export function StatCard({ s, delay }: { s: StatItem; delay: number }) {
         </svg>
         <span
           style={{
-            fontFamily: "'DM Sans',sans-serif",
+            fontFamily: "var(--font-body)",
             fontSize: ".75rem",
             color: "hsl(var(--accent-bright))",
           }}

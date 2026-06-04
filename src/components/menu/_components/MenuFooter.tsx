@@ -42,7 +42,7 @@ export function MenuFooter({ lang }: MenuFooterProps) {
         </span>
         <span
           style={{
-            fontFamily: "'DM Mono', monospace",
+            fontFamily: "var(--font-mono)",
             fontSize: 10,
             letterSpacing: ".22em",
             textTransform: "uppercase",
@@ -53,7 +53,7 @@ export function MenuFooter({ lang }: MenuFooterProps) {
         </span>
         <span
           style={{
-            fontFamily: "'DM Sans', sans-serif",
+            fontFamily: "var(--font-body)",
             fontWeight: 700,
             fontSize: 13,
             letterSpacing: ".18em",

@@ -50,7 +50,7 @@ export function MainPhoto({
         >
           <span
             style={{
-              fontFamily: "'DM Mono',monospace",
+              fontFamily: "var(--font-mono)",
               fontSize: ".625rem",
               letterSpacing: ".14em",
               color: "hsl(var(--dim))",
@@ -87,7 +87,7 @@ export function MainPhoto({
             borderRadius: 99,
             cursor: "pointer",
             color: "hsl(36,28%,92%)",
-            fontFamily: "'DM Mono',monospace",
+            fontFamily: "var(--font-mono)",
             fontSize: ".5875rem",
             letterSpacing: ".14em",
             textTransform: "uppercase",

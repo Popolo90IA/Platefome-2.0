@@ -11,7 +11,7 @@ export function FooterLinkColumns() {
           <span
             style={{
               display: "block",
-              fontFamily: "'DM Sans',sans-serif",
+              fontFamily: "var(--font-body)",
               fontSize: 11,
               fontWeight: 600,
               letterSpacing: ".1em",
@@ -34,7 +34,7 @@ export function FooterLinkColumns() {
                 key={label}
                 href={href}
                 style={{
-                  fontFamily: "'DM Sans',sans-serif",
+                  fontFamily: "var(--font-body)",
                   fontSize: ".9rem",
                   color: "hsl(28,10%,58%)",
                   textDecoration: "none",

@@ -52,7 +52,7 @@ export function SearchBar({ value, onChange, lang, dir }: SearchBarProps) {
             background: "hsl(28,22%,12%,.8)",
             border: `1px solid ${value ? D.line2 : D.line}`,
             color: D.cream,
-            fontFamily: "'DM Sans', sans-serif",
+            fontFamily: "var(--font-body)",
             fontSize: 13,
             outline: "none",
             boxSizing: "border-box",

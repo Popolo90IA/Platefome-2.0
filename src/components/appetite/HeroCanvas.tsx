@@ -65,7 +65,7 @@ export function HeroCanvas({ modelUrl }: HeroCanvasProps) {
       {!loaded && (
         <div style={{ position: "absolute", inset: 0, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 16, pointerEvents: "none", zIndex: 6, borderRadius: 16, background: "hsl(36,20%,96%,.6)", backdropFilter: "blur(8px)" }}>
           <div style={{ width: 32, height: 32, border: "1.5px solid hsl(36,30%,82%)", borderTopColor: "hsl(36,65%,50%)", borderRadius: "50%", animation: "spin 0.9s linear infinite" }} />
-          <span style={{ fontFamily: "'DM Mono',monospace", fontSize: ".5625rem", letterSpacing: ".18em", textTransform: "uppercase", color: "hsl(28,20%,52%)" }}>טוען מודל</span>
+          <span style={{ fontFamily: "var(--font-mono)", fontSize: ".5625rem", letterSpacing: ".18em", textTransform: "uppercase", color: "hsl(28,20%,52%)" }}>טוען מודל</span>
         </div>
       )}
       <style>{`@keyframes spin{to{transform:rotate(360deg)}}`}</style>

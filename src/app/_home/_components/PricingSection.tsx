@@ -63,7 +63,7 @@ export function PricingSection() {
           style={{
             textAlign: "center",
             marginTop: 40,
-            fontFamily: "'DM Sans',sans-serif",
+            fontFamily: "var(--font-body)",
             fontSize: ".8rem",
             color: "hsl(var(--subtle))",
           }}

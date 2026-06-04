@@ -71,7 +71,7 @@ export function RestaurantMark({
         <div>
           <div
             style={{
-              fontFamily: "'DM Mono', monospace",
+              fontFamily: "var(--font-mono)",
               fontSize: 11,
               letterSpacing: ".14em",
               textTransform: "uppercase",
@@ -110,7 +110,7 @@ export function RestaurantMark({
           display: "flex",
           gap: 18,
           flexWrap: "wrap",
-          fontFamily: "'DM Mono', monospace",
+          fontFamily: "var(--font-mono)",
           fontSize: "10.5px",
           letterSpacing: ".18em",
           textTransform: "uppercase",

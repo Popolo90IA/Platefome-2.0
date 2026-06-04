@@ -34,7 +34,7 @@ export default function OnboardingPage() {
       style={{
         minHeight: "100vh",
         background: S.void,
-        fontFamily: "'DM Sans', sans-serif",
+        fontFamily: "var(--font-body)",
         display: "flex",
         flexDirection: "column",
       }}

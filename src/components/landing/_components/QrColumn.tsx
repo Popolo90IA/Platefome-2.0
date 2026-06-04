@@ -23,7 +23,7 @@ export function QrColumn({ qrSrc }: Props) {
     >
       <span
         style={{
-          fontFamily: "'DM Mono',monospace",
+          fontFamily: "var(--font-mono)",
           fontSize: 10,
           letterSpacing: ".22em",
           textTransform: "uppercase",
@@ -95,7 +95,7 @@ export function QrColumn({ qrSrc }: Props) {
 
       <p
         style={{
-          fontFamily: "var(--font-cormorant), 'Cormorant Garamond', serif",
+          fontFamily: "var(--font-display)",
           fontSize: ".95rem",
           fontStyle: "italic",
           color: "hsl(24,18%,16%)",

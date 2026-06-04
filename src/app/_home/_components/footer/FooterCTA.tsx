@@ -21,7 +21,7 @@ export function FooterCTA() {
       >
         <h2
           style={{
-            fontFamily: "'Cormorant Garamond',serif",
+            fontFamily: "var(--font-display)",
             fontSize: "clamp(2rem,4vw,3rem)",
             fontWeight: 700,
             color: "hsl(32,28%,92%)",
@@ -38,7 +38,7 @@ export function FooterCTA() {
         </h2>
         <p
           style={{
-            fontFamily: "'DM Sans',sans-serif",
+            fontFamily: "var(--font-body)",
             fontSize: "1rem",
             color: "hsl(28,12%,62%)",
             lineHeight: 1.7,
@@ -65,7 +65,7 @@ export function FooterCTA() {
               padding: "14px 28px",
               background: "var(--grad-bronze)",
               borderRadius: 10,
-              fontFamily: "'DM Sans',sans-serif",
+              fontFamily: "var(--font-body)",
               fontSize: ".9375rem",
               fontWeight: 600,
               color: "#fff",
@@ -85,7 +85,7 @@ export function FooterCTA() {
               background: "hsl(28,18%,22%)",
               border: "1px solid hsl(28,18%,32%)",
               borderRadius: 10,
-              fontFamily: "'DM Sans',sans-serif",
+              fontFamily: "var(--font-body)",
               fontSize: ".9375rem",
               fontWeight: 500,
               color: "hsl(32,28%,88%)",

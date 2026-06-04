@@ -36,7 +36,7 @@ export function QrMockup() {
       <div style={{ flex: 1 }}>
         <div
           style={{
-            fontFamily: "'DM Sans',sans-serif",
+            fontFamily: "var(--font-body)",
             fontSize: ".8rem",
             fontWeight: 600,
             color: "hsl(var(--fog))",
@@ -46,7 +46,7 @@ export function QrMockup() {
         </div>
         <div
           style={{
-            fontFamily: "'DM Sans',sans-serif",
+            fontFamily: "var(--font-body)",
             fontSize: ".7rem",
             color: "hsl(var(--dim))",
           }}
@@ -60,7 +60,7 @@ export function QrMockup() {
           border: "1px solid hsl(140,60%,45%,.3)",
           borderRadius: 6,
           padding: "3px 8px",
-          fontFamily: "'DM Sans',sans-serif",
+          fontFamily: "var(--font-body)",
           fontSize: ".7rem",
           color: "hsl(140,60%,60%)",
           flexShrink: 0,

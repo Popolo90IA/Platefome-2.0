@@ -15,7 +15,7 @@ export function FooterBrandCol() {
       </div>
       <p
         style={{
-          fontFamily: "'DM Sans',sans-serif",
+          fontFamily: "var(--font-body)",
           fontSize: ".9rem",
           lineHeight: 1.75,
           color: "hsl(28,10%,55%)",

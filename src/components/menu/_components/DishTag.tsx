@@ -34,7 +34,7 @@ export function DishTag({ color, children }: DishTagProps) {
   return (
     <span
       style={{
-        fontFamily: "'DM Mono', monospace",
+        fontFamily: "var(--font-mono)",
         fontSize: "9.5px",
         letterSpacing: ".18em",
         textTransform: "uppercase",

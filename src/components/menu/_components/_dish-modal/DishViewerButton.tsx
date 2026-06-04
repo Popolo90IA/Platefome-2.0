@@ -11,7 +11,7 @@ const STYLE = {
   borderRadius: 10,
   background: D.grad,
   color: "#fff",
-  fontFamily: "'DM Sans', sans-serif",
+  fontFamily: "var(--font-body)",
   fontSize: 13.5,
   fontWeight: 600,
   cursor: "pointer",

@@ -59,7 +59,7 @@ export function PlanCard({
             border: `1px solid ${plan.badge.border}`,
             borderRadius: isHighlighted ? 99 : 8,
             padding: "4px 12px",
-            fontFamily: "'DM Sans',sans-serif",
+            fontFamily: "var(--font-body)",
             fontSize: 11,
             fontWeight: isHighlighted ? 600 : 700,
             color: plan.badge.color,
@@ -80,7 +80,7 @@ export function PlanCard({
       >
         <div
           style={{
-            fontFamily: "'DM Sans',sans-serif",
+            fontFamily: "var(--font-body)",
             fontSize: 11,
             fontWeight: 600,
             letterSpacing: ".1em",
@@ -93,7 +93,7 @@ export function PlanCard({
         </div>
         <div
           style={{
-            fontFamily: "'Cormorant Garamond',serif",
+            fontFamily: "var(--font-display)",
             fontWeight: 700,
             fontSize: "3.25rem",
             letterSpacing: "-.04em",
@@ -104,7 +104,7 @@ export function PlanCard({
           {plan.price}
           <span
             style={{
-              fontFamily: "'DM Sans',sans-serif",
+              fontFamily: "var(--font-body)",
               fontSize: ".85rem",
               fontWeight: 400,
               color: isHighlighted ? "hsl(var(--gold-dark))" : "hsl(var(--subtle))",
@@ -116,7 +116,7 @@ export function PlanCard({
         </div>
         <div
           style={{
-            fontFamily: "'DM Sans',sans-serif",
+            fontFamily: "var(--font-body)",
             fontSize: ".8rem",
             color: isHighlighted ? "hsl(var(--gold-dark))" : "hsl(var(--subtle))",
             marginTop: 6,
@@ -159,7 +159,7 @@ export function PlanCard({
             </svg>
             <span
               style={{
-                fontFamily: "'DM Sans',sans-serif",
+                fontFamily: "var(--font-body)",
                 fontSize: ".9rem",
                 color: featureColor,
               }}

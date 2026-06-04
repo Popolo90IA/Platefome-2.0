@@ -27,11 +27,11 @@ export function DishInfo({
 
       {/* Name */}
       <div className="dish-fade-a" style={{ marginBottom: 8 }}>
-        <h1 style={{ fontFamily: "'Noto Serif Hebrew',serif", fontWeight: 300, fontSize: "clamp(2rem,4vw,3rem)", lineHeight: 0.95, letterSpacing: "-.03em", color: "hsl(var(--cream))", margin: 0 }}>
+        <h1 style={{ fontFamily: "var(--font-hebrew)", fontWeight: 300, fontSize: "clamp(2rem,4vw,3rem)", lineHeight: 0.95, letterSpacing: "-.03em", color: "hsl(var(--cream))", margin: 0 }}>
           {dish.name}
         </h1>
         {dish.name_en && (
-          <div style={{ fontFamily: "'Cormorant Garamond',serif", fontStyle: "italic", fontSize: "1.25rem", color: "hsl(var(--fog))", marginTop: 6 }}>
+          <div style={{ fontFamily: "var(--font-display)", fontStyle: "italic", fontSize: "1.25rem", color: "hsl(var(--fog))", marginTop: 6 }}>
             {dish.name_en}
           </div>
         )}
@@ -41,7 +41,7 @@ export function DishInfo({
       <div className="dish-fade-b" style={{ marginBottom: 28 }}>
         <span
           style={{
-            fontFamily: "'Cormorant Garamond',serif",
+            fontFamily: "var(--font-display)",
             fontWeight: 300,
             fontSize: "2.5rem",
             letterSpacing: "-.04em",
@@ -64,7 +64,7 @@ export function DishInfo({
         <div className="dish-fade-b" style={{ marginBottom: 32, paddingBottom: 32, borderBottom: "1px solid hsl(var(--line))" }}>
           <p style={{ fontSize: "1.0625rem", color: "hsl(var(--subtle))", lineHeight: 1.8, margin: 0 }}>{dish.description}</p>
           {dish.description_en && (
-            <p style={{ fontSize: ".9375rem", color: "hsl(var(--dim))", lineHeight: 1.7, marginTop: 12, fontStyle: "italic", fontFamily: "'Cormorant Garamond',serif" }}>
+            <p style={{ fontSize: ".9375rem", color: "hsl(var(--dim))", lineHeight: 1.7, marginTop: 12, fontStyle: "italic", fontFamily: "var(--font-display)" }}>
               {dish.description_en}
             </p>
           )}
@@ -74,7 +74,7 @@ export function DishInfo({
       {/* Tags */}
       {dish.tags && dish.tags.length > 0 && (
         <div className="dish-fade-c" style={{ marginBottom: 28 }}>
-          <div style={{ fontFamily: "'DM Mono',monospace", fontSize: ".5875rem", letterSpacing: ".18em", color: "hsl(var(--dim))", textTransform: "uppercase", marginBottom: 12 }}>
+          <div style={{ fontFamily: "var(--font-mono)", fontSize: ".5875rem", letterSpacing: ".18em", color: "hsl(var(--dim))", textTransform: "uppercase", marginBottom: 12 }}>
             תגיות
           </div>
           <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
@@ -96,7 +96,7 @@ export function DishInfo({
               <line x1="12" y1="9" x2="12" y2="13" />
               <line x1="12" y1="17" x2="12.01" y2="17" />
             </svg>
-            <span style={{ fontFamily: "'DM Mono',monospace", fontSize: ".5875rem", letterSpacing: ".18em", color: "hsl(0,60%,52%)", textTransform: "uppercase" }}>
+            <span style={{ fontFamily: "var(--font-mono)", fontSize: ".5875rem", letterSpacing: ".18em", color: "hsl(0,60%,52%)", textTransform: "uppercase" }}>
               אלרגנים
             </span>
           </div>
@@ -106,7 +106,7 @@ export function DishInfo({
               return (
                 <div key={a} style={{ display: "flex", alignItems: "center", gap: 6, padding: "4px 12px", background: "hsl(0,60%,52%,.08)", border: "1px solid hsl(0,60%,52%,.22)", borderRadius: 99 }}>
                   <span>{info.emoji}</span>
-                  <span style={{ fontFamily: "'DM Mono',monospace", fontSize: ".5875rem", letterSpacing: ".1em", color: "hsl(0,60%,52%)", textTransform: "uppercase" }}>
+                  <span style={{ fontFamily: "var(--font-mono)", fontSize: ".5875rem", letterSpacing: ".1em", color: "hsl(0,60%,52%)", textTransform: "uppercase" }}>
                     {info.label}
                   </span>
                 </div>

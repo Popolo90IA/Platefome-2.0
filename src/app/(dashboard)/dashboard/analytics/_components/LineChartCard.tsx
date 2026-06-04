@@ -176,7 +176,7 @@ export function LineChartCard({
             x="300"
             y="130"
             textAnchor="middle"
-            fontFamily="DM Sans"
+            fontFamily="var(--font-body)"
             fontSize="14"
             fill="hsl(24,12%,38%)"
           >

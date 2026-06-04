@@ -106,7 +106,7 @@ export function DishMedia({
               style={{
                 padding: "7px 14px",
                 borderRadius: 99,
-                fontFamily: "'DM Mono', monospace",
+                fontFamily: "var(--font-mono)",
                 fontSize: "9.5px",
                 letterSpacing: ".18em",
                 textTransform: "uppercase",

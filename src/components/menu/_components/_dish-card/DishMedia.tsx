@@ -110,7 +110,7 @@ export function DishMedia({
           <span
             style={{
               fontSize: 8,
-              fontFamily: "'DM Mono', monospace",
+              fontFamily: "var(--font-mono)",
               letterSpacing: ".1em",
               textTransform: "uppercase",
               color: "#fff",
@@ -128,7 +128,7 @@ export function DishMedia({
             bottom: 4,
             insetInlineStart: 4,
             zIndex: 3,
-            fontFamily: "'DM Mono', monospace",
+            fontFamily: "var(--font-mono)",
             fontSize: 8,
             letterSpacing: ".1em",
             textTransform: "uppercase",

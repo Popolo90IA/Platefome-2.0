@@ -15,7 +15,7 @@ export function ModalBody({ dish }: { dish: GalleryDish }) {
       >
         <h2
           style={{
-            fontFamily: "'Noto Serif Hebrew',serif",
+            fontFamily: "var(--font-hebrew)",
             fontWeight: 400,
             fontSize: "1.75rem",
             letterSpacing: "-.03em",
@@ -28,7 +28,7 @@ export function ModalBody({ dish }: { dish: GalleryDish }) {
         </h2>
         <span
           style={{
-            fontFamily: "'Cormorant Garamond',serif",
+            fontFamily: "var(--font-display)",
             fontWeight: 300,
             fontSize: "2rem",
             letterSpacing: "-.04em",
@@ -83,7 +83,7 @@ export function ModalBody({ dish }: { dish: GalleryDish }) {
         />
         <span
           style={{
-            fontFamily: "'DM Mono',monospace",
+            fontFamily: "var(--font-mono)",
             fontSize: ".6875rem",
             letterSpacing: ".12em",
             color: "hsl(var(--dim))",

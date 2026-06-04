@@ -26,7 +26,7 @@ export function GalleryHeader() {
         />
         <span
           style={{
-            fontFamily: "'DM Sans',sans-serif",
+            fontFamily: "var(--font-body)",
             fontSize: 12,
             fontWeight: 600,
             letterSpacing: ".1em",
@@ -39,7 +39,7 @@ export function GalleryHeader() {
       </div>
       <h2
         style={{
-          fontFamily: "'Cormorant Garamond',serif",
+          fontFamily: "var(--font-display)",
           fontSize: "clamp(2.2rem,4.5vw,3.5rem)",
           fontWeight: 700,
           color: "hsl(var(--fog))",
@@ -55,7 +55,7 @@ export function GalleryHeader() {
       </h2>
       <p
         style={{
-          fontFamily: "'DM Sans',sans-serif",
+          fontFamily: "var(--font-body)",
           fontSize: "1rem",
           color: "hsl(var(--subtle))",
           maxWidth: 420,

@@ -82,7 +82,7 @@ export function MenuSection({
         />
         <span
           style={{
-            fontFamily: "'DM Mono', monospace",
+            fontFamily: "var(--font-mono)",
             fontSize: 10,
             letterSpacing: ".22em",
             textTransform: "uppercase",

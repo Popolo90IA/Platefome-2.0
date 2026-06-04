@@ -62,7 +62,7 @@ export function StickerRound({
         <text
           fill={color}
           style={{
-            fontFamily: "'DM Mono', 'JetBrains Mono', monospace",
+            fontFamily: "var(--font-mono)",
             fontSize: size * 0.085,
             fontWeight: 600,
             letterSpacing: size * 0.02,

@@ -34,7 +34,7 @@ export function ModalImage({
           backdropFilter: "blur(8px)",
           border: "1px solid hsl(var(--line) / .2)",
           borderRadius: 99,
-          fontFamily: "'DM Mono',monospace",
+          fontFamily: "var(--font-mono)",
           fontSize: ".625rem",
           letterSpacing: ".14em",
           textTransform: "uppercase",

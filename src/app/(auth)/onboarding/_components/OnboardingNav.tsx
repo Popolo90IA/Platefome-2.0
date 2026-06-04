@@ -31,7 +31,7 @@ export function OnboardingNav({ restaurantName }: { restaurantName: string }) {
         <svg width="28" height="28" viewBox="0 0 80 80">
           <circle cx="40" cy="40" r="28" fill="#f6f4ef" stroke="hsl(28,15%,18%)" strokeWidth="1.5" />
           <circle cx="40" cy="40" r="20" fill="none" stroke="hsl(28,15%,18%)" strokeWidth=".5" strokeDasharray="1.5 2" />
-          <text x="40" y="49" textAnchor="middle" fontFamily="Cormorant Garamond, serif" fontStyle="italic" fontWeight="500" fontSize="32" fill="hsl(28,62%,38%)">
+          <text x="40" y="49" textAnchor="middle" fontFamily="var(--font-display)" fontStyle="italic" fontWeight="500" fontSize="32" fill="hsl(28,62%,38%)">
             P
           </text>
         </svg>

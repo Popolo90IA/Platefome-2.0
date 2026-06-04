@@ -76,7 +76,7 @@ export function DishModalBody({
       </h2>
       <div
         style={{
-          fontFamily: "'DM Mono', monospace",
+          fontFamily: "var(--font-mono)",
           fontSize: 16,
           color: D.gold,
           letterSpacing: ".04em",

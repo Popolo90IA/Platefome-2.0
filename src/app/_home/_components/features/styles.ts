@@ -13,7 +13,7 @@ export const NUMBER_BG: CSSProperties = {
   position: "absolute",
   top: 12,
   left: 20,
-  fontFamily: "'DM Sans',sans-serif",
+  fontFamily: "var(--font-body)",
   fontSize: 72,
   fontWeight: 800,
   color: "hsl(var(--accent-bright) / .18)",
@@ -33,7 +33,7 @@ export const ICON_WRAP_BASE: CSSProperties = {
 };
 
 export const EYEBROW_BASE: CSSProperties = {
-  fontFamily: "'DM Sans',sans-serif",
+  fontFamily: "var(--font-body)",
   fontSize: 11,
   fontWeight: 600,
   letterSpacing: ".12em",
@@ -42,7 +42,7 @@ export const EYEBROW_BASE: CSSProperties = {
 };
 
 export const H3: CSSProperties = {
-  fontFamily: "'Cormorant Garamond',serif",
+  fontFamily: "var(--font-display)",
   fontSize: "2rem",
   fontWeight: 700,
   color: "hsl(var(--fog))",
@@ -51,7 +51,7 @@ export const H3: CSSProperties = {
 };
 
 export const P: CSSProperties = {
-  fontFamily: "'DM Sans',sans-serif",
+  fontFamily: "var(--font-body)",
   fontSize: ".9rem",
   color: "hsl(var(--subtle))",
   lineHeight: 1.65,

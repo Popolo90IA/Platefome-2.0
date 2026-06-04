@@ -72,7 +72,7 @@ export function SiteNav() {
               style={{
                 padding: "7px 14px",
                 textDecoration: "none",
-                fontFamily: "'DM Sans',sans-serif",
+                fontFamily: "var(--font-body)",
                 fontSize: ".875rem",
                 fontWeight: 400,
                 color: "hsl(var(--subtle))",
@@ -113,7 +113,7 @@ export function SiteNav() {
             style={{
               padding: "7px 14px",
               textDecoration: "none",
-              fontFamily: "'DM Sans',sans-serif",
+              fontFamily: "var(--font-body)",
               fontSize: ".875rem",
               fontWeight: 400,
               color: "hsl(var(--subtle))",
@@ -138,7 +138,7 @@ export function SiteNav() {
               padding: "9px 20px",
               background: "var(--grad-bronze)",
               color: "#fff",
-              fontFamily: "'DM Sans',sans-serif",
+              fontFamily: "var(--font-body)",
               fontSize: ".875rem",
               fontWeight: 600,
               letterSpacing: "-.01em",

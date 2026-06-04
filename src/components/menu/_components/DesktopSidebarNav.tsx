@@ -90,7 +90,7 @@ export function DesktopSidebarNav({
             background: D.surface,
             border: `1px solid ${D.line}`,
             color: D.cream,
-            fontFamily: "'DM Sans', sans-serif",
+            fontFamily: "var(--font-body)",
             fontSize: 12,
             outline: "none",
             boxSizing: "border-box",

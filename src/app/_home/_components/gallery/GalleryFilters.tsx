@@ -19,7 +19,7 @@ export function GalleryFilters() {
         <div
           key={t}
           style={{
-            fontFamily: "'DM Sans',sans-serif",
+            fontFamily: "var(--font-body)",
             fontSize: ".85rem",
             fontWeight: ti === 0 ? 600 : 400,
             padding: "8px 18px",

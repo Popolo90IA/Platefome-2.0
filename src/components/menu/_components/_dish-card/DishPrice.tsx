@@ -30,7 +30,7 @@ export function DishPrice({ dish, currency, lang, isGrid }: Props) {
       <span
         style={{
           display: "inline-block",
-          fontFamily: "'DM Mono', monospace",
+          fontFamily: "var(--font-mono)",
           fontSize: isGrid ? 13 : 13.5,
           color: D.cream,
           background: D.surface,

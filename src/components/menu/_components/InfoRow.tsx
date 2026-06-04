@@ -13,7 +13,7 @@ export function InfoRow({ label, value }: InfoRowProps) {
     <div style={{ display: "flex", justifyContent: "space-between" }}>
       <span
         style={{
-          fontFamily: "'DM Mono', monospace",
+          fontFamily: "var(--font-mono)",
           fontSize: 10,
           letterSpacing: ".18em",
           textTransform: "uppercase",
@@ -24,7 +24,7 @@ export function InfoRow({ label, value }: InfoRowProps) {
       </span>
       <span
         style={{
-          fontFamily: "'DM Sans', sans-serif",
+          fontFamily: "var(--font-body)",
           fontSize: 13,
           color: D.cream,
         }}

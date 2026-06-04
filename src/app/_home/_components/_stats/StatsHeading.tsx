@@ -8,7 +8,7 @@ export function StatsHeading() {
         <div style={{ width: 32, height: 1, background: "hsl(var(--accent-bright) / .35)" }} />
         <span
           style={{
-            fontFamily: "'DM Sans',sans-serif",
+            fontFamily: "var(--font-body)",
             fontSize: ".6875rem",
             letterSpacing: ".18em",
             textTransform: "uppercase",
@@ -22,7 +22,7 @@ export function StatsHeading() {
       </div>
       <h2
         style={{
-          fontFamily: "'Cormorant Garamond',serif",
+          fontFamily: "var(--font-display)",
           fontSize: "clamp(2rem,4vw,2.75rem)",
           fontWeight: 600,
           color: "hsl(var(--fog))",

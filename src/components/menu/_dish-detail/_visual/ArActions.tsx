@@ -25,7 +25,7 @@ export function ArActions({ dish }: { dish: Dish }) {
             <path d="M2 12l10 5 10-5" />
           </svg>
           <div>
-            <div style={{ fontFamily: "'DM Mono',monospace", fontSize: ".5875rem", letterSpacing: ".14em", color: "hsl(28,88%,52%)", textTransform: "uppercase", marginBottom: 2 }}>
+            <div style={{ fontFamily: "var(--font-mono)", fontSize: ".5875rem", letterSpacing: ".14em", color: "hsl(28,88%,52%)", textTransform: "uppercase", marginBottom: 2 }}>
               מציאות רבודה
             </div>
             <div style={{ fontSize: ".8125rem", color: "hsl(var(--subtle))" }}>כוון מצלמה לשולחן</div>
@@ -49,7 +49,7 @@ export function ArActions({ dish }: { dish: Dish }) {
             <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
           </svg>
           <div>
-            <div style={{ fontFamily: "'DM Mono',monospace", fontSize: ".5875rem", letterSpacing: ".14em", color: "hsl(36,28%,92%,.7)", textTransform: "uppercase", marginBottom: 2 }}>
+            <div style={{ fontFamily: "var(--font-mono)", fontSize: ".5875rem", letterSpacing: ".14em", color: "hsl(36,28%,92%,.7)", textTransform: "uppercase", marginBottom: 2 }}>
               תלת-מימד
             </div>
             <div style={{ fontSize: ".8125rem", color: "hsl(var(--subtle))" }}>סובב וצפה בכל זווית</div>

@@ -28,7 +28,7 @@ export function FeaturesHeader() {
         />
         <span
           style={{
-            fontFamily: "'DM Sans',sans-serif",
+            fontFamily: "var(--font-body)",
             fontSize: 12,
             fontWeight: 600,
             letterSpacing: ".1em",
@@ -41,7 +41,7 @@ export function FeaturesHeader() {
       </div>
       <h2
         style={{
-          fontFamily: "'Cormorant Garamond',serif",
+          fontFamily: "var(--font-display)",
           fontSize: "clamp(2.2rem,4.5vw,3.5rem)",
           fontWeight: 700,
           color: "hsl(var(--fog))",

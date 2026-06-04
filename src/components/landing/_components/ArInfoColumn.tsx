@@ -39,7 +39,7 @@ export function ArInfoColumn() {
         />
         <span
           style={{
-            fontFamily: "'DM Mono',monospace",
+            fontFamily: "var(--font-mono)",
             fontSize: 10,
             letterSpacing: ".18em",
             textTransform: "uppercase",
@@ -83,7 +83,7 @@ export function ArInfoColumn() {
       <div>
         <h3
           style={{
-            fontFamily: "var(--font-cormorant), 'Cormorant Garamond', serif",
+            fontFamily: "var(--font-display)",
             fontSize: "clamp(1.25rem, 1.6vw, 1.6rem)",
             fontWeight: 600,
             color: "hsl(24,18%,16%)",
@@ -107,7 +107,7 @@ export function ArInfoColumn() {
         </h3>
         <p
           style={{
-            fontFamily: "'DM Sans',sans-serif",
+            fontFamily: "var(--font-body)",
             fontSize: ".85rem",
             color: "hsl(24,12%,38%)",
             lineHeight: 1.55,
@@ -135,7 +135,7 @@ export function ArInfoColumn() {
               display: "flex",
               alignItems: "center",
               gap: 8,
-              fontFamily: "'DM Mono',monospace",
+              fontFamily: "var(--font-mono)",
               fontSize: 10,
               letterSpacing: ".08em",
               color: "hsl(24,12%,42%)",

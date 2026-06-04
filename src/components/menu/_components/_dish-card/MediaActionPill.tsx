@@ -7,7 +7,7 @@ const PILL_STYLE: CSSProperties = {
   display: "inline-flex",
   alignItems: "center",
   gap: 4,
-  fontFamily: "'DM Mono', monospace",
+  fontFamily: "var(--font-mono)",
   fontSize: "9px",
   letterSpacing: ".14em",
   textTransform: "uppercase",

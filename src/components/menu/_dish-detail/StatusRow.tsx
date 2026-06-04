@@ -32,7 +32,7 @@ export function StatusRow({
       <div>
         <div
           style={{
-            fontFamily: "'DM Mono',monospace",
+            fontFamily: "var(--font-mono)",
             fontSize: ".5875rem",
             letterSpacing: ".14em",
             color: "hsl(var(--dim))",

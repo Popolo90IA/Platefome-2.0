@@ -36,7 +36,7 @@ export function BarChartMockup() {
       </div>
       <div
         style={{
-          fontFamily: "'DM Sans',sans-serif",
+          fontFamily: "var(--font-body)",
           fontSize: ".72rem",
           color: "hsl(var(--subtle))",
           textAlign: "center",
