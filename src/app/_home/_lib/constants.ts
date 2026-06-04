@@ -22,7 +22,7 @@ export const GALLERY_DISHES: readonly GalleryDish[] = [
     desc: "נתח אנגוס פרמיום על האש עם תוספת לבחירה — גריל פחמים, עשבי תיבול טריים, וסלסה בית. מוגש עם אחת מהתוספות העונתיות שלנו.",
     price: "₪148",
     badge: "3D · AR",
-    badgeColor: "hsl(28,62%,42%)",
+    badgeColor: "hsl(var(--accent-bright))",
     cat: "בשר",
   },
   {
@@ -31,7 +31,7 @@ export const GALLERY_DISHES: readonly GalleryDish[] = [
     desc: "פסטה פתוחה עם פירות ים טריים — שרימפס, מולים ותמנון — ברוטב ויין לבן, שום ופרמז'ן. הכנה טרייה ב-20 דקות.",
     price: "₪89",
     badge: "וידאו",
-    badgeColor: "hsl(36,80%,62%)",
+    badgeColor: "hsl(var(--gold-light))",
     cat: "פסטה",
   },
   {
@@ -40,7 +40,7 @@ export const GALLERY_DISHES: readonly GalleryDish[] = [
     desc: "תערובת עשבי תיבול טריים מהגינה שלנו עם גבינה צרפתית, אגוזי מלך קלויים ורוטב ביתי על בסיס שמן זית וחומץ תפוחים.",
     price: "₪54",
     badge: "3D",
-    badgeColor: "hsl(140,60%,55%)",
+    badgeColor: "hsl(var(--success))",
     cat: "ירקות",
   },
   {
@@ -49,7 +49,7 @@ export const GALLERY_DISHES: readonly GalleryDish[] = [
     desc: "בורדו עדין ועשיר משנת 2021 — פרי יומרני עם טאנינים מעודנים. בחירת הסומלייה החודש. מוגש במצב החדר האידיאלי של 16°.",
     price: "₪62",
     badge: "360°",
-    badgeColor: "hsl(22,70%,50%)",
+    badgeColor: "hsl(var(--gold))",
     cat: "שתייה",
   },
   {
@@ -58,7 +58,7 @@ export const GALLERY_DISHES: readonly GalleryDish[] = [
     desc: "עוגת שוקולד בלגי 72% חמה ונוזלית בפנים, מוגשת עם גלידת וניל מדגסקר וקרמל מלח ים. מומלץ לאכול מיד כשמגיע.",
     price: "₪44",
     badge: "AR",
-    badgeColor: "hsl(28,62%,42%)",
+    badgeColor: "hsl(var(--accent-bright))",
     cat: "קינוח",
   },
   {
@@ -67,7 +67,7 @@ export const GALLERY_DISHES: readonly GalleryDish[] = [
     desc: "בלנד אתיופי מיוחד — עם טעמי פרי יערות ופרחים — נקלה בקלייה בינונית כדי לשמר את הארומה. מוגש כפול כדיפולט.",
     price: "₪28",
     badge: "חי",
-    badgeColor: "hsl(140,60%,55%)",
+    badgeColor: "hsl(var(--success))",
     cat: "שתייה",
   },
 ];
@@ -109,9 +109,9 @@ export const PRICING_PLANS: readonly PricingPlan[] = [
     highlighted: false,
     badge: {
       label: "חינם",
-      bg: "hsl(142,52%,44%,.12)",
-      border: "hsl(142,52%,44%,.3)",
-      color: "hsl(142,52%,36%)",
+      bg: "hsl(var(--success) / .12)",
+      border: "hsl(var(--success) / .3)",
+      color: "hsl(var(--success))",
     },
   },
   {
@@ -129,9 +129,9 @@ export const PRICING_PLANS: readonly PricingPlan[] = [
     highlighted: true,
     badge: {
       label: "✦ מומלץ",
-      bg: "hsl(28,62%,42%,.1)",
-      border: "hsl(28,62%,42%,.3)",
-      color: "hsl(28,62%,42%)",
+      bg: "hsl(var(--accent-bright) / .1)",
+      border: "hsl(var(--accent-bright) / .3)",
+      color: "hsl(var(--accent-bright))",
     },
   },
   {

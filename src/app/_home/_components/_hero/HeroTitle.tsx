@@ -14,7 +14,7 @@ export function HeroTitle() {
             letterSpacing: "-.03em",
             margin: 0,
             padding: "4px 0 6px",
-            color: "hsl(24,18%,16%)",
+            color: "hsl(var(--fog))",
             display: "block",
           }}
         >
@@ -35,7 +35,7 @@ export function HeroTitle() {
             margin: 0,
             padding: "4px 0 6px",
             background:
-              "linear-gradient(135deg, hsl(28,62%,42%), hsl(22,70%,56%), hsl(28,58%,42%))",
+              "linear-gradient(135deg, hsl(var(--accent-bright)), hsl(22,70%,56%), hsl(28,58%,42%))",
             backgroundSize: "200% auto",
             WebkitBackgroundClip: "text",
             backgroundClip: "text",

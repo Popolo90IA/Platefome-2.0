@@ -1,8 +1,8 @@
 import type { CSSProperties } from "react";
 
 export const CARD_BASE: CSSProperties = {
-  background: "linear-gradient(135deg,hsl(38,30%,97%),hsl(36,22%,93%))",
-  border: "1px solid hsl(30,18%,82%,.5)",
+  background: "linear-gradient(135deg,hsl(var(--deep)),hsl(var(--abyss)))",
+  border: "1px solid hsl(var(--line) / .5)",
   borderRadius: 20,
   padding: "36px 32px",
   position: "relative",
@@ -16,7 +16,7 @@ export const NUMBER_BG: CSSProperties = {
   fontFamily: "'DM Sans',sans-serif",
   fontSize: 72,
   fontWeight: 800,
-  color: "hsl(28,62%,42%,.18)",
+  color: "hsl(var(--accent-bright) / .18)",
   lineHeight: 1,
   letterSpacing: "-.04em",
   userSelect: "none",
@@ -45,7 +45,7 @@ export const H3: CSSProperties = {
   fontFamily: "'Cormorant Garamond',serif",
   fontSize: "2rem",
   fontWeight: 700,
-  color: "hsl(24,18%,16%)",
+  color: "hsl(var(--fog))",
   lineHeight: 1.1,
   marginBottom: 12,
 };
@@ -53,14 +53,14 @@ export const H3: CSSProperties = {
 export const P: CSSProperties = {
   fontFamily: "'DM Sans',sans-serif",
   fontSize: ".9rem",
-  color: "hsl(24,12%,32%)",
+  color: "hsl(var(--subtle))",
   lineHeight: 1.65,
   marginBottom: 24,
 };
 
 export const MOCKUP: CSSProperties = {
-  background: "hsl(38,28%,94%)",
-  border: "1px solid hsl(30,18%,82%,.3)",
+  background: "hsl(var(--void))",
+  border: "1px solid hsl(var(--line) / .3)",
   borderRadius: 12,
   padding: "14px 16px",
 };

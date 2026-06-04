@@ -29,7 +29,7 @@ export function HeroSocialProof() {
               height: 28,
               borderRadius: "50%",
               background: c,
-              border: "2px solid hsl(38,28%,94%)",
+              border: "2px solid hsl(var(--void))",
               marginLeft: i === 0 ? 0 : -7,
               flexShrink: 0,
             }}
@@ -40,7 +40,7 @@ export function HeroSocialProof() {
         style={{
           width: 1,
           height: 24,
-          background: "hsl(32,20%,100%,.1)",
+          background: "hsl(var(--white) / .1)",
         }}
       />
       <div
@@ -58,7 +58,7 @@ export function HeroSocialProof() {
               width="11"
               height="11"
               viewBox="0 0 24 24"
-              fill="hsl(22,70%,50%)"
+              fill="hsl(var(--gold))"
             >
               <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
             </svg>
@@ -68,7 +68,7 @@ export function HeroSocialProof() {
           style={{
             fontFamily: "'DM Sans',sans-serif",
             fontSize: ".75rem",
-            color: "hsl(24,12%,38%)",
+            color: "hsl(var(--subtle))",
           }}
         >
           מדורג 4.9/5 על ידי 200+ מסעדות

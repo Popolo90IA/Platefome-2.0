@@ -15,8 +15,8 @@ export function FeaturesSection() {
       id="features"
       style={{
         padding: "120px 0 140px",
-        background: "hsl(38,30%,97%)",
-        borderTop: "1px solid hsl(30,18%,86%)",
+        background: "hsl(var(--deep))",
+        borderTop: "1px solid hsl(var(--line))",
         position: "relative",
         scrollMarginTop: 80,
         overflow: "hidden",
@@ -32,7 +32,7 @@ export function FeaturesSection() {
           width: 800,
           height: 400,
           background:
-            "radial-gradient(ellipse,hsl(28,62%,42%,.06) 0%,transparent 65%)",
+            "radial-gradient(ellipse,hsl(var(--accent-bright) / .06) 0%,transparent 65%)",
           filter: "blur(60px)",
           pointerEvents: "none",
         }}
@@ -59,10 +59,10 @@ export function FeaturesSection() {
           <FeatureCard
             delay={0}
             numberStr="01"
-            topGradient="linear-gradient(90deg, hsl(28,62%,42%), hsl(22,70%,50%))"
-            iconBg="linear-gradient(135deg,hsl(28,62%,42%,.12),hsl(22,70%,50%,.08))"
-            iconBorder="hsl(28,62%,42%,.3)"
-            iconStroke="hsl(28,62%,42%)"
+            topGradient="linear-gradient(90deg, hsl(var(--accent-bright)), hsl(var(--gold)))"
+            iconBg="linear-gradient(135deg,hsl(var(--accent-bright) / .12),hsl(var(--gold) / .08))"
+            iconBorder="hsl(var(--accent-bright) / .3)"
+            iconStroke="hsl(var(--accent-bright))"
             iconSvg={
               <>
                 <rect x="3" y="3" width="7" height="7" rx="1" />
@@ -71,7 +71,7 @@ export function FeaturesSection() {
                 <rect x="14" y="14" width="3" height="3" rx=".5" />
               </>
             }
-            eyebrowColor="hsl(28,62%,42%)"
+            eyebrowColor="hsl(var(--accent-bright))"
             eyebrow="סריקה"
             titleLines={
               <>
@@ -87,10 +87,10 @@ export function FeaturesSection() {
           <FeatureCard
             delay={120}
             numberStr="02"
-            topGradient="linear-gradient(90deg,hsl(36,80%,58%),hsl(28,62%,42%))"
-            iconBg="linear-gradient(135deg,hsl(36,80%,55%,.15),hsl(28,62%,42%,.1))"
-            iconBorder="hsl(36,80%,55%,.25)"
-            iconStroke="hsl(36,80%,62%)"
+            topGradient="linear-gradient(90deg,hsl(var(--gold-light)),hsl(var(--accent-bright)))"
+            iconBg="linear-gradient(135deg,hsl(var(--gold-light) / .15),hsl(var(--accent-bright) / .1))"
+            iconBorder="hsl(var(--gold-light) / .25)"
+            iconStroke="hsl(var(--gold-light))"
             iconSvg={
               <>
                 <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
@@ -98,7 +98,7 @@ export function FeaturesSection() {
                 <line x1="12" x2="12" y1="22.08" y2="12" />
               </>
             }
-            eyebrowColor="hsl(36,80%,62%)"
+            eyebrowColor="hsl(var(--gold-light))"
             eyebrow="AR תלת-מימד"
             titleLines={
               <>
@@ -114,10 +114,10 @@ export function FeaturesSection() {
           <FeatureCard
             delay={240}
             numberStr="03"
-            topGradient="linear-gradient(90deg,hsl(140,60%,45%),hsl(28,62%,42%))"
-            iconBg="linear-gradient(135deg,hsl(140,60%,45%,.15),hsl(28,62%,42%,.1))"
+            topGradient="linear-gradient(90deg,hsl(140,60%,45%),hsl(var(--accent-bright)))"
+            iconBg="linear-gradient(135deg,hsl(140,60%,45%,.15),hsl(var(--accent-bright) / .1))"
             iconBorder="hsl(140,60%,45%,.25)"
-            iconStroke="hsl(140,60%,55%)"
+            iconStroke="hsl(var(--success))"
             iconSvg={
               <>
                 <line x1="18" y1="20" x2="18" y2="10" />
@@ -125,7 +125,7 @@ export function FeaturesSection() {
                 <line x1="6" y1="20" x2="6" y2="14" />
               </>
             }
-            eyebrowColor="hsl(140,60%,55%)"
+            eyebrowColor="hsl(var(--success))"
             eyebrow="אנליטיקה"
             titleLines={
               <>

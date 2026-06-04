@@ -19,7 +19,7 @@ export function QrMockup() {
         style={{
           width: 38,
           height: 38,
-          background: "hsl(38,30%,97%)",
+          background: "hsl(var(--deep))",
           borderRadius: 8,
           display: "grid",
           gridTemplateColumns: "1fr 1fr",
@@ -31,7 +31,7 @@ export function QrMockup() {
         <div style={{ background: "hsl(36,28%,80%)", borderRadius: 2 }} />
         <div style={{ background: "hsl(36,28%,80%)", borderRadius: 2 }} />
         <div style={{ background: "hsl(36,28%,80%)", borderRadius: 2 }} />
-        <div style={{ background: "hsl(28,62%,42%)", borderRadius: 2 }} />
+        <div style={{ background: "hsl(var(--accent-bright))", borderRadius: 2 }} />
       </div>
       <div style={{ flex: 1 }}>
         <div
@@ -39,7 +39,7 @@ export function QrMockup() {
             fontFamily: "'DM Sans',sans-serif",
             fontSize: ".8rem",
             fontWeight: 600,
-            color: "hsl(24,18%,16%)",
+            color: "hsl(var(--fog))",
           }}
         >
           תפריט נפתח
@@ -48,7 +48,7 @@ export function QrMockup() {
           style={{
             fontFamily: "'DM Sans',sans-serif",
             fontSize: ".7rem",
-            color: "hsl(28,8%,50%)",
+            color: "hsl(var(--dim))",
           }}
         >
           0.8s · ללא הורדה

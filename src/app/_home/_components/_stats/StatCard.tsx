@@ -9,7 +9,7 @@ export function StatCard({ s, delay }: { s: StatItem; delay: number }) {
       className="reveal"
       data-delay={String(delay)}
       style={{
-        background: "hsl(38,28%,94%)",
+        background: "hsl(var(--void))",
         padding: "40px 32px",
         display: "flex",
         flexDirection: "column",
@@ -20,10 +20,10 @@ export function StatCard({ s, delay }: { s: StatItem; delay: number }) {
         cursor: "default",
       }}
       onMouseOver={(e) =>
-        ((e.currentTarget as HTMLDivElement).style.background = "hsl(36,22%,90%)")
+        ((e.currentTarget as HTMLDivElement).style.background = "hsl(var(--abyss))")
       }
       onMouseOut={(e) =>
-        ((e.currentTarget as HTMLDivElement).style.background = "hsl(38,28%,94%)")
+        ((e.currentTarget as HTMLDivElement).style.background = "hsl(var(--void))")
       }
     >
       <div
@@ -33,7 +33,7 @@ export function StatCard({ s, delay }: { s: StatItem; delay: number }) {
           left: 0,
           right: 0,
           height: 2,
-          background: "linear-gradient(90deg, hsl(28,62%,42%), hsl(22,70%,50%))",
+          background: "linear-gradient(90deg, hsl(var(--accent-bright)), hsl(var(--gold)))",
         }}
       />
       <div
@@ -41,7 +41,7 @@ export function StatCard({ s, delay }: { s: StatItem; delay: number }) {
           fontFamily: "'DM Sans',sans-serif",
           fontSize: "3.75rem",
           fontWeight: 800,
-          color: "hsl(24,18%,16%)",
+          color: "hsl(var(--fog))",
           lineHeight: 1,
           letterSpacing: "-.04em",
         }}
@@ -53,7 +53,7 @@ export function StatCard({ s, delay }: { s: StatItem; delay: number }) {
           fontFamily: "'DM Sans',sans-serif",
           fontSize: "1rem",
           fontWeight: 500,
-          color: "hsl(24,18%,16%)",
+          color: "hsl(var(--fog))",
         }}
       >
         {s.label}
@@ -62,7 +62,7 @@ export function StatCard({ s, delay }: { s: StatItem; delay: number }) {
         style={{
           fontFamily: "'DM Sans',sans-serif",
           fontSize: ".8125rem",
-          color: "hsl(24,12%,38%)",
+          color: "hsl(var(--subtle))",
           lineHeight: 1.55,
           flexGrow: 1,
         }}
@@ -73,7 +73,7 @@ export function StatCard({ s, delay }: { s: StatItem; delay: number }) {
         style={{
           marginTop: 16,
           paddingTop: 16,
-          borderTop: "1px solid hsl(30,18%,88%)",
+          borderTop: "1px solid hsl(var(--surface))",
           display: "flex",
           alignItems: "center",
           gap: 6,
@@ -84,7 +84,7 @@ export function StatCard({ s, delay }: { s: StatItem; delay: number }) {
           height="12"
           viewBox="0 0 24 24"
           fill="none"
-          stroke="hsl(28,62%,42%)"
+          stroke="hsl(var(--accent-bright))"
           strokeWidth="2.5"
           strokeLinecap="round"
           strokeLinejoin="round"
@@ -96,7 +96,7 @@ export function StatCard({ s, delay }: { s: StatItem; delay: number }) {
           style={{
             fontFamily: "'DM Sans',sans-serif",
             fontSize: ".75rem",
-            color: "hsl(28,62%,42%)",
+            color: "hsl(var(--accent-bright))",
           }}
         >
           {s.badge}

@@ -16,7 +16,7 @@ export function FooterLinkColumns() {
               fontWeight: 600,
               letterSpacing: ".1em",
               textTransform: "uppercase" as const,
-              color: "hsl(28,62%,42%)",
+              color: "hsl(var(--accent-bright))",
               marginBottom: 20,
             }}
           >

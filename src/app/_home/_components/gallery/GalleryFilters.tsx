@@ -25,10 +25,10 @@ export function GalleryFilters() {
             padding: "8px 18px",
             borderRadius: 99,
             border: `1px solid ${
-              ti === 0 ? "hsl(28,62%,42%)" : "hsl(30,18%,82%,.5)"
+              ti === 0 ? "hsl(var(--accent-bright))" : "hsl(var(--line) / .5)"
             }`,
-            background: ti === 0 ? "hsl(28,62%,42%,.1)" : "transparent",
-            color: ti === 0 ? "hsl(28,62%,42%)" : "hsl(28,8%,55%)",
+            background: ti === 0 ? "hsl(var(--accent-bright) / .1)" : "transparent",
+            color: ti === 0 ? "hsl(var(--accent-bright))" : "hsl(var(--dim))",
             cursor: "pointer",
           }}
         >

@@ -21,8 +21,8 @@ export function GallerySection({ onSelectDish }: GallerySectionProps) {
       id="gallery"
       style={{
         padding: "120px 0 140px",
-        background: "hsl(38,28%,94%)",
-        borderTop: "1px solid hsl(30,18%,86%)",
+        background: "hsl(var(--void))",
+        borderTop: "1px solid hsl(var(--line))",
         scrollMarginTop: 80,
         position: "relative",
         overflow: "hidden",
@@ -38,7 +38,7 @@ export function GallerySection({ onSelectDish }: GallerySectionProps) {
           width: 700,
           height: 300,
           background:
-            "radial-gradient(ellipse,hsl(28,62%,42%,.05) 0%,transparent 65%)",
+            "radial-gradient(ellipse,hsl(var(--accent-bright) / .05) 0%,transparent 65%)",
           filter: "blur(60px)",
           pointerEvents: "none",
         }}

@@ -11,12 +11,12 @@ export function GalleryFooter() {
           gap: 12,
           fontFamily: "'DM Sans',sans-serif",
           fontSize: ".82rem",
-          color: "hsl(28,8%,40%)",
+          color: "hsl(var(--subtle))",
         }}
       >
-        <div style={{ height: 1, width: 48, background: "hsl(30,18%,82%,.5)" }} />
+        <div style={{ height: 1, width: 48, background: "hsl(var(--line) / .5)" }} />
         מודלים תלת-מימדיים · GLTF/GLB · פורמטים שלנו
-        <div style={{ height: 1, width: 48, background: "hsl(30,18%,82%,.5)" }} />
+        <div style={{ height: 1, width: 48, background: "hsl(var(--line) / .5)" }} />
       </div>
     </div>
   );

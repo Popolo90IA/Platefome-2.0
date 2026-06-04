@@ -48,7 +48,7 @@ export function FooterBrandCol() {
             onMouseOver={(e) => {
               const el = e.currentTarget as HTMLAnchorElement;
               el.style.color = "hsl(28,62%,62%)";
-              el.style.borderColor = "hsl(28,62%,42%,.4)";
+              el.style.borderColor = "hsl(var(--accent-bright) / .4)";
               el.style.background = "hsl(28,18%,22%)";
             }}
             onMouseOut={(e) => {

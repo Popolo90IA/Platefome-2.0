@@ -12,8 +12,8 @@ export const HOME_KEYFRAMES = `
   @keyframes pulseGlow { 0%,100%{opacity:.5;transform:scale(1)} 50%{opacity:1;transform:scale(1.12)} }
   @keyframes fadeUp { from{opacity:0;transform:translateY(36px)} to{opacity:1;transform:translateY(0)} }
   @keyframes pricingPulse {
-    0%,100%{box-shadow:0 0 0 1px hsl(30,18%,82%,.18),0 40px 80px -24px rgba(0,0,0,.7)}
-    50%{box-shadow:0 0 0 1px hsl(36,28%,92%,.42),0 40px 80px -24px rgba(0,0,0,.7),0 0 80px hsl(36,28%,92%,.05)}
+    0%,100%{box-shadow:0 0 0 1px hsl(var(--line) / .18),0 40px 80px -24px rgba(0,0,0,.7)}
+    50%{box-shadow:0 0 0 1px hsl(var(--abyss) / .42),0 40px 80px -24px rgba(0,0,0,.7),0 0 80px hsl(var(--abyss) / .05)}
   }
   @keyframes shimmerCard { 0%{background-position:-200% 0} 100%{background-position:200% 0} }
   @keyframes letterReveal { from{opacity:0;transform:translateY(60px) skewY(4deg)} to{opacity:1;transform:translateY(0) skewY(0deg)} }
@@ -45,7 +45,7 @@ export const HOME_KEYFRAMES = `
   @keyframes aurora2 { 0%,100%{transform:translate(0,0) scale(1.1)} 50%{transform:translate(120px,-50px) scale(0.9)} }
   @keyframes aurora3 { 0%,100%{transform:translate(0,0) scale(0.9)} 50%{transform:translate(-60px,90px) scale(1.15)} }
   @keyframes navPill { from{opacity:0;transform:translateX(-50%) translateY(-16px)} to{opacity:1;transform:translateX(-50%) translateY(0)} }
-  @keyframes badgeDot { 0%,100%{box-shadow:0 0 0 0 hsl(28,62%,42%,.35)} 50%{box-shadow:0 0 0 8px hsl(28,62%,42%,0)} }
+  @keyframes badgeDot { 0%,100%{box-shadow:0 0 0 0 hsl(var(--accent-bright) / .35)} 50%{box-shadow:0 0 0 8px hsl(var(--accent-bright) / 0)} }
 
   /* ── Hero elements: initial hidden, revealed by GSAP CinematicCurtain ── */
   .hero-fade-a,.hero-fade-b,.hero-fade-c,.hero-fade-d,.hero-fade-e,.hero-fade-f {

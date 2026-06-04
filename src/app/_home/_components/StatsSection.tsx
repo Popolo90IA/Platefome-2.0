@@ -12,9 +12,9 @@ export function StatsSection() {
     <section
       style={{
         padding: "96px 0",
-        background: "hsl(30,20%,87%)",
-        borderTop: "1px solid hsl(30,18%,80%)",
-        borderBottom: "1px solid hsl(30,18%,80%)",
+        background: "hsl(var(--abyss))",
+        borderTop: "1px solid hsl(var(--line))",
+        borderBottom: "1px solid hsl(var(--line))",
         position: "relative",
       }}
     >
@@ -27,7 +27,7 @@ export function StatsSection() {
           transform: "translate(-50%,-50%)",
           width: 900,
           height: 400,
-          background: "radial-gradient(ellipse,hsl(28,62%,42%,.06) 0%,transparent 70%)",
+          background: "radial-gradient(ellipse,hsl(var(--accent-bright) / .06) 0%,transparent 70%)",
           filter: "blur(60px)",
           pointerEvents: "none",
         }}
@@ -44,7 +44,7 @@ export function StatsSection() {
             display: "grid",
             gridTemplateColumns: "repeat(4,1fr)",
             gap: 1,
-            background: "hsl(30,18%,88%)",
+            background: "hsl(var(--surface))",
           }}
         >
           {HOME_STATS.map((s, i) => (

@@ -21,7 +21,7 @@ export function ModalImage({
           position: "absolute",
           inset: 0,
           background:
-            "linear-gradient(to top,hsl(36,22%,90%) 0%,transparent 50%)",
+            "linear-gradient(to top,hsl(var(--abyss)) 0%,transparent 50%)",
         }}
       />
       <div
@@ -30,9 +30,9 @@ export function ModalImage({
           top: 16,
           right: 16,
           padding: "6px 14px",
-          background: "hsl(38,28%,94%,.82)",
+          background: "hsl(var(--void) / .82)",
           backdropFilter: "blur(8px)",
-          border: "1px solid hsl(30,18%,82%,.2)",
+          border: "1px solid hsl(var(--line) / .2)",
           borderRadius: 99,
           fontFamily: "'DM Mono',monospace",
           fontSize: ".625rem",
@@ -53,8 +53,8 @@ export function ModalImage({
           width: 36,
           height: 36,
           borderRadius: "50%",
-          background: "hsl(38,28%,94%,.72)",
-          border: "1px solid hsl(30,18%,82%,.15)",
+          background: "hsl(var(--void) / .72)",
+          border: "1px solid hsl(var(--line) / .15)",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
@@ -64,11 +64,11 @@ export function ModalImage({
         }}
         onMouseOver={(e) =>
           ((e.currentTarget as HTMLButtonElement).style.background =
-            "hsl(38,30%,97%)")
+            "hsl(var(--deep))")
         }
         onMouseOut={(e) =>
           ((e.currentTarget as HTMLButtonElement).style.background =
-            "hsl(38,28%,94%,.72)")
+            "hsl(var(--void) / .72)")
         }
         aria-label="סגור"
       >

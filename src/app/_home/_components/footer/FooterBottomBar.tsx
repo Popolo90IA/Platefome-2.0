@@ -30,7 +30,7 @@ export function FooterBottomBar() {
           color: "hsl(28,10%,48%)",
         }}
       >
-        נוצר באהבה <span style={{ color: "hsl(28,62%,42%)" }}>◆</span> בתל אביב
+        נוצר באהבה <span style={{ color: "hsl(var(--accent-bright))" }}>◆</span> בתל אביב
       </span>
     </div>
   );

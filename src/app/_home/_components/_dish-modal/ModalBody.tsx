@@ -44,7 +44,7 @@ export function ModalBody({ dish }: { dish: GalleryDish }) {
         style={{
           width: 40,
           height: 1,
-          background: "hsl(30,18%,82%,.2)",
+          background: "hsl(var(--line) / .2)",
           marginBottom: 16,
         }}
       />
@@ -63,8 +63,8 @@ export function ModalBody({ dish }: { dish: GalleryDish }) {
         style={{
           marginTop: 28,
           padding: "16px 20px",
-          background: "hsl(36,28%,92%,.04)",
-          border: "1px solid hsl(36,28%,92%,.08)",
+          background: "hsl(var(--abyss) / .04)",
+          border: "1px solid hsl(var(--abyss) / .08)",
           borderRadius: 10,
           display: "flex",
           alignItems: "center",
@@ -77,7 +77,7 @@ export function ModalBody({ dish }: { dish: GalleryDish }) {
             height: 6,
             borderRadius: "50%",
             background: "hsl(var(--sage))",
-            boxShadow: "0 0 8px hsl(28,62%,42%,.4)",
+            boxShadow: "0 0 8px hsl(var(--accent-bright) / .4)",
             flexShrink: 0,
           }}
         />

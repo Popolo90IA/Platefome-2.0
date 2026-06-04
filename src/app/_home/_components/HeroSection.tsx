@@ -36,7 +36,7 @@ export function HeroSection({
         minHeight: "100vh",
         display: "flex",
         alignItems: "center",
-        background: "hsl(38,28%,94%)",
+        background: "hsl(var(--void))",
       }}
     >
       <AuroraBackground />
@@ -62,7 +62,7 @@ export function HeroSection({
           style={{
             fontSize: "1.0625rem",
             lineHeight: 1.75,
-            color: "hsl(24,12%,38%)",
+            color: "hsl(var(--subtle))",
             maxWidth: 480,
             margin: "0 auto 0",
           }}

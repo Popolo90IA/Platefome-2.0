@@ -46,6 +46,7 @@
     --accent-warm:   28  52% 52%;   /* bronze clair */
     --accent-bright: 28  62% 42%;   /* bronze principal */
     --ember:          0  60% 52%;   /* error / danger */
+    --success:      142  52% 44%;   /* vert succès / gratuit */
     --sage:          28  62% 42%;   /* bronze accent */
     --gold:          22  70% 50%;   /* terracotta secondaire */
     --gold-light:    36  80% 58%;   /* warm highlight */
@@ -101,6 +102,14 @@
     --grad-bronze:      linear-gradient(135deg, hsl(28 62% 38%) 0%, hsl(22 70% 50%) 100%);
     --grad-bronze-warm: linear-gradient(135deg, hsl(36 80% 55%), hsl(28 62% 42%));
     --grad-gold-shimmer: linear-gradient(135deg, hsl(28 62% 42%), hsl(22 70% 56%), hsl(28 58% 42%));
+
+    /* ── Font family tokens (source unique typo) ──
+       Pointent vers les next/font de layout.tsx. Changer une police =
+       changer ici (ou le next/font), tout l'app suit. */
+    --font-display: var(--font-cormorant), var(--font-noto-serif-hebrew), Georgia, serif;
+    --font-body:    var(--font-dm-sans), system-ui, -apple-system, sans-serif;
+    --font-mono:    var(--font-dm-mono), ui-monospace, monospace;
+    --font-hebrew:  var(--font-noto-serif-hebrew), var(--font-heebo), serif;
 
     /* ── Type scale tokens ── */
     --t-h1-size:    clamp(48px, 7vw, 108px);
@@ -165,6 +174,7 @@
     --accent-warm:   28  62% 58%;
     --accent-bright: 28  62% 52%;
     --ember:          0  62% 56%;
+    --success:      142  52% 50%;
     --sage:          28  62% 52%;
     --gold:          22  72% 56%;
     --gold-light:    36  82% 62%;
@@ -219,7 +229,7 @@
 .menu-dark .dish-card:hover { border-color: var(--d-line-2); }
 
 .menu-dark .dish-tag {
-  font-family: "DM Mono", monospace;
+  font-family: var(--font-mono);
   font-size: 9.5px; letter-spacing: 0.18em;
   text-transform: uppercase;
   padding: 3px 9px; border-radius: var(--radius-pill);
@@ -251,7 +261,7 @@
 .menu-dark .cat-pill {
   padding: 8px 16px; border-radius: var(--radius-pill);
   background: transparent; border: 1px solid var(--d-line);
-  font-family: "DM Sans", system-ui, sans-serif;
+  font-family: var(--font-body);
   font-size: 13px; font-weight: 500;
   color: var(--d-text-dim); cursor: pointer; flex-shrink: 0;
   transition: color var(--dur-fast), border-color var(--dur-fast), background var(--dur-fast);
@@ -274,13 +284,13 @@
   }
   body {
     @apply bg-background text-foreground;
-    font-family: "DM Sans", system-ui, sans-serif;
+    font-family: var(--font-body);
     font-size: 16px;
     line-height: 1.6;
     letter-spacing: -0.008em;
   }
   h1, .t-h1 {
-    font-family: "Cormorant Garamond", "Noto Serif Hebrew", Georgia, serif;
+    font-family: var(--font-display);
     font-weight: var(--t-h1-weight);
     font-size: var(--t-h1-size);
     line-height: var(--t-h1-line);
@@ -297,7 +307,7 @@
     color: transparent;
   }
   h2, .t-h2 {
-    font-family: "Cormorant Garamond", "Noto Serif Hebrew", Georgia, serif;
+    font-family: var(--font-display);
     font-weight: var(--t-h2-weight);
     font-size: var(--t-h2-size);
     line-height: var(--t-h2-line);
@@ -307,7 +317,7 @@
   }
   h2 em, .t-h2 em { font-style: italic; color: hsl(var(--accent-bright)); }
   h3, .t-h3 {
-    font-family: "Cormorant Garamond", "Noto Serif Hebrew", Georgia, serif;
+    font-family: var(--font-display);
     font-weight: var(--t-h3-weight);
     font-size: var(--t-h3-size);
     line-height: var(--t-h3-line);
@@ -317,25 +327,25 @@
   }
   [dir="rtl"] h1, [dir="rtl"] h2, [dir="rtl"] h3,
   :lang(he) h1, :lang(he) h2, :lang(he) h3 {
-    font-family: "Noto Serif Hebrew", "Cormorant Garamond", serif;
+    font-family: var(--font-hebrew);
     font-weight: 400;
     line-height: 1.1;
   }
   p, .t-body {
-    font-family: "DM Sans", system-ui, sans-serif;
+    font-family: var(--font-body);
     font-size: 1rem;
     line-height: 1.6;
     color: hsl(var(--subtle));
     margin: 0;
   }
   .t-lead {
-    font-family: "DM Sans", system-ui, sans-serif;
+    font-family: var(--font-body);
     font-size: 1.0625rem;
     line-height: 1.75;
     color: hsl(var(--subtle));
   }
   .t-small {
-    font-family: "DM Sans", system-ui, sans-serif;
+    font-family: var(--font-body);
     font-size: 0.875rem;
     color: hsl(var(--subtle));
   }
@@ -344,12 +354,12 @@
     color: hsl(var(--cream));
   }
 
-  .font-display { font-family: "Cormorant Garamond", "Noto Serif Hebrew", Georgia, serif; font-weight: 300; letter-spacing: -0.03em; line-height: 0.94; }
-  .font-display-it { font-family: "Cormorant Garamond", serif; font-style: italic; font-weight: 300; letter-spacing: -0.04em; line-height: 0.92; }
-  .font-sans { font-family: "DM Sans", system-ui, sans-serif; }
-  .font-mono { font-family: "DM Mono", ui-monospace, monospace; letter-spacing: 0; }
-  .font-hebrew { font-family: "Noto Serif Hebrew", "Heebo", serif; }
-  .font-serif-display { font-family: "Cormorant Garamond", serif; }
+  .font-display { font-family: var(--font-display); font-weight: 300; letter-spacing: -0.03em; line-height: 0.94; }
+  .font-display-it { font-family: var(--font-display); font-style: italic; font-weight: 300; letter-spacing: -0.04em; line-height: 0.92; }
+  .font-sans { font-family: var(--font-body); }
+  .font-mono { font-family: var(--font-mono); letter-spacing: 0; }
+  .font-hebrew { font-family: var(--font-hebrew); }
+  .font-serif-display { font-family: var(--font-display); }
 }
 
 @layer utilities {
@@ -453,12 +463,12 @@
     display: flex; align-items: center; gap: 12px;
   }
   .section-head h3 {
-    font-family: "Cormorant Garamond", serif;
+    font-family: var(--font-display);
     font-size: 20px; font-weight: 600;
     color: hsl(var(--fog)); margin: 0;
   }
   .section-head .pill {
-    font-family: "DM Mono", monospace;
+    font-family: var(--font-mono);
     font-size: var(--t-mono-size);
     letter-spacing: var(--t-mono-track);
     text-transform: uppercase;
@@ -483,7 +493,7 @@
 
   /* Greeting eyebrow */
   .greeting-eyebrow {
-    font-family: "DM Mono", monospace;
+    font-family: var(--font-mono);
     font-size: var(--t-eyebrow-size);
     letter-spacing: var(--t-eyebrow-track);
     text-transform: uppercase;
@@ -624,7 +634,7 @@
   /* ── EYEBROW TAG (badge pill) ── */
   .eyebrow-tag {
     display: inline-flex; align-items: center; gap: 8px;
-    font-family: "DM Mono", monospace;
+    font-family: var(--font-mono);
     font-size: var(--t-eyebrow-size);
     letter-spacing: var(--t-eyebrow-track);
     text-transform: uppercase;
@@ -658,7 +668,7 @@
   }
   .stat-cell:hover::before { opacity: 1; }
   .stat-num {
-    font-family: "DM Sans", system-ui, sans-serif;
+    font-family: var(--font-body);
     font-weight: 800;
     font-size: clamp(2.5rem, 4vw, 3.5rem);
     line-height: 1;
@@ -667,14 +677,14 @@
     margin-bottom: 14px;
   }
   .stat-num em {
-    font-family: "Cormorant Garamond", serif;
+    font-family: var(--font-display);
     font-style: italic; font-weight: 600;
     background: var(--grad-bronze);
     -webkit-background-clip: text; background-clip: text;
     -webkit-text-fill-color: transparent;
   }
   .stat-label {
-    font-family: "DM Mono", monospace;
+    font-family: var(--font-mono);
     font-size: var(--t-eyebrow-size);
     letter-spacing: var(--t-eyebrow-track);
     text-transform: uppercase;
@@ -682,7 +692,7 @@
     margin-bottom: 8px;
   }
   .stat-desc {
-    font-family: "DM Sans", system-ui, sans-serif;
+    font-family: var(--font-body);
     font-size: 0.8125rem;
     line-height: 1.5;
     color: hsl(var(--subtle));
@@ -708,7 +718,7 @@
   }
   .feature-num {
     position: absolute; top: 8px; right: 24px;
-    font-family: "DM Sans", system-ui, sans-serif;
+    font-family: var(--font-body);
     font-weight: 800;
     font-size: 84px;
     letter-spacing: -0.05em;
@@ -748,25 +758,25 @@
 
   /* ── TYPOGRAPHY LABELS ── */
   .eyebrow {
-    font-family: "DM Sans", system-ui, sans-serif;
+    font-family: var(--font-body);
     font-weight: 600; font-size: 0.75rem;
     letter-spacing: 0.08em; text-transform: uppercase;
     color: hsl(var(--subtle));
   }
   .eyebrow-gold {
-    font-family: "DM Sans", system-ui, sans-serif;
+    font-family: var(--font-body);
     font-weight: 600; font-size: 0.75rem;
     letter-spacing: 0.08em; text-transform: uppercase;
     color: hsl(var(--gold));
   }
   .eyebrow-crimson {
-    font-family: "DM Sans", system-ui, sans-serif;
+    font-family: var(--font-body);
     font-weight: 600; font-size: 0.75rem;
     letter-spacing: 0.08em; text-transform: uppercase;
     color: hsl(var(--ember));
   }
-  .tick-number { font-family: "DM Mono", monospace; font-weight: 300; font-size: 0.75rem; letter-spacing: 0.08em; color: hsl(var(--subtle)); }
-  .price-tag { font-family: "DM Mono", monospace; font-weight: 400; font-size: 0.875rem; letter-spacing: 0.04em; color: hsl(var(--gold)); }
+  .tick-number { font-family: var(--font-mono); font-weight: 300; font-size: 0.75rem; letter-spacing: 0.08em; color: hsl(var(--subtle)); }
+  .price-tag { font-family: var(--font-mono); font-weight: 400; font-size: 0.875rem; letter-spacing: 0.04em; color: hsl(var(--gold)); }
 
   /* ── CARD (primitive) ── */
   .card {
@@ -888,7 +898,7 @@
     padding: 14px 32px;
     background: var(--grad-bronze);
     color: white;
-    font-family: "DM Sans", system-ui, sans-serif;
+    font-family: var(--font-body);
     font-size: 0.9375rem; font-weight: 600;
     letter-spacing: -0.01em;
     border: none; border-radius: var(--radius-lg);
@@ -907,7 +917,7 @@
     padding: 14px 28px;
     background: hsl(32 20% 100% / .06);
     color: hsl(var(--subtle));
-    font-family: "DM Sans", system-ui, sans-serif;
+    font-family: var(--font-body);
     font-size: 0.9375rem; font-weight: 500;
     border: 1px solid hsl(32 20% 100% / .1);
     border-radius: var(--radius-lg);

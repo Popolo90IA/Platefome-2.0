@@ -63,15 +63,18 @@ module.exports = {
           dim: "hsl(var(--gold-dim))",
           dark: "hsl(var(--gold-dark))",
         },
-        gold: "hsl(var(--gold))",
+        gold: { DEFAULT: "hsl(var(--gold))", light: "hsl(var(--gold-light))" },
         ember: "hsl(var(--ember))",
+        success: "hsl(var(--success))",
       },
       // ── TYPOGRAPHY ──
+      // Polices pilotées par les variables next/font (layout.tsx).
+      // Changer une police = changer le next/font correspondant, tout suit.
       fontFamily: {
-        display: ['"Cormorant Garamond"', '"Noto Serif Hebrew"', "Georgia", "serif"],
-        sans: ['"DM Sans"', "system-ui", "-apple-system", "sans-serif"],
-        mono: ['"DM Mono"', "ui-monospace", "monospace"],
-        hebrew: ['"Noto Serif Hebrew"', '"Heebo"', "serif"],
+        display: ["var(--font-cormorant)", "var(--font-noto-serif-hebrew)", "Georgia", "serif"],
+        sans: ["var(--font-dm-sans)", "system-ui", "-apple-system", "sans-serif"],
+        mono: ["var(--font-dm-mono)", "ui-monospace", "monospace"],
+        hebrew: ["var(--font-noto-serif-hebrew)", "var(--font-heebo)", "serif"],
       },
       letterSpacing: {
         eyebrow: "0.18em",

@@ -20,7 +20,7 @@ export function AuroraBackground() {
           position: "absolute",
           inset: 0,
           backgroundImage:
-            "linear-gradient(hsl(32,20%,100%,.045) 1px,transparent 1px),linear-gradient(90deg,hsl(32,20%,100%,.045) 1px,transparent 1px)",
+            "linear-gradient(hsl(var(--white) / .045) 1px,transparent 1px),linear-gradient(90deg,hsl(var(--white) / .045) 1px,transparent 1px)",
           backgroundSize: "72px 72px",
           maskImage:
             "radial-gradient(ellipse 80% 70% at 50% 30%, black 20%, transparent 100%)",
@@ -37,7 +37,7 @@ export function AuroraBackground() {
           height: 700,
           borderRadius: "50%",
           background:
-            "radial-gradient(circle,hsl(28,62%,42%,.15) 0%,transparent 60%)",
+            "radial-gradient(circle,hsl(var(--accent-bright) / .15) 0%,transparent 60%)",
           filter: "blur(80px)",
           animation: "aurora1 9s ease-in-out infinite",
         }}
@@ -51,7 +51,7 @@ export function AuroraBackground() {
           height: 600,
           borderRadius: "50%",
           background:
-            "radial-gradient(circle,hsl(36,80%,55%,.12) 0%,transparent 60%)",
+            "radial-gradient(circle,hsl(var(--gold-light) / .12) 0%,transparent 60%)",
           filter: "blur(100px)",
           animation: "aurora2 11s ease-in-out infinite",
         }}
@@ -78,7 +78,7 @@ export function AuroraBackground() {
           right: 0,
           height: 200,
           background:
-            "linear-gradient(to bottom, transparent, hsl(38,28%,94%))",
+            "linear-gradient(to bottom, transparent, hsl(var(--void)))",
         }}
       />
     </div>

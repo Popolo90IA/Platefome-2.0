@@ -32,7 +32,7 @@ export function FooterCTA() {
         >
           מוכן להפוך את התפריט שלך
           <br />
-          <em style={{ color: "hsl(28,62%,42%)", fontStyle: "italic" }}>
+          <em style={{ color: "hsl(var(--accent-bright))", fontStyle: "italic" }}>
             לחוויה תלת-מימדית?
           </em>
         </h2>
@@ -63,15 +63,14 @@ export function FooterCTA() {
               alignItems: "center",
               gap: 8,
               padding: "14px 28px",
-              background:
-                "linear-gradient(135deg, hsl(28,62%,38%), hsl(22,70%,50%))",
+              background: "var(--grad-bronze)",
               borderRadius: 10,
               fontFamily: "'DM Sans',sans-serif",
               fontSize: ".9375rem",
               fontWeight: 600,
               color: "#fff",
               textDecoration: "none",
-              boxShadow: "0 4px 24px hsl(28,62%,42%,.3)",
+              boxShadow: "0 4px 24px hsl(var(--accent-bright) / .3)",
             }}
           >
             התחל בחינם

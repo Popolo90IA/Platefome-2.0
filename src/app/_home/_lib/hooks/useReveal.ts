@@ -60,18 +60,18 @@ export function useHeaderScroll() {
         gsap.to(inner, {
           duration: 0.35,
           ease: "power2.out",
-          "--bg": "hsl(38,28%,94%,.92)",
-          borderColor: "hsl(30,18%,78%)",
+          "--bg": "hsl(var(--void) / .92)",
+          borderColor: "hsl(var(--line))",
           boxShadow:
-            "0 8px 40px rgba(0,0,0,.6), inset 0 1px 0 hsl(30,18%,82%,.5)",
+            "0 8px 40px rgba(0,0,0,.6), inset 0 1px 0 hsl(var(--line) / .5)",
         }),
       onLeaveBack: () =>
         gsap.to(inner, {
           duration: 0.35,
           ease: "power2.out",
-          borderColor: "hsl(30,18%,82%,.5)",
+          borderColor: "hsl(var(--line) / .5)",
           boxShadow:
-            "0 8px 32px rgba(0,0,0,.4), inset 0 1px 0 hsl(30,18%,82%,.3)",
+            "0 8px 32px rgba(0,0,0,.4), inset 0 1px 0 hsl(var(--line) / .3)",
         }),
     });
   });

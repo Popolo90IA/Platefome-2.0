@@ -13,8 +13,8 @@ export function PricingSection() {
       id="pricing"
       style={{
         padding: "120px 0 140px",
-        background: "hsl(38,30%,97%)",
-        borderTop: "1px solid hsl(30,18%,86%)",
+        background: "hsl(var(--deep))",
+        borderTop: "1px solid hsl(var(--line))",
         scrollMarginTop: 80,
         position: "relative",
         overflow: "hidden",
@@ -30,7 +30,7 @@ export function PricingSection() {
           width: 800,
           height: 400,
           background:
-            "radial-gradient(ellipse,hsl(28,62%,42%,.06) 0%,transparent 65%)",
+            "radial-gradient(ellipse,hsl(var(--accent-bright) / .06) 0%,transparent 65%)",
           filter: "blur(80px)",
           pointerEvents: "none",
         }}
@@ -65,7 +65,7 @@ export function PricingSection() {
             marginTop: 40,
             fontFamily: "'DM Sans',sans-serif",
             fontSize: ".8rem",
-            color: "hsl(28,8%,38%)",
+            color: "hsl(var(--subtle))",
           }}
         >
           כל המחירים בשקלים · לא כולל מע״מ · ללא התחייבות

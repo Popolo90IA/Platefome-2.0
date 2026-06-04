@@ -21,8 +21,7 @@ export function HeroCTA() {
           alignItems: "center",
           gap: 8,
           padding: "14px 32px",
-          background:
-            "linear-gradient(135deg, hsl(28,62%,38%), hsl(22,70%,50%))",
+          background: "var(--grad-bronze)",
           color: "#fff",
           fontFamily: "'DM Sans',sans-serif",
           fontSize: ".9375rem",
@@ -31,7 +30,7 @@ export function HeroCTA() {
           borderRadius: 10,
           textDecoration: "none",
           boxShadow:
-            "0 4px 24px hsl(28,62%,38%,.4), inset 0 1px 0 rgba(255,255,255,.18)",
+            "0 4px 24px hsl(var(--accent-bright) / .4), inset 0 1px 0 rgba(255,255,255,.18)",
           transition: "filter .2s,transform .18s,box-shadow .2s",
         }}
         onMouseOver={(e) => {
@@ -39,14 +38,14 @@ export function HeroCTA() {
           el.style.filter = "brightness(1.1)";
           el.style.transform = "translateY(-2px)";
           el.style.boxShadow =
-            "0 8px 32px hsl(28,62%,38%,.5), inset 0 1px 0 rgba(255,255,255,.18)";
+            "0 8px 32px hsl(var(--accent-bright) / .5), inset 0 1px 0 rgba(255,255,255,.18)";
         }}
         onMouseOut={(e) => {
           const el = e.currentTarget as HTMLAnchorElement;
           el.style.filter = "";
           el.style.transform = "";
           el.style.boxShadow =
-            "0 4px 24px hsl(28,62%,38%,.4), inset 0 1px 0 rgba(255,255,255,.18)";
+            "0 4px 24px hsl(var(--accent-bright) / .4), inset 0 1px 0 rgba(255,255,255,.18)";
         }}
       >
         התחל בחינם
@@ -71,13 +70,13 @@ export function HeroCTA() {
           alignItems: "center",
           gap: 8,
           padding: "14px 28px",
-          background: "hsl(32,20%,100%,.06)",
-          color: "hsl(24,12%,38%)",
+          background: "hsl(var(--white) / .06)",
+          color: "hsl(var(--subtle))",
           fontFamily: "'DM Sans',sans-serif",
           fontSize: ".9375rem",
           fontWeight: 500,
           letterSpacing: "-.01em",
-          border: "1px solid hsl(32,20%,100%,.1)",
+          border: "1px solid hsl(var(--white) / .1)",
           borderRadius: 10,
           textDecoration: "none",
           backdropFilter: "blur(8px)",
@@ -85,15 +84,15 @@ export function HeroCTA() {
         }}
         onMouseOver={(e) => {
           const el = e.currentTarget as HTMLAnchorElement;
-          el.style.borderColor = "hsl(28,62%,42%,.35)";
+          el.style.borderColor = "hsl(var(--accent-bright) / .35)";
           el.style.color = "#fff";
-          el.style.background = "hsl(28,62%,42%,.08)";
+          el.style.background = "hsl(var(--accent-bright) / .08)";
         }}
         onMouseOut={(e) => {
           const el = e.currentTarget as HTMLAnchorElement;
-          el.style.borderColor = "hsl(32,20%,100%,.1)";
-          el.style.color = "hsl(24,12%,38%)";
-          el.style.background = "hsl(32,20%,100%,.06)";
+          el.style.borderColor = "hsl(var(--white) / .1)";
+          el.style.color = "hsl(var(--subtle))";
+          el.style.background = "hsl(var(--white) / .06)";
         }}
       >
         <svg

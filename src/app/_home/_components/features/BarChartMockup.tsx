@@ -27,8 +27,8 @@ export function BarChartMockup() {
               height: `${h}%`,
               background:
                 i === 6
-                  ? "hsl(28,62%,42%)"
-                  : `hsl(28,62%,42%,${0.15 + i * 0.11})`,
+                  ? "hsl(var(--accent-bright))"
+                  : `hsl(var(--accent-bright) / ${0.15 + i * 0.11})`,
               borderRadius: "3px 3px 0 0",
             }}
           />
@@ -38,7 +38,7 @@ export function BarChartMockup() {
         style={{
           fontFamily: "'DM Sans',sans-serif",
           fontSize: ".72rem",
-          color: "hsl(28,8%,45%)",
+          color: "hsl(var(--subtle))",
           textAlign: "center",
         }}
       >

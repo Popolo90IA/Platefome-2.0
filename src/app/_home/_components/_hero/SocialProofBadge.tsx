@@ -9,8 +9,8 @@ export function SocialProofBadge() {
         alignItems: "center",
         gap: 8,
         padding: "6px 16px 6px 12px",
-        background: "hsl(28,62%,42%,.1)",
-        border: "1px solid hsl(28,62%,42%,.22)",
+        background: "hsl(var(--accent-bright) / .1)",
+        border: "1px solid hsl(var(--accent-bright) / .22)",
         borderRadius: 99,
         marginBottom: 36,
       }}

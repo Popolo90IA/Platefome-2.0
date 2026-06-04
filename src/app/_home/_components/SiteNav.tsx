@@ -36,13 +36,13 @@ export function SiteNav() {
           alignItems: "center",
           justifyContent: "space-between",
           padding: "10px 16px 10px 20px",
-          background: "hsl(38,28%,94%,.75)",
+          background: "hsl(var(--void) / .75)",
           backdropFilter: "blur(24px)",
           WebkitBackdropFilter: "blur(24px)",
-          border: "1px solid hsl(30,18%,82%,.5)",
+          border: "1px solid hsl(var(--line) / .5)",
           borderRadius: 14,
           boxShadow:
-            "0 8px 32px rgba(0,0,0,.4), inset 0 1px 0 hsl(30,18%,82%,.3)",
+            "0 8px 32px rgba(0,0,0,.4), inset 0 1px 0 hsl(var(--line) / .3)",
           transition: "background .4s, border-color .4s",
         }}
       >
@@ -75,7 +75,7 @@ export function SiteNav() {
                 fontFamily: "'DM Sans',sans-serif",
                 fontSize: ".875rem",
                 fontWeight: 400,
-                color: "hsl(24,12%,38%)",
+                color: "hsl(var(--subtle))",
                 letterSpacing: "-.01em",
                 borderRadius: 8,
                 transition: "color .2s, background .2s",
@@ -83,11 +83,11 @@ export function SiteNav() {
               onMouseOver={(e) => {
                 (e.currentTarget as HTMLAnchorElement).style.color = "#fff";
                 (e.currentTarget as HTMLAnchorElement).style.background =
-                  "hsl(32,20%,100%,.06)";
+                  "hsl(var(--white) / .06)";
               }}
               onMouseOut={(e) => {
                 (e.currentTarget as HTMLAnchorElement).style.color =
-                  "hsl(24,12%,38%)";
+                  "hsl(var(--subtle))";
                 (e.currentTarget as HTMLAnchorElement).style.background =
                   "transparent";
               }}
@@ -116,13 +116,13 @@ export function SiteNav() {
               fontFamily: "'DM Sans',sans-serif",
               fontSize: ".875rem",
               fontWeight: 400,
-              color: "hsl(24,12%,38%)",
+              color: "hsl(var(--subtle))",
               letterSpacing: "-.01em",
               transition: "color .2s",
             }}
             onMouseOver={(e) => (e.currentTarget.style.color = "#fff")}
             onMouseOut={(e) =>
-              (e.currentTarget.style.color = "hsl(24,12%,38%)")
+              (e.currentTarget.style.color = "hsl(var(--subtle))")
             }
           >
             כניסה
@@ -136,8 +136,7 @@ export function SiteNav() {
               alignItems: "center",
               gap: 7,
               padding: "9px 20px",
-              background:
-                "linear-gradient(135deg, hsl(28,62%,38%) 0%, hsl(22,70%,50%) 100%)",
+              background: "var(--grad-bronze)",
               color: "#fff",
               fontFamily: "'DM Sans',sans-serif",
               fontSize: ".875rem",
@@ -146,7 +145,7 @@ export function SiteNav() {
               borderRadius: 8,
               textDecoration: "none",
               boxShadow:
-                "0 2px 16px hsl(28,62%,38%,.4), inset 0 1px 0 rgba(255,255,255,.18)",
+                "0 2px 16px hsl(var(--accent-bright) / .4), inset 0 1px 0 rgba(255,255,255,.18)",
               transition: "filter .2s, transform .18s, box-shadow .2s",
             }}
             onMouseOver={(e) => {
@@ -154,14 +153,14 @@ export function SiteNav() {
               el.style.filter = "brightness(1.12)";
               el.style.transform = "translateY(-1px)";
               el.style.boxShadow =
-                "0 6px 28px hsl(28,62%,38%,.5), inset 0 1px 0 rgba(255,255,255,.18)";
+                "0 6px 28px hsl(var(--accent-bright) / .5), inset 0 1px 0 rgba(255,255,255,.18)";
             }}
             onMouseOut={(e) => {
               const el = e.currentTarget as HTMLAnchorElement;
               el.style.filter = "";
               el.style.transform = "";
               el.style.boxShadow =
-                "0 2px 16px hsl(28,62%,38%,.4), inset 0 1px 0 rgba(255,255,255,.18)";
+                "0 2px 16px hsl(var(--accent-bright) / .4), inset 0 1px 0 rgba(255,255,255,.18)";
             }}
           >
             התחל בחינם

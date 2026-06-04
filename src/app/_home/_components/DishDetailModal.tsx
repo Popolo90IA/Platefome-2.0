@@ -28,7 +28,7 @@ export function DishDetailModal({ dish, onClose }: DishDetailModalProps) {
         alignItems: "center",
         justifyContent: "center",
         padding: "24px",
-        background: "hsl(38,28%,94%,.88)",
+        background: "hsl(var(--void) / .88)",
         backdropFilter: "blur(20px)",
         WebkitBackdropFilter: "blur(20px)",
         animation: "fadeIn .2s ease",
@@ -37,8 +37,8 @@ export function DishDetailModal({ dish, onClose }: DishDetailModalProps) {
       <div
         onClick={(e) => e.stopPropagation()}
         style={{
-          background: "hsl(36,22%,90%)",
-          border: "1px solid hsl(36,28%,92%,.14)",
+          background: "hsl(var(--abyss))",
+          border: "1px solid hsl(var(--abyss) / .14)",
           borderRadius: 16,
           overflow: "hidden",
           maxWidth: 560,

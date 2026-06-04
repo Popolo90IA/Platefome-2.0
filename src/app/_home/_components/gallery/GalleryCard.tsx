@@ -18,8 +18,8 @@ export function GalleryCard({
       data-delay={String(delay)}
       onClick={onSelect}
       style={{
-        background: "hsl(38,30%,97%)",
-        border: "1px solid hsl(30,18%,82%,.5)",
+        background: "hsl(var(--deep))",
+        border: "1px solid hsl(var(--line) / .5)",
         borderRadius: 16,
         overflow: "hidden",
         cursor: "pointer",
@@ -27,13 +27,13 @@ export function GalleryCard({
       }}
       onMouseOver={(e) => {
         const el = e.currentTarget as HTMLDivElement;
-        el.style.borderColor = "hsl(28,62%,42%,.3)";
+        el.style.borderColor = "hsl(var(--accent-bright) / .3)";
         el.style.transform = "translateY(-4px)";
         el.style.boxShadow = "0 16px 40px rgba(0,0,0,.4)";
       }}
       onMouseOut={(e) => {
         const el = e.currentTarget as HTMLDivElement;
-        el.style.borderColor = "hsl(30,18%,82%,.5)";
+        el.style.borderColor = "hsl(var(--line) / .5)";
         el.style.transform = "";
         el.style.boxShadow = "";
       }}
@@ -59,7 +59,7 @@ export function GalleryCard({
             position: "absolute",
             inset: 0,
             background:
-              "linear-gradient(180deg,transparent 50%,hsl(24,18%,16%,.4) 100%)",
+              "linear-gradient(180deg,transparent 50%,hsl(var(--fog) / .4) 100%)",
           }}
         />
         <div
@@ -68,7 +68,7 @@ export function GalleryCard({
             top: 12,
             right: 12,
             padding: "4px 10px",
-            background: "hsl(38,28%,94%,.85)",
+            background: "hsl(var(--void) / .85)",
             backdropFilter: "blur(8px)",
             border: `1px solid ${dish.badgeColor.replace(")", ", .3)")}`,
             borderRadius: 99,
@@ -96,7 +96,7 @@ export function GalleryCard({
               fontFamily: "'Cormorant Garamond',serif",
               fontSize: "1.25rem",
               fontWeight: 700,
-              color: "hsl(24,18%,16%)",
+              color: "hsl(var(--fog))",
             }}
           >
             {dish.name}
@@ -106,7 +106,7 @@ export function GalleryCard({
               fontFamily: "'DM Sans',sans-serif",
               fontSize: "1rem",
               fontWeight: 700,
-              color: "hsl(28,62%,42%)",
+              color: "hsl(var(--accent-bright))",
             }}
           >
             {dish.price}
@@ -115,13 +115,13 @@ export function GalleryCard({
         <div
           style={{
             display: "inline-block",
-            background: "hsl(36,22%,92%)",
-            border: "1px solid hsl(30,18%,80%)",
+            background: "hsl(var(--abyss))",
+            border: "1px solid hsl(var(--line))",
             borderRadius: 99,
             padding: "2px 10px",
             fontFamily: "'DM Sans',sans-serif",
             fontSize: 11,
-            color: "hsl(28,8%,50%)",
+            color: "hsl(var(--dim))",
           }}
         >
           {dish.cat}

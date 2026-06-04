@@ -13,8 +13,8 @@ export function ArMockup() {
           display: "inline-flex",
           alignItems: "center",
           gap: 8,
-          background: "hsl(36,80%,55%,.1)",
-          border: "1px solid hsl(36,80%,55%,.2)",
+          background: "hsl(var(--gold-light) / .1)",
+          border: "1px solid hsl(var(--gold-light) / .2)",
           borderRadius: 8,
           padding: "8px 16px",
           marginBottom: 10,
@@ -25,7 +25,7 @@ export function ArMockup() {
           height="14"
           viewBox="0 0 24 24"
           fill="none"
-          stroke="hsl(36,80%,62%)"
+          stroke="hsl(var(--gold-light))"
           strokeWidth="2"
         >
           <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
@@ -34,7 +34,7 @@ export function ArMockup() {
           style={{
             fontFamily: "'DM Sans',sans-serif",
             fontSize: ".8rem",
-            color: "hsl(28,62%,42%)",
+            color: "hsl(var(--accent-bright))",
             fontWeight: 600,
           }}
         >
@@ -46,7 +46,7 @@ export function ArMockup() {
           style={{
             fontFamily: "'DM Sans',sans-serif",
             fontSize: ".75rem",
-            color: "hsl(28,8%,50%)",
+            color: "hsl(var(--dim))",
           }}
         >
           iPhone ✓
@@ -55,7 +55,7 @@ export function ArMockup() {
           style={{
             fontFamily: "'DM Sans',sans-serif",
             fontSize: ".75rem",
-            color: "hsl(28,8%,50%)",
+            color: "hsl(var(--dim))",
           }}
         >
           Android ✓

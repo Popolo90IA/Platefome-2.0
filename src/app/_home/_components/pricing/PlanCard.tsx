@@ -15,10 +15,10 @@ export function PlanCard({
   delay: number;
 }) {
   const isHighlighted = plan.highlighted;
-  const accent = isHighlighted ? "hsl(28,62%,42%)" : "hsl(28,8%,50%)";
-  const checkColor = isHighlighted ? "hsl(28,62%,42%)" : "hsl(28,8%,45%)";
-  const featureColor = isHighlighted ? "hsl(24,18%,16%)" : "hsl(24,12%,38%)";
-  const priceColor = isHighlighted ? "hsl(28,62%,42%)" : "hsl(24,18%,16%)";
+  const accent = isHighlighted ? "hsl(var(--accent-bright))" : "hsl(var(--dim))";
+  const checkColor = isHighlighted ? "hsl(var(--accent-bright))" : "hsl(var(--subtle))";
+  const featureColor = isHighlighted ? "hsl(var(--fog))" : "hsl(var(--subtle))";
+  const priceColor = isHighlighted ? "hsl(var(--accent-bright))" : "hsl(var(--fog))";
 
   return (
     <div
@@ -26,17 +26,17 @@ export function PlanCard({
       data-delay={String(delay)}
       style={{
         background: isHighlighted
-          ? "linear-gradient(180deg,hsl(38,30%,97%),hsl(36,22%,90%))"
-          : "hsl(38,30%,97%)",
+          ? "linear-gradient(180deg,hsl(var(--deep)),hsl(var(--abyss)))"
+          : "hsl(var(--deep))",
         border: isHighlighted
-          ? "1px solid hsl(28,62%,42%,.4)"
-          : "1px solid hsl(30,18%,82%,.5)",
+          ? "1px solid hsl(var(--accent-bright) / .4)"
+          : "1px solid hsl(var(--line) / .5)",
         borderRadius: 20,
         overflow: "hidden",
         position: "relative",
         transform: isHighlighted ? "scale(1.04)" : undefined,
         boxShadow: isHighlighted
-          ? "0 0 0 1px hsl(28,62%,42%,.08), 0 24px 64px -16px rgba(0,0,0,.12)"
+          ? "0 0 0 1px hsl(var(--accent-bright) / .08), 0 24px 64px -16px rgba(0,0,0,.12)"
           : undefined,
       }}
     >
@@ -44,8 +44,8 @@ export function PlanCard({
         style={{
           height: 2,
           background: isHighlighted
-            ? "linear-gradient(90deg, hsl(28,62%,42%), hsl(22,70%,50%))"
-            : "hsl(30,18%,82%,.3)",
+            ? "linear-gradient(90deg, hsl(var(--accent-bright)), hsl(var(--gold)))"
+            : "hsl(var(--line) / .3)",
         }}
       />
 
@@ -74,8 +74,8 @@ export function PlanCard({
         style={{
           padding: "28px 28px 24px",
           borderBottom: isHighlighted
-            ? "1px solid hsl(28,62%,42%,.1)"
-            : "1px solid hsl(30,18%,82%,.3)",
+            ? "1px solid hsl(var(--accent-bright) / .1)"
+            : "1px solid hsl(var(--line) / .3)",
         }}
       >
         <div
@@ -107,7 +107,7 @@ export function PlanCard({
               fontFamily: "'DM Sans',sans-serif",
               fontSize: ".85rem",
               fontWeight: 400,
-              color: isHighlighted ? "hsl(28,48%,38%)" : "hsl(24,12%,38%)",
+              color: isHighlighted ? "hsl(var(--gold-dark))" : "hsl(var(--subtle))",
               letterSpacing: 0,
             }}
           >
@@ -118,7 +118,7 @@ export function PlanCard({
           style={{
             fontFamily: "'DM Sans',sans-serif",
             fontSize: ".8rem",
-            color: isHighlighted ? "hsl(28,48%,36%)" : "hsl(28,8%,42%)",
+            color: isHighlighted ? "hsl(var(--gold-dark))" : "hsl(var(--subtle))",
             marginTop: 6,
           }}
         >
