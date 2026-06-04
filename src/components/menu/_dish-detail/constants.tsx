@@ -28,11 +28,11 @@ export type DishBadge = { label: string; color: string; bg: string };
 /* Build the badge list from dish flags. */
 export function buildBadges(dish: Dish): DishBadge[] {
   return [
-    ...(dish.is_new ? [{ label: "חדש", color: "hsl(28,88%,52%)", bg: "hsl(28,88%,52%,.08)" }] : []),
+    ...(dish.is_new ? [{ label: "חדש", color: "hsl(var(--accent-vivid))", bg: "hsl(var(--accent-vivid) / .08)" }] : []),
     ...(dish.is_signature ? [{ label: "מנת שף", color: "hsl(36,28%,92%)", bg: "hsl(36,28%,92%,.06)" }] : []),
     ...(dish.is_featured ? [{ label: "מובלט", color: "hsl(28,90%,58%)", bg: "hsl(28,90%,58%,.08)" }] : []),
-    ...(dish.ar_enabled ? [{ label: "AR", color: "hsl(28,88%,52%)", bg: "hsl(28,88%,52%,.08)" }] : []),
+    ...(dish.ar_enabled ? [{ label: "AR", color: "hsl(var(--accent-vivid))", bg: "hsl(var(--accent-vivid) / .08)" }] : []),
     ...(dish.model_3d_url ? [{ label: "3D", color: "hsl(36,28%,92%)", bg: "hsl(36,28%,92%,.06)" }] : []),
-    ...(!dish.is_available ? [{ label: "לא זמין", color: "hsl(0,60%,52%)", bg: "hsl(0,60%,52%,.08)" }] : []),
+    ...(!dish.is_available ? [{ label: "לא זמין", color: "hsl(var(--ember))", bg: "hsl(var(--ember) / .08)" }] : []),
   ];
 }

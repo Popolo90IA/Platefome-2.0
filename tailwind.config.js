@@ -60,6 +60,7 @@ module.exports = {
         bronze: {
           DEFAULT: "hsl(var(--accent-bright))",
           warm: "hsl(var(--accent-warm))",
+          vivid: "hsl(var(--accent-vivid))",
           dim: "hsl(var(--gold-dim))",
           dark: "hsl(var(--gold-dark))",
         },

@@ -89,14 +89,14 @@ export function DishInfo({
 
       {/* Allergens */}
       {dish.allergens && dish.allergens.length > 0 && (
-        <div className="dish-fade-c" style={{ marginBottom: 28, padding: "20px 24px", background: "hsl(0,60%,52%,.04)", border: "1px solid hsl(0,60%,52%,.18)", borderRadius: 12 }}>
+        <div className="dish-fade-c" style={{ marginBottom: 28, padding: "20px 24px", background: "hsl(var(--ember) / .04)", border: "1px solid hsl(var(--ember) / .18)", borderRadius: 12 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 14 }}>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="hsl(0,60%,52%)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="hsl(var(--ember))" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
               <line x1="12" y1="9" x2="12" y2="13" />
               <line x1="12" y1="17" x2="12.01" y2="17" />
             </svg>
-            <span style={{ fontFamily: "var(--font-mono)", fontSize: ".5875rem", letterSpacing: ".18em", color: "hsl(0,60%,52%)", textTransform: "uppercase" }}>
+            <span style={{ fontFamily: "var(--font-mono)", fontSize: ".5875rem", letterSpacing: ".18em", color: "hsl(var(--ember))", textTransform: "uppercase" }}>
               אלרגנים
             </span>
           </div>
@@ -104,9 +104,9 @@ export function DishInfo({
             {dish.allergens.map((a) => {
               const info = ALLERGEN_ICONS[a] ?? { label: a, emoji: "⚠️" };
               return (
-                <div key={a} style={{ display: "flex", alignItems: "center", gap: 6, padding: "4px 12px", background: "hsl(0,60%,52%,.08)", border: "1px solid hsl(0,60%,52%,.22)", borderRadius: 99 }}>
+                <div key={a} style={{ display: "flex", alignItems: "center", gap: 6, padding: "4px 12px", background: "hsl(var(--ember) / .08)", border: "1px solid hsl(var(--ember) / .22)", borderRadius: 99 }}>
                   <span>{info.emoji}</span>
-                  <span style={{ fontFamily: "var(--font-mono)", fontSize: ".5875rem", letterSpacing: ".1em", color: "hsl(0,60%,52%)", textTransform: "uppercase" }}>
+                  <span style={{ fontFamily: "var(--font-mono)", fontSize: ".5875rem", letterSpacing: ".1em", color: "hsl(var(--ember))", textTransform: "uppercase" }}>
                     {info.label}
                   </span>
                 </div>
@@ -118,10 +118,10 @@ export function DishInfo({
 
       {/* Status indicators */}
       <div className="dish-fade-d" style={{ display: "flex", flexDirection: "column", gap: 12, paddingTop: 28, borderTop: "1px solid hsl(var(--line))" }}>
-        <StatusRow label="זמינות" value={dish.is_available ? "זמין עכשיו" : "לא זמין"} color={dish.is_available ? "hsl(28,88%,52%)" : "hsl(0,60%,52%)"} icon={dish.is_available ? "✓" : "✗"} />
-        {dish.is_new && <StatusRow label="מנה חדשה" value="נוסף לאחרונה לתפריט" color="hsl(28,88%,52%)" icon="★" />}
+        <StatusRow label="זמינות" value={dish.is_available ? "זמין עכשיו" : "לא זמין"} color={dish.is_available ? "hsl(var(--accent-vivid))" : "hsl(var(--ember))"} icon={dish.is_available ? "✓" : "✗"} />
+        {dish.is_new && <StatusRow label="מנה חדשה" value="נוסף לאחרונה לתפריט" color="hsl(var(--accent-vivid))" icon="★" />}
         {dish.is_signature && <StatusRow label="מנת שף" value="המלצה מיוחדת של השף" color="hsl(36,28%,92%)" icon="♦" />}
-        {dish.ar_enabled && <StatusRow label="AR זמין" value="סרוק עם המצלמה לחוויה תלת-מימד" color="hsl(28,88%,52%)" icon="◉" />}
+        {dish.ar_enabled && <StatusRow label="AR זמין" value="סרוק עם המצלמה לחוויה תלת-מימד" color="hsl(var(--accent-vivid))" icon="◉" />}
       </div>
     </div>
   );

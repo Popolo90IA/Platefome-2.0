@@ -45,6 +45,7 @@
     /* ── Accent tones (bronze/cuivre) ── */
     --accent-warm:  28  52% 52%;   /* cuivre clair */
     --accent-bright:28  62% 42%;   /* bronze principal */
+    --accent-vivid: 28  88% 52%;   /* bronze vif — hover, statuts actifs */
     --ember:          0  60% 52%;   /* error / danger */
     --success:      142  52% 44%;   /* vert succès / gratuit */
     --sage:         28  62% 42%;   /* accent bronze */
@@ -173,6 +174,7 @@
     /* Accent tones — bronzes ajustés pour contraste sur noir */
     --accent-warm:   28  62% 58%;
     --accent-bright: 28  62% 52%;
+    --accent-vivid:  28  88% 60%;
     --ember:          0  62% 56%;
     --success:      142  52% 50%;
     --sage:          28  62% 52%;
@@ -444,7 +446,7 @@
     -webkit-text-fill-color: transparent; color: transparent;
   }
   .bg-gold-gradient { background: transparent; border: 1px solid rgba(255,255,255,0.3); color: white; }
-  .bg-gold-gradient:hover { background: hsl(28,88%,52%); border-color: hsl(28,88%,52%); box-shadow: 0 8px 32px hsl(28,88%,48%,0.4); }
+  .bg-gold-gradient:hover { background: hsl(var(--accent-vivid)); border-color: hsl(var(--accent-vivid)); box-shadow: 0 8px 32px hsl(var(--accent-vivid) / 0.4); }
   .text-gold-glow { color: hsl(var(--cream)); text-shadow: 0 0 40px hsl(var(--cream) / 0.12); }
   .text-crimson-glow { color: hsl(var(--ember)); text-shadow: 0 0 20px hsl(var(--ember)/0.4); }
   .divider-gold { background: linear-gradient(90deg, transparent, hsl(var(--line)), transparent); height: 1px; }

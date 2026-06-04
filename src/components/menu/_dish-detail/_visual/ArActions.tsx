@@ -13,19 +13,19 @@ export function ArActions({ dish }: { dish: Dish }) {
             alignItems: "center",
             gap: 10,
             padding: "12px 20px",
-            background: "hsl(28,88%,52%,.07)",
-            border: "1px solid hsl(28,88%,52%,.25)",
+            background: "hsl(var(--accent-vivid) / .07)",
+            border: "1px solid hsl(var(--accent-vivid) / .25)",
             borderRadius: 10,
             flex: 1,
           }}
         >
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="hsl(28,88%,52%)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="hsl(var(--accent-vivid))" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
             <path d="M12 2L2 7l10 5 10-5-10-5z" />
             <path d="M2 17l10 5 10-5" />
             <path d="M2 12l10 5 10-5" />
           </svg>
           <div>
-            <div style={{ fontFamily: "var(--font-mono)", fontSize: ".5875rem", letterSpacing: ".14em", color: "hsl(28,88%,52%)", textTransform: "uppercase", marginBottom: 2 }}>
+            <div style={{ fontFamily: "var(--font-mono)", fontSize: ".5875rem", letterSpacing: ".14em", color: "hsl(var(--accent-vivid))", textTransform: "uppercase", marginBottom: 2 }}>
               מציאות רבודה
             </div>
             <div style={{ fontSize: ".8125rem", color: "hsl(var(--subtle))" }}>כוון מצלמה לשולחן</div>
