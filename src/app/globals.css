@@ -43,15 +43,15 @@
     --white:   0   0% 100%;  /* blanc absolu */
 
     /* ── Accent tones (bronze/cuivre) ── */
-    --accent-warm:   28  52% 52%;   /* bronze clair */
-    --accent-bright: 28  62% 42%;   /* bronze principal */
+    --accent-warm:  28  52% 52%;   /* cuivre clair */
+    --accent-bright:28  62% 42%;   /* bronze principal */
     --ember:          0  60% 52%;   /* error / danger */
     --success:      142  52% 44%;   /* vert succès / gratuit */
-    --sage:          28  62% 42%;   /* bronze accent */
-    --gold:          22  70% 50%;   /* terracotta secondaire */
-    --gold-light:    36  80% 58%;   /* warm highlight */
-    --gold-dark:     28  48% 34%;   /* bronze foncé */
-    --gold-dim:      28  38% 58%;   /* bronze atténué */
+    --sage:         28  62% 42%;   /* accent bronze */
+    --gold:         22  70% 50%;   /* terracotta secondaire */
+    --gold-light:   36  80% 58%;   /* or clair */
+    --gold-dark:    28  48% 34%;   /* bronze foncé */
+    --gold-dim:     28  38% 58%;   /* bronze atténué */
 
     /* backward compat aliases */
     --snow:    38  28% 94%;
@@ -98,10 +98,10 @@
     --shadow-pill:      0 8px 32px rgba(0,0,0,.4), inset 0 1px 0 hsl(var(--line) / .3);
     --shadow-glow-gold: 0 0 0 1px hsl(var(--gold) / .3), 0 0 32px hsl(var(--gold) / .2);
 
-    /* ── Gradient tokens ── */
-    --grad-bronze:      linear-gradient(135deg, hsl(28 62% 38%) 0%, hsl(22 70% 50%) 100%);
-    --grad-bronze-warm: linear-gradient(135deg, hsl(36 80% 55%), hsl(28 62% 42%));
-    --grad-gold-shimmer: linear-gradient(135deg, hsl(28 62% 42%), hsl(22 70% 56%), hsl(28 58% 42%));
+    /* ── Gradient tokens (dérivés des couleurs marque) ── */
+    --grad-bronze:      linear-gradient(135deg, hsl(var(--accent-bright)) 0%, hsl(var(--gold)) 100%);
+    --grad-bronze-warm: linear-gradient(135deg, hsl(var(--gold-light)), hsl(var(--accent-bright)));
+    --grad-gold-shimmer: linear-gradient(135deg, hsl(var(--accent-bright)), hsl(var(--gold)), hsl(var(--accent-bright)));
 
     /* ── Font family tokens (source unique typo) ──
        Pointent vers les next/font de layout.tsx. Changer une police =
