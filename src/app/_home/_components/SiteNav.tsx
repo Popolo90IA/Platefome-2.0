@@ -69,6 +69,7 @@ export function SiteNav() {
             <a
               key={href}
               href={href}
+              className="home-nav-link"
               style={{
                 padding: "7px 14px",
                 textDecoration: "none",
@@ -109,7 +110,7 @@ export function SiteNav() {
           <Link
             href="/login"
             transitionTypes={["nav-forward"]}
-            className="home-nav-login"
+            className="home-nav-login home-nav-link"
             style={{
               padding: "7px 14px",
               textDecoration: "none",
@@ -131,6 +132,7 @@ export function SiteNav() {
           <Link
             href="/signup"
             transitionTypes={["nav-forward"]}
+            className="home-nav-link"
             style={{
               display: "inline-flex",
               alignItems: "center",

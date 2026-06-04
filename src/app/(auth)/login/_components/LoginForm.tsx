@@ -20,7 +20,7 @@ function ForgotPasswordLink() {
         textDecoration: "none",
       }}
       onMouseEnter={(e) => {
-        (e.currentTarget as HTMLAnchorElement).style.color = "hsl(28,62%,42%)";
+        (e.currentTarget as HTMLAnchorElement).style.color = "hsl(var(--accent-bright))";
       }}
       onMouseLeave={(e) => {
         (e.currentTarget as HTMLAnchorElement).style.color = "hsl(var(--subtle))";
@@ -61,11 +61,14 @@ export function LoginForm() {
         .from("user_roles")
         .select("role")
         .eq("user_id", userData.user.id)
-        .single();
+        .maybeSingle();
 
       router.push(roleData?.role === "super_admin" ? "/admin" : "/dashboard");
       router.refresh();
+      return;
     }
+
+    setLoading(false);
   };
 
   return (
