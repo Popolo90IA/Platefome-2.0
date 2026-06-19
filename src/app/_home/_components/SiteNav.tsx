@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Menu, X } from "lucide-react";
 import { LogoWordmark } from "@/components/brand";
 
@@ -18,6 +18,23 @@ const NAV_LINKS: ReadonlyArray<readonly [string, string]> = [
  */
 export function SiteNav() {
   const [open, setOpen] = useState(false);
+  const toggleRef = useRef<HTMLButtonElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
+
+  // Mobile menu a11y: Escape closes (focus back to the toggle), and opening
+  // moves focus into the panel.
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setOpen(false);
+        toggleRef.current?.focus();
+      }
+    };
+    document.addEventListener("keydown", onKey);
+    panelRef.current?.querySelector<HTMLElement>("a, button")?.focus();
+    return () => document.removeEventListener("keydown", onKey);
+  }, [open]);
 
   return (
     <header
@@ -178,9 +195,11 @@ export function SiteNav() {
           {/* Hamburger — mobile only (≤900px via CSS) */}
           <button
             type="button"
+            ref={toggleRef}
             className="home-nav-mobile-toggle"
             aria-label={open ? "סגור תפריט" : "פתח תפריט"}
             aria-expanded={open}
+            aria-controls="home-nav-mobile-panel"
             onClick={() => setOpen((v) => !v)}
             style={{
               alignItems: "center",
@@ -218,6 +237,8 @@ export function SiteNav() {
             }}
           />
           <div
+            id="home-nav-mobile-panel"
+            ref={panelRef}
             className="home-nav-mobile-panel"
             style={{
               marginTop: 10,
