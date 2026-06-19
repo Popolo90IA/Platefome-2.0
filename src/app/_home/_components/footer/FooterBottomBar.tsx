@@ -21,7 +21,7 @@ export function FooterBottomBar() {
           color: "hsl(28,10%,48%)",
         }}
       >
-        © 2025 PLATFORME · כל הזכויות שמורות
+        © {new Date().getFullYear()} PLATFORME · כל הזכויות שמורות
       </span>
       <span
         style={{

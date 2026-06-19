@@ -49,7 +49,27 @@ export function FeatureCard({
     border: `1px solid ${iconBorder}`,
   };
   return (
-    <div className="reveal" data-delay={delay} style={CARD_BASE}>
+    <div
+      className="reveal"
+      data-delay={delay}
+      style={{
+        ...CARD_BASE,
+        transition:
+          "transform .3s cubic-bezier(.16,1,.3,1), border-color .3s, box-shadow .3s",
+      }}
+      onMouseOver={(e) => {
+        const el = e.currentTarget as HTMLDivElement;
+        el.style.transform = "translateY(-6px)";
+        el.style.borderColor = "hsl(var(--accent-bright) / .35)";
+        el.style.boxShadow = "0 24px 56px -20px rgba(0,0,0,.45)";
+      }}
+      onMouseOut={(e) => {
+        const el = e.currentTarget as HTMLDivElement;
+        el.style.transform = "";
+        el.style.borderColor = "hsl(var(--line) / .5)";
+        el.style.boxShadow = "";
+      }}
+    >
       <div
         style={{
           position: "absolute",
