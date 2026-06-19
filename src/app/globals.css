@@ -1486,12 +1486,76 @@
   .home-nav-login {
     display: none !important;
   }
+
+  /* Mobile: show hamburger, hide the inline CTA (moved into the panel) */
+  .home-nav-mobile-toggle {
+    display: inline-flex !important;
+  }
+
+  .home-nav-cta-desktop {
+    display: none !important;
+  }
+}
+
+/* Hamburger toggle: hidden on desktop, revealed ≤900px (rule above) */
+.home-nav-mobile-toggle {
+  display: none;
+}
+
+/* Mobile menu: animated open — panel slides/fades in, items stagger */
+.home-nav-mobile-panel {
+  animation: navPanelIn 0.28s cubic-bezier(0.16, 1, 0.3, 1) both;
+  transform-origin: top center;
+}
+.home-nav-mobile-panel > * {
+  animation: navPanelItemIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.home-nav-mobile-panel > *:nth-child(1) { animation-delay: 0.05s; }
+.home-nav-mobile-panel > *:nth-child(2) { animation-delay: 0.09s; }
+.home-nav-mobile-panel > *:nth-child(3) { animation-delay: 0.13s; }
+.home-nav-mobile-panel > *:nth-child(4) { animation-delay: 0.17s; }
+.home-nav-mobile-panel > *:nth-child(5) { animation-delay: 0.21s; }
+.home-nav-mobile-panel > *:nth-child(6) { animation-delay: 0.25s; }
+.home-nav-mobile-panel > *:nth-child(7) { animation-delay: 0.29s; }
+@keyframes navPanelIn {
+  from { opacity: 0; transform: translateY(-10px) scale(0.97); }
+  to   { opacity: 1; transform: none; }
+}
+@keyframes navPanelItemIn {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .home-nav-mobile-panel,
+  .home-nav-mobile-panel > * { animation: none; }
+}
+
+/* Hero — cinematic staggered entrance (badge → titles → subtitle → showcase).
+   The `hero-fade-c` italic line carries its own inline animation (.3s + shimmer);
+   a/b/d/e fill the rest of the cascade. Wrappers use overflow:hidden for a
+   masked-reveal effect on the title lines. */
+.hero-fade-a { animation: fadeUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.05s both; }
+.hero-fade-b { animation: fadeUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.15s both; }
+.hero-fade-d { animation: fadeUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.45s both; }
+.hero-fade-e { animation: heroShowcaseIn 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.58s both; }
+/* translate only — no scale() on the wrapper, which would resample the WebGL
+   canvas and soften the 3D model during the entrance. */
+@keyframes heroShowcaseIn {
+  from { opacity: 0; transform: translateY(40px); }
+  to   { opacity: 1; transform: none; }
+}
+/* Reduced motion: never leave hero elements stuck at opacity:0 */
+@media (prefers-reduced-motion: reduce) {
+  .hero-fade-a,
+  .hero-fade-b,
+  .hero-fade-d,
+  .hero-fade-e { animation: none; opacity: 1; transform: none; }
 }
 
 /* Nav links: visible keyboard focus ring (hover is JS-only, no :focus state) */
 .home-nav-link:focus-visible {
   outline: 2px solid hsl(var(--accent-bright));
   outline-offset: 2px;
-  color: #fff;
+  color: hsl(var(--accent-bright));
   border-radius: 8px;
 }

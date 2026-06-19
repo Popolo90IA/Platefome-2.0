@@ -114,10 +114,10 @@ export function FeaturesSection() {
           <FeatureCard
             delay={240}
             numberStr="03"
-            topGradient="linear-gradient(90deg,hsl(140,60%,45%),hsl(var(--accent-bright)))"
-            iconBg="linear-gradient(135deg,hsl(140,60%,45%,.15),hsl(var(--accent-bright) / .1))"
-            iconBorder="hsl(140,60%,45%,.25)"
-            iconStroke="hsl(var(--success))"
+            topGradient="linear-gradient(90deg,hsl(var(--gold)),hsl(var(--accent-bright)))"
+            iconBg="linear-gradient(135deg,hsl(var(--gold) / .15),hsl(var(--accent-bright) / .1))"
+            iconBorder="hsl(var(--gold) / .25)"
+            iconStroke="hsl(var(--gold))"
             iconSvg={
               <>
                 <line x1="18" y1="20" x2="18" y2="10" />
@@ -125,7 +125,7 @@ export function FeaturesSection() {
                 <line x1="6" y1="20" x2="6" y2="14" />
               </>
             }
-            eyebrowColor="hsl(var(--success))"
+            eyebrowColor="hsl(var(--gold))"
             eyebrow="אנליטיקה"
             titleLines={
               <>

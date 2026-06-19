@@ -20,6 +20,21 @@ export function PlanCard({
   const featureColor = isHighlighted ? "hsl(var(--fog))" : "hsl(var(--subtle))";
   const priceColor = isHighlighted ? "hsl(var(--accent-bright))" : "hsl(var(--fog))";
 
+  // Hover = renforcement de l'ombre + bordure bronze. Pas de transform :
+  // la classe `reveal` (GSAP) possède déjà la propriété transform de la carte.
+  const baseBorder = isHighlighted
+    ? "1px solid hsl(var(--accent-bright) / .4)"
+    : "1px solid hsl(var(--line) / .5)";
+  const baseShadow = isHighlighted
+    ? "0 0 0 1px hsl(var(--accent-bright) / .08), 0 24px 64px -16px rgba(0,0,0,.12)"
+    : "none";
+  const hoverBorder = isHighlighted
+    ? "1px solid hsl(var(--accent-bright) / .55)"
+    : "1px solid hsl(var(--accent-bright) / .3)";
+  const hoverShadow = isHighlighted
+    ? "0 0 0 1px hsl(var(--accent-bright) / .15), 0 32px 72px -16px rgba(0,0,0,.2)"
+    : "0 24px 56px -20px rgba(0,0,0,.16)";
+
   return (
     <div
       className="reveal"
@@ -28,16 +43,23 @@ export function PlanCard({
         background: isHighlighted
           ? "linear-gradient(180deg,hsl(var(--deep)),hsl(var(--abyss)))"
           : "hsl(var(--deep))",
-        border: isHighlighted
-          ? "1px solid hsl(var(--accent-bright) / .4)"
-          : "1px solid hsl(var(--line) / .5)",
+        border: baseBorder,
         borderRadius: 20,
         overflow: "hidden",
         position: "relative",
         transform: isHighlighted ? "scale(1.04)" : undefined,
-        boxShadow: isHighlighted
-          ? "0 0 0 1px hsl(var(--accent-bright) / .08), 0 24px 64px -16px rgba(0,0,0,.12)"
-          : undefined,
+        boxShadow: baseShadow,
+        transition: "border-color .3s, box-shadow .3s",
+      }}
+      onMouseOver={(e) => {
+        const el = e.currentTarget as HTMLDivElement;
+        el.style.border = hoverBorder;
+        el.style.boxShadow = hoverShadow;
+      }}
+      onMouseOut={(e) => {
+        const el = e.currentTarget as HTMLDivElement;
+        el.style.border = baseBorder;
+        el.style.boxShadow = baseShadow;
       }}
     >
       <div

@@ -55,7 +55,10 @@ export function createHeroScene({ canvas, wrap, modelUrl, onLoaded }: SceneDeps)
   controls.enablePan = false;
   controls.minPolarAngle = Math.PI / 4;
   controls.maxPolarAngle = Math.PI * 0.7;
-  controls.autoRotate = true;
+  const reduceMotion = window.matchMedia(
+    "(prefers-reduced-motion: reduce)",
+  ).matches;
+  controls.autoRotate = !reduceMotion;
   controls.autoRotateSpeed = 0.8;
 
   let model: THREE.Object3D | null = null;
@@ -119,7 +122,7 @@ export function createHeroScene({ canvas, wrap, modelUrl, onLoaded }: SceneDeps)
   const onUp = () => {
     userInteracting = false;
     setTimeout(() => {
-      controls.autoRotate = true;
+      controls.autoRotate = !reduceMotion;
     }, 2000);
   };
   canvas.addEventListener("pointerdown", onDown);
@@ -130,7 +133,8 @@ export function createHeroScene({ canvas, wrap, modelUrl, onLoaded }: SceneDeps)
   function animate() {
     rafId = requestAnimationFrame(animate);
     const t = clock.getElapsedTime();
-    if (model && !userInteracting) model.position.y += Math.sin(t * 0.6) * 0.0008;
+    if (model && !userInteracting && !reduceMotion)
+      model.position.y += Math.sin(t * 0.6) * 0.0008;
     glowLight.intensity = 0.8 + Math.sin(t * 1.2) * 0.2;
     controls.update();
     renderer.render(scene, camera);

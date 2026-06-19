@@ -1,13 +1,20 @@
 interface LogoWordmarkProps {
   width?: number;
   className?: string;
+  /** Couleur du mot "Plate". Par défaut le ton encre (fonds clairs).
+   *  Sur fond sombre (footer), passer une teinte claire pour rester lisible. */
+  color?: string;
 }
 
 /**
  * Wordmark — cloche dorée PNG (ton vrai logo) + texte "Plateform".
  * direction:ltr garantit le bon ordre Plate→form même en RTL (hébreu).
  */
-export function LogoWordmark({ width = 140, className }: LogoWordmarkProps) {
+export function LogoWordmark({
+  width = 140,
+  className,
+  color = "hsl(24,18%,16%)",
+}: LogoWordmarkProps) {
   // Proportions calées sur logo-lockup.svg (source de vérité — page login).
   // SVG: viewBox 800×220, cloche ~160px (ratio 1.587), texte font-size 84.
   // Pour un wordmark où width = largeur cloche+gap+texte (~width*0.7 du viewBox):
@@ -43,7 +50,7 @@ export function LogoWordmark({ width = 140, className }: LogoWordmarkProps) {
             "var(--font-cormorant), 'Cormorant Garamond', 'Playfair Display', Georgia, serif",
           fontWeight: 500,
           fontSize,
-          color: "hsl(24,18%,16%)",
+          color,
           letterSpacing: "-0.02em",
           lineHeight: 1,
         }}

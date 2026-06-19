@@ -40,7 +40,7 @@ export const GALLERY_DISHES: readonly GalleryDish[] = [
     desc: "תערובת עשבי תיבול טריים מהגינה שלנו עם גבינה צרפתית, אגוזי מלך קלויים ורוטב ביתי על בסיס שמן זית וחומץ תפוחים.",
     price: "₪54",
     badge: "3D",
-    badgeColor: "hsl(var(--success))",
+    badgeColor: "hsl(var(--accent-vivid))",
     cat: "ירקות",
   },
   {
@@ -67,7 +67,7 @@ export const GALLERY_DISHES: readonly GalleryDish[] = [
     desc: "בלנד אתיופי מיוחד — עם טעמי פרי יערות ופרחים — נקלה בקלייה בינונית כדי לשמר את הארומה. מוגש כפול כדיפולט.",
     price: "₪28",
     badge: "חי",
-    badgeColor: "hsl(var(--success))",
+    badgeColor: "hsl(var(--accent-vivid))",
     cat: "שתייה",
   },
 ];
@@ -95,7 +95,7 @@ export const HOME_STATS: readonly StatItem[] = [
     num: "98%",
     label: "שביעות רצון",
     sub: "מהלקוחות ממשיכים לאחר תקופת הניסיון",
-    badge: "retention rate",
+    badge: "שימור לקוחות",
   },
 ];
 
@@ -109,9 +109,9 @@ export const PRICING_PLANS: readonly PricingPlan[] = [
     highlighted: false,
     badge: {
       label: "חינם",
-      bg: "hsl(var(--success) / .12)",
-      border: "hsl(var(--success) / .3)",
-      color: "hsl(var(--success))",
+      bg: "hsl(var(--subtle) / .1)",
+      border: "hsl(var(--subtle) / .25)",
+      color: "hsl(var(--subtle))",
     },
   },
   {

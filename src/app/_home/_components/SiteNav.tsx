@@ -1,6 +1,8 @@
 "use client";
 
 import Link from "next/link";
+import { useEffect, useRef, useState } from "react";
+import { Menu, X } from "lucide-react";
 import { LogoWordmark } from "@/components/brand";
 
 const NAV_LINKS: ReadonlyArray<readonly [string, string]> = [
@@ -15,6 +17,25 @@ const NAV_LINKS: ReadonlyArray<readonly [string, string]> = [
  * id="site-header" est utilisé par useHeaderScroll pour effet frosted à 60px de scroll.
  */
 export function SiteNav() {
+  const [open, setOpen] = useState(false);
+  const toggleRef = useRef<HTMLButtonElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
+
+  // Mobile menu a11y: Escape closes (focus back to the toggle), and opening
+  // moves focus into the panel.
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setOpen(false);
+        toggleRef.current?.focus();
+      }
+    };
+    document.addEventListener("keydown", onKey);
+    panelRef.current?.querySelector<HTMLElement>("a, button")?.focus();
+    return () => document.removeEventListener("keydown", onKey);
+  }, [open]);
+
   return (
     <header
       id="site-header"
@@ -43,7 +64,7 @@ export function SiteNav() {
           borderRadius: 14,
           boxShadow:
             "0 8px 32px rgba(0,0,0,.4), inset 0 1px 0 hsl(var(--line) / .3)",
-          transition: "background .4s, border-color .4s",
+          transition: "background .4s, border-color .4s, box-shadow .4s",
         }}
       >
         {/* Logo */}
@@ -82,9 +103,10 @@ export function SiteNav() {
                 transition: "color .2s, background .2s",
               }}
               onMouseOver={(e) => {
-                (e.currentTarget as HTMLAnchorElement).style.color = "#fff";
+                (e.currentTarget as HTMLAnchorElement).style.color =
+                  "hsl(var(--accent-bright))";
                 (e.currentTarget as HTMLAnchorElement).style.background =
-                  "hsl(var(--white) / .06)";
+                  "hsl(var(--accent-bright) / .08)";
               }}
               onMouseOut={(e) => {
                 (e.currentTarget as HTMLAnchorElement).style.color =
@@ -121,7 +143,9 @@ export function SiteNav() {
               letterSpacing: "-.01em",
               transition: "color .2s",
             }}
-            onMouseOver={(e) => (e.currentTarget.style.color = "#fff")}
+            onMouseOver={(e) =>
+              (e.currentTarget.style.color = "hsl(var(--accent-bright))")
+            }
             onMouseOut={(e) =>
               (e.currentTarget.style.color = "hsl(var(--subtle))")
             }
@@ -132,7 +156,7 @@ export function SiteNav() {
           <Link
             href="/signup"
             transitionTypes={["nav-forward"]}
-            className="home-nav-link"
+            className="home-nav-cta-desktop home-nav-link"
             style={{
               display: "inline-flex",
               alignItems: "center",
@@ -167,8 +191,135 @@ export function SiteNav() {
           >
             התחל בחינם
           </Link>
+
+          {/* Hamburger — mobile only (≤900px via CSS) */}
+          <button
+            type="button"
+            ref={toggleRef}
+            className="home-nav-mobile-toggle"
+            aria-label={open ? "סגור תפריט" : "פתח תפריט"}
+            aria-expanded={open}
+            aria-controls="home-nav-mobile-panel"
+            onClick={() => setOpen((v) => !v)}
+            style={{
+              alignItems: "center",
+              justifyContent: "center",
+              width: 40,
+              height: 40,
+              background: "transparent",
+              border: "1px solid hsl(var(--line) / .6)",
+              borderRadius: 10,
+              color: "hsl(var(--fog))",
+              cursor: "pointer",
+            }}
+          >
+            {open ? <X size={20} /> : <Menu size={20} />}
+          </button>
         </div>
       </div>
+
+      {/* Mobile panel + backdrop */}
+      {open && (
+        <>
+          <button
+            type="button"
+            aria-hidden
+            tabIndex={-1}
+            onClick={() => setOpen(false)}
+            style={{
+              position: "fixed",
+              inset: 0,
+              top: -20,
+              zIndex: -1,
+              border: "none",
+              background: "transparent",
+              cursor: "default",
+            }}
+          />
+          <div
+            id="home-nav-mobile-panel"
+            ref={panelRef}
+            className="home-nav-mobile-panel"
+            style={{
+              marginTop: 10,
+              display: "flex",
+              flexDirection: "column",
+              gap: 4,
+              padding: 12,
+              background: "hsl(var(--void) / .96)",
+              backdropFilter: "blur(24px)",
+              WebkitBackdropFilter: "blur(24px)",
+              border: "1px solid hsl(var(--line) / .5)",
+              borderRadius: 14,
+              boxShadow: "0 16px 48px rgba(0,0,0,.5)",
+            }}
+          >
+            {NAV_LINKS.map(([href, label]) => (
+              <a
+                key={href}
+                href={href}
+                onClick={() => setOpen(false)}
+                className="home-nav-link"
+                style={{
+                  padding: "12px 14px",
+                  textDecoration: "none",
+                  fontFamily: "var(--font-body)",
+                  fontSize: "1rem",
+                  fontWeight: 400,
+                  color: "hsl(var(--fog))",
+                  borderRadius: 8,
+                }}
+              >
+                {label}
+              </a>
+            ))}
+            <div
+              style={{
+                height: 1,
+                background: "hsl(var(--line) / .5)",
+                margin: "6px 0",
+              }}
+            />
+            <Link
+              href="/login"
+              onClick={() => setOpen(false)}
+              className="home-nav-link"
+              style={{
+                padding: "12px 14px",
+                textDecoration: "none",
+                fontFamily: "var(--font-body)",
+                fontSize: "1rem",
+                color: "hsl(var(--subtle))",
+                borderRadius: 8,
+              }}
+            >
+              כניסה
+            </Link>
+            <Link
+              href="/signup"
+              onClick={() => setOpen(false)}
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: 7,
+                padding: "13px 20px",
+                background: "var(--grad-bronze)",
+                color: "#fff",
+                fontFamily: "var(--font-body)",
+                fontSize: "1rem",
+                fontWeight: 600,
+                borderRadius: 10,
+                textDecoration: "none",
+                boxShadow:
+                  "0 2px 16px hsl(var(--accent-bright) / .4), inset 0 1px 0 rgba(255,255,255,.18)",
+              }}
+            >
+              התחל בחינם
+            </Link>
+          </div>
+        </>
+      )}
     </header>
   );
 }

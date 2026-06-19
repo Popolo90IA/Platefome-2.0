@@ -39,6 +39,7 @@ next-env.d.ts
 ruvector.db
 .claude-flow/
 .swarm/
+.playwright-mcp/
 
 # 3D assets backups (kept locally only)
 /public/models/_originals/

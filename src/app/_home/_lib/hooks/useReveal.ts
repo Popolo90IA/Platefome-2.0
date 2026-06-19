@@ -54,25 +54,27 @@ export function useHeaderScroll() {
     const inner = header.firstElementChild as HTMLElement | null;
     if (!inner) return;
 
-    ScrollTrigger.create({
+    // NB: on applique les couleurs en CSS direct (pas via gsap.to) car GSAP
+    // ne sait pas parser `var()` dans une couleur — il appelle splitColor(null)
+    // et crash à chaque frame. La transition CSS (définie sur l'inner dans
+    // SiteNav) anime ces propriétés en douceur, et `var()` est résolu nativement.
+    const scrolled = {
+      background: "hsl(var(--void) / .92)",
+      borderColor: "hsl(var(--line))",
+      boxShadow: "0 8px 40px rgba(0,0,0,.6), inset 0 1px 0 hsl(var(--line) / .5)",
+    } as const;
+    const atTop = {
+      background: "hsl(var(--void) / .75)",
+      borderColor: "hsl(var(--line) / .5)",
+      boxShadow: "0 8px 32px rgba(0,0,0,.4), inset 0 1px 0 hsl(var(--line) / .3)",
+    } as const;
+
+    const st = ScrollTrigger.create({
       start: "top+=60 top",
-      onEnter: () =>
-        gsap.to(inner, {
-          duration: 0.35,
-          ease: "power2.out",
-          "--bg": "hsl(var(--void) / .92)",
-          borderColor: "hsl(var(--line))",
-          boxShadow:
-            "0 8px 40px rgba(0,0,0,.6), inset 0 1px 0 hsl(var(--line) / .5)",
-        }),
-      onLeaveBack: () =>
-        gsap.to(inner, {
-          duration: 0.35,
-          ease: "power2.out",
-          borderColor: "hsl(var(--line) / .5)",
-          boxShadow:
-            "0 8px 32px rgba(0,0,0,.4), inset 0 1px 0 hsl(var(--line) / .3)",
-        }),
+      onEnter: () => Object.assign(inner.style, scrolled),
+      onLeaveBack: () => Object.assign(inner.style, atTop),
     });
+
+    return () => st.kill();
   });
 }

@@ -72,7 +72,7 @@ export function HeroSection({
           ללא אפליקציה. ללא הורדה.
         </p>
 
-        <div style={{ width: "100%", marginTop: 16 }}>
+        <div className="hero-fade-e" style={{ width: "100%", marginTop: 16 }}>
           <HeroShowcase
             models={models}
             modelIdx={modelIdx}

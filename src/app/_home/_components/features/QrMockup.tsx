@@ -56,13 +56,13 @@ export function QrMockup() {
       </div>
       <div
         style={{
-          background: "hsl(140,60%,45%,.15)",
-          border: "1px solid hsl(140,60%,45%,.3)",
+          background: "hsl(var(--accent-bright) / .15)",
+          border: "1px solid hsl(var(--accent-bright) / .3)",
           borderRadius: 6,
           padding: "3px 8px",
           fontFamily: "var(--font-body)",
           fontSize: ".7rem",
-          color: "hsl(140,60%,60%)",
+          color: "hsl(var(--accent-bright))",
           flexShrink: 0,
         }}
       >
