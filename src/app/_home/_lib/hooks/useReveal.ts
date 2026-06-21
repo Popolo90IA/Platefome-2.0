@@ -28,7 +28,7 @@ export function useReveal() {
         {
           opacity: 1,
           y: 0,
-          duration: 0.9,
+          duration: 0.55,
           delay,
           ease: "power3.out",
           scrollTrigger: {
