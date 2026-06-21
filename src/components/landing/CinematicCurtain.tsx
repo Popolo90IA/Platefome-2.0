@@ -16,6 +16,19 @@ export function CinematicCurtain() {
   const wordRef     = useRef<HTMLDivElement>(null);
 
   useGSAP(() => {
+    // Reduced-motion : pas de rideau cinématique. On masque immédiatement
+    // l'overlay et on révèle le hero sans animation (les tweens GSAP ne sont
+    // PAS coupés par le `*{animation:none}` global, qui ne vise que le CSS).
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      gsap.set(curtainRef.current, { autoAlpha: 0, pointerEvents: "none" });
+      [".hero-fade-a", ".hero-fade-b", ".hero-fade-c", ".hero-fade-d", ".hero-fade-e", ".hero-fade-f"]
+        .forEach((sel) => {
+          const el = document.querySelector(sel);
+          if (el) gsap.set(el, { opacity: 1, y: 0, filter: "none" });
+        });
+      return;
+    }
+
     // Sélectionner les lettres via querySelectorAll dans le container du mot
     // — ordre garanti par l'ordre du DOM
     const letters = Array.from(

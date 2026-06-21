@@ -16,7 +16,7 @@ export function StatsHeading() {
             fontWeight: 500,
           }}
         >
-          מספרים שמדברים
+          היכולות
         </span>
         <div style={{ width: 32, height: 1, background: "hsl(var(--accent-bright) / .35)" }} />
       </div>
@@ -30,9 +30,8 @@ export function StatsHeading() {
           margin: 0,
         }}
       >
-        המסעדות שבחרו{" "}
-        <em style={{ color: "hsl(var(--accent-bright))", fontStyle: "italic" }}>PLATFORME</em>{" "}
-        מרוויחות יותר
+        כל מה שהופך תפריט ל
+        <em style={{ color: "hsl(var(--accent-bright))", fontStyle: "italic" }}>חוויה</em>
       </h2>
     </div>
   );

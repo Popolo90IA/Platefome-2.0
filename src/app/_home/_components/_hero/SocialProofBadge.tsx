@@ -29,11 +29,11 @@ export function SocialProofBadge() {
         style={{
           fontFamily: "var(--font-body)",
           fontSize: ".8125rem",
-          color: "hsl(28,62%,58%)",
+          color: "hsl(var(--accent-warm))",
           fontWeight: 500,
         }}
       >
-        +200 מסעדות כבר משתמשות בפלטפורמה
+        תפריט חי · כל מנה בתלת-מימד
       </span>
     </div>
   );

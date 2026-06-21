@@ -40,14 +40,20 @@ export default function HomePage() {
   return (
     <DirectionalTransition>
       <div
+        className="dark"
         style={{
           background: "hsl(var(--void))",
           color: "hsl(var(--cream))",
+          colorScheme: "dark",
           overflowX: "hidden",
           minHeight: "100vh",
         }}
       >
         <style>{HOME_KEYFRAMES}</style>
+        {/* Fallback no-JS : hero + sections reveal ne doivent jamais rester invisibles. */}
+        <noscript>
+          <style>{`.hero-fade-a,.hero-fade-b,.hero-fade-c,.hero-fade-d,.hero-fade-e,.hero-fade-f,.reveal,.reveal-left,.reveal-scale,.reveal-blur{opacity:1!important;transform:none!important;filter:none!important}`}</style>
+        </noscript>
 
         <CinematicCurtain />
 

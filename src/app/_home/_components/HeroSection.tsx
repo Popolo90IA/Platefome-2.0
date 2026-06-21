@@ -94,7 +94,7 @@ export function HeroSection() {
                 position: "absolute",
                 inset: 0,
                 transform: "translate(18px, 18px)",
-                border: "1px solid hsl(28,62%,42%,.32)",
+                border: "1px solid hsl(var(--accent-bright) / .32)",
                 borderRadius: 32,
                 pointerEvents: "none",
               }}
@@ -106,7 +106,7 @@ export function HeroSection() {
                 position: "absolute",
                 inset: "-12%",
                 background:
-                  "radial-gradient(ellipse at 50% 50%, hsl(28,62%,42%,.18) 0%, transparent 65%)",
+                  "radial-gradient(ellipse at 50% 50%, hsl(var(--accent-bright) / .18) 0%, transparent 65%)",
                 filter: "blur(40px)",
                 pointerEvents: "none",
               }}

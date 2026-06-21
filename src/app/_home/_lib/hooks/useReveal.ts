@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
@@ -9,37 +10,63 @@ if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger, useGSAP);
 }
 
+const REVEAL_SELECTOR = ".reveal, .reveal-left, .reveal-scale, .reveal-blur";
+
 /**
- * Scroll-reveal animation for any element with class `.reveal`,
- * `.reveal-left`, `.reveal-scale`, or `.reveal-blur`. Respects
- * `prefers-reduced-motion`.
+ * Scroll-reveal pour tout élément `.reveal`, `.reveal-left`, `.reveal-scale`
+ * ou `.reveal-blur`. Pilote la classe `.visible` (les transitions vivent dans
+ * globals.css). IntersectionObserver plutôt que ScrollTrigger : il ne dépend
+ * pas de positions calculées avant le layout final, et un failsafe garantit
+ * que le contenu ne reste JAMAIS invisible (no-scroll, headless, crawlers).
+ * Respecte `prefers-reduced-motion`.
  */
 export function useReveal() {
-  useGSAP(() => {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    const els = gsap.utils.toArray<HTMLElement>(
-      ".reveal, .reveal-left, .reveal-scale, .reveal-blur",
+  useEffect(() => {
+    const els = Array.from(
+      document.querySelectorAll<HTMLElement>(REVEAL_SELECTOR),
     );
-    els.forEach((el) => {
-      const delay = Number(el.dataset.delay || 0) / 1000;
-      gsap.fromTo(
-        el,
-        { opacity: 0, y: 36 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 0.55,
-          delay,
-          ease: "power3.out",
-          scrollTrigger: {
-            trigger: el,
-            start: "top 94%",
-            toggleActions: "play none none none",
-          },
-        },
-      );
-    });
-  });
+    if (els.length === 0) return;
+
+    const revealAll = () => els.forEach((el) => el.classList.add("visible"));
+
+    // Reduced motion : le CSS force déjà la visibilité ; rien à observer.
+    // IO indisponible : on révèle tout immédiatement (jamais de blank).
+    if (
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches ||
+      typeof IntersectionObserver === "undefined"
+    ) {
+      revealAll();
+      return;
+    }
+
+    const io = new IntersectionObserver(
+      (entries, obs) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          const el = entry.target as HTMLElement;
+          const delay = Number(el.dataset.delay || 0);
+          if (delay) {
+            window.setTimeout(() => el.classList.add("visible"), delay);
+          } else {
+            el.classList.add("visible");
+          }
+          obs.unobserve(el);
+        });
+      },
+      { rootMargin: "0px 0px -6% 0px", threshold: 0.01 },
+    );
+
+    els.forEach((el) => io.observe(el));
+
+    // Filet de sécurité : ne jamais laisser du contenu caché si aucun scroll
+    // n'arrive (onglet en arrière-plan au load, rendu headless, robots).
+    const failsafe = window.setTimeout(revealAll, 2500);
+
+    return () => {
+      io.disconnect();
+      window.clearTimeout(failsafe);
+    };
+  }, []);
 }
 
 /**

@@ -43,7 +43,7 @@ export function HeroVideo() {
         style={{
           position: "relative",
           background: CARD_BG,
-          border: "1px solid hsl(28,62%,42%,.22)",
+          border: "1px solid hsl(var(--accent-bright) / .22)",
           borderRadius: 28,
           padding: "clamp(10px, 1.6vw, 16px)",
           boxShadow:

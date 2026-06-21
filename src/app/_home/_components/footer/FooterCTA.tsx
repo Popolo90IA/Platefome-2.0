@@ -45,7 +45,7 @@ export function FooterCTA() {
             marginBottom: 36,
           }}
         >
-          הצטרף ל-200+ מסעדות שכבר מגדילות את ההכנסות עם PLATFORME.
+          הפכו את התפריט לחוויה בתלת-מימד — בלי אפליקציה, בלי קוד.
         </p>
         <div
           style={{
