@@ -3,6 +3,13 @@
     "perplexity-docs": {
       "type": "http",
       "url": "https://docs.perplexity.ai/mcp"
+    },
+    "shadcn": {
+      "command": "npx",
+      "args": [
+        "shadcn@latest",
+        "mcp"
+      ]
     }
   }
 }

@@ -73,6 +73,10 @@ export const HOME_KEYFRAMES = `
     .hero-cols{flex-direction:column !important}
     .hero-text{max-width:100% !important;padding-left:0 !important}
     .hero-3d{max-width:100% !important}
+    .hero-split{grid-template-columns:1fr !important;gap:32px !important}
+    .hero-video-col{order:-1 !important}
+    .hero-text-col{align-items:center !important;text-align:center !important}
+    .hero-video-deco{display:none !important}
     .features-grid{grid-template-columns:1fr !important}
     .gallery-grid{grid-template-columns:repeat(2,1fr) !important}
     .pricing-grid{grid-template-columns:1fr !important}

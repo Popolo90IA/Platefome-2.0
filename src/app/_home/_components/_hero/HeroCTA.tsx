@@ -9,7 +9,7 @@ export function HeroCTA() {
         display: "flex",
         gap: 12,
         flexWrap: "wrap",
-        justifyContent: "center",
+        justifyContent: "flex-start",
         marginTop: 32,
       }}
     >

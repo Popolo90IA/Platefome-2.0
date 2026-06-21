@@ -17,7 +17,7 @@ export function HeroSocialProof() {
         alignItems: "center",
         gap: 14,
         marginTop: 28,
-        justifyContent: "center",
+        justifyContent: "flex-start",
       }}
     >
       <div style={{ display: "flex" }}>
