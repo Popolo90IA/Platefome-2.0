@@ -72,30 +72,32 @@ export const GALLERY_DISHES: readonly GalleryDish[] = [
   },
 ];
 
+// Faits produit vérifiables — pas de stats d'adoption/satisfaction inventées
+// (cf. CLAUDE.md « pas de stats inventées »).
 export const HOME_STATS: readonly StatItem[] = [
   {
-    num: "+200",
-    label: "מסעדות פעילות",
-    sub: "לקוחות ברחבי הארץ משתמשים בפלטפורמה בכל יום",
-    badge: "+40% השנה",
+    num: "360°",
+    label: "כל מנה בתלת-מימד",
+    sub: "הלקוח מסובב את הצלחת, מתקרב ובוחן כל פרט לפני שהוא מזמין.",
+    badge: "3D · AR",
   },
   {
-    num: "×3.2",
-    label: "יותר הזמנות",
-    sub: "בממוצע בהשוואה לתפריט נייר רגיל",
-    badge: "מוכח בנתונים",
+    num: "QR",
+    label: "סריקה אחת",
+    sub: "סורקים וצופים מיד בדפדפן — בלי הורדה ובלי התקנה.",
+    badge: "ללא אפליקציה",
+  },
+  {
+    num: "3",
+    label: "שפות",
+    sub: "עברית, אנגלית וצרפתית — עם תמיכת RTL מלאה.",
+    badge: "רב-לשוני",
   },
   {
     num: "<0.8s",
     label: "זמן טעינה",
-    sub: "התפריט נפתח מיידית — ללא אפליקציה, ללא המתנה",
-    badge: "ביצועים גבוהים",
-  },
-  {
-    num: "98%",
-    label: "שביעות רצון",
-    sub: "מהלקוחות ממשיכים לאחר תקופת הניסיון",
-    badge: "שימור לקוחות",
+    sub: "התפריט נפתח כמעט מיידית, ישירות מהדפדפן.",
+    badge: "מהיר",
   },
 ];
 

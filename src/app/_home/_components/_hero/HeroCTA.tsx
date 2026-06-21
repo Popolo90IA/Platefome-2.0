@@ -9,7 +9,7 @@ export function HeroCTA() {
         display: "flex",
         gap: 12,
         flexWrap: "wrap",
-        justifyContent: "center",
+        justifyContent: "flex-start",
         marginTop: 32,
       }}
     >
@@ -34,6 +34,8 @@ export function HeroCTA() {
           transition: "filter .2s,transform .18s,box-shadow .2s",
         }}
         onMouseOver={(e) => {
+          if (!window.matchMedia("(hover: hover) and (pointer: fine)").matches)
+            return;
           const el = e.currentTarget as HTMLAnchorElement;
           el.style.filter = "brightness(1.1)";
           el.style.transform = "translateY(-2px)";
@@ -46,6 +48,14 @@ export function HeroCTA() {
           el.style.transform = "";
           el.style.boxShadow =
             "0 4px 24px hsl(var(--accent-bright) / .4), inset 0 1px 0 rgba(255,255,255,.18)";
+        }}
+        onPointerDown={(e) => {
+          (e.currentTarget as HTMLAnchorElement).style.transform =
+            "translateY(-2px) scale(0.97)";
+        }}
+        onPointerUp={(e) => {
+          const el = e.currentTarget as HTMLAnchorElement;
+          el.style.transform = e.pointerType === "mouse" ? "translateY(-2px)" : "";
         }}
       >
         התחל בחינם
@@ -80,9 +90,11 @@ export function HeroCTA() {
           borderRadius: 10,
           textDecoration: "none",
           backdropFilter: "blur(8px)",
-          transition: "border-color .2s,color .2s,background .2s",
+          transition: "border-color .2s,color .2s,background .2s,transform .18s",
         }}
         onMouseOver={(e) => {
+          if (!window.matchMedia("(hover: hover) and (pointer: fine)").matches)
+            return;
           const el = e.currentTarget as HTMLAnchorElement;
           el.style.borderColor = "hsl(var(--accent-bright) / .35)";
           el.style.color = "#fff";
@@ -93,6 +105,12 @@ export function HeroCTA() {
           el.style.borderColor = "hsl(var(--white) / .1)";
           el.style.color = "hsl(var(--subtle))";
           el.style.background = "hsl(var(--white) / .06)";
+        }}
+        onPointerDown={(e) => {
+          (e.currentTarget as HTMLAnchorElement).style.transform = "scale(0.97)";
+        }}
+        onPointerUp={(e) => {
+          (e.currentTarget as HTMLAnchorElement).style.transform = "";
         }}
       >
         <svg

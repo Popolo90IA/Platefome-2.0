@@ -1,0 +1,109 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-06-22T00:00:00.000Z",
+  "title": "Design System: PLATFORME",
+  "extensions": {
+    "colorMeta": {
+      "bronze": { "role": "primary", "displayName": "Bronze Signature", "canonical": "hsl(28 62% 52%)", "tonalRamp": ["#2a1a0d", "#46280f", "#643813", "#854a1c", "#ae6729", "#c2773a", "#d39660", "#e7c39c"] },
+      "terracotta": { "role": "secondary", "displayName": "Terracotta", "canonical": "hsl(22 70% 50%)", "tonalRamp": ["#3a1707", "#5a230b", "#7c3110", "#a64216", "#d96826", "#e07c43", "#ea9e72", "#f3c6a8"] },
+      "void-dark": { "role": "neutral", "displayName": "Warm Void", "canonical": "hsl(24 8% 6%)", "tonalRamp": ["#110f0e", "#1e1b19", "#322e2a", "#4a443e", "#6b6258", "#a59a8e", "#d8cfc3", "#f3ebdd"] },
+      "sand": { "role": "neutral", "displayName": "Beige Sable", "canonical": "hsl(38 28% 94%)", "tonalRamp": ["#302720", "#4a3e33", "#6b5d4c", "#9a8a74", "#c4b6a0", "#e3d8c6", "#f3ebdd", "#faf6ef"] },
+      "sage": { "role": "tertiary", "displayName": "Live Sage", "canonical": "hsl(142 32% 46%)", "tonalRamp": ["#0e2417", "#173a26", "#205237", "#2e6f4a", "#4f9d6b", "#74b58c", "#a0cdb1", "#cfe6d8"] }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display", "purpose": "Titres hero, Cormorant Garamond. Un mot en italique bronze." },
+      "body": { "displayName": "Body", "purpose": "Texte courant et UI, DM Sans / Heebo." },
+      "label": { "displayName": "Label/Mono", "purpose": "Eyebrows et chips, DM Mono tracé UPPERCASE." }
+    },
+    "shadows": [
+      { "name": "card", "value": "0 0 0 1px hsl(24 6% 18%), 0 16px 48px -16px rgba(0,0,0,.8)", "purpose": "Cards sur fond sombre." },
+      { "name": "cta", "value": "0 2px 16px hsl(28 62% 38% / .5), inset 0 1px 0 rgba(255,255,255,.08)", "purpose": "Boutons primaires bronze." },
+      { "name": "glow-gold", "value": "0 0 0 1px hsl(22 70% 50% / .3), 0 0 32px hsl(22 70% 50% / .2)", "purpose": "Halo des éléments mis en avant." },
+      { "name": "deep", "value": "0 24px 64px -24px rgba(0,0,0,.7)", "purpose": "Visuel hero, modales." }
+    ],
+    "motion": [
+      { "name": "ease-out-expo", "value": "cubic-bezier(0.16, 1, 0.3, 1)", "purpose": "Easing par défaut des reveals et transitions d'état." },
+      { "name": "curtain", "value": "power4.inOut", "purpose": "Ouverture des panneaux de l'intro cinématique (GSAP)." }
+    ],
+    "breakpoints": [
+      { "name": "mobile", "value": "600px" },
+      { "name": "tablet", "value": "900px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "CTA principal, gradient bronze. Hero, conversions.",
+      "html": "<a class=\"ds-btn-primary\" href=\"#\">התחל בחינם<svg width=\"15\" height=\"15\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"m9 18 6-6-6-6\"/></svg></a>",
+      "css": ".ds-btn-primary { display: inline-flex; align-items: center; gap: 8px; padding: 14px 32px; background: linear-gradient(135deg, hsl(28 62% 52%), hsl(22 72% 56%)); color: #faf6ef; font-family: 'DM Sans', sans-serif; font-size: .9375rem; font-weight: 600; letter-spacing: -.01em; border-radius: 10px; text-decoration: none; box-shadow: 0 2px 16px hsl(28 62% 38% / .5), inset 0 1px 0 rgba(255,255,255,.18); transition: filter .2s, transform .18s, box-shadow .2s; } .ds-btn-primary:hover { filter: brightness(1.1); transform: translateY(-2px); box-shadow: 0 8px 32px hsl(28 62% 38% / .6), inset 0 1px 0 rgba(255,255,255,.18); } .ds-btn-primary:active { transform: translateY(-2px) scale(.97); } .ds-btn-primary:focus-visible { outline: 2px solid hsl(28 62% 60%); outline-offset: 3px; }"
+    },
+    {
+      "name": "Ghost Button",
+      "kind": "button",
+      "refersTo": "button-ghost",
+      "description": "CTA secondaire en verre, sur fond sombre.",
+      "html": "<a class=\"ds-btn-ghost\" href=\"#\"><svg width=\"15\" height=\"15\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><polygon points=\"5 3 19 12 5 21 5 3\"/></svg>ראה הדגמה</a>",
+      "css": ".ds-btn-ghost { display: inline-flex; align-items: center; gap: 8px; padding: 14px 28px; background: rgba(255,255,255,.06); color: #a59a8e; font-family: 'DM Sans', sans-serif; font-size: .9375rem; font-weight: 500; letter-spacing: -.01em; border: 1px solid rgba(255,255,255,.1); border-radius: 10px; text-decoration: none; backdrop-filter: blur(8px); transition: border-color .2s, color .2s, background .2s, transform .18s; } .ds-btn-ghost:hover { border-color: hsl(28 62% 52% / .35); color: #fff; background: hsl(28 62% 52% / .08); } .ds-btn-ghost:active { transform: scale(.97); } .ds-btn-ghost:focus-visible { outline: 2px solid hsl(28 62% 60%); outline-offset: 3px; }"
+    },
+    {
+      "name": "Chip 360",
+      "kind": "chip",
+      "refersTo": "chip",
+      "description": "Pilule méta gradient bronze (ex. 360°).",
+      "html": "<span class=\"ds-chip\">360°</span>",
+      "css": ".ds-chip { display: inline-flex; align-items: center; padding: 7px 14px; background: linear-gradient(135deg, hsl(28 62% 52%), hsl(22 72% 56%)); color: #fff; font-family: 'DM Mono', monospace; font-size: .7rem; font-weight: 600; letter-spacing: .12em; border-radius: 99px; box-shadow: 0 8px 24px hsl(28 62% 28% / .4); }"
+    },
+    {
+      "name": "Live Badge",
+      "kind": "chip",
+      "refersTo": "chip-live",
+      "description": "Pilule statut avec dot sage pulsant.",
+      "html": "<span class=\"ds-badge-live\"><i class=\"ds-dot\"></i>תפריט חי · כל מנה בתלת-מימד</span>",
+      "css": ".ds-badge-live { display: inline-flex; align-items: center; gap: 8px; padding: 6px 16px 6px 12px; background: hsl(28 62% 52% / .1); border: 1px solid hsl(28 62% 52% / .22); border-radius: 99px; font-family: 'DM Sans', sans-serif; font-size: .8125rem; font-weight: 500; color: hsl(28 62% 58%); } .ds-badge-live .ds-dot { width: 7px; height: 7px; border-radius: 50%; background: hsl(142 52% 50%); animation: ds-pulse 2.2s ease-in-out infinite; } @keyframes ds-pulse { 0%,100% { box-shadow: 0 0 0 0 hsl(28 62% 52% / .35); } 50% { box-shadow: 0 0 0 8px hsl(28 62% 52% / 0); } }"
+    },
+    {
+      "name": "Dark Card",
+      "kind": "card",
+      "refersTo": "card-dark",
+      "description": "Cadre visuel premium, trait bronze + ombre profonde.",
+      "html": "<div class=\"ds-card\"><div class=\"ds-card-media\"></div></div>",
+      "css": ".ds-card { background: #1e1b19; border: 1px solid hsl(28 62% 52% / .22); border-radius: 28px; padding: 16px; box-shadow: 0 28px 80px -24px hsl(28 62% 28% / .28), 0 2px 0 hsl(36 30% 98% / .06) inset; } .ds-card-media { aspect-ratio: 1/1; border-radius: 16px; background: radial-gradient(ellipse at 50% 40%, #3a322b, #161311); }"
+    }
+  ],
+  "narrative": {
+    "northStar": "Le présentoir d'artisan, sous vitrine",
+    "overview": "PLATFORME fait du menu une expérience : chaque plat se regarde en 3D / 360° avant d'être commandé. Deux mondes sous une même identité bronze : la landing de marque, sombre et cinématique, et l'app outil, claire en beige sable. La chaleur vient de l'accent bronze, du serif Cormorant et de l'imagerie — jamais d'un fond beige par défaut. Ton éditorial et retenu, un seul geste fort par écran, RTL hébreu d'abord.",
+    "keyCharacteristics": [
+      "Bronze comme voix unique, jamais dilué dans des neutres.",
+      "Cormorant Garamond display + DM Sans body + DM Mono labels.",
+      "Landing sombre cinématique ; app claire beige sable.",
+      "RTL hébreu d'abord, un geste fort par écran.",
+      "Imagerie / 3D au centre : montre le plat, ne le raconte pas."
+    ],
+    "rules": [
+      { "name": "The One-Bronze Rule", "body": "Une seule famille d'accent : bronze → terracotta. Les couleurs « plat » vivent dans l'imagerie, pas dans les composants.", "section": "colors" },
+      { "name": "The Earned-Warmth Rule", "body": "La chaleur est portée par l'accent, le serif et les photos — jamais par un fond beige tiède posé par défaut sur une surface sombre.", "section": "colors" },
+      { "name": "The Signature-Word Rule", "body": "Un seul mot par titre passe en italique Cormorant avec le gradient bronze (background-clip: text), fallback color solide requis.", "section": "typography" },
+      { "name": "The Warm-Shadow Rule", "body": "Ombres et lueurs teintées bronze, pas grises/noires neutres. La profondeur est lumineuse.", "section": "elevation" }
+    ],
+    "dos": [
+      "Do verrouiller la landing en thème sombre (.dark sur la racine).",
+      "Do réserver le gradient background-clip: text à un mot signature par titre, avec fallback color solide.",
+      "Do porter la chaleur par l'accent bronze, le serif et l'imagerie.",
+      "Do honorer prefers-reduced-motion sur toutes les animations, y compris l'intro GSAP.",
+      "Do garder un seul geste fort par écran ; varier l'espacement pour le rythme.",
+      "Do penser RTL d'abord (ancrage start, insetInlineStart, bidi-override sur le wordmark latin)."
+    ],
+    "donts": [
+      "Don't inventer de statistiques (4.9/5, +200 restaurants) : ancrer un chiffre réel ou le retirer.",
+      "Don't poser un fond beige tiède par défaut sur une surface qui doit être sombre.",
+      "Don't utiliser le gradient-text comme décoration ailleurs que le mot signature.",
+      "Don't empiler le template SaaS hero-metric ni des grilles de cards identiques.",
+      "Don't mettre d'emoji dans l'UI.",
+      "Don't animer width / height / padding / margin ; utiliser transform / opacity.",
+      "Don't poser de texte gris sur un fond coloré."
+    ]
+  }
+}

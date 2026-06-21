@@ -16,6 +16,41 @@ export function CinematicCurtain() {
   const wordRef     = useRef<HTMLDivElement>(null);
 
   useGSAP(() => {
+    const HERO_FADES = [
+      ".hero-fade-a", ".hero-fade-b", ".hero-fade-c",
+      ".hero-fade-d", ".hero-fade-e", ".hero-fade-f",
+    ];
+    // Masque l'overlay et révèle le hero sans animation (les tweens GSAP ne
+    // sont PAS coupés par le `*{animation:none}` global, qui ne vise que le CSS).
+    const revealInstantly = () => {
+      gsap.set(curtainRef.current, { autoAlpha: 0, pointerEvents: "none" });
+      HERO_FADES.forEach((sel) => {
+        const el = document.querySelector(sel);
+        if (el) gsap.set(el, { opacity: 1, y: 0, filter: "none" });
+      });
+    };
+
+    // Reduced-motion : pas de rideau cinématique.
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      revealInstantly();
+      return;
+    }
+
+    // Intro déjà jouée cette session : on ne la rejoue pas à chaque retour sur /
+    // (sessionStorage protégé pour le mode privé Safari qui peut throw).
+    const INTRO_KEY = "platforme:intro-played";
+    let alreadyPlayed = false;
+    try {
+      alreadyPlayed = sessionStorage.getItem(INTRO_KEY) === "1";
+    } catch {}
+    if (alreadyPlayed) {
+      revealInstantly();
+      return;
+    }
+    try {
+      sessionStorage.setItem(INTRO_KEY, "1");
+    } catch {}
+
     // Sélectionner les lettres via querySelectorAll dans le container du mot
     // — ordre garanti par l'ordre du DOM
     const letters = Array.from(

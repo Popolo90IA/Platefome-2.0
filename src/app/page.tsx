@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { CinematicCurtain } from "@/components/landing/CinematicCurtain";
 import { DirectionalTransition } from "@/components/transitions/DirectionalTransition";
 
-import { MODELS } from "./_home/_lib/constants";
 import { HOME_KEYFRAMES, GRAIN_SVG } from "./_home/_lib/keyframes";
 import { useReveal, useHeaderScroll } from "./_home/_lib/hooks/useReveal";
 import type { GalleryDish } from "./_home/_lib/types";
@@ -12,6 +11,7 @@ import type { GalleryDish } from "./_home/_lib/types";
 import { SiteNav } from "./_home/_components/SiteNav";
 import { HeroSection } from "./_home/_components/HeroSection";
 import { StatsSection } from "./_home/_components/StatsSection";
+import { ShowcaseSection } from "./_home/_components/ShowcaseSection";
 import { FeaturesSection } from "./_home/_components/FeaturesSection";
 import { GallerySection } from "./_home/_components/GallerySection";
 import { PricingSection } from "./_home/_components/PricingSection";
@@ -26,12 +26,7 @@ export default function HomePage() {
   useReveal();
   useHeaderScroll();
 
-  const [modelIdx, setModelIdx] = useState(0);
   const [selectedDish, setSelectedDish] = useState<GalleryDish | null>(null);
-
-  const prev = () =>
-    setModelIdx((i) => (i - 1 + MODELS.length) % MODELS.length);
-  const next = () => setModelIdx((i) => (i + 1) % MODELS.length);
 
   // Close modal on Escape
   useEffect(() => {
@@ -42,17 +37,32 @@ export default function HomePage() {
     return () => window.removeEventListener("keydown", handler);
   }, []);
 
+  // La home est dark : on applique `.dark` sur <html> tant qu'on est dessus,
+  // pour que les UI rendues au niveau <body> (toasts) héritent du thème sombre
+  // au lieu des tokens clairs `:root`. Retiré en quittant la route.
+  useEffect(() => {
+    const root = document.documentElement;
+    root.classList.add("dark");
+    return () => root.classList.remove("dark");
+  }, []);
+
   return (
     <DirectionalTransition>
       <div
+        className="dark"
         style={{
           background: "hsl(var(--void))",
           color: "hsl(var(--cream))",
+          colorScheme: "dark",
           overflowX: "hidden",
           minHeight: "100vh",
         }}
       >
         <style>{HOME_KEYFRAMES}</style>
+        {/* Fallback no-JS : hero + sections reveal ne doivent jamais rester invisibles. */}
+        <noscript>
+          <style>{`.hero-fade-a,.hero-fade-b,.hero-fade-c,.hero-fade-d,.hero-fade-e,.hero-fade-f,.reveal,.reveal-left,.reveal-scale,.reveal-blur{opacity:1!important;transform:none!important;filter:none!important}`}</style>
+        </noscript>
 
         <CinematicCurtain />
 
@@ -78,15 +88,10 @@ export default function HomePage() {
 
         <SiteNav />
 
-        <HeroSection
-          models={MODELS}
-          modelIdx={modelIdx}
-          onPrev={prev}
-          onNext={next}
-          onSelect={setModelIdx}
-        />
+        <HeroSection />
 
         <StatsSection />
+        <ShowcaseSection />
         <FeaturesSection />
         <GallerySection onSelectDish={setSelectedDish} />
         <PricingSection />

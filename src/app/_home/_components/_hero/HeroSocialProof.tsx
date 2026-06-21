@@ -1,12 +1,11 @@
 "use client";
 
-const AVATAR_COLORS = [
-  "hsl(28,60%,55%)",
-  "hsl(200,60%,55%)",
-  "hsl(140,50%,50%)",
-  "hsl(280,50%,60%)",
-  "hsl(0,60%,60%)",
-];
+/**
+ * HeroSocialProof — rangée de preuves *produit* (faits vérifiables), pas de
+ * statistiques inventées (cf. CLAUDE.md « pas de stats inventées »). Remplace
+ * l'ancien stack d'avatars + note 4.9/5 fabriquée.
+ */
+const PROOF_ITEMS = ["ללא אפליקציה", "סריקת QR", "תלת-מימד · 360°"];
 
 export function HeroSocialProof() {
   return (
@@ -15,65 +14,42 @@ export function HeroSocialProof() {
       style={{
         display: "flex",
         alignItems: "center",
-        gap: 14,
+        gap: 18,
         marginTop: 28,
-        justifyContent: "center",
+        flexWrap: "wrap",
+        justifyContent: "flex-start",
       }}
     >
-      <div style={{ display: "flex" }}>
-        {AVATAR_COLORS.map((c, i) => (
-          <div
-            key={i}
-            style={{
-              width: 28,
-              height: 28,
-              borderRadius: "50%",
-              background: c,
-              border: "2px solid hsl(var(--void))",
-              marginLeft: i === 0 ? 0 : -7,
-              flexShrink: 0,
-            }}
-          />
-        ))}
-      </div>
-      <div
-        style={{
-          width: 1,
-          height: 24,
-          background: "hsl(var(--white) / .1)",
-        }}
-      />
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "flex-end",
-          gap: 2,
-        }}
-      >
-        <div style={{ display: "flex", gap: 2 }}>
-          {[1, 2, 3, 4, 5].map((i) => (
-            <svg
-              key={i}
-              width="11"
-              height="11"
-              viewBox="0 0 24 24"
-              fill="hsl(var(--gold))"
-            >
-              <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
-            </svg>
-          ))}
-        </div>
-        <span
-          style={{
-            fontFamily: "var(--font-body)",
-            fontSize: ".75rem",
-            color: "hsl(var(--subtle))",
-          }}
+      {PROOF_ITEMS.map((label) => (
+        <div
+          key={label}
+          style={{ display: "inline-flex", alignItems: "center", gap: 7 }}
         >
-          מדורג 4.9/5 על ידי 200+ מסעדות
-        </span>
-      </div>
+          <svg
+            width="15"
+            height="15"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="hsl(var(--accent-warm))"
+            strokeWidth="2.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            aria-hidden
+          >
+            <path d="M20 6 9 17l-5-5" />
+          </svg>
+          <span
+            style={{
+              fontFamily: "var(--font-body)",
+              fontSize: ".8125rem",
+              color: "hsl(var(--subtle))",
+              fontWeight: 500,
+            }}
+          >
+            {label}
+          </span>
+        </div>
+      ))}
     </div>
   );
 }

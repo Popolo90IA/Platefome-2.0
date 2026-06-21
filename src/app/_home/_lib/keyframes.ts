@@ -11,13 +11,8 @@ export const HOME_KEYFRAMES = `
   @keyframes marqueeScrollReverse { from{transform:translateX(-50%)} to{transform:translateX(0)} }
   @keyframes pulseGlow { 0%,100%{opacity:.5;transform:scale(1)} 50%{opacity:1;transform:scale(1.12)} }
   @keyframes fadeUp { from{opacity:0;transform:translateY(36px)} to{opacity:1;transform:translateY(0)} }
-  @keyframes pricingPulse {
-    0%,100%{box-shadow:0 0 0 1px hsl(var(--line) / .18),0 40px 80px -24px rgba(0,0,0,.7)}
-    50%{box-shadow:0 0 0 1px hsl(var(--abyss) / .42),0 40px 80px -24px rgba(0,0,0,.7),0 0 80px hsl(var(--abyss) / .05)}
-  }
   @keyframes shimmerCard { 0%{background-position:-200% 0} 100%{background-position:200% 0} }
   @keyframes letterReveal { from{opacity:0;transform:translateY(60px) skewY(4deg)} to{opacity:1;transform:translateY(0) skewY(0deg)} }
-  @keyframes lineExpand { from{scaleX:0} to{scaleX:1} }
   @keyframes subtlePulse { 0%,100%{opacity:.6} 50%{opacity:1} }
   @keyframes floatY { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
   @keyframes kineticWord {
@@ -37,7 +32,6 @@ export const HOME_KEYFRAMES = `
     100%    {transform:translateY(0);opacity:1}
   }
   @keyframes scrollIndicator { 0%{transform:translateY(0);opacity:1} 100%{transform:translateY(18px);opacity:0} }
-  @keyframes stepProgress { from{height:0} to{height:100%} }
   @keyframes fadeIn { from{opacity:0} to{opacity:1} }
   @keyframes heroFadeIn { from{opacity:0} to{opacity:1} }
   @keyframes slideUp { from{opacity:0;transform:translateY(32px) scale(.97)} to{opacity:1;transform:translateY(0) scale(1)} }
@@ -46,6 +40,7 @@ export const HOME_KEYFRAMES = `
   @keyframes aurora3 { 0%,100%{transform:translate(0,0) scale(0.9)} 50%{transform:translate(-60px,90px) scale(1.15)} }
   @keyframes navPill { from{opacity:0;transform:translateX(-50%) translateY(-16px)} to{opacity:1;transform:translateX(-50%) translateY(0)} }
   @keyframes badgeDot { 0%,100%{box-shadow:0 0 0 0 hsl(var(--accent-bright) / .35)} 50%{box-shadow:0 0 0 8px hsl(var(--accent-bright) / 0)} }
+  @keyframes showcaseBounce { 0%,100%{transform:translateY(0);opacity:.6} 50%{transform:translateY(6px);opacity:1} }
 
   /* ── Hero elements: initial hidden, revealed by GSAP CinematicCurtain ── */
   .hero-fade-a,.hero-fade-b,.hero-fade-c,.hero-fade-d,.hero-fade-e,.hero-fade-f {
@@ -58,10 +53,10 @@ export const HOME_KEYFRAMES = `
       transform: none !important;
     }
   }
-  .fade-a{animation:fadeUp 1s cubic-bezier(.16,1,.3,1) both}
-  .fade-b{animation:fadeUp 1s cubic-bezier(.16,1,.3,1) .12s both}
-  .fade-c{animation:fadeUp 1s cubic-bezier(.16,1,.3,1) .24s both}
-  .fade-d{animation:fadeUp 1s cubic-bezier(.16,1,.3,1) .36s both}
+  .fade-a{animation:fadeUp .6s cubic-bezier(.16,1,.3,1) both}
+  .fade-b{animation:fadeUp .6s cubic-bezier(.16,1,.3,1) .08s both}
+  .fade-c{animation:fadeUp .6s cubic-bezier(.16,1,.3,1) .16s both}
+  .fade-d{animation:fadeUp .6s cubic-bezier(.16,1,.3,1) .24s both}
   .kinetic-a{position:absolute;inset:0;display:flex;align-items:flex-start;overflow:hidden}
   .kinetic-a>span{display:block;animation:kineticWord 9s cubic-bezier(.76,0,.24,1) infinite}
   .kinetic-b{position:absolute;inset:0;display:flex;align-items:flex-start;overflow:hidden}
@@ -72,6 +67,10 @@ export const HOME_KEYFRAMES = `
     .hero-cols{flex-direction:column !important}
     .hero-text{max-width:100% !important;padding-left:0 !important}
     .hero-3d{max-width:100% !important}
+    .hero-split{grid-template-columns:1fr !important;gap:32px !important}
+    .hero-video-col{order:-1 !important}
+    .hero-text-col{align-items:center !important;text-align:center !important}
+    .hero-video-deco{display:none !important}
     .features-grid{grid-template-columns:1fr !important}
     .gallery-grid{grid-template-columns:repeat(2,1fr) !important}
     .pricing-grid{grid-template-columns:1fr !important}

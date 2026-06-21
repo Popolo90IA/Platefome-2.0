@@ -5,7 +5,7 @@ import { MOCKUP } from "./styles";
 const BARS = [30, 50, 40, 65, 55, 80, 100];
 
 /**
- * BarChartMockup — graphe en barres "+30% הזמנות".
+ * BarChartMockup — mockup illustratif d'un graphe d'analytics (commandes / 7 jours).
  */
 export function BarChartMockup() {
   return (

@@ -41,7 +41,14 @@ ruvector.db
 .swarm/
 .playwright-mcp/
 
+# impeccable runtime (config is committed, cache/sessions are local)
+.impeccable/hook.cache.json
+.impeccable/live/sessions/
+
 # 3D assets backups (kept locally only)
 /public/models/_originals/
 public/brand/cloche-source.jpeg
 public/brand/cloche-source.png
+
+# video masters (compressed versions shipped in /public)
+/media-src/

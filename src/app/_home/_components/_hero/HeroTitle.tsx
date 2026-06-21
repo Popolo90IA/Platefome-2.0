@@ -2,51 +2,51 @@
 
 export function HeroTitle() {
   return (
-    <div style={{ overflow: "visible", marginBottom: 20 }}>
-      <div style={{ overflow: "hidden" }}>
-        <h1
+    <h1
+      style={{
+        fontFamily: "var(--font-display)",
+        fontWeight: 700,
+        lineHeight: 0.94,
+        margin: "0 0 20px",
+      }}
+    >
+      {/* Ligne 1 — masque overflow : le reveal "slide up" est piloté par le rideau (.hero-fade-b) */}
+      <span style={{ display: "block", overflow: "hidden" }}>
+        <span
           className="hero-fade-b"
           style={{
-            fontFamily: "var(--font-display)",
-            fontWeight: 700,
-            fontSize: "clamp(48px, 7vw, 108px)",
-            lineHeight: 0.92,
+            display: "block",
+            fontSize: "clamp(44px, 5.2vw, 88px)",
             letterSpacing: "-.03em",
-            margin: 0,
             padding: "4px 0 6px",
             color: "hsl(var(--fog))",
-            display: "block",
           }}
         >
           תפריט שגורם
-        </h1>
-      </div>
+        </span>
+      </span>
 
-      <div style={{ overflow: "hidden" }}>
-        <h1
+      {/* Ligne 2 — mot signature en italique bronze (gradient de marque, statique ;
+          fallback `color` solide si background-clip:text non supporté) */}
+      <span style={{ display: "block", overflow: "hidden" }}>
+        <span
           className="hero-fade-c"
           style={{
-            fontFamily: "var(--font-display)",
+            display: "block",
             fontStyle: "italic",
-            fontWeight: 700,
-            fontSize: "clamp(40px, 6vw, 92px)",
-            lineHeight: 0.92,
+            fontSize: "clamp(38px, 4.6vw, 74px)",
             letterSpacing: "-.02em",
-            margin: 0,
             padding: "4px 0 6px",
+            color: "hsl(var(--gold))",
             background: "var(--grad-gold-shimmer)",
-            backgroundSize: "200% auto",
             WebkitBackgroundClip: "text",
             backgroundClip: "text",
             WebkitTextFillColor: "transparent",
-            animation:
-              "fadeUp .7s cubic-bezier(.16,1,.3,1) .3s both, goldShimmer 6s ease-in-out 1s infinite",
-            display: "block",
           }}
         >
           ללקוחות להזמין יותר
-        </h1>
-      </div>
-    </div>
+        </span>
+      </span>
+    </h1>
   );
 }
