@@ -37,6 +37,15 @@ export default function HomePage() {
     return () => window.removeEventListener("keydown", handler);
   }, []);
 
+  // La home est dark : on applique `.dark` sur <html> tant qu'on est dessus,
+  // pour que les UI rendues au niveau <body> (toasts) héritent du thème sombre
+  // au lieu des tokens clairs `:root`. Retiré en quittant la route.
+  useEffect(() => {
+    const root = document.documentElement;
+    root.classList.add("dark");
+    return () => root.classList.remove("dark");
+  }, []);
+
   return (
     <DirectionalTransition>
       <div
