@@ -46,6 +46,7 @@ export const HOME_KEYFRAMES = `
   @keyframes aurora3 { 0%,100%{transform:translate(0,0) scale(0.9)} 50%{transform:translate(-60px,90px) scale(1.15)} }
   @keyframes navPill { from{opacity:0;transform:translateX(-50%) translateY(-16px)} to{opacity:1;transform:translateX(-50%) translateY(0)} }
   @keyframes badgeDot { 0%,100%{box-shadow:0 0 0 0 hsl(var(--accent-bright) / .35)} 50%{box-shadow:0 0 0 8px hsl(var(--accent-bright) / 0)} }
+  @keyframes showcaseBounce { 0%,100%{transform:translateY(0);opacity:.6} 50%{transform:translateY(6px);opacity:1} }
 
   /* ── Hero elements: initial hidden, revealed by GSAP CinematicCurtain ── */
   .hero-fade-a,.hero-fade-b,.hero-fade-c,.hero-fade-d,.hero-fade-e,.hero-fade-f {

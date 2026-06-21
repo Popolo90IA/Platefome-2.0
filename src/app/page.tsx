@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { CinematicCurtain } from "@/components/landing/CinematicCurtain";
 import { DirectionalTransition } from "@/components/transitions/DirectionalTransition";
 
-import { MODELS } from "./_home/_lib/constants";
 import { HOME_KEYFRAMES, GRAIN_SVG } from "./_home/_lib/keyframes";
 import { useReveal, useHeaderScroll } from "./_home/_lib/hooks/useReveal";
 import type { GalleryDish } from "./_home/_lib/types";
@@ -12,6 +11,7 @@ import type { GalleryDish } from "./_home/_lib/types";
 import { SiteNav } from "./_home/_components/SiteNav";
 import { HeroSection } from "./_home/_components/HeroSection";
 import { StatsSection } from "./_home/_components/StatsSection";
+import { ShowcaseSection } from "./_home/_components/ShowcaseSection";
 import { FeaturesSection } from "./_home/_components/FeaturesSection";
 import { GallerySection } from "./_home/_components/GallerySection";
 import { PricingSection } from "./_home/_components/PricingSection";
@@ -26,12 +26,7 @@ export default function HomePage() {
   useReveal();
   useHeaderScroll();
 
-  const [modelIdx, setModelIdx] = useState(0);
   const [selectedDish, setSelectedDish] = useState<GalleryDish | null>(null);
-
-  const prev = () =>
-    setModelIdx((i) => (i - 1 + MODELS.length) % MODELS.length);
-  const next = () => setModelIdx((i) => (i + 1) % MODELS.length);
 
   // Close modal on Escape
   useEffect(() => {
@@ -78,15 +73,10 @@ export default function HomePage() {
 
         <SiteNav />
 
-        <HeroSection
-          models={MODELS}
-          modelIdx={modelIdx}
-          onPrev={prev}
-          onNext={next}
-          onSelect={setModelIdx}
-        />
+        <HeroSection />
 
         <StatsSection />
+        <ShowcaseSection />
         <FeaturesSection />
         <GallerySection onSelectDish={setSelectedDish} />
         <PricingSection />

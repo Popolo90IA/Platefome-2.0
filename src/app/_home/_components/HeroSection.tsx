@@ -1,32 +1,18 @@
 "use client";
 
-import { HeroShowcase } from "@/components/landing/HeroShowcase";
-import type { HeroModel } from "../_lib/types";
 import { AuroraBackground } from "./_hero/AuroraBackground";
 import { HeroCTA } from "./_hero/HeroCTA";
 import { HeroSocialProof } from "./_hero/HeroSocialProof";
 import { HeroTitle } from "./_hero/HeroTitle";
+import { HeroVideo } from "./_hero/HeroVideo";
 import { SocialProofBadge } from "./_hero/SocialProofBadge";
 
-type HeroSectionProps = {
-  models: HeroModel[];
-  modelIdx: number;
-  onPrev: () => void;
-  onNext: () => void;
-  onSelect: (idx: number) => void;
-};
-
 /**
- * HeroSection — section hero plein écran (titre + showcase 3D + CTA + social proof).
+ * HeroSection — section hero plein écran (titre + boucle vidéo + CTA + social proof).
+ * Le présentoir 3D interactif vit désormais dans ShowcaseSection, plus bas.
  * Inclut aurora background + grid lines + vignette.
  */
-export function HeroSection({
-  models,
-  modelIdx,
-  onPrev,
-  onNext,
-  onSelect,
-}: HeroSectionProps) {
+export function HeroSection() {
   return (
     <section
       style={{
@@ -73,13 +59,7 @@ export function HeroSection({
         </p>
 
         <div className="hero-fade-e" style={{ width: "100%", marginTop: 16 }}>
-          <HeroShowcase
-            models={models}
-            modelIdx={modelIdx}
-            onPrev={onPrev}
-            onNext={onNext}
-            onSelect={onSelect}
-          />
+          <HeroVideo />
         </div>
 
         <HeroCTA />

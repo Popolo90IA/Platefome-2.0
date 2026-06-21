@@ -45,3 +45,6 @@ ruvector.db
 /public/models/_originals/
 public/brand/cloche-source.jpeg
 public/brand/cloche-source.png
+
+# video masters (compressed versions shipped in /public)
+/media-src/
