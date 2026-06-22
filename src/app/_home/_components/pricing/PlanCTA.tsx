@@ -2,78 +2,100 @@
 
 import Link from "next/link";
 
+const ARROW = (
+  <svg
+    width="14"
+    height="14"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <path d="m15 18-6-6 6-6" />
+  </svg>
+);
+
 /**
- * PlanCTA — bouton "בחר תוכנית" du PlanCard.
- * Variante highlighted (gradient bronze) ou normale (outline).
+ * PlanCTA — bouton "בחר תוכנית" (pilule). Architecture button-in-button :
+ * la flèche vit dans sa propre pastille circulaire, qui glisse au hover.
  */
 export function PlanCTA({ highlighted }: { highlighted: boolean }) {
-  if (highlighted) {
-    return (
-      <Link
-        href="/signup"
-        transitionTypes={["nav-forward"]}
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          padding: "13px 24px",
-          background: "var(--grad-bronze)",
-          borderRadius: 10,
-          fontFamily: "var(--font-body)",
-          fontSize: ".9rem",
-          fontWeight: 600,
-          color: "#fff",
-          textDecoration: "none",
-          boxShadow: "0 4px 20px hsl(var(--accent-bright) / .3)",
-          transition: "transform .2s,box-shadow .2s",
-        }}
-        onMouseOver={(e) => {
-          const el = e.currentTarget as HTMLAnchorElement;
-          el.style.transform = "translateY(-2px)";
-          el.style.boxShadow = "0 8px 32px hsl(var(--accent-bright) / .4)";
-        }}
-        onMouseOut={(e) => {
-          const el = e.currentTarget as HTMLAnchorElement;
-          el.style.transform = "";
-          el.style.boxShadow = "0 4px 20px hsl(var(--accent-bright) / .3)";
-        }}
-      >
-        בחר תוכנית
-      </Link>
-    );
-  }
+  const hl = highlighted;
 
   return (
     <Link
       href="/signup"
       transitionTypes={["nav-forward"]}
+      className="plan-cta"
       style={{
         display: "flex",
         alignItems: "center",
-        justifyContent: "center",
-        padding: "13px 24px",
-        background: "transparent",
-        border: "1px solid hsl(var(--line))",
-        borderRadius: 10,
+        justifyContent: "space-between",
+        gap: 10,
+        padding: "10px 12px 10px 22px",
+        background: hl ? "var(--grad-bronze)" : "hsl(var(--white) / .04)",
+        border: hl ? "none" : "1px solid hsl(var(--white) / .1)",
+        borderRadius: 999,
         fontFamily: "var(--font-body)",
         fontSize: ".9rem",
         fontWeight: 600,
-        color: "hsl(var(--subtle))",
+        color: hl ? "#fff" : "hsl(var(--subtle))",
         textDecoration: "none",
-        transition: "border-color .2s,color .2s,background .2s",
+        boxShadow: hl ? "0 6px 24px hsl(var(--accent-bright) / .32)" : "none",
+        transition: "transform .25s cubic-bezier(.32,.72,0,1), border-color .25s, color .25s, background .25s, box-shadow .25s",
       }}
       onMouseOver={(e) => {
         const el = e.currentTarget as HTMLAnchorElement;
-        el.style.borderColor = "hsl(var(--accent-bright) / .5)";
-        el.style.color = "hsl(var(--accent-bright))";
+        if (!hl) {
+          el.style.borderColor = "hsl(var(--accent-bright) / .5)";
+          el.style.color = "hsl(var(--accent-bright))";
+          el.style.background = "hsl(var(--accent-bright) / .08)";
+        } else {
+          el.style.boxShadow = "0 10px 34px hsl(var(--accent-bright) / .45)";
+        }
+        const dot = el.querySelector<HTMLElement>(".plan-cta-dot");
+        if (dot) dot.style.transform = "translateX(-3px)";
       }}
       onMouseOut={(e) => {
         const el = e.currentTarget as HTMLAnchorElement;
-        el.style.borderColor = "hsl(var(--line))";
-        el.style.color = "hsl(var(--subtle))";
+        if (!hl) {
+          el.style.borderColor = "hsl(var(--white) / .1)";
+          el.style.color = "hsl(var(--subtle))";
+          el.style.background = "hsl(var(--white) / .04)";
+        } else {
+          el.style.boxShadow = "0 6px 24px hsl(var(--accent-bright) / .32)";
+        }
+        const dot = el.querySelector<HTMLElement>(".plan-cta-dot");
+        if (dot) dot.style.transform = "";
+      }}
+      onPointerDown={(e) => {
+        (e.currentTarget as HTMLAnchorElement).style.transform = "scale(.97)";
+      }}
+      onPointerUp={(e) => {
+        (e.currentTarget as HTMLAnchorElement).style.transform = "";
       }}
     >
-      בחר תוכנית
+      <span>בחר תוכנית</span>
+      <span
+        className="plan-cta-dot"
+        aria-hidden
+        style={{
+          display: "inline-flex",
+          alignItems: "center",
+          justifyContent: "center",
+          width: 30,
+          height: 30,
+          borderRadius: "50%",
+          background: hl ? "rgba(255,255,255,.18)" : "hsl(var(--accent-bright) / .14)",
+          color: hl ? "#fff" : "hsl(var(--accent-bright))",
+          flexShrink: 0,
+          transition: "transform .25s cubic-bezier(.32,.72,0,1)",
+        }}
+      >
+        {ARROW}
+      </span>
     </Link>
   );
 }

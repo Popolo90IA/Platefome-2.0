@@ -42,7 +42,7 @@ export function BarChartMockup() {
           textAlign: "center",
         }}
       >
-        הזמנות — 7 ימים אחרונים ↑
+        הזמנות · 7 ימים אחרונים ↑
       </div>
     </div>
   );

@@ -19,7 +19,7 @@ export const GALLERY_DISHES: readonly GalleryDish[] = [
   {
     img: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=700&h=440&fit=crop&q=80",
     name: "בשר אנגוס",
-    desc: "נתח אנגוס פרמיום על האש עם תוספת לבחירה — גריל פחמים, עשבי תיבול טריים, וסלסה בית. מוגש עם אחת מהתוספות העונתיות שלנו.",
+    desc: "נתח אנגוס פרמיום על האש עם תוספת לבחירה: גריל פחמים, עשבי תיבול טריים, וסלסה בית. מוגש עם אחת מהתוספות העונתיות שלנו.",
     price: "₪148",
     badge: "3D · AR",
     badgeColor: "hsl(var(--accent-bright))",
@@ -28,7 +28,7 @@ export const GALLERY_DISHES: readonly GalleryDish[] = [
   {
     img: "https://images.unsplash.com/photo-1563379926898-05f4575a45d8?w=700&h=440&fit=crop&q=80",
     name: "פסטה ים",
-    desc: "פסטה פתוחה עם פירות ים טריים — שרימפס, מולים ותמנון — ברוטב ויין לבן, שום ופרמז'ן. הכנה טרייה ב-20 דקות.",
+    desc: "פסטה פתוחה עם פירות ים טריים: שרימפס, מולים ותמנון, ברוטב ויין לבן, שום ופרמז'ן. הכנה טרייה ב-20 דקות.",
     price: "₪89",
     badge: "וידאו",
     badgeColor: "hsl(var(--gold-light))",
@@ -46,7 +46,7 @@ export const GALLERY_DISHES: readonly GalleryDish[] = [
   {
     img: "https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?w=700&h=440&fit=crop&q=80",
     name: "יין אדום",
-    desc: "בורדו עדין ועשיר משנת 2021 — פרי יומרני עם טאנינים מעודנים. בחירת הסומלייה החודש. מוגש במצב החדר האידיאלי של 16°.",
+    desc: "בורדו עדין ועשיר משנת 2021: פרי יומרני עם טאנינים מעודנים. בחירת הסומלייה החודש. מוגש במצב החדר האידיאלי של 16°.",
     price: "₪62",
     badge: "360°",
     badgeColor: "hsl(var(--gold))",
@@ -64,7 +64,7 @@ export const GALLERY_DISHES: readonly GalleryDish[] = [
   {
     img: "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=700&h=440&fit=crop&q=80",
     name: "אספרסו",
-    desc: "בלנד אתיופי מיוחד — עם טעמי פרי יערות ופרחים — נקלה בקלייה בינונית כדי לשמר את הארומה. מוגש כפול כדיפולט.",
+    desc: "בלנד אתיופי מיוחד, עם טעמי פרי יערות ופרחים, נקלה בקלייה בינונית כדי לשמר את הארומה. מוגש כפול כדיפולט.",
     price: "₪28",
     badge: "חי",
     badgeColor: "hsl(var(--accent-vivid))",
@@ -84,13 +84,13 @@ export const HOME_STATS: readonly StatItem[] = [
   {
     num: "QR",
     label: "סריקה אחת",
-    sub: "סורקים וצופים מיד בדפדפן — בלי הורדה ובלי התקנה.",
+    sub: "סורקים וצופים מיד בדפדפן, בלי הורדה ובלי התקנה.",
     badge: "ללא אפליקציה",
   },
   {
     num: "3",
     label: "שפות",
-    sub: "עברית, אנגלית וצרפתית — עם תמיכת RTL מלאה.",
+    sub: "עברית, אנגלית וצרפתית, עם תמיכת RTL מלאה.",
     badge: "רב-לשוני",
   },
   {

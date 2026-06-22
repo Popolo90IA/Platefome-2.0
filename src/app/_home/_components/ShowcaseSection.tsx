@@ -37,11 +37,8 @@ export function ShowcaseSection() {
         }}
       >
         <div style={{ textAlign: "center", marginBottom: 48 }}>
-          <p className="eyebrow-gold" style={{ marginBottom: 14 }}>
-            הדגמה אינטראקטיבית
-          </p>
           <h2 style={{ maxWidth: 620, margin: "0 auto" }}>
-            סובבו, התקרבו — כל מנה <em>בתלת-מימד</em>
+            סובבו, התקרבו: כל מנה <em>בתלת-מימד</em>
           </h2>
         </div>
 

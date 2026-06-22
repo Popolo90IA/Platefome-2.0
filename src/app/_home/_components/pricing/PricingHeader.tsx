@@ -6,39 +6,6 @@
 export function PricingHeader() {
   return (
     <div className="reveal" style={{ textAlign: "center", marginBottom: 64 }}>
-      <div
-        style={{
-          display: "inline-flex",
-          alignItems: "center",
-          gap: 8,
-          background: "hsl(var(--accent-bright) / .08)",
-          border: "1px solid hsl(var(--accent-bright) / .18)",
-          borderRadius: 99,
-          padding: "6px 18px",
-          marginBottom: 24,
-        }}
-      >
-        <div
-          style={{
-            width: 6,
-            height: 6,
-            borderRadius: "50%",
-            background: "hsl(var(--accent-bright))",
-          }}
-        />
-        <span
-          style={{
-            fontFamily: "var(--font-body)",
-            fontSize: 12,
-            fontWeight: 600,
-            letterSpacing: ".1em",
-            textTransform: "uppercase" as const,
-            color: "hsl(var(--accent-bright))",
-          }}
-        >
-          מחירים
-        </span>
-      </div>
       <h2
         style={{
           fontFamily: "var(--font-display)",
