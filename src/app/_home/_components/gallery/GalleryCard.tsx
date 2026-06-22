@@ -2,7 +2,9 @@
 
 import type { GalleryDish } from "../../_lib/types";
 
-/* ── GalleryCard — dish card (image + badge + hover lift) ── */
+const EASE = "cubic-bezier(.32,.72,0,1)";
+
+/* ── GalleryCard — dish card Double-Bezel (coque hairline + cœur image) ── */
 export function GalleryCard({
   dish,
   delay,
@@ -18,7 +20,7 @@ export function GalleryCard({
       data-delay={String(delay)}
       role="button"
       tabIndex={0}
-      aria-label={`${dish.name} — ${dish.price}`}
+      aria-label={`${dish.name} · ${dish.price}`}
       onClick={onSelect}
       onKeyDown={(e) => {
         if (e.key === "Enter" || e.key === " ") {
@@ -27,113 +29,136 @@ export function GalleryCard({
         }
       }}
       style={{
-        background: "hsl(var(--deep))",
-        border: "1px solid hsl(var(--line) / .5)",
-        borderRadius: 16,
-        overflow: "hidden",
+        position: "relative",
+        padding: 5,
+        borderRadius: 20,
+        background: "var(--bezel-shell)",
+        border: "1px solid var(--bezel-border)",
+        boxShadow: "inset 0 1px 0 var(--bezel-hi)",
         cursor: "pointer",
-        transition: "border-color .25s, transform .25s, box-shadow .25s",
+        transition: `transform .5s ${EASE}, border-color .4s ${EASE}, box-shadow .4s ${EASE}`,
+        willChange: "transform",
       }}
       onMouseOver={(e) => {
         const el = e.currentTarget as HTMLDivElement;
-        el.style.borderColor = "hsl(var(--accent-bright) / .3)";
-        el.style.transform = "translateY(-4px)";
-        el.style.boxShadow = "0 16px 40px rgba(0,0,0,.4)";
+        el.style.transform = "translateY(-6px)";
+        el.style.borderColor = "hsl(var(--accent-bright) / .32)";
+        el.style.boxShadow = "0 28px 60px -28px rgba(0,0,0,.55)";
+        const img = el.querySelector<HTMLImageElement>(".gallery-img");
+        if (img) img.style.transform = "scale(1.07)";
       }}
       onMouseOut={(e) => {
         const el = e.currentTarget as HTMLDivElement;
-        el.style.borderColor = "hsl(var(--line) / .5)";
         el.style.transform = "";
-        el.style.boxShadow = "";
+        el.style.borderColor = "var(--bezel-border)";
+        el.style.boxShadow = "inset 0 1px 0 var(--bezel-hi)";
+        const img = el.querySelector<HTMLImageElement>(".gallery-img");
+        if (img) img.style.transform = "scale(1)";
       }}
     >
-      {/* Image */}
-      <div style={{ height: 220, overflow: "hidden", position: "relative" }}>
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src={dish.img}
-          alt={dish.name}
-          style={{
-            width: "100%",
-            height: "100%",
-            objectFit: "cover",
-            transition: "transform .6s cubic-bezier(.16,1,.3,1)",
-          }}
-          onMouseOver={(e) => (e.currentTarget.style.transform = "scale(1.06)")}
-          onMouseOut={(e) => (e.currentTarget.style.transform = "scale(1)")}
-          loading="lazy"
-        />
-        <div
-          style={{
-            position: "absolute",
-            inset: 0,
-            background:
-              "linear-gradient(180deg,transparent 50%,hsl(var(--fog) / .4) 100%)",
-          }}
-        />
-        <div
-          style={{
-            position: "absolute",
-            top: 12,
-            right: 12,
-            padding: "4px 10px",
-            background: "hsl(var(--void) / .85)",
-            backdropFilter: "blur(8px)",
-            border: `1px solid ${dish.badgeColor.replace(")", ", .3)")}`,
-            borderRadius: 99,
-            fontFamily: "var(--font-body)",
-            fontSize: 11,
-            fontWeight: 600,
-            color: dish.badgeColor,
-          }}
-        >
-          {dish.badge}
-        </div>
-      </div>
-      {/* Info */}
-      <div style={{ padding: "16px 18px 20px", direction: "rtl" }}>
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            marginBottom: 8,
-          }}
-        >
-          <span
+      {/* Cœur */}
+      <div
+        style={{
+          position: "relative",
+          borderRadius: 15,
+          overflow: "hidden",
+          background: "hsl(var(--abyss))",
+          boxShadow: "inset 0 0 0 1px var(--veil-soft)",
+        }}
+      >
+        {/* Image */}
+        <div style={{ height: 210, overflow: "hidden", position: "relative" }}>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            className="gallery-img"
+            src={dish.img}
+            alt={dish.name}
             style={{
-              fontFamily: "var(--font-display)",
-              fontSize: "1.25rem",
-              fontWeight: 700,
-              color: "hsl(var(--fog))",
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
+              transition: "transform .7s cubic-bezier(.16,1,.3,1)",
+            }}
+            loading="lazy"
+          />
+          <div
+            style={{
+              position: "absolute",
+              inset: 0,
+              background:
+                "linear-gradient(180deg, transparent 45%, hsl(24 12% 4% / .6) 100%)",
+            }}
+          />
+          <div
+            style={{
+              position: "absolute",
+              top: 12,
+              insetInlineEnd: 12,
+              padding: "5px 11px",
+              background: "hsl(24 12% 5% / .8)",
+              backdropFilter: "blur(10px)",
+              WebkitBackdropFilter: "blur(10px)",
+              border: "1px solid hsl(var(--white) / .14)",
+              borderRadius: 99,
+              fontFamily: "var(--font-mono)",
+              fontSize: 10,
+              fontWeight: 600,
+              letterSpacing: ".08em",
+              color: dish.badgeColor,
             }}
           >
-            {dish.name}
-          </span>
-          <span
+            {dish.badge}
+          </div>
+        </div>
+
+        {/* Info */}
+        <div style={{ padding: "15px 18px 18px", direction: "rtl" }}>
+          <div
             style={{
+              display: "flex",
+              alignItems: "baseline",
+              justifyContent: "space-between",
+              gap: 12,
+              marginBottom: 9,
+            }}
+          >
+            <span
+              style={{
+                fontFamily: "var(--font-display)",
+                fontSize: "1.3rem",
+                fontWeight: 700,
+                color: "hsl(var(--fog))",
+              }}
+            >
+              {dish.name}
+            </span>
+            <span
+              style={{
+                fontFamily: "var(--font-body)",
+                fontSize: "1rem",
+                fontWeight: 700,
+                color: "hsl(var(--accent-bright))",
+                letterSpacing: "-.01em",
+                flexShrink: 0,
+              }}
+            >
+              {dish.price}
+            </span>
+          </div>
+          <div
+            style={{
+              display: "inline-block",
+              background: "var(--veil-soft)",
+              border: "1px solid var(--veil-line)",
+              borderRadius: 99,
+              padding: "3px 11px",
               fontFamily: "var(--font-body)",
-              fontSize: "1rem",
-              fontWeight: 700,
-              color: "hsl(var(--accent-bright))",
+              fontSize: 11,
+              color: "hsl(var(--dim))",
             }}
           >
-            {dish.price}
-          </span>
-        </div>
-        <div
-          style={{
-            display: "inline-block",
-            background: "hsl(var(--abyss))",
-            border: "1px solid hsl(var(--line))",
-            borderRadius: 99,
-            padding: "2px 10px",
-            fontFamily: "var(--font-body)",
-            fontSize: 11,
-            color: "hsl(var(--dim))",
-          }}
-        >
-          {dish.cat}
+            {dish.cat}
+          </div>
         </div>
       </div>
     </div>

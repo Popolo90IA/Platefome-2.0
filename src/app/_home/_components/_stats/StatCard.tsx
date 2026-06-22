@@ -19,21 +19,29 @@ export function StatCard({ s, delay }: { s: StatItem; delay: number }) {
         transition: "background .2s",
         cursor: "default",
       }}
-      onMouseOver={(e) =>
-        ((e.currentTarget as HTMLDivElement).style.background = "hsl(var(--abyss))")
-      }
-      onMouseOut={(e) =>
-        ((e.currentTarget as HTMLDivElement).style.background = "hsl(var(--void))")
-      }
+      onMouseOver={(e) => {
+        const el = e.currentTarget as HTMLDivElement;
+        el.style.background = "hsl(var(--abyss))";
+        const a = el.querySelector<HTMLElement>(".stat-accent");
+        if (a) a.style.opacity = "1";
+      }}
+      onMouseOut={(e) => {
+        const el = e.currentTarget as HTMLDivElement;
+        el.style.background = "hsl(var(--void))";
+        const a = el.querySelector<HTMLElement>(".stat-accent");
+        if (a) a.style.opacity = "0";
+      }}
     >
       <div
+        className="stat-accent"
         style={{
           position: "absolute",
           top: 0,
-          left: 0,
-          right: 0,
+          insetInline: 0,
           height: 2,
           background: "linear-gradient(90deg, hsl(var(--accent-bright)), hsl(var(--gold)))",
+          opacity: 0,
+          transition: "opacity .35s cubic-bezier(.32,.72,0,1)",
         }}
       />
       <div
@@ -44,9 +52,12 @@ export function StatCard({ s, delay }: { s: StatItem; delay: number }) {
           color: "hsl(var(--fog))",
           lineHeight: 1,
           letterSpacing: "-.04em",
+          fontVariantNumeric: "slashed-zero tabular-nums",
         }}
       >
-        {s.num}
+        <span style={{ direction: "ltr", unicodeBidi: "isolate", display: "inline-block" }}>
+          {s.num}
+        </span>
       </div>
       <div
         style={{
@@ -85,7 +96,7 @@ export function StatCard({ s, delay }: { s: StatItem; delay: number }) {
           viewBox="0 0 24 24"
           fill="none"
           stroke="hsl(var(--accent-bright))"
-          strokeWidth="2.5"
+          strokeWidth="1.5"
           strokeLinecap="round"
           strokeLinejoin="round"
         >
@@ -94,8 +105,9 @@ export function StatCard({ s, delay }: { s: StatItem; delay: number }) {
         </svg>
         <span
           style={{
-            fontFamily: "var(--font-body)",
-            fontSize: ".75rem",
+            fontFamily: "var(--font-mono)",
+            fontSize: ".72rem",
+            letterSpacing: ".08em",
             color: "hsl(var(--accent-bright))",
           }}
         >

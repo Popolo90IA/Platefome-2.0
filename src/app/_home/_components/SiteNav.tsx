@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { Menu, X } from "lucide-react";
+import { Menu, Moon, Sun, X } from "lucide-react";
 import { LogoWordmark } from "@/components/brand";
 
 const NAV_LINKS: ReadonlyArray<readonly [string, string]> = [
@@ -16,7 +16,13 @@ const NAV_LINKS: ReadonlyArray<readonly [string, string]> = [
  * SiteNav — header glassmorphism (pill flottant haut centré).
  * id="site-header" est utilisé par useHeaderScroll pour effet frosted à 60px de scroll.
  */
-export function SiteNav() {
+export function SiteNav({
+  theme,
+  onToggleTheme,
+}: {
+  theme: "dark" | "light";
+  onToggleTheme: () => void;
+}) {
   const [open, setOpen] = useState(false);
   const toggleRef = useRef<HTMLButtonElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
@@ -129,6 +135,42 @@ export function SiteNav() {
             flexShrink: 0,
           }}
         >
+          {/* Toggle jour/nuit */}
+          <button
+            type="button"
+            onClick={onToggleTheme}
+            aria-label={theme === "dark" ? "עבור למצב יום" : "עבור למצב לילה"}
+            title={theme === "dark" ? "מצב יום" : "מצב לילה"}
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              justifyContent: "center",
+              width: 38,
+              height: 38,
+              background: "transparent",
+              border: "1px solid hsl(var(--line) / .6)",
+              borderRadius: 10,
+              color: "hsl(var(--subtle))",
+              cursor: "pointer",
+              flexShrink: 0,
+              transition: "color .2s, border-color .2s, background .2s",
+            }}
+            onMouseOver={(e) => {
+              const el = e.currentTarget;
+              el.style.color = "hsl(var(--accent-bright))";
+              el.style.borderColor = "hsl(var(--accent-bright) / .4)";
+              el.style.background = "hsl(var(--accent-bright) / .08)";
+            }}
+            onMouseOut={(e) => {
+              const el = e.currentTarget;
+              el.style.color = "hsl(var(--subtle))";
+              el.style.borderColor = "hsl(var(--line) / .6)";
+              el.style.background = "transparent";
+            }}
+          >
+            {theme === "dark" ? <Sun size={18} /> : <Moon size={18} />}
+          </button>
+
           <Link
             href="/login"
             transitionTypes={["nav-forward"]}

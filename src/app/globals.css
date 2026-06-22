@@ -42,6 +42,15 @@
     --cream:   24 18% 16%;   /* titres */
     --white:   0   0% 100%;  /* blanc absolu */
 
+    /* ── Bezel / veil surfaces (theme-aware) ──
+       En clair : voile d'encre sombre + highlight blanc.
+       En sombre (.dark) : voile blanc. Utilisés par les cards Double-Bezel. */
+    --bezel-shell:  linear-gradient(150deg, hsl(24 18% 16% / .06), hsl(24 18% 16% / .02));
+    --bezel-border: hsl(24 18% 16% / .12);
+    --bezel-hi:     hsl(0 0% 100% / .6);
+    --veil-soft:    hsl(24 18% 16% / .04);
+    --veil-line:    hsl(24 18% 16% / .1);
+
     /* ── Accent tones (bronze/cuivre) ── */
     --accent-warm:  28  52% 52%;   /* cuivre clair */
     --accent-bright:28  62% 42%;   /* bronze principal */
@@ -170,6 +179,13 @@
     --fog:     38 14% 92%;   /* texte principal */
     --cream:   38 18% 96%;   /* titres */
     --white:   0   0% 100%;
+
+    /* Bezel / veil surfaces (dark) — voile blanc */
+    --bezel-shell:  linear-gradient(150deg, hsl(0 0% 100% / .05), hsl(0 0% 100% / .015));
+    --bezel-border: hsl(0 0% 100% / .07);
+    --bezel-hi:     hsl(0 0% 100% / .06);
+    --veil-soft:    hsl(0 0% 100% / .04);
+    --veil-line:    hsl(0 0% 100% / .1);
 
     /* Accent tones — bronzes ajustés pour contraste sur noir */
     --accent-warm:   28  62% 58%;

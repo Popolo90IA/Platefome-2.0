@@ -2,7 +2,6 @@
 
 import { AuroraBackground } from "./_hero/AuroraBackground";
 import { HeroCTA } from "./_hero/HeroCTA";
-import { HeroSocialProof } from "./_hero/HeroSocialProof";
 import { HeroTitle } from "./_hero/HeroTitle";
 import { HeroVideo } from "./_hero/HeroVideo";
 import { SocialProofBadge } from "./_hero/SocialProofBadge";
@@ -78,7 +77,6 @@ export function HeroSection() {
             </p>
 
             <HeroCTA />
-            <HeroSocialProof />
           </div>
 
           {/* COLONNE VIDÉO — gauche en RTL, profondeur en couches */}

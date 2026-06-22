@@ -3,197 +3,247 @@
 import type { PricingPlan } from "../../_lib/types";
 import { PlanCTA } from "./PlanCTA";
 
-/**
- * PlanCard — carte de tarif (Starter / Popular / Enterprise).
- * Variante highlighted = mise en avant (scale, gradient, badge pill).
- */
-export function PlanCard({
-  plan,
-  delay,
-}: {
-  plan: PricingPlan;
-  delay: number;
-}) {
-  const isHighlighted = plan.highlighted;
-  const accent = isHighlighted ? "hsl(var(--accent-bright))" : "hsl(var(--dim))";
-  const checkColor = isHighlighted ? "hsl(var(--accent-bright))" : "hsl(var(--subtle))";
-  const featureColor = isHighlighted ? "hsl(var(--fog))" : "hsl(var(--subtle))";
-  const priceColor = isHighlighted ? "hsl(var(--accent-bright))" : "hsl(var(--fog))";
+const EASE = "cubic-bezier(.32,.72,0,1)";
 
-  // Hover = renforcement de l'ombre + bordure bronze. Pas de transform :
-  // la classe `reveal` (GSAP) possède déjà la propriété transform de la carte.
-  const baseBorder = isHighlighted
-    ? "1px solid hsl(var(--accent-bright) / .4)"
-    : "1px solid hsl(var(--line) / .5)";
-  const baseShadow = isHighlighted
-    ? "0 0 0 1px hsl(var(--accent-bright) / .08), 0 24px 64px -16px rgba(0,0,0,.12)"
-    : "none";
-  const hoverBorder = isHighlighted
-    ? "1px solid hsl(var(--accent-bright) / .55)"
-    : "1px solid hsl(var(--accent-bright) / .3)";
-  const hoverShadow = isHighlighted
-    ? "0 0 0 1px hsl(var(--accent-bright) / .15), 0 32px 72px -16px rgba(0,0,0,.2)"
-    : "0 24px 56px -20px rgba(0,0,0,.16)";
+/**
+ * PlanCard — carte de tarif Double-Bezel (coque hairline + cœur en retrait).
+ * Variante `highlighted` : coque bronze, glow, léger scale. Le scale vit sur la
+ * coque interne (pas sur `.reveal`, qui possède déjà le transform d'entrée GSAP).
+ */
+export function PlanCard({ plan, delay }: { plan: PricingPlan; delay: number }) {
+  const hl = plan.highlighted;
+
+  const checkColor = hl ? "hsl(var(--accent-bright))" : "hsl(var(--subtle))";
+  const featureColor = hl ? "hsl(var(--fog))" : "hsl(var(--subtle))";
+  const priceColor = hl ? "hsl(var(--accent-bright))" : "hsl(var(--fog))";
+
+  const shellBg = hl
+    ? "linear-gradient(150deg, hsl(var(--accent-bright) / .16), hsl(var(--accent-bright) / .03))"
+    : "var(--bezel-shell)";
+  const shellBorder = hl
+    ? "1px solid hsl(var(--accent-bright) / .32)"
+    : "1px solid var(--bezel-border)";
+  const shellShadow = hl
+    ? "0 36px 90px -44px hsl(var(--accent-bright) / .5)"
+    : "inset 0 1px 0 var(--bezel-hi)";
+  const baseTransform = hl ? "scale(1.035)" : "none";
 
   return (
-    <div
-      className="reveal"
-      data-delay={String(delay)}
-      style={{
-        background: isHighlighted
-          ? "linear-gradient(180deg,hsl(var(--deep)),hsl(var(--abyss)))"
-          : "hsl(var(--deep))",
-        border: baseBorder,
-        borderRadius: 20,
-        overflow: "hidden",
-        position: "relative",
-        transform: isHighlighted ? "scale(1.04)" : undefined,
-        boxShadow: baseShadow,
-        transition: "border-color .3s, box-shadow .3s",
-      }}
-      onMouseOver={(e) => {
-        const el = e.currentTarget as HTMLDivElement;
-        el.style.border = hoverBorder;
-        el.style.boxShadow = hoverShadow;
-      }}
-      onMouseOut={(e) => {
-        const el = e.currentTarget as HTMLDivElement;
-        el.style.border = baseBorder;
-        el.style.boxShadow = baseShadow;
-      }}
-    >
+    <div className="reveal" data-delay={String(delay)} style={{ height: "100%" }}>
+      {/* Coque (bezel) */}
       <div
         style={{
-          height: 2,
-          background: isHighlighted
-            ? "linear-gradient(90deg, hsl(var(--accent-bright)), hsl(var(--gold)))"
-            : "hsl(var(--line) / .3)",
+          position: "relative",
+          height: "100%",
+          padding: 6,
+          borderRadius: 26,
+          background: shellBg,
+          border: shellBorder,
+          boxShadow: shellShadow,
+          transform: baseTransform,
+          transition: `transform .6s ${EASE}, border-color .5s ${EASE}, box-shadow .5s ${EASE}`,
+          willChange: "transform",
+          zIndex: hl ? 2 : 1,
         }}
-      />
-
-      {plan.badge && (
-        <div
-          style={{
-            position: "absolute",
-            top: 16,
-            left: 16,
-            background: plan.badge.bg,
-            border: `1px solid ${plan.badge.border}`,
-            borderRadius: isHighlighted ? 99 : 8,
-            padding: "4px 12px",
-            fontFamily: "var(--font-body)",
-            fontSize: 11,
-            fontWeight: isHighlighted ? 600 : 700,
-            color: plan.badge.color,
-            letterSpacing: ".06em",
-          }}
-        >
-          {plan.badge.label}
-        </div>
-      )}
-
-      <div
-        style={{
-          padding: "28px 28px 24px",
-          borderBottom: isHighlighted
-            ? "1px solid hsl(var(--accent-bright) / .1)"
-            : "1px solid hsl(var(--line) / .3)",
+        onMouseOver={(e) => {
+          if (!window.matchMedia("(hover: hover) and (pointer: fine)").matches)
+            return;
+          const el = e.currentTarget as HTMLDivElement;
+          el.style.transform = hl ? "scale(1.035) translateY(-4px)" : "translateY(-6px)";
+          el.style.borderColor = "hsl(var(--accent-bright) / .5)";
+          el.style.boxShadow = hl
+            ? "0 44px 100px -44px hsl(var(--accent-bright) / .6)"
+            : "0 30px 70px -34px rgba(0,0,0,.5)";
+        }}
+        onMouseOut={(e) => {
+          const el = e.currentTarget as HTMLDivElement;
+          el.style.transform = baseTransform;
+          el.style.borderColor = hl
+            ? "hsl(var(--accent-bright) / .32)"
+            : "var(--bezel-border)";
+          el.style.boxShadow = shellShadow;
         }}
       >
+        {/* Cœur */}
         <div
           style={{
-            fontFamily: "var(--font-body)",
-            fontSize: 11,
-            fontWeight: 600,
-            letterSpacing: ".1em",
-            textTransform: "uppercase" as const,
-            color: accent,
-            marginBottom: 16,
+            position: "relative",
+            height: "100%",
+            display: "flex",
+            flexDirection: "column",
+            overflow: "hidden",
+            borderRadius: 20,
+            background:
+              "linear-gradient(175deg, hsl(var(--deep)) 0%, hsl(var(--abyss)) 100%)",
+            boxShadow: "inset 0 1px 0 var(--bezel-hi)",
           }}
         >
-          {plan.tier}
-        </div>
-        <div
-          style={{
-            fontFamily: "var(--font-display)",
-            fontWeight: 700,
-            fontSize: "3.25rem",
-            letterSpacing: "-.04em",
-            color: priceColor,
-            lineHeight: 1,
-          }}
-        >
-          {plan.price}
-          <span
-            style={{
-              fontFamily: "var(--font-body)",
-              fontSize: ".85rem",
-              fontWeight: 400,
-              color: isHighlighted ? "hsl(var(--gold-dark))" : "hsl(var(--subtle))",
-              letterSpacing: 0,
-            }}
-          >
-            /חודש
-          </span>
-        </div>
-        <div
-          style={{
-            fontFamily: "var(--font-body)",
-            fontSize: ".8rem",
-            color: isHighlighted ? "hsl(var(--gold-dark))" : "hsl(var(--subtle))",
-            marginTop: 6,
-          }}
-        >
-          {plan.tagline}
-        </div>
-      </div>
-
-      <div
-        style={{
-          padding: "24px 28px",
-          display: "flex",
-          flexDirection: "column" as const,
-          gap: 12,
-          marginBottom: 4,
-        }}
-      >
-        {plan.features.map((f) => (
-          <div
-            key={f}
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 10,
-              direction: "rtl" as const,
-            }}
-          >
-            <svg
-              width="14"
-              height="14"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke={checkColor}
-              strokeWidth={isHighlighted ? "2.5" : "2"}
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <polyline points="20 6 9 17 4 12" />
-            </svg>
-            <span
+          {/* Glow accent (highlighted) */}
+          {hl && (
+            <div
+              aria-hidden
               style={{
-                fontFamily: "var(--font-body)",
-                fontSize: ".9rem",
-                color: featureColor,
+                position: "absolute",
+                insetInlineEnd: "-25%",
+                top: "-20%",
+                width: 380,
+                height: 380,
+                borderRadius: "50%",
+                background:
+                  "radial-gradient(circle, hsl(var(--accent-bright) / .16) 0%, transparent 62%)",
+                filter: "blur(40px)",
+                pointerEvents: "none",
+              }}
+            />
+          )}
+
+          {/* Filet accent haut (highlighted) */}
+          {hl && (
+            <div
+              aria-hidden
+              style={{
+                position: "absolute",
+                top: 0,
+                insetInline: 0,
+                height: 2,
+                background:
+                  "linear-gradient(90deg, transparent, hsl(var(--accent-bright)), hsl(var(--gold)), transparent)",
+              }}
+            />
+          )}
+
+          {/* Badge */}
+          {plan.badge && (
+            <div
+              style={{
+                position: "absolute",
+                top: 18,
+                insetInlineStart: 22,
+                background: plan.badge.bg,
+                border: `1px solid ${plan.badge.border}`,
+                borderRadius: 99,
+                padding: "5px 13px",
+                fontFamily: "var(--font-mono)",
+                fontSize: 10.5,
+                fontWeight: 600,
+                letterSpacing: ".08em",
+                color: plan.badge.color,
               }}
             >
-              {f}
-            </span>
-          </div>
-        ))}
-      </div>
+              {plan.badge.label}
+            </div>
+          )}
 
-      <div style={{ padding: "0 28px 28px" }}>
-        <PlanCTA highlighted={!!isHighlighted} />
+          {/* En-tête : tier · prix · tagline */}
+          <div
+            style={{
+              padding: "54px 30px 26px",
+              borderBottom: hl
+                ? "1px solid hsl(var(--accent-bright) / .12)"
+                : "1px solid var(--bezel-border)",
+              position: "relative",
+            }}
+          >
+            <div
+              style={{
+                fontFamily: "var(--font-mono)",
+                fontSize: 10.5,
+                fontWeight: 600,
+                letterSpacing: ".18em",
+                textTransform: "uppercase",
+                color: hl ? "hsl(var(--accent-bright))" : "hsl(var(--dim))",
+                marginBottom: 18,
+              }}
+            >
+              {plan.tier}
+            </div>
+            <div
+              style={{
+                fontFamily: "var(--font-display)",
+                fontWeight: 700,
+                fontSize: "3.4rem",
+                letterSpacing: "-.04em",
+                color: priceColor,
+                lineHeight: 1,
+              }}
+            >
+              {plan.price}
+              <span
+                style={{
+                  fontFamily: "var(--font-body)",
+                  fontSize: ".85rem",
+                  fontWeight: 400,
+                  color: hl ? "hsl(var(--gold-dark))" : "hsl(var(--subtle))",
+                  letterSpacing: 0,
+                }}
+              >
+                /חודש
+              </span>
+            </div>
+            <div
+              style={{
+                fontFamily: "var(--font-body)",
+                fontSize: ".82rem",
+                color: hl ? "hsl(var(--gold-dark))" : "hsl(var(--subtle))",
+                marginTop: 8,
+              }}
+            >
+              {plan.tagline}
+            </div>
+          </div>
+
+          {/* Features */}
+          <div
+            style={{
+              padding: "24px 30px",
+              display: "flex",
+              flexDirection: "column",
+              gap: 13,
+              flex: 1,
+              position: "relative",
+            }}
+          >
+            {plan.features.map((f) => (
+              <div
+                key={f}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 11,
+                  direction: "rtl",
+                }}
+              >
+                <svg
+                  width="15"
+                  height="15"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke={checkColor}
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  style={{ flexShrink: 0 }}
+                >
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+                <span
+                  style={{
+                    fontFamily: "var(--font-body)",
+                    fontSize: ".9rem",
+                    color: featureColor,
+                  }}
+                >
+                  {f}
+                </span>
+              </div>
+            ))}
+          </div>
+
+          {/* CTA */}
+          <div style={{ padding: "0 30px 30px", position: "relative" }}>
+            <PlanCTA highlighted={hl} />
+          </div>
+        </div>
       </div>
     </div>
   );

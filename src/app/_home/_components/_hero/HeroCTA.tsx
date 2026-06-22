@@ -80,13 +80,13 @@ export function HeroCTA() {
           alignItems: "center",
           gap: 8,
           padding: "14px 28px",
-          background: "hsl(var(--white) / .06)",
+          background: "var(--veil-soft)",
           color: "hsl(var(--subtle))",
           fontFamily: "var(--font-body)",
           fontSize: ".9375rem",
           fontWeight: 500,
           letterSpacing: "-.01em",
-          border: "1px solid hsl(var(--white) / .1)",
+          border: "1px solid var(--veil-line)",
           borderRadius: 10,
           textDecoration: "none",
           backdropFilter: "blur(8px)",
@@ -97,14 +97,14 @@ export function HeroCTA() {
             return;
           const el = e.currentTarget as HTMLAnchorElement;
           el.style.borderColor = "hsl(var(--accent-bright) / .35)";
-          el.style.color = "#fff";
+          el.style.color = "hsl(var(--cream))";
           el.style.background = "hsl(var(--accent-bright) / .08)";
         }}
         onMouseOut={(e) => {
           const el = e.currentTarget as HTMLAnchorElement;
-          el.style.borderColor = "hsl(var(--white) / .1)";
+          el.style.borderColor = "var(--veil-line)";
           el.style.color = "hsl(var(--subtle))";
-          el.style.background = "hsl(var(--white) / .06)";
+          el.style.background = "var(--veil-soft)";
         }}
         onPointerDown={(e) => {
           (e.currentTarget as HTMLAnchorElement).style.transform = "scale(0.97)";

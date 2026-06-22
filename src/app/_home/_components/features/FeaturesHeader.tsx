@@ -10,28 +10,19 @@ export function FeaturesHeader() {
         style={{
           display: "inline-flex",
           alignItems: "center",
-          gap: 8,
-          background: "hsl(var(--accent-bright) / .08)",
+          background: "hsl(var(--accent-bright) / .07)",
           border: "1px solid hsl(var(--accent-bright) / .18)",
           borderRadius: 99,
-          padding: "6px 18px",
-          marginBottom: 24,
+          padding: "7px 20px",
+          marginBottom: 26,
         }}
       >
-        <div
-          style={{
-            width: 6,
-            height: 6,
-            borderRadius: "50%",
-            background: "hsl(var(--accent-bright))",
-          }}
-        />
         <span
           style={{
-            fontFamily: "var(--font-body)",
-            fontSize: 12,
+            fontFamily: "var(--font-mono)",
+            fontSize: 11,
             fontWeight: 600,
-            letterSpacing: ".1em",
+            letterSpacing: ".24em",
             textTransform: "uppercase",
             color: "hsl(var(--accent-bright))",
           }}

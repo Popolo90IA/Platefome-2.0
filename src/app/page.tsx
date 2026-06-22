@@ -27,6 +27,26 @@ export default function HomePage() {
   useHeaderScroll();
 
   const [selectedDish, setSelectedDish] = useState<GalleryDish | null>(null);
+  const [theme, setTheme] = useState<"dark" | "light">("dark");
+
+  // Préférence sauvegardée (défaut : dark — la home est éditoriale sombre).
+  useEffect(() => {
+    const saved = localStorage.getItem("platforme-home-theme");
+    if (saved === "light" || saved === "dark") setTheme(saved);
+  }, []);
+
+  // Applique `.dark` sur <html> tant qu'on est sur la home (pour que les UI
+  // rendues au niveau <body> — toasts, modale — héritent du bon thème).
+  // Persiste le choix. Retiré en quittant la route.
+  useEffect(() => {
+    const root = document.documentElement;
+    root.classList.toggle("dark", theme === "dark");
+    localStorage.setItem("platforme-home-theme", theme);
+    return () => root.classList.remove("dark");
+  }, [theme]);
+
+  const toggleTheme = () =>
+    setTheme((t) => (t === "dark" ? "light" : "dark"));
 
   // Close modal on Escape
   useEffect(() => {
@@ -37,25 +57,19 @@ export default function HomePage() {
     return () => window.removeEventListener("keydown", handler);
   }, []);
 
-  // La home est dark : on applique `.dark` sur <html> tant qu'on est dessus,
-  // pour que les UI rendues au niveau <body> (toasts) héritent du thème sombre
-  // au lieu des tokens clairs `:root`. Retiré en quittant la route.
-  useEffect(() => {
-    const root = document.documentElement;
-    root.classList.add("dark");
-    return () => root.classList.remove("dark");
-  }, []);
-
   return (
     <DirectionalTransition>
+      {/* Le thème est porté par `.dark` sur <html> (script no-flash + effet
+          ci-dessus). Le wrapper hérite des tokens, pas de className ici pour
+          éviter un conflit de premier paint. */}
       <div
-        className="dark"
         style={{
           background: "hsl(var(--void))",
           color: "hsl(var(--cream))",
-          colorScheme: "dark",
+          colorScheme: theme,
           overflowX: "hidden",
           minHeight: "100vh",
+          transition: "background .4s ease, color .4s ease",
         }}
       >
         <style>{HOME_KEYFRAMES}</style>
@@ -86,7 +100,7 @@ export default function HomePage() {
           onClose={() => setSelectedDish(null)}
         />
 
-        <SiteNav />
+        <SiteNav theme={theme} onToggleTheme={toggleTheme} />
 
         <HeroSection />
 

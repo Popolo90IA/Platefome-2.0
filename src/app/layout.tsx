@@ -110,9 +110,17 @@ export default function RootLayout({
     <html
       lang="he"
       dir="rtl"
+      suppressHydrationWarning
       className={`${cormorant.variable} ${dmSans.variable} ${dmMono.variable} ${notoSerifHebrew.variable} ${heebo.variable}`}
     >
       <body className="antialiased">
+        {/* No-flash : applique le thème de la home sur <html> avant le paint
+            (uniquement sur la route '/'), pour éviter le flash dark→clair. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `try{if(location.pathname==='/'){var t=localStorage.getItem('platforme-home-theme')||'dark';document.documentElement.classList.toggle('dark',t!=='light');}}catch(e){}`,
+          }}
+        />
         <ToastProvider>
           <EditModeProvider>
             {children}

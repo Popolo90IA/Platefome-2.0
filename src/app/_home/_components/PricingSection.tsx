@@ -50,8 +50,8 @@ export function PricingSection() {
           style={{
             display: "grid",
             gridTemplateColumns: "1fr 1fr 1fr",
-            gap: 16,
-            alignItems: "center",
+            gap: 18,
+            alignItems: "stretch",
           }}
         >
           {PRICING_PLANS.map((plan, i) => (
