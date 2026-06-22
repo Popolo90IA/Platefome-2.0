@@ -59,8 +59,10 @@ export default function HomePage() {
 
   return (
     <DirectionalTransition>
+      {/* Le thème est porté par `.dark` sur <html> (script no-flash + effet
+          ci-dessus). Le wrapper hérite des tokens, pas de className ici pour
+          éviter un conflit de premier paint. */}
       <div
-        className={theme === "dark" ? "dark" : undefined}
         style={{
           background: "hsl(var(--void))",
           color: "hsl(var(--cream))",
