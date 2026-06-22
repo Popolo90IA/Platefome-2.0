@@ -35,8 +35,8 @@ export function PlanCTA({ highlighted }: { highlighted: boolean }) {
         justifyContent: "space-between",
         gap: 10,
         padding: "10px 12px 10px 22px",
-        background: hl ? "var(--grad-bronze)" : "hsl(var(--white) / .04)",
-        border: hl ? "none" : "1px solid hsl(var(--white) / .1)",
+        background: hl ? "var(--grad-bronze)" : "var(--veil-soft)",
+        border: hl ? "none" : "1px solid var(--veil-line)",
         borderRadius: 999,
         fontFamily: "var(--font-body)",
         fontSize: ".9rem",
@@ -61,9 +61,9 @@ export function PlanCTA({ highlighted }: { highlighted: boolean }) {
       onMouseOut={(e) => {
         const el = e.currentTarget as HTMLAnchorElement;
         if (!hl) {
-          el.style.borderColor = "hsl(var(--white) / .1)";
+          el.style.borderColor = "var(--veil-line)";
           el.style.color = "hsl(var(--subtle))";
-          el.style.background = "hsl(var(--white) / .04)";
+          el.style.background = "var(--veil-soft)";
         } else {
           el.style.boxShadow = "0 6px 24px hsl(var(--accent-bright) / .32)";
         }

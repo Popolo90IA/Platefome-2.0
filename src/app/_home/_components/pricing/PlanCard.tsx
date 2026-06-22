@@ -19,13 +19,13 @@ export function PlanCard({ plan, delay }: { plan: PricingPlan; delay: number }) 
 
   const shellBg = hl
     ? "linear-gradient(150deg, hsl(var(--accent-bright) / .16), hsl(var(--accent-bright) / .03))"
-    : "linear-gradient(150deg, hsl(var(--white) / .05), hsl(var(--white) / .015))";
+    : "var(--bezel-shell)";
   const shellBorder = hl
     ? "1px solid hsl(var(--accent-bright) / .32)"
-    : "1px solid hsl(var(--white) / .07)";
+    : "1px solid var(--bezel-border)";
   const shellShadow = hl
     ? "0 36px 90px -44px hsl(var(--accent-bright) / .5)"
-    : "inset 0 1px 0 hsl(var(--white) / .04)";
+    : "inset 0 1px 0 var(--bezel-hi)";
   const baseTransform = hl ? "scale(1.035)" : "none";
 
   return (
@@ -60,7 +60,7 @@ export function PlanCard({ plan, delay }: { plan: PricingPlan; delay: number }) 
           el.style.transform = baseTransform;
           el.style.borderColor = hl
             ? "hsl(var(--accent-bright) / .32)"
-            : "hsl(var(--white) / .07)";
+            : "var(--bezel-border)";
           el.style.boxShadow = shellShadow;
         }}
       >
@@ -75,7 +75,7 @@ export function PlanCard({ plan, delay }: { plan: PricingPlan; delay: number }) 
             borderRadius: 20,
             background:
               "linear-gradient(175deg, hsl(var(--deep)) 0%, hsl(var(--abyss)) 100%)",
-            boxShadow: "inset 0 1px 0 hsl(var(--white) / .06)",
+            boxShadow: "inset 0 1px 0 var(--bezel-hi)",
           }}
         >
           {/* Glow accent (highlighted) */}
@@ -140,7 +140,7 @@ export function PlanCard({ plan, delay }: { plan: PricingPlan; delay: number }) 
               padding: "54px 30px 26px",
               borderBottom: hl
                 ? "1px solid hsl(var(--accent-bright) / .12)"
-                : "1px solid hsl(var(--white) / .05)",
+                : "1px solid var(--bezel-border)",
               position: "relative",
             }}
           >

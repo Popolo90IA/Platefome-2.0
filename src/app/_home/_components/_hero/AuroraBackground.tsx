@@ -20,7 +20,7 @@ export function AuroraBackground() {
           position: "absolute",
           inset: 0,
           backgroundImage:
-            "linear-gradient(hsl(var(--white) / .045) 1px,transparent 1px),linear-gradient(90deg,hsl(var(--white) / .045) 1px,transparent 1px)",
+            "linear-gradient(var(--veil-soft) 1px,transparent 1px),linear-gradient(90deg,var(--veil-soft) 1px,transparent 1px)",
           backgroundSize: "72px 72px",
           maskImage:
             "radial-gradient(ellipse 80% 70% at 50% 30%, black 20%, transparent 100%)",

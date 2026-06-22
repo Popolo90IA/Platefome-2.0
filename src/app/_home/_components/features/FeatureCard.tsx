@@ -46,10 +46,9 @@ export function FeatureCard({
         height: "100%",
         padding: 6,
         borderRadius: 28,
-        background:
-          "linear-gradient(150deg, hsl(var(--white) / .05), hsl(var(--white) / .015))",
-        border: "1px solid hsl(var(--white) / .07)",
-        boxShadow: "inset 0 1px 0 hsl(var(--white) / .04)",
+        background: "var(--bezel-shell)",
+        border: "1px solid var(--bezel-border)",
+        boxShadow: "inset 0 1px 0 var(--bezel-hi)",
         transition: `transform .6s ${EASE}, border-color .5s ${EASE}, box-shadow .5s ${EASE}`,
         willChange: "transform",
       }}
@@ -64,8 +63,8 @@ export function FeatureCard({
       onMouseOut={(e) => {
         const el = e.currentTarget as HTMLDivElement;
         el.style.transform = "";
-        el.style.borderColor = "hsl(var(--white) / .07)";
-        el.style.boxShadow = "inset 0 1px 0 hsl(var(--white) / .04)";
+        el.style.borderColor = "var(--bezel-border)";
+        el.style.boxShadow = "inset 0 1px 0 var(--bezel-hi)";
       }}
     >
       {/* Cœur en retrait */}
@@ -81,7 +80,7 @@ export function FeatureCard({
           background:
             "linear-gradient(165deg, hsl(var(--deep)) 0%, hsl(var(--abyss)) 100%)",
           boxShadow:
-            "inset 0 1px 0 hsl(var(--white) / .06), inset 0 0 0 1px hsl(var(--white) / .02)",
+            "inset 0 1px 0 var(--bezel-hi), inset 0 0 0 1px var(--veil-soft)",
         }}
       >
         {/* Glow accent coin haut */}
@@ -132,7 +131,7 @@ export function FeatureCard({
             justifyContent: "center",
             background: `hsl(var(${accentVar}) / .1)`,
             border: `1px solid hsl(var(${accentVar}) / .22)`,
-            boxShadow: "inset 0 1px 0 hsl(var(--white) / .08)",
+            boxShadow: "inset 0 1px 0 var(--bezel-hi)",
             marginBottom: featured ? 26 : 20,
           }}
         >

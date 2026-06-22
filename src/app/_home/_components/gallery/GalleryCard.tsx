@@ -32,10 +32,9 @@ export function GalleryCard({
         position: "relative",
         padding: 5,
         borderRadius: 20,
-        background:
-          "linear-gradient(150deg, hsl(var(--white) / .08), hsl(var(--white) / .02))",
-        border: "1px solid hsl(var(--white) / .1)",
-        boxShadow: "inset 0 1px 0 hsl(var(--white) / .05)",
+        background: "var(--bezel-shell)",
+        border: "1px solid var(--bezel-border)",
+        boxShadow: "inset 0 1px 0 var(--bezel-hi)",
         cursor: "pointer",
         transition: `transform .5s ${EASE}, border-color .4s ${EASE}, box-shadow .4s ${EASE}`,
         willChange: "transform",
@@ -51,8 +50,8 @@ export function GalleryCard({
       onMouseOut={(e) => {
         const el = e.currentTarget as HTMLDivElement;
         el.style.transform = "";
-        el.style.borderColor = "hsl(var(--white) / .07)";
-        el.style.boxShadow = "inset 0 1px 0 hsl(var(--white) / .04)";
+        el.style.borderColor = "var(--bezel-border)";
+        el.style.boxShadow = "inset 0 1px 0 var(--bezel-hi)";
         const img = el.querySelector<HTMLImageElement>(".gallery-img");
         if (img) img.style.transform = "scale(1)";
       }}
@@ -64,7 +63,7 @@ export function GalleryCard({
           borderRadius: 15,
           overflow: "hidden",
           background: "hsl(var(--abyss))",
-          boxShadow: "inset 0 0 0 1px hsl(var(--white) / .03)",
+          boxShadow: "inset 0 0 0 1px var(--veil-soft)",
         }}
       >
         {/* Image */}
@@ -149,8 +148,8 @@ export function GalleryCard({
           <div
             style={{
               display: "inline-block",
-              background: "hsl(var(--white) / .04)",
-              border: "1px solid hsl(var(--white) / .08)",
+              background: "var(--veil-soft)",
+              border: "1px solid var(--veil-line)",
               borderRadius: 99,
               padding: "3px 11px",
               fontFamily: "var(--font-body)",
