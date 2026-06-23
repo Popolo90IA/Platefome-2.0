@@ -47,17 +47,34 @@ export function CinematicCurtain() {
       revealInstantly();
       return;
     }
-    try {
-      sessionStorage.setItem(INTRO_KEY, "1");
-    } catch {}
+    // Garde-fou : si le wordmark n'est pas encore monté, on révèle sans crasher
+    // (sinon `wordRef.current!` throw → rideau noir figé).
+    if (!wordRef.current) {
+      revealInstantly();
+      return;
+    }
+
+    // Filet de sécurité : si l'intro n'aboutit pas (onglet en arrière-plan qui
+    // gèle les rAF, erreur GSAP…), on force la révélation après 6 s pour ne
+    // JAMAIS rester bloqué sur le rideau noir.
+    const safety = window.setTimeout(revealInstantly, 6000);
+
+    // Le flag « intro jouée » est posé à la FIN de l'anim (onComplete), pas
+    // avant : une intro interrompue (reload à chaud) pourra ainsi rejouer.
+    const markPlayed = () => {
+      clearTimeout(safety);
+      try {
+        sessionStorage.setItem(INTRO_KEY, "1");
+      } catch {}
+    };
 
     // Sélectionner les lettres via querySelectorAll dans le container du mot
     // — ordre garanti par l'ordre du DOM
     const letters = Array.from(
-      wordRef.current!.querySelectorAll<HTMLSpanElement>("span")
+      wordRef.current.querySelectorAll<HTMLSpanElement>("span")
     );
 
-    const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
+    const tl = gsap.timeline({ defaults: { ease: "power3.out" }, onComplete: markPlayed });
 
     gsap.set(curtainRef.current,  { autoAlpha: 1 });
     gsap.set([panelTopRef.current, panelBotRef.current], { yPercent: 0 });
@@ -95,6 +112,8 @@ export function CinematicCurtain() {
         gsap.set(el, { opacity: 0, y: 32, filter: "blur(6px)" });
         tl.to(el, { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.9, ease: "power3.out" }, 2.8 + i * 0.14);
       });
+
+    return () => clearTimeout(safety);
   }, { scope: curtainRef });
 
   return (
@@ -110,26 +129,26 @@ export function CinematicCurtain() {
       <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%,-50%)", display: "flex", flexDirection: "column", alignItems: "center", gap: 18, zIndex: 1 }}>
 
         {/* Halo bronze */}
-        <div ref={haloRef} style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%,-50%)", width: 360, height: 160, background: "radial-gradient(ellipse at center, hsl(28,62%,38%,.22) 0%, transparent 70%)", filter: "blur(20px)", pointerEvents: "none" }} />
+        <div ref={haloRef} style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%,-50%)", width: 360, height: 160, background: "radial-gradient(ellipse at center, hsl(28,62%,38%,.22) 0%, transparent 70%)", filter: "blur(20px)", pointerEvents: "none", opacity: 0 }} />
 
         {/* Ligne haut */}
-        <div ref={lineTopRef} style={{ height: 1, width: 160, background: "linear-gradient(90deg, transparent, hsl(28,70%,62%), transparent)" }} />
+        <div ref={lineTopRef} style={{ height: 1, width: 160, background: "linear-gradient(90deg, transparent, hsl(28,70%,62%), transparent)", opacity: 0 }} />
 
         {/* Wordmark — bidi-override + ltr isole du RTL hébreu global */}
         <div ref={wordRef} style={{ display: "flex", direction: "ltr", unicodeBidi: "bidi-override", alignItems: "center", fontFamily: "var(--font-body)", fontSize: "1.2rem", fontWeight: 400, letterSpacing: ".44em", textTransform: "uppercase", color: "hsl(38,35%,96%)", textShadow: "0 0 40px hsl(28,62%,52%,.5)", paddingLeft: ".44em" }}>
-          <span style={{ display: "inline-block" }}>P</span>
-          <span style={{ display: "inline-block" }}>L</span>
-          <span style={{ display: "inline-block" }}>A</span>
-          <span style={{ display: "inline-block" }}>T</span>
-          <span style={{ display: "inline-block" }}>F</span>
-          <span style={{ display: "inline-block" }}>O</span>
-          <span style={{ display: "inline-block" }}>R</span>
-          <span style={{ display: "inline-block" }}>M</span>
-          <span style={{ display: "inline-block" }}>E</span>
+          <span style={{ display: "inline-block", opacity: 0 }}>P</span>
+          <span style={{ display: "inline-block", opacity: 0 }}>L</span>
+          <span style={{ display: "inline-block", opacity: 0 }}>A</span>
+          <span style={{ display: "inline-block", opacity: 0 }}>T</span>
+          <span style={{ display: "inline-block", opacity: 0 }}>F</span>
+          <span style={{ display: "inline-block", opacity: 0 }}>O</span>
+          <span style={{ display: "inline-block", opacity: 0 }}>R</span>
+          <span style={{ display: "inline-block", opacity: 0 }}>M</span>
+          <span style={{ display: "inline-block", opacity: 0 }}>E</span>
         </div>
 
         {/* Ligne bas */}
-        <div ref={lineBotRef} style={{ height: 1, width: 160, background: "linear-gradient(90deg, transparent, hsl(28,70%,62%), transparent)" }} />
+        <div ref={lineBotRef} style={{ height: 1, width: 160, background: "linear-gradient(90deg, transparent, hsl(28,70%,62%), transparent)", opacity: 0 }} />
       </div>
 
       {/* Grain */}
