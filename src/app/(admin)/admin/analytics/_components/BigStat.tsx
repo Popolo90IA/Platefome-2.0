@@ -20,22 +20,22 @@ export function BigStat({
         className={`absolute inset-0 bg-gradient-to-br ${color} pointer-events-none`}
       />
       <CardContent className="relative p-4">
-        <div className="flex items-center justify-between mb-2">
-          <span className="text-[11px] font-medium text-muted-foreground">
-            {label}
-          </span>
-          <div
-            className="h-7 w-7 rounded-md flex items-center justify-center text-white"
-            style={{
-              background: "var(--grad-bronze)",
-              boxShadow: "0 2px 10px hsl(28 62% 38% / .35)",
-            }}
-          >
-            {icon}
-          </div>
+        <div
+          className="h-9 w-9 rounded-lg flex items-center justify-center text-white shrink-0"
+          style={{
+            background: "var(--grad-bronze)",
+            boxShadow: "0 2px 10px hsl(28 62% 38% / .35)",
+          }}
+        >
+          {icon}
         </div>
-        <div className="font-serif-display text-2xl font-bold">
-          {value.toLocaleString()}
+        <div className="mt-3">
+          <div className="font-serif-display text-2xl font-bold leading-none">
+            {value.toLocaleString()}
+          </div>
+          <div className="mt-1.5 text-[11px] font-medium text-muted-foreground">
+            {label}
+          </div>
         </div>
       </CardContent>
     </Card>

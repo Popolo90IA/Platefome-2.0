@@ -40,7 +40,7 @@ export function DailyActivityChart({
             return (
               <div
                 key={i}
-                className="flex-1 flex flex-col justify-end group relative"
+                className="flex-1 flex flex-col justify-end group relative h-full"
                 title={`${d.date}: ${d.views} צפיות · ${d.scans} סריקות`}
               >
                 <div

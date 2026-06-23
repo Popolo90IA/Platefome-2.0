@@ -59,9 +59,9 @@ export function RestaurantCard({
             </div>
           )}
 
-          <div className="flex-1 min-w-0">
+          <div className="flex-1 min-w-[12rem]">
             <div className="flex items-center gap-2 flex-wrap">
-              <h3 className="font-serif-display text-lg font-bold truncate">
+              <h3 className="font-serif-display text-lg font-bold">
                 {r.name}
               </h3>
               {r.is_active ? (
