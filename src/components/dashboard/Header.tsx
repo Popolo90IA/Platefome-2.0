@@ -112,11 +112,10 @@ export function Header({ onMenuToggle }: HeaderProps) {
         >
           {/* Avatar */}
           <div
-            className="h-7 w-7 rounded-sm flex items-center justify-center text-[11px] font-medium flex-shrink-0"
+            className="h-7 w-7 rounded-full flex items-center justify-center text-[11px] font-semibold flex-shrink-0 text-white"
             style={{
-              background: "hsl(var(--surface))",
-              border: "1px solid hsl(var(--line))",
-              color: "hsl(var(--fog))",
+              background: "var(--grad-bronze)",
+              boxShadow: "0 2px 8px hsl(28 62% 38% / .3)",
             }}
           >
             {initial}

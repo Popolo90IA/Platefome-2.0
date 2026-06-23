@@ -66,7 +66,7 @@ export default async function AdminPage() {
       </div>
 
       {/* Stats grid */}
-      <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 auto-rows-fr">
         <AdminStat
           icon={<Building2 className="h-5 w-5" />}
           label="מסעדות"
@@ -178,17 +178,25 @@ function AdminStat({
   sub?: string;
 }) {
   return (
-    <Card className="group relative overflow-hidden shadow-premium hover:border-[hsl(var(--gold))]/40 transition-all">
-      <div className="absolute top-0 right-0 w-24 h-24 bg-[hsl(var(--gold))]/10 rounded-full blur-2xl" />
-      <CardContent className="relative p-5">
-        <div className="flex items-center justify-between mb-3">
-          <span className="text-xs font-medium text-muted-foreground">{label}</span>
-          <div className="h-8 w-8 rounded-lg flex items-center justify-center text-white" style={{ background: "var(--grad-bronze)", boxShadow: "0 2px 12px hsl(28 62% 38% / .35)" }}>
+    <Card className="group relative overflow-hidden shadow-premium transition-all duration-200 hover:border-[hsl(var(--gold))]/40 hover:-translate-y-0.5">
+      <div className="absolute -top-8 -left-8 w-28 h-28 bg-[hsl(var(--gold))]/12 rounded-full blur-2xl" />
+      <CardContent className="relative px-5 py-4">
+        <div className="flex items-start justify-between gap-2">
+          <div className="h-10 w-10 rounded-xl flex items-center justify-center text-white shrink-0" style={{ background: "var(--grad-bronze)", boxShadow: "0 4px 14px hsl(28 62% 38% / .35)" }}>
             {icon}
           </div>
+          {sub && (
+            <span className="rounded-full px-2 py-0.5 text-[11px] font-medium text-[hsl(var(--accent-bright))] bg-[hsl(var(--accent-bright))]/10 whitespace-nowrap">
+              {sub}
+            </span>
+          )}
         </div>
-        <div className="font-serif-display text-3xl font-bold">{value.toLocaleString()}</div>
-        {sub && <div className="text-xs text-muted-foreground mt-1">{sub}</div>}
+        <div className="mt-2.5">
+          <div className="font-serif-display text-[2.5rem] leading-none font-bold tracking-tight">
+            {value.toLocaleString()}
+          </div>
+          <div className="mt-2 text-sm text-muted-foreground">{label}</div>
+        </div>
       </CardContent>
     </Card>
   );
