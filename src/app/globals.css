@@ -1340,6 +1340,52 @@
   }
 }
 
+/* ── Admin — surfaces "verre" premium (jour/nuit via tokens) ──
+   Hors @layer pour primer sur les utilitaires Tailwind. Scopé #admin-root. */
+#admin-root .bg-card {
+  background: hsl(var(--deep) / 0.72);
+  -webkit-backdrop-filter: blur(16px) saturate(1.1);
+  backdrop-filter: blur(16px) saturate(1.1);
+  border: 1px solid hsl(var(--line) / 0.9);
+  border-radius: 18px;
+  box-shadow: 0 24px 56px -28px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 hsl(0 0% 100% / 0.05);
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+}
+#admin-root.dark .bg-card {
+  background: hsl(var(--deep) / 0.5);
+  box-shadow: 0 28px 64px -28px rgba(0, 0, 0, 0.75),
+    inset 0 1px 0 hsl(0 0% 100% / 0.06);
+}
+#admin-root .dash-sidebar {
+  background: hsl(var(--deep) / 0.6) !important;
+  -webkit-backdrop-filter: blur(22px) saturate(1.1);
+  backdrop-filter: blur(22px) saturate(1.1);
+}
+/* Lueur bronze sous les pastilles d'icône en dégradé (douce) */
+#admin-root [style*="grad-bronze"] {
+  box-shadow: 0 6px 18px hsl(var(--accent-bright) / 0.35),
+    0 0 0 1px hsl(var(--accent-bright) / 0.2) !important;
+}
+
+/* Champs de formulaire — premium, raccord avec les surfaces verre */
+#admin-root input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
+#admin-root select,
+#admin-root textarea {
+  background: hsl(var(--surface) / 0.55) !important;
+  border: 1px solid hsl(var(--line)) !important;
+  border-radius: 12px !important;
+  transition: border-color 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+}
+#admin-root input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):focus,
+#admin-root select:focus,
+#admin-root textarea:focus {
+  outline: none !important;
+  border-color: hsl(var(--accent-bright)) !important;
+  box-shadow: 0 0 0 3px hsl(var(--accent-bright) / 0.18) !important;
+  background: hsl(var(--surface) / 0.8) !important;
+}
+
 /* ── QR Code page — mobile fixes ── */
 @media (max-width: 768px) {
   /* Collapse the 320px sidebar + preview into a single column */

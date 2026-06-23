@@ -15,12 +15,15 @@ export default function AdminShell({
 
   return (
     <>
-      <ThemeScript targetSelector="#admin-root" />
-      <ThemeProvider targetSelector="#admin-root">
+      <ThemeScript targetSelector="#admin-root" defaultTheme="dark" />
+      <ThemeProvider targetSelector="#admin-root" defaultTheme="dark">
         <div
           id="admin-root"
           className="dash-layout min-h-screen flex"
-          style={{ background: "hsl(var(--void))" }}
+          style={{
+            background:
+              "radial-gradient(1200px 620px at 88% -8%, hsl(var(--accent-bright) / 0.14), transparent 60%), radial-gradient(1000px 720px at -5% 112%, hsl(var(--gold) / 0.10), transparent 55%), hsl(var(--void))",
+          }}
           dir="rtl"
         >
           <AdminSidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
