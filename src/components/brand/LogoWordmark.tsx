@@ -1,8 +1,9 @@
 interface LogoWordmarkProps {
   width?: number;
   className?: string;
-  /** Couleur du mot "Plate". Par défaut le ton encre (fonds clairs).
-   *  Sur fond sombre (footer), passer une teinte claire pour rester lisible. */
+  /** Couleur du mot "Plate". Par défaut suit le thème via --fog (encre en
+   *  jour, clair en nuit) → reste lisible dans les deux modes. Override possible
+   *  (ex. footer toujours sombre) en passant une teinte fixe. */
   color?: string;
 }
 
@@ -13,7 +14,7 @@ interface LogoWordmarkProps {
 export function LogoWordmark({
   width = 140,
   className,
-  color = "hsl(24,18%,16%)",
+  color = "hsl(var(--fog))",
 }: LogoWordmarkProps) {
   // Proportions calées sur logo-lockup.svg (source de vérité — page login).
   // SVG: viewBox 800×220, cloche ~160px (ratio 1.587), texte font-size 84.
