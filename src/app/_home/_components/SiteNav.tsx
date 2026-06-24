@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { Menu, Moon, Sun, X } from "lucide-react";
+import { Menu, X } from "lucide-react";
+import { ThemePill } from "@/components/theme/ThemePill";
 import { LogoWordmark } from "@/components/brand";
 
 const NAV_LINKS: ReadonlyArray<readonly [string, string]> = [
@@ -135,41 +136,8 @@ export function SiteNav({
             flexShrink: 0,
           }}
         >
-          {/* Toggle jour/nuit */}
-          <button
-            type="button"
-            onClick={onToggleTheme}
-            aria-label={theme === "dark" ? "עבור למצב יום" : "עבור למצב לילה"}
-            title={theme === "dark" ? "מצב יום" : "מצב לילה"}
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              justifyContent: "center",
-              width: 38,
-              height: 38,
-              background: "transparent",
-              border: "1px solid hsl(var(--line) / .6)",
-              borderRadius: 10,
-              color: "hsl(var(--subtle))",
-              cursor: "pointer",
-              flexShrink: 0,
-              transition: "color .2s, border-color .2s, background .2s",
-            }}
-            onMouseOver={(e) => {
-              const el = e.currentTarget;
-              el.style.color = "hsl(var(--accent-bright))";
-              el.style.borderColor = "hsl(var(--accent-bright) / .4)";
-              el.style.background = "hsl(var(--accent-bright) / .08)";
-            }}
-            onMouseOut={(e) => {
-              const el = e.currentTarget;
-              el.style.color = "hsl(var(--subtle))";
-              el.style.borderColor = "hsl(var(--line) / .6)";
-              el.style.background = "transparent";
-            }}
-          >
-            {theme === "dark" ? <Sun size={18} /> : <Moon size={18} />}
-          </button>
+          {/* Toggle jour/nuit — pill partagé (même visuel qu'admin/dashboard) */}
+          <ThemePill isDark={theme === "dark"} onToggle={onToggleTheme} />
 
           <Link
             href="/login"

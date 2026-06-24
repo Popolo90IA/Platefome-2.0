@@ -118,7 +118,7 @@ export default function RootLayout({
             (uniquement sur la route '/'), pour éviter le flash dark→clair. */}
         <script
           dangerouslySetInnerHTML={{
-            __html: `try{if(location.pathname==='/'){var t=localStorage.getItem('platforme-home-theme')||'dark';document.documentElement.classList.toggle('dark',t!=='light');}}catch(e){}`,
+            __html: `try{if(location.pathname==='/'){var t=localStorage.getItem('plateform-theme')||'dark';document.documentElement.classList.toggle('dark',t!=='light');}}catch(e){}`,
           }}
         />
         <ToastProvider>

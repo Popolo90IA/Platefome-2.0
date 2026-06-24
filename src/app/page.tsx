@@ -31,7 +31,7 @@ export default function HomePage() {
 
   // Préférence sauvegardée (défaut : dark — la home est éditoriale sombre).
   useEffect(() => {
-    const saved = localStorage.getItem("platforme-home-theme");
+    const saved = localStorage.getItem("plateform-theme");
     if (saved === "light" || saved === "dark") setTheme(saved);
   }, []);
 
@@ -41,7 +41,7 @@ export default function HomePage() {
   useEffect(() => {
     const root = document.documentElement;
     root.classList.toggle("dark", theme === "dark");
-    localStorage.setItem("platforme-home-theme", theme);
+    localStorage.setItem("plateform-theme", theme);
     return () => root.classList.remove("dark");
   }, [theme]);
 

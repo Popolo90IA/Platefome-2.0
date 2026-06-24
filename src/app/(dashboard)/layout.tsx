@@ -15,8 +15,8 @@ export default function DashboardLayout({
 
   return (
     <>
-      <ThemeScript targetSelector="#dashboard-root" />
-      <ThemeProvider targetSelector="#dashboard-root">
+      <ThemeScript targetSelector="#dashboard-root" defaultTheme="dark" />
+      <ThemeProvider targetSelector="#dashboard-root" defaultTheme="dark">
         <div
           id="dashboard-root"
           className="dash-layout min-h-screen flex"
