@@ -124,7 +124,7 @@ export function GalleryCard({
           >
             <span
               style={{
-                fontFamily: "var(--font-display)",
+                fontFamily: "var(--font-hebrew)",
                 fontSize: "1.3rem",
                 fontWeight: 700,
                 color: "hsl(var(--fog))",

@@ -6,7 +6,7 @@ export function StatsHeading() {
     <div className="reveal" style={{ textAlign: "center", marginBottom: 64 }}>
       <h2
         style={{
-          fontFamily: "var(--font-display)",
+          fontFamily: "var(--font-hebrew)",
           fontSize: "clamp(2rem,4vw,2.75rem)",
           fontWeight: 600,
           color: "hsl(var(--fog))",

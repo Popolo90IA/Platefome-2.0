@@ -31,7 +31,7 @@ export function ModelLabel({ label }: Props) {
       >
         <span
           style={{
-            fontFamily: "var(--font-display)",
+            fontFamily: "var(--font-hebrew)",
             fontSize: ".95rem",
             color: "hsl(24,18%,16%)",
             fontStyle: "italic",

@@ -95,7 +95,7 @@ export function QrColumn({ qrSrc }: Props) {
 
       <p
         style={{
-          fontFamily: "var(--font-display)",
+          fontFamily: "var(--font-hebrew)",
           fontSize: ".95rem",
           fontStyle: "italic",
           color: "hsl(24,18%,16%)",

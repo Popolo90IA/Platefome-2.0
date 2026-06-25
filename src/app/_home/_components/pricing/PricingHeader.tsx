@@ -8,7 +8,7 @@ export function PricingHeader() {
     <div className="reveal" style={{ textAlign: "center", marginBottom: 64 }}>
       <h2
         style={{
-          fontFamily: "var(--font-display)",
+          fontFamily: "var(--font-hebrew)",
           fontSize: "clamp(2.2rem,4.5vw,3.5rem)",
           fontWeight: 700,
           color: "hsl(var(--fog))",

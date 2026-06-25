@@ -83,7 +83,7 @@ export function ArInfoColumn() {
       <div>
         <h3
           style={{
-            fontFamily: "var(--font-display)",
+            fontFamily: "var(--font-hebrew)",
             fontSize: "clamp(1.25rem, 1.6vw, 1.6rem)",
             fontWeight: 600,
             color: "hsl(24,18%,16%)",

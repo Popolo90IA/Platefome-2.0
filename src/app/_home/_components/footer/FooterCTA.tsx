@@ -21,7 +21,7 @@ export function FooterCTA() {
       >
         <h2
           style={{
-            fontFamily: "var(--font-display)",
+            fontFamily: "var(--font-hebrew)",
             fontSize: "clamp(2rem,4vw,3rem)",
             fontWeight: 700,
             color: "hsl(32,28%,92%)",

@@ -32,7 +32,7 @@ export function FeaturesHeader() {
       </div>
       <h2
         style={{
-          fontFamily: "var(--font-display)",
+          fontFamily: "var(--font-hebrew)",
           fontSize: "clamp(2.2rem,4.5vw,3.5rem)",
           fontWeight: 700,
           color: "hsl(var(--fog))",

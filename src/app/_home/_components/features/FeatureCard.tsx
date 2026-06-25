@@ -169,7 +169,7 @@ export function FeatureCard({
         <h3
           style={{
             position: "relative",
-            fontFamily: "var(--font-display)",
+            fontFamily: "var(--font-hebrew)",
             fontWeight: 700,
             fontSize: featured ? "clamp(1.9rem, 2.5vw, 2.5rem)" : "1.55rem",
             lineHeight: 1.08,
