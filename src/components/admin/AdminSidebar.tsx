@@ -1,9 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { useEffect } from "react";
-import { createClient } from "@/lib/supabase/client";
 import { cn } from "@/lib/utils";
 import {
   Home,
@@ -12,7 +11,6 @@ import {
   BarChart3,
   Sparkles,
   Settings,
-  LogOut,
   ArrowRight,
 } from "lucide-react";
 import { LogoWordmark } from "@/components/brand";
@@ -33,19 +31,11 @@ const navItems = [
 
 export function AdminSidebar({ open, onClose }: AdminSidebarProps) {
   const pathname = usePathname();
-  const router = useRouter();
-  const supabase = createClient();
 
   // Close on route change (mobile nav)
   useEffect(() => {
     onClose?.();
   }, [pathname]); // eslint-disable-line react-hooks/exhaustive-deps
-
-  const handleLogout = async () => {
-    await supabase.auth.signOut();
-    router.push("/login");
-    router.refresh();
-  };
 
   return (
     <>
@@ -170,29 +160,6 @@ export function AdminSidebar({ open, onClose }: AdminSidebarProps) {
         </Link>
       </nav>
 
-      {/* Logout */}
-      <div
-        className="px-2 py-4"
-        style={{ borderTop: "1px solid hsl(var(--line))" }}
-      >
-        <button
-          onClick={handleLogout}
-          className="group w-full flex items-center gap-3 px-3 py-2 rounded-sm text-sm transition-all duration-150 relative"
-          style={{ color: "hsl(var(--subtle))" }}
-        >
-          <LogOut
-            className="h-[15px] w-[15px] flex-shrink-0 group-hover:text-[hsl(var(--ember))] transition-colors"
-            strokeWidth={1.5}
-          />
-          <span className="font-sans text-[13px] group-hover:text-[hsl(var(--ember))] transition-colors">
-            התנתקות
-          </span>
-          <div
-            className="absolute inset-0 rounded-sm opacity-0 group-hover:opacity-100 transition-opacity duration-150 pointer-events-none"
-            style={{ background: "hsl(var(--ember) / 0.06)" }}
-          />
-        </button>
-      </div>
     </aside>
     </>
   );

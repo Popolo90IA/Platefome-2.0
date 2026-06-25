@@ -5,7 +5,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
-import { Eye, ChevronDown, Menu, ExternalLink, LogOut } from "lucide-react";
+import { ChevronDown, Menu, ExternalLink, LogOut } from "lucide-react";
 import { ThemeToggle } from "@/components/theme/ThemeToggle";
 
 interface HeaderProps {
@@ -87,7 +87,7 @@ export function Header({ onMenuToggle }: HeaderProps) {
           : "1px solid transparent",
       }}
     >
-      {/* Left — hamburger (mobile) + breadcrumb */}
+      {/* Left — hamburger (mobile) */}
       <div className="flex items-center gap-3">
         {/* Hamburger — mobile only */}
         <button
@@ -97,23 +97,6 @@ export function Header({ onMenuToggle }: HeaderProps) {
         >
           <Menu style={{ width: 18, height: 18 }} strokeWidth={1.6} />
         </button>
-
-        {slug && (
-          <Link
-            href={`/menu/${slug}`}
-            target="_blank"
-            className="group flex items-center gap-1.5 text-[13px] transition-colors duration-150"
-            style={{ color: "hsl(var(--subtle))" }}
-          >
-            <Eye
-              className="h-3.5 w-3.5 group-hover:text-[hsl(var(--fog))] transition-colors"
-              strokeWidth={1.5}
-            />
-            <span className="hidden sm:block group-hover:text-[hsl(var(--fog))] transition-colors">
-              תצוגת לקוח
-            </span>
-          </Link>
-        )}
       </div>
 
       {/* Right — user */}
