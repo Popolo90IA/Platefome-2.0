@@ -4,9 +4,12 @@ export function HeroTitle() {
   return (
     <h1
       style={{
-        fontFamily: "var(--font-display)",
-        fontWeight: 700,
-        lineHeight: 1.08,
+        // Titre hébreu : police Noto Serif Hebrew (cf. CLAUDE.md, override RTL).
+        // Cormorant n'a pas de glyphes hébreu → fallback + métriques latines qui
+        // décalent et rognent les lettres hautes (ל). La police hébreu corrige.
+        fontFamily: "var(--font-hebrew)",
+        fontWeight: 600,
+        lineHeight: 1.1,
         margin: "0 0 20px",
       }}
     >
