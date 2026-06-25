@@ -378,6 +378,11 @@
   .font-mono { font-family: var(--font-mono); letter-spacing: 0; }
   .font-hebrew { font-family: var(--font-hebrew); }
   .font-serif-display { font-family: var(--font-display); }
+
+  /* Hébreu : les lettres hautes (ל) montent au-delà d'un line-height serré et
+     se font rogner par les masques overflow:hidden. Leading sûr en RTL/he. */
+  [dir="rtl"] .font-display,    :lang(he) .font-display    { line-height: 1.06; }
+  [dir="rtl"] .font-display-it, :lang(he) .font-display-it { line-height: 1.06; }
 }
 
 @layer utilities {

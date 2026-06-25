@@ -6,7 +6,7 @@ export function HeroTitle() {
       style={{
         fontFamily: "var(--font-display)",
         fontWeight: 700,
-        lineHeight: 0.94,
+        lineHeight: 1.08,
         margin: "0 0 20px",
       }}
     >
@@ -18,7 +18,7 @@ export function HeroTitle() {
             display: "block",
             fontSize: "clamp(44px, 5.2vw, 88px)",
             letterSpacing: "-.03em",
-            padding: "4px 0 6px",
+            padding: "0.14em 0 0.1em",
             color: "hsl(var(--fog))",
           }}
         >
@@ -36,7 +36,7 @@ export function HeroTitle() {
             fontStyle: "italic",
             fontSize: "clamp(38px, 4.6vw, 74px)",
             letterSpacing: "-.02em",
-            padding: "4px 0 6px",
+            padding: "0.14em 0 0.12em",
             color: "hsl(var(--gold))",
             background: "var(--grad-gold-shimmer)",
             WebkitBackgroundClip: "text",
