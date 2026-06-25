@@ -1,5 +1,6 @@
 "use client";
 
+import { BarChart3 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import type { DayPoint } from "../_lib/types";
 
@@ -11,6 +12,7 @@ export function DailyActivityChart({
   byDay: DayPoint[];
   maxDay: number;
 }) {
+  const isEmpty = byDay.length === 0 || maxDay <= 0;
   return (
     <Card className="shadow-premium">
       <CardContent className="p-6">
@@ -31,6 +33,18 @@ export function DailyActivityChart({
           </div>
         </div>
 
+        {isEmpty ? (
+          <div className="h-40 flex flex-col items-center justify-center text-center gap-2">
+            <BarChart3
+              className="h-8 w-8 text-muted-foreground/40"
+              strokeWidth={1.5}
+            />
+            <p className="text-sm text-muted-foreground">
+              אין עדיין פעילות בטווח הזה
+            </p>
+          </div>
+        ) : (
+        <>
         <div className="flex items-end gap-0.5 h-40 w-full">
           {byDay.map((d, i) => {
             const total = d.views + d.scans;
@@ -65,6 +79,8 @@ export function DailyActivityChart({
           <span>{byDay[0]?.date.slice(5)}</span>
           <span>{byDay[byDay.length - 1]?.date.slice(5)}</span>
         </div>
+        </>
+        )}
       </CardContent>
     </Card>
   );

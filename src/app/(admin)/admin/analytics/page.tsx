@@ -1,6 +1,8 @@
 "use client";
 
 import { useState } from "react";
+import { Card, CardContent } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
 import { DailyActivityChart } from "./_components/DailyActivityChart";
 import { KpiGrid } from "./_components/KpiGrid";
 import { RangeSelector } from "./_components/RangeSelector";
@@ -29,8 +31,24 @@ export default function AdminAnalyticsPage() {
       </div>
 
       {loading ? (
-        <div className="flex items-center justify-center py-24">
-          <div className="h-8 w-8 rounded-full border-2 border-[hsl(var(--gold))] border-t-transparent animate-spin" />
+        <div className="space-y-6">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
+            {Array.from({ length: 5 }).map((_, i) => (
+              <Card key={i} className="shadow-premium">
+                <CardContent className="p-4">
+                  <Skeleton className="h-9 w-9 rounded-lg" />
+                  <Skeleton className="h-7 w-16 mt-3" />
+                  <Skeleton className="h-3 w-20 mt-1.5" />
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+          <Card className="shadow-premium">
+            <CardContent className="p-6">
+              <Skeleton className="h-6 w-32 mb-4" />
+              <Skeleton className="h-40 w-full" />
+            </CardContent>
+          </Card>
         </div>
       ) : (
         <>
