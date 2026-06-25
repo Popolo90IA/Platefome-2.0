@@ -67,18 +67,19 @@ function buildStats(stats: Stats, deltas: Deltas): StatItem[] {
 
 function StatCard({ s }: { s: StatItem }) {
   return (
-    <Link href={s.href}>
+    <Link href={s.href} style={{ display: "block", height: "100%" }}>
       <div
         className="group cursor-pointer"
         style={{
           background: "hsl(var(--deep))",
           padding: "22px 24px",
+          height: "100%",
           position: "relative",
           transition: "background .15s",
         }}
         onMouseEnter={(e) => {
           (e.currentTarget as HTMLDivElement).style.background =
-            "hsl(var(--void))";
+            "hsl(var(--surface))";
           const bar = e.currentTarget.querySelector<HTMLDivElement>(
             "[data-accent-bar]"
           );

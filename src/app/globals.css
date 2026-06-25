@@ -9,37 +9,37 @@
     /* PLATFORME — Light Mode, Beige Sable + Bronze */
 
     /* ── Shadcn/Radix compatibility tokens ── */
-    --background: 38 28% 94%;
-    --foreground: 24 18% 16%;
-    --card: 38 30% 97%;
-    --card-foreground: 24 18% 16%;
-    --popover: 38 30% 97%;
-    --popover-foreground: 24 18% 16%;
-    --primary: 28 62% 42%;
+    --background: 38 26% 91%;
+    --foreground: 24 20% 14%;
+    --card: 40 42% 99%;
+    --card-foreground: 24 20% 14%;
+    --popover: 40 42% 99%;
+    --popover-foreground: 24 20% 14%;
+    --primary: 26 64% 40%;
     --primary-foreground: 0 0% 100%;
-    --secondary: 36 22% 90%;
-    --secondary-foreground: 24 18% 16%;
-    --muted: 30 18% 88%;
-    --muted-foreground: 24 12% 38%;
-    --accent: 36 22% 90%;
-    --accent-foreground: 24 18% 16%;
+    --secondary: 36 24% 87%;
+    --secondary-foreground: 24 20% 14%;
+    --muted: 34 20% 89%;
+    --muted-foreground: 24 14% 33%;
+    --accent: 36 24% 87%;
+    --accent-foreground: 24 20% 14%;
     --destructive: 0 62% 48%;
     --destructive-foreground: 0 0% 100%;
-    --border: 30 18% 82%;
-    --input: 36 22% 90%;
-    --ring: 28 62% 42%;
+    --border: 30 20% 76%;
+    --input: 30 18% 82%;
+    --ring: 26 64% 40%;
 
     /* ── Spatial depth scale (light beige) ── */
-    --void:    38 28% 94%;   /* page bg — beige sable */
-    --abyss:   36 22% 90%;   /* sections alternées */
-    --deep:    38 30% 97%;   /* cards blanches cassées */
-    --surface: 30 18% 88%;   /* surfaces interactives */
-    --line:    30 18% 82%;   /* bordures, séparateurs */
-    --dim:     28 10% 56%;   /* désactivé, placeholder */
-    --subtle:  24 12% 38%;   /* texte secondaire */
-    --pale:    24 15% 28%;   /* texte tertiaire */
-    --fog:     24 18% 16%;   /* texte principal */
-    --cream:   24 18% 16%;   /* titres */
+    --void:    38 26% 91%;   /* page bg — beige sable (plus profond, cartes ressortent) */
+    --abyss:   36 22% 86%;   /* sections alternées */
+    --deep:    40 42% 99%;   /* cards — blanc chaud croustillant */
+    --surface: 34 26% 95%;   /* surfaces interactives (légèrement surélevées) */
+    --line:    30 20% 76%;   /* bordures, séparateurs (nettes) */
+    --dim:     28 12% 50%;   /* désactivé, placeholder */
+    --subtle:  24 14% 33%;   /* texte secondaire (plus lisible) */
+    --pale:    24 16% 25%;   /* texte tertiaire */
+    --fog:     24 20% 14%;   /* texte principal */
+    --cream:   24 22% 12%;   /* titres (plus sombres que le corps) */
     --white:   0   0% 100%;  /* blanc absolu */
 
     /* ── Bezel / veil surfaces (theme-aware) ──
@@ -64,11 +64,11 @@
     --gold-dim:     28  38% 58%;   /* bronze atténué */
 
     /* backward compat aliases */
-    --snow:    38  28% 94%;
-    --ink:     24  18% 16%;
-    --obsidian: 38 28% 94%;
-    --charcoal: 24 15% 28%;
-    --mist:    24  12% 38%;
+    --snow:    38  26% 91%;
+    --ink:     24  20% 14%;
+    --obsidian: 38 26% 91%;
+    --charcoal: 24 16% 25%;
+    --mist:    24  14% 33%;
 
     /* ── Radius scale ── */
     --radius:      4px;
