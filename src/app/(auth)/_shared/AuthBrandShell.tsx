@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import type { ReactNode } from "react";
+import { LogoWordmark } from "@/components/brand/LogoWordmark";
 
 interface Props {
   children: ReactNode;
@@ -84,14 +85,7 @@ export function AuthBrandShell({ children, footer }: Props) {
 
       <div style={{ position: "relative", zIndex: 1 }}>
         <Link href="/" className="logo-hover" style={{ display: "inline-block" }}>
-          <img
-            src="/brand/logo-lockup-light.svg"
-            width={160}
-            height={44}
-            alt="Plateform — Every dish, in 360°"
-            draggable={false}
-            style={{ display: "block" }}
-          />
+          <LogoWordmark width={160} variant="light" />
         </Link>
       </div>
 

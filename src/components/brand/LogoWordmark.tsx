@@ -1,26 +1,26 @@
 interface LogoWordmarkProps {
   width?: number;
   className?: string;
-  /** Couleur du mot "Plate". Par défaut suit le thème via --fog (encre en
-   *  jour, clair en nuit) → reste lisible dans les deux modes. Override possible
-   *  (ex. footer toujours sombre) en passant une teinte fixe. */
-  color?: string;
+  /**
+   * "auto"  — suit le thème (défaut)
+   * "light" — texte clair pour fond sombre (ex. panel auth dark)
+   * "dark"  — texte sombre pour fond clair
+   */
+  variant?: "auto" | "light" | "dark";
 }
 
-/**
- * Wordmark — cloche dorée PNG (ton vrai logo) + texte "Plateform".
- * direction:ltr garantit le bon ordre Plate→form même en RTL (hébreu).
- */
+const TEXT_COLOR: Record<string, string> = {
+  auto: "hsl(var(--fog))",
+  light: "hsl(36,30%,88%)",
+  dark: "hsl(24,18%,16%)",
+};
+
 export function LogoWordmark({
   width = 140,
   className,
-  color = "hsl(var(--fog))",
+  variant = "auto",
 }: LogoWordmarkProps) {
-  // Proportions calées sur logo-lockup.svg (source de vérité — page login).
-  // SVG: viewBox 800×220, cloche ~160px (ratio 1.587), texte font-size 84.
-  // Pour un wordmark où width = largeur cloche+gap+texte (~width*0.7 du viewBox):
-  const bellHeight = Math.round(width * 0.28);
-  const bellWidth = Math.round(bellHeight * 1.587);
+  const iconSize = Math.round(width * 0.28);
   const fontSize = Math.round(width * 0.15);
   const gap = Math.round(width * 0.075);
 
@@ -39,8 +39,8 @@ export function LogoWordmark({
     >
       <img
         src="/brand/logo-mark.svg"
-        width={bellHeight}
-        height={bellHeight}
+        width={iconSize}
+        height={iconSize}
         alt=""
         draggable={false}
         style={{ flexShrink: 0, objectFit: "contain" }}
@@ -51,7 +51,7 @@ export function LogoWordmark({
             "var(--font-cormorant), 'Cormorant Garamond', 'Playfair Display', Georgia, serif",
           fontWeight: 500,
           fontSize,
-          color,
+          color: TEXT_COLOR[variant],
           letterSpacing: "-0.02em",
           lineHeight: 1,
         }}
