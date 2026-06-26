@@ -31,17 +31,17 @@ export function HeroTitle() {
         </span>
       </span>
 
-      {/* Ligne 2 — mot signature en italique bronze (gradient de marque, statique ;
-          fallback `color` solide si background-clip:text non supporté) */}
+      {/* Ligne 2 — même typo que la ligne 1 (droit, non-italique, taille/tracking
+          identiques) ; garde le dégradé bronze de marque (couleur ≠ typo).
+          Fallback `color` solide si background-clip:text non supporté. */}
       <span style={{ display: "block", overflowX: "visible", overflowY: "clip" }}>
         <span
           className="hero-fade-c"
           style={{
             display: "block",
-            fontStyle: "italic",
-            fontSize: "clamp(38px, 4.6vw, 74px)",
-            letterSpacing: "-.02em",
-            padding: "0.14em 0 0.12em",
+            fontSize: "clamp(44px, 5.2vw, 88px)",
+            letterSpacing: "-.03em",
+            padding: "0.14em 0 0.1em",
             color: "hsl(var(--gold))",
             background: "var(--grad-gold-shimmer)",
             WebkitBackgroundClip: "text",
