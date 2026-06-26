@@ -54,9 +54,10 @@ export function HeroVideo() {
         <video
           ref={videoRef}
           muted
+          autoPlay
           loop
           playsInline
-          preload="metadata"
+          preload="auto"
           poster="/intro-plat-poster.jpg"
           aria-label="הדגמה: מנה בתלת-מימד"
           style={{
