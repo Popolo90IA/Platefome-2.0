@@ -13,8 +13,10 @@ export function HeroTitle() {
         margin: "0 0 20px",
       }}
     >
-      {/* Ligne 1 — masque overflow : le reveal "slide up" est piloté par le rideau (.hero-fade-b) */}
-      <span style={{ display: "block", overflow: "hidden" }}>
+      {/* Ligne 1 — masque overflow : le reveal "slide up" est piloté par le rideau (.hero-fade-b).
+          overflow-y clip pour le rideau vertical ; overflow-x visible pour ne pas rogner
+          l'extrémité gauche (overhang italique / lettres larges) du texte hébreu. */}
+      <span style={{ display: "block", overflowX: "visible", overflowY: "clip" }}>
         <span
           className="hero-fade-b"
           style={{
@@ -31,7 +33,7 @@ export function HeroTitle() {
 
       {/* Ligne 2 — mot signature en italique bronze (gradient de marque, statique ;
           fallback `color` solide si background-clip:text non supporté) */}
-      <span style={{ display: "block", overflow: "hidden" }}>
+      <span style={{ display: "block", overflowX: "visible", overflowY: "clip" }}>
         <span
           className="hero-fade-c"
           style={{

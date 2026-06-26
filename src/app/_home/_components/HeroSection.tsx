@@ -43,8 +43,10 @@ export function HeroSection() {
           className="hero-split"
           style={{
             display: "grid",
-            gridTemplateColumns: "1.1fr 0.9fr",
-            gap: "clamp(40px, 5vw, 80px)",
+            // Colonne texte élargie (vers la gauche, côté vidéo) pour laisser
+            // respirer le titre hébreu et ne jamais rogner son extrémité gauche.
+            gridTemplateColumns: "1.3fr 0.8fr",
+            gap: "clamp(32px, 4vw, 64px)",
             alignItems: "center",
           }}
         >
