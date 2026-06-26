@@ -1,36 +1,33 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="400" height="400">
   <defs>
-    <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="hsl(38,65%,58%)"/>
-      <stop offset="1" stop-color="hsl(28,62%,42%)"/>
+    <linearGradient id="bronze" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="hsl(28,62%,38%)"/>
+      <stop offset="100%" stop-color="hsl(22,70%,50%)"/>
+    </linearGradient>
+    <linearGradient id="bronzeLight" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="hsl(28,62%,52%)"/>
+      <stop offset="100%" stop-color="hsl(22,70%,62%)"/>
     </linearGradient>
   </defs>
 
-  <!-- Tray base -->
-  <rect x="48" y="268" width="304" height="10" rx="5" fill="none" stroke="url(#gold)" stroke-width="5" stroke-linecap="round"/>
-  <!-- Tray line -->
-  <line x1="60" y1="268" x2="340" y2="268" stroke="url(#gold)" stroke-width="5" stroke-linecap="round"/>
+  <!-- Plate outer rim -->
+  <circle cx="200" cy="200" r="178" fill="none" stroke="url(#bronze)" stroke-width="6"/>
 
-  <!-- Cloche dome -->
-  <path d="M 68 268 Q 68 120 200 120 Q 332 120 332 268 Z"
-    fill="none" stroke="url(#gold)" stroke-width="5" stroke-linejoin="round"/>
+  <!-- Plate inner rim -->
+  <circle cx="200" cy="200" r="152" fill="none" stroke="url(#bronzeLight)" stroke-width="2.5" stroke-dasharray="0"/>
 
-  <!-- Handle ring -->
-  <circle cx="200" cy="112" r="16" fill="none" stroke="url(#gold)" stroke-width="5"/>
+  <!-- Plate well (subtle fill) -->
+  <circle cx="200" cy="200" r="148" fill="hsl(38,28%,96%)" opacity="0.6"/>
 
-  <!-- Infinity / wave motif (3 waves) -->
-  <!-- Wave 1 (top) -->
-  <path d="M 90 224 C 120 196, 160 196, 200 224 C 240 252, 280 252, 310 224"
-    fill="none" stroke="url(#gold)" stroke-width="5" stroke-linecap="round"/>
-  <!-- Wave 2 (middle) -->
-  <path d="M 90 244 C 120 216, 160 216, 200 244 C 240 272, 280 272, 310 244"
-    fill="none" stroke="url(#gold)" stroke-width="5" stroke-linecap="round"/>
-  <!-- Wave 3 (bottom) -->
-  <path d="M 90 264 C 120 236, 160 236, 200 264 C 240 292, 280 292, 310 264"
-    fill="none" stroke="url(#gold)" stroke-width="5" stroke-linecap="round"/>
-
-  <!-- Sparkle dots -->
-  <circle cx="136" cy="152" r="5" fill="url(#gold)"/>
-  <circle cx="96"  cy="196" r="4" fill="url(#gold)"/>
-  <circle cx="296" cy="168" r="4" fill="url(#gold)"/>
+  <!-- Letter P — italic, Cormorant-style, centered -->
+  <text
+    x="200"
+    y="260"
+    font-family="Cormorant Garamond, Georgia, serif"
+    font-size="200"
+    font-style="italic"
+    font-weight="600"
+    text-anchor="middle"
+    fill="url(#bronze)"
+  >P</text>
 </svg>
