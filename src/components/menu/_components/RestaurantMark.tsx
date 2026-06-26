@@ -58,14 +58,11 @@ export function RestaurantMark({
             />
           ) : (
             // eslint-disable-next-line @next/next/no-img-element
-            <img
-              src="/brand/logo-mark.svg"
-              width={48}
-              height={48}
-              alt="Plateform"
-              style={{ borderRadius: 12, objectFit: "cover" }}
-              draggable={false}
-            />
+            <svg width={32} height={32} viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" aria-label="Plateform">
+              <circle cx="50" cy="50" r="46" fill="none" stroke="hsl(38,80%,82%)" strokeWidth="4"/>
+              <circle cx="50" cy="50" r="38" fill="none" stroke="hsl(38,80%,82%)" strokeWidth="1.5" opacity="0.5"/>
+              <text x="50" y="68" fontFamily="Cormorant Garamond,Georgia,serif" fontSize="58" fontStyle="italic" fontWeight="600" textAnchor="middle" fill="hsl(38,80%,82%)">P</text>
+            </svg>
           )}
         </div>
         <div>

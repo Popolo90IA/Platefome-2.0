@@ -79,17 +79,11 @@ export function QrColumn({ qrSrc }: Props) {
             boxShadow: "0 0 0 3px hsl(38,34%,96%)",
           }}
         >
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src="/brand/cloche.png"
-            width={20}
-            height={13}
-            alt=""
-            style={{
-              objectFit: "contain",
-              filter: "brightness(1.6) saturate(0.4)",
-            }}
-          />
+          <svg width={20} height={20} viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <circle cx="50" cy="50" r="46" fill="none" stroke="hsl(38,80%,88%)" strokeWidth="5"/>
+            <circle cx="50" cy="50" r="38" fill="none" stroke="hsl(38,80%,88%)" strokeWidth="2" opacity="0.5"/>
+            <text x="50" y="68" fontFamily="Cormorant Garamond,Georgia,serif" fontSize="58" fontStyle="italic" fontWeight="600" textAnchor="middle" fill="hsl(38,80%,88%)">P</text>
+          </svg>
         </div>
       </div>
 

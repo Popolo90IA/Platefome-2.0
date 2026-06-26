@@ -3,12 +3,8 @@ interface LogoMonogramProps {
   className?: string;
 }
 
-/**
- * Tuile bronze — cloche dorée (ton vrai logo) sur fond bronze arrondi.
- * Use for: card placeholder, admin avatar, push icon, app icon.
- */
 export function LogoMonogram({ size = 64, className }: LogoMonogramProps) {
-  const iconSize = Math.round(size * 0.72);
+  const inner = Math.round(size * 0.72);
   return (
     <span
       className={className}
@@ -23,14 +19,25 @@ export function LogoMonogram({ size = 64, className }: LogoMonogramProps) {
         flexShrink: 0,
       }}
     >
-      <img
-        src="/brand/logo-mark.svg"
-        width={iconSize}
-        height={iconSize}
-        alt="Plateform"
-        draggable={false}
-        style={{ objectFit: "contain", filter: "brightness(1.8) saturate(0.3)" }}
-      />
+      <svg
+        width={inner}
+        height={inner}
+        viewBox="0 0 100 100"
+        xmlns="http://www.w3.org/2000/svg"
+        aria-label="Plateform"
+      >
+        <circle cx="50" cy="50" r="46" fill="none" stroke="hsl(38,80%,82%)" strokeWidth="3.5"/>
+        <circle cx="50" cy="50" r="38" fill="none" stroke="hsl(38,80%,82%)" strokeWidth="1.5" opacity="0.5"/>
+        <text
+          x="50" y="68"
+          fontFamily="Cormorant Garamond, Georgia, serif"
+          fontSize="58"
+          fontStyle="italic"
+          fontWeight="600"
+          textAnchor="middle"
+          fill="hsl(38,80%,82%)"
+        >P</text>
+      </svg>
     </span>
   );
 }

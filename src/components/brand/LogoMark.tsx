@@ -4,21 +4,29 @@ interface LogoMarkProps {
   variant?: "light" | "dark";
 }
 
-/**
- * Primary icon — cloche dorée (PNG transparent, ton vrai logo).
- * Source : public/brand/cloche.png (600×378, fond transparent).
- * Use for: header (28–32px), favicon, QR coasters, tight spaces.
- */
-export function LogoMark({ size = 32, className }: LogoMarkProps) {
+export function LogoMark({ size = 32, className, variant }: LogoMarkProps) {
+  const stroke = variant === "light" ? "hsl(38,70%,68%)" : "hsl(28,62%,42%)";
   return (
-    <img
-      src="/brand/logo-mark.svg"
+    <svg
       width={size}
       height={size}
-      alt="Plateform"
+      viewBox="0 0 100 100"
+      xmlns="http://www.w3.org/2000/svg"
       className={className}
-      draggable={false}
-      style={{ display: "inline-block", flexShrink: 0, objectFit: "contain" }}
-    />
+      style={{ display: "inline-block", flexShrink: 0 }}
+      aria-label="Plateform"
+    >
+      <circle cx="50" cy="50" r="46" fill="none" stroke={stroke} strokeWidth="3.5"/>
+      <circle cx="50" cy="50" r="38" fill="none" stroke={stroke} strokeWidth="1.5" opacity="0.5"/>
+      <text
+        x="50" y="68"
+        fontFamily="Cormorant Garamond, Georgia, serif"
+        fontSize="58"
+        fontStyle="italic"
+        fontWeight="600"
+        textAnchor="middle"
+        fill={stroke}
+      >P</text>
+    </svg>
   );
 }
