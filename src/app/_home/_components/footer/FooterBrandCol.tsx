@@ -10,7 +10,7 @@ export function FooterBrandCol() {
     <div>
       <div style={{ marginBottom: 16 }}>
         <Link href="/" className="logo-hover" style={{ display: "inline-block" }}>
-          <LogoWordmark width={130} color="hsl(38,30%,92%)" />
+          <LogoWordmark width={130} variant="light" />
         </Link>
       </div>
       <p
