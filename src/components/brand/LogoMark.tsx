@@ -10,12 +10,10 @@ interface LogoMarkProps {
  * Use for: header (28–32px), favicon, QR coasters, tight spaces.
  */
 export function LogoMark({ size = 32, className }: LogoMarkProps) {
-  // Ratio natif 600/378 ≈ 1.587
-  const width = Math.round(size * 1.587);
   return (
     <img
-      src="/brand/cloche.png"
-      width={width}
+      src="/brand/logo-mark.svg"
+      width={size}
       height={size}
       alt="Plateform"
       className={className}

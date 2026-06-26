@@ -8,8 +8,7 @@ interface LogoMonogramProps {
  * Use for: card placeholder, admin avatar, push icon, app icon.
  */
 export function LogoMonogram({ size = 64, className }: LogoMonogramProps) {
-  const bellWidth = Math.round(size * 0.72);
-  const bellHeight = Math.round(bellWidth / 1.587);
+  const iconSize = Math.round(size * 0.72);
   return (
     <span
       className={className}
@@ -25,17 +24,12 @@ export function LogoMonogram({ size = 64, className }: LogoMonogramProps) {
       }}
     >
       <img
-        src="/brand/cloche.png"
-        width={bellWidth}
-        height={bellHeight}
+        src="/brand/logo-mark.svg"
+        width={iconSize}
+        height={iconSize}
         alt="Plateform"
         draggable={false}
-        style={{
-          objectFit: "contain",
-          // La cloche est dorée — sur fond bronze elle se fond.
-          // On l'éclaircit avec un filter pour la faire ressortir en or clair/blanc cassé.
-          filter: "brightness(1.6) saturate(0.4)",
-        }}
+        style={{ objectFit: "contain", filter: "brightness(1.8) saturate(0.3)" }}
       />
     </span>
   );

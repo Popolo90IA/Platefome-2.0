@@ -38,8 +38,8 @@ export function LogoWordmark({
       }}
     >
       <img
-        src="/brand/cloche.png"
-        width={bellWidth}
+        src="/brand/logo-mark.svg"
+        width={bellHeight}
         height={bellHeight}
         alt=""
         draggable={false}
