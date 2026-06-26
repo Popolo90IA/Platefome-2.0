@@ -34,9 +34,18 @@ export function LogoWordmark({ width = 180, className, variant = "auto" }: LogoW
         </linearGradient>
       </defs>
 
-      {/* Plate icon — circles only, no letter (letter is in the wordmark) */}
+      {/* Plate icon */}
       <circle cx="60" cy="60" r="54" fill="none" stroke="url(#lw-gold)" strokeWidth="4" />
       <circle cx="60" cy="60" r="42" fill="none" stroke="url(#lw-gold)" strokeWidth="1.5" opacity="0.5" />
+      <text
+        x="60" y="82"
+        fontFamily="Cormorant Garamond, Georgia, serif"
+        fontSize="72"
+        fontStyle="italic"
+        fontWeight="600"
+        textAnchor="middle"
+        fill="url(#lw-gold)"
+      >P</text>
 
       {/* Wordmark — starts right after icon */}
       <text
